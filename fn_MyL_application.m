@@ -15,7 +15,7 @@ lake_par_file = tempname;
 dlmwrite(sed_par_file, calibration_k_values,'delimiter','\t');
 
 %% writing lake parameter file
-f = fopen('IO/vansjø_para.txt');
+f = fopen('IO/vansjo_para.txt');
 garbage = fgetl(f); % file get line
 garbage = fgetl(f); % file get line
 data_lake = textscan(f, '%s%f%f%f%s', 60, 'Delimiter', '\t');
@@ -48,7 +48,7 @@ dlmwrite(lake_par_file, [[1:60]',data_lake{2},data_lake{3},data_lake{4},(1:60)']
 %% Specific MyLake application
 
 warning('off', 'all')
-lake='Vansjø';
+lake='Vansjo';
 year=1983;
 dt = 1.0;
 
@@ -60,6 +60,11 @@ if use_INCA == 1;
 else
     INCA_QC = 0;
 end
+
+
+% store_INCAP_input
+% vanem_INCAP_input
+
 
 %# ############ This is Vansjø Storefj ##############
 
@@ -77,6 +82,7 @@ elseif ischar(use_INCA);
     inputfile=use_INCA;
     disp('Using response surfaces array')
 end
+
 
 %% 24/9/2014 This is MyLake DOCOMO commands ...  disabled for now
 %[In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz, In_TPz_sed,In_Chlz_sed,In_O2z,In_FIM,Ice0,Wt,Inflw,...
@@ -99,6 +105,7 @@ disp('Storefjorden ...')
 [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz, In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,...
     Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
     = modelinputs_v12_1b(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parafile, 'lake', dt);
+
 
 [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,Qzt_sed,lambdazt,...
     P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt]...
@@ -172,7 +179,7 @@ if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis.
         P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt]...
         = solvemodel_v12_1b(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake');
    
-    delete (vanem_input)
+    % delete (vanem_input)
     disp('Cleanup ... done.')
 end
 
@@ -199,7 +206,8 @@ end
 
 if isnumeric(use_INCA)
     
-    load obs\vanem_obs\TOTP.dat % these are just C&P of vanem ...
+    file_path = ['obs' filesep 'vanem_obs' filesep 'TOTP.dat']
+    load file_path % these are just C&P of vanem ...
     temp=(Pzt(zinx,:)+PPzt(zinx,:)+DOPzt(zinx,:)+Chlzt(zinx,:))'; % total P is computed
     TP_mod_all = [tlims mean(temp,2)]; % this is the mean of depth-averaged time series
     TP_obs = TOTP; % retreiving the observations
@@ -209,7 +217,8 @@ if isnumeric(use_INCA)
     TP_mod = MatchedData (:,3); % fn output
     clear MatchedData
     
-    load obs\vanem_obs\Cha.dat % these are just C&P of vanem ...
+    file_path = ['obs' filesep 'vanem_obs' filesep 'Cha.dat']
+    load file_path % these are just C&P of vanem ...
     temp=(Chlzt(zinx,:)+Czt(zinx,:))'; % this is the mean of depth-averaged time series
     chl_mod_all=[tlims mean(temp,2)];
     chl_obs = Cha;
@@ -219,7 +228,8 @@ if isnumeric(use_INCA)
     chl_mod = MatchedData (:,3); % fn output
     clear MatchedData
     
-    load obs\vanem_obs\PO4.dat % these are just C&P of vanem ...
+    file_path = ['obs' filesep 'vanem_obs' filesep 'PO4.dat']
+    load file_path % these are just C&P of vanem ...
     temp=Pzt(zinx,:)'; % this is the mean of depth-averaged time series
     PO4_mod_all=[tlims mean(temp,2)];
     PO4_obs = PO4;
@@ -229,7 +239,8 @@ if isnumeric(use_INCA)
     PO4_mod = MatchedData (:,3); % fn output
     clear MatchedData
     
-    load obs\vanem_obs\Part.dat % these are just C&P of vanem ...
+    file_path = ['obs' filesep 'vanem_obs' filesep 'Part.dat']
+    load file_path % these are just C&P of vanem ...
     temp=PPzt(zinx,:)'; % this is the mean of depth-averaged time series
     Part_mod_all=[tlims mean(temp,2)];
     Part_obs = Part;
@@ -249,7 +260,7 @@ input_all = [Wt,Inflw]; % weather and inflows
 
 %% cleaning
 fclose('all');
-delete (sed_par_file)
-delete (lake_par_file)
+% delete (sed_par_file)
+% delete (lake_par_file)
 
 end

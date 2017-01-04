@@ -1,0 +1,1872 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"ass",
+				"assumptions"
+			],
+			[
+				"elemen",
+				"elements"
+			],
+			[
+				"micro",
+				"microorganisms"
+			],
+			[
+				"dis",
+				"dissolution"
+			],
+			[
+				"Grad",
+				"Gradient"
+			],
+			[
+				"alter",
+				"alternative"
+			],
+			[
+				"Ecolo",
+				"Ecological\t(bibliography.bib)"
+			],
+			[
+				"additio",
+				"additional"
+			],
+			[
+				"factr",
+				"factors"
+			],
+			[
+				"enviro",
+				"environments"
+			],
+			[
+				"diffus",
+				"diffusive"
+			],
+			[
+				"There",
+				"Therefore"
+			],
+			[
+				"compet",
+				"competition"
+			],
+			[
+				"bibl",
+				"bibliography"
+			],
+			[
+				"determ",
+				"determine\t(bibliography.bib)"
+			],
+			[
+				"Timeli",
+				"img/Timeline.pdf"
+			],
+			[
+				"Time",
+				"img/Timeline.pdf"
+			],
+			[
+				"microbi",
+				"microbially"
+			],
+			[
+				"no",
+				"northern"
+			],
+			[
+				"ext",
+				"external"
+			],
+			[
+				"thre",
+				"threshold"
+			],
+			[
+				"en",
+				"environments"
+			],
+			[
+				"producti",
+				"productivity"
+			],
+			[
+				"clear",
+				"clearpage\tlatex-document"
+			],
+			[
+				"environme",
+				"environmental"
+			],
+			[
+				"gas",
+				"gases\t(bibliography.bib)"
+			],
+			[
+				"fin",
+				"finding"
+			],
+			[
+				"Biogeo",
+				"Biogeochemical"
+			],
+			[
+				"meas",
+				"measured"
+			],
+			[
+				"deve",
+				"development"
+			],
+			[
+				"em",
+				"emissions"
+			],
+			[
+				"Fenn",
+				"img/fennoscandian_lakes.pdf"
+			],
+			[
+				"flux",
+				"fluxes"
+			],
+			[
+				"represe",
+				"representation"
+			],
+			[
+				"algo",
+				"algorithm"
+			],
+			[
+				"textit",
+				"\\textit{text}\tlatex-document"
+			],
+			[
+				"hydrogeno",
+				"hydrogenotrophic\t(competitive_exclusion.tex)"
+			],
+			[
+				"Sedi",
+				"Sediments\t(bibliography.bib)"
+			],
+			[
+				"rate",
+				"img/rates_h_ph6.pdf"
+			],
+			[
+				"hfi",
+				"hfill\ttex"
+			],
+			[
+				"fu",
+				"__future__\tmodule"
+			],
+			[
+				"if",
+				"ifmain\tif __name__ == '__main__'"
+			],
+			[
+				"MN",
+				"MN2"
+			],
+			[
+				"rec",
+				"reconstruct_flug"
+			],
+			[
+				"car",
+				"carb_eq_alpha_1"
+			],
+			[
+				"ta",
+				"tableofcontents\tlatex-document"
+			],
+			[
+				"bio",
+				"bibliography"
+			],
+			[
+				"with",
+				"without\t(Watson_original_model.py)"
+			],
+			[
+				"show",
+				"show_fig"
+			],
+			[
+				"save",
+				"save_fig\tparam"
+			],
+			[
+				"extra",
+				"extra_plotting_methods\tmodule"
+			],
+			[
+				"Wa",
+				"Watson_original_model\tmodule"
+			],
+			[
+				"font",
+				"fontsize"
+			],
+			[
+				"fig",
+				"figure〔function〕"
+			],
+			[
+				"num",
+				"num_steps"
+			],
+			[
+				"have",
+				"have_event"
+			],
+			[
+				"CH",
+				"CH4\tstatement"
+			],
+			[
+				"FE",
+				"FE2"
+			],
+			[
+				"y_",
+				"y_interp"
+			],
+			[
+				"re",
+				"reconstracted"
+			],
+			[
+				"bui",
+				"build_graphs\t(build_graphs.py)"
+			],
+			[
+				"times",
+				"timestep\t(extra_methods.py)"
+			],
+			[
+				"va",
+				"variables"
+			],
+			[
+				"lin",
+				"linewidth\t(model.tex)"
+			],
+			[
+				"asa",
+				"asarray\tfunction"
+			],
+			[
+				"t",
+				"tolerance\tstatement"
+			],
+			[
+				"NO3",
+				"NO3\tstatement"
+			],
+			[
+				"dGr0_H",
+				"dGr0_H2a\tstatement"
+			],
+			[
+				"cali",
+				"calibration\t(calibration_routine.py)"
+			],
+			[
+				"tota",
+				"total_rmsd"
+			],
+			[
+				"m_N",
+				"m_NO3_days"
+			],
+			[
+				"Fe",
+				"Fe3"
+			],
+			[
+				"gibb",
+				"gibbs_energy"
+			],
+			[
+				"r_",
+				"r_CH4"
+			],
+			[
+				"SA",
+				"SA_t"
+			],
+			[
+				"Km",
+				"Km_SO4\tstatement"
+			],
+			[
+				"Km_",
+				"Km_NO3\t(model_3g.m)"
+			],
+			[
+				"dG",
+				"dGr0_A5"
+			],
+			[
+				"F",
+				"Fe2\tstatement"
+			],
+			[
+				"Mn",
+				"MnO2s\t(gibbs_ehergy_of_reaction.py)"
+			],
+			[
+				"MnO",
+				"MnO2"
+			],
+			[
+				"C6",
+				"C6H6O"
+			],
+			[
+				"con",
+				"concentrations"
+			],
+			[
+				"vs",
+				"vstack\tfunction"
+			],
+			[
+				"r_ac",
+				"r_acetate_s_red"
+			],
+			[
+				"par",
+				"parentdir2"
+			],
+			[
+				"yi",
+				"yield"
+			],
+			[
+				"power",
+				"powerful"
+			],
+			[
+				"ace",
+				"Acetotrophy"
+			],
+			[
+				"log",
+				"logic_optx"
+			],
+			[
+				"H2",
+				"H2O"
+			],
+			[
+				"TE",
+				"TEA"
+			],
+			[
+				"R1_",
+				"R1_max"
+			],
+			[
+				"enviroment",
+				"environment"
+			],
+			[
+				"probability_app",
+				"Probability_approach_application"
+			],
+			[
+				"proba",
+				"probability"
+			],
+			[
+				"modeller",
+				"modeller"
+			],
+			[
+				"dGr0_glucose_Fe",
+				"dGr0_glucose_FeOOH"
+			],
+			[
+				"dGr0_glucose_",
+				"dGr0_glucose_SO4\tstatement"
+			],
+			[
+				"Thermodynami",
+				"thermodynamics"
+			],
+			[
+				"opt_2_rxns",
+				"opt_2_rxns_eq"
+			],
+			[
+				"reactions",
+				"reactions"
+			],
+			[
+				"center",
+				"centering"
+			],
+			[
+				"Probabil",
+				"Probability\t(movie.m)"
+			],
+			[
+				"diffe",
+				"differential"
+			],
+			[
+				"parti",
+				"partial\t(bibliography.bib)"
+			],
+			[
+				"has",
+				"haynes2012crc"
+			],
+			[
+				"enzy",
+				"enzyme"
+			],
+			[
+				"cons",
+				"constant"
+			],
+			[
+				"inhi",
+				"inhibition"
+			],
+			[
+				"expe",
+				"experimental"
+			],
+			[
+				"class",
+				"classical"
+			],
+			[
+				"prev",
+				"prev_optx"
+			],
+			[
+				"inf",
+				"infty"
+			],
+			[
+				"in",
+				"infty"
+			],
+			[
+				"pa",
+				"page\tPage"
+			],
+			[
+				"statis",
+				"Statistical"
+			],
+			[
+				"distrib",
+				"distribution"
+			],
+			[
+				"Ft_",
+				"Ft_improved"
+			],
+			[
+				"opt",
+				"optimization"
+			],
+			[
+				"FeO",
+				"FeOH3"
+			],
+			[
+				"mea",
+				"meanwhile"
+			],
+			[
+				"the",
+				"thermodynamic"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/C++11/C++11.sublime-build",
+					""
+				],
+				[
+					"Packages/C++11/C++11.sublime-build",
+					"Run"
+				]
+			],
+			[
+				"Packages/C++11/C++11.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					""
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Traditional"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"PdfLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"XeLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"LuaLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder - PdfLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder - XeLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Basic Builder - LuaLaTeX"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					"Script Builder"
+				]
+			],
+			[
+				"Packages/LaTeXTools/LaTeX.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/LaTeXing/LaTeX (TikZ).sublime-build",
+					""
+				],
+				[
+					"Packages/LaTeXing/LaTeX (TikZ).sublime-build",
+					"Clean up Files"
+				]
+			],
+			[
+				"Packages/LaTeXing/LaTeX (TikZ).sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/LaTeXing/LaTeX.sublime-build",
+					""
+				],
+				[
+					"Packages/LaTeXing/LaTeX.sublime-build",
+					"Clean up Files"
+				]
+			],
+			[
+				"Packages/LaTeXing/LaTeX.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/LaTeXing/LaTeX.sublime-build",
+					""
+				],
+				[
+					"Packages/LaTeXing/LaTeX.sublime-build",
+					"Primary Quick Build"
+				],
+				[
+					"Packages/LaTeXing/LaTeX.sublime-build",
+					"Choose Quick Build"
+				],
+				[
+					"Packages/LaTeXing/LaTeX.sublime-build",
+					"Clean up Files"
+				]
+			],
+			[
+				"Packages/LaTeXing/LaTeX.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/LaTeXing/LaTeX.sublime-build",
+					""
+				],
+				[
+					"Packages/LaTeXing/LaTeX.sublime-build",
+					"Primary Quick Build"
+				],
+				[
+					"Packages/LaTeXing/LaTeX.sublime-build",
+					"Choose Quick Build"
+				],
+				[
+					"Packages/LaTeXing/LaTeX.sublime-build",
+					"Clean up Files"
+				],
+				[
+					"Packages/LaTeXTools/LaTeX.sublime-build",
+					""
+				],
+				[
+					"Packages/SublimeREPL/sublimerepl_build_system_hack.sublime-build",
+					""
+				],
+				[
+					"Packages/User/custom_make.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/LaTeXing/LaTeX.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 320.0,
+		"last_filter": "pep",
+		"selected_items":
+		[
+			[
+				"pep",
+				"User: Python PEP8 Autoformat"
+			],
+			[
+				"ali",
+				"Table Cleaner: Align Table"
+			],
+			[
+				"latdel",
+				"LaTeXTools: Delete temporary files"
+			],
+			[
+				"tit",
+				"Convert Case: Title Case"
+			],
+			[
+				"lat",
+				"LaTeXTools: Delete temporary files"
+			],
+			[
+				"con",
+				"Convert Case: Title Case"
+			],
+			[
+				"la",
+				"LaTeXTools: Delete temporary files"
+			],
+			[
+				"del",
+				"ANF: Delete File"
+			],
+			[
+				"packa ",
+				"Package Control: Remove Package"
+			],
+			[
+				"dis",
+				"Package Control: Disable Package"
+			],
+			[
+				"pa dis",
+				"Package Control: Disable Package"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"titl",
+				"Convert Case: Title Case"
+			],
+			[
+				"lower",
+				"Convert Case: Lower Case"
+			],
+			[
+				"git a",
+				"Git: Quick Add"
+			],
+			[
+				"git com",
+				"Git: Commit"
+			],
+			[
+				"tab",
+				"AlignTab"
+			],
+			[
+				"ta",
+				"Table Cleaner: Align Table"
+			],
+			[
+				"ena",
+				"Package Control: Enable Package"
+			],
+			[
+				"titel",
+				"Convert Case: Title Case"
+			],
+			[
+				"packe ope",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"title",
+				"Convert Case: Title Case"
+			],
+			[
+				"disa",
+				"Package Control: Disable Package"
+			],
+			[
+				"enable",
+				"Package Control: Enable Package"
+			],
+			[
+				"Title ca",
+				"Convert Case: Title Case"
+			],
+			[
+				"conlo",
+				"Convert Case: Lower Case"
+			],
+			[
+				"thesarus",
+				"Thesaurus search"
+			],
+			[
+				"",
+				"Anaconda: Autoformat PEP8 Errors"
+			],
+			[
+				"case",
+				"Convert Case: Upper Case"
+			],
+			[
+				"all",
+				"Table Cleaner: Align Table"
+			],
+			[
+				"al",
+				"Table Cleaner: Align Table"
+			],
+			[
+				"alli",
+				"Table Cleaner: Align Table"
+			],
+			[
+				"latextools",
+				"LaTeXTools: View PDF"
+			],
+			[
+				"dis c",
+				"Package Control: Discover Packages"
+			],
+			[
+				"en",
+				"Package Control: Enable Package"
+			],
+			[
+				"enabl",
+				"Package Control: Enable Package"
+			],
+			[
+				"disab",
+				"Package Control: Disable Package"
+			],
+			[
+				"ipython",
+				"SublimeREPL: Python - IPython"
+			],
+			[
+				"theme",
+				"Colorsublime: Install Theme"
+			],
+			[
+				"repl ip",
+				"SublimeREPL: Python - IPython"
+			],
+			[
+				"pac",
+				"Package Control: List Packages"
+			],
+			[
+				"de",
+				"LaTexTools: Delete temporary files"
+			],
+			[
+				"repl ipy",
+				"SublimeREPL: Python - IPython"
+			],
+			[
+				"pac ins",
+				"Package Control: Install Package"
+			],
+			[
+				"pac rem",
+				"Package Control: Remove Package"
+			],
+			[
+				"pa",
+				"Package Control: Install Package"
+			],
+			[
+				"packain",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"diff",
+				"Git: Diff"
+			],
+			[
+				"install pa",
+				"Package Control: Install Package"
+			],
+			[
+				"mark st",
+				"SublimeLinter: Choose Mark Style"
+			],
+			[
+				"linter sed",
+				"Preferences: SublimeLinter Settings – Default"
+			],
+			[
+				"keyspe",
+				"Package Control: Satisfy Dependencies"
+			],
+			[
+				"thes",
+				"Thesaurus search"
+			],
+			[
+				"install te",
+				"Colorsublime: Install Theme"
+			],
+			[
+				"insta",
+				"Colorsublime: Install Theme"
+			],
+			[
+				"install theme",
+				"Colorsublime: Install Theme"
+			],
+			[
+				"install the",
+				"Colorsublime: Install Theme"
+			],
+			[
+				"instal the",
+				"Colorsublime: Install Theme"
+			],
+			[
+				"anaco def",
+				"Anaconda: Goto object definition"
+			],
+			[
+				"lin show",
+				"SublimeLinter: Show All Errors"
+			],
+			[
+				"lint",
+				"SublimeLinter: Lint This View"
+			],
+			[
+				"vintage",
+				"Vintageous: Open .vintageousrc"
+			],
+			[
+				"packa insta",
+				"Package Control: Install Package"
+			],
+			[
+				"show cons",
+				"Show TODOs: Project and open files"
+			],
+			[
+				"snipit",
+				"Snippet: Italic Shape Text"
+			],
+			[
+				"pack dis",
+				"Package Control: Disable Package"
+			],
+			[
+				"packa dis",
+				"Package Control: Disable Package"
+			],
+			[
+				"linter sett",
+				"Preferences: SublimeLinter Settings – User"
+			],
+			[
+				"linter",
+				"SublimeLinter: Toggle Linter"
+			],
+			[
+				"new file",
+				"File: New File Relative to Current View"
+			],
+			[
+				"packa in",
+				"Package Control: Install Package"
+			],
+			[
+				"disa pac",
+				"Package Control: Disable Package"
+			],
+			[
+				"enable pa",
+				"Package Control: Enable Package"
+			],
+			[
+				"upda",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"allign",
+				"Table Cleaner: Align Table"
+			],
+			[
+				"check",
+				"Highlight Mistakes: Check Current File"
+			],
+			[
+				"packins",
+				"Package Control: Install Package"
+			],
+			[
+				"packaup",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"conver",
+				"Convert Case: Title Case"
+			],
+			[
+				"cam",
+				"Convert Case: camelCase"
+			]
+		],
+		"width": 570.0
+	},
+	"console":
+	{
+		"height": 184.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo"
+	],
+	"file_history":
+	[
+		"/Users/MarkelovIgor/git/biogeochemistry/PhD-proposal/python/all_data.py",
+		"/Users/MarkelovIgor/git/biogeochemistry/PhD-proposal/python/plotting_map.py",
+		"/var/folders/49/nrnz8x2x141g4w899z9k4clr0000gn/T/com.freron.MailMate/edit/130785/message.eml.markdown",
+		"/Users/MarkelovIgor/Desktop/Untitled.bib",
+		"/Users/MarkelovIgor/git/biogeochemistry/PhD-proposal/proposal.toc",
+		"/Users/MarkelovIgor/git/biogeochemistry/PhD-proposal/bibliography_back.bib",
+		"/Users/MarkelovIgor/git/biogeochemistry/PhD-proposal/PhD comp/notes.tex",
+		"/Users/MarkelovIgor/git/biogeochemistry/bioenergetics/competitive_exclusion_paper/competitive_exclusion.fff",
+		"/Users/MarkelovIgor/git/biogeochemistry/PhD-proposal/PhD comp/notes.toc",
+		"/Users/MarkelovIgor/git/biogeochemistry/bioenergetics/bioenergetics_paper/model.tex",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/User/LaTeXTools.sublime-settings",
+		"/Users/MarkelovIgor/git/biogeochemistry/PhD-proposal/proposal.bbl",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/LaTeX/Snippets/section-..-(section).sublime-snippet",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/LaTeX/Snippets/subsection-..-(sub).sublime-snippet",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/LaTeX/Snippets/subsubsection-..-(ssub).sublime-snippet",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/LaTeX/Snippets/Section.sublime-snippet",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/LaTeX Snippets/section.sublime-snippet",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/User/LaTeXing.sublime-settings",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/LaTeXing/LaTeXing.sublime-settings",
+		"/Users/MarkelovIgor/.vimrc",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/PhD-proposal/proposal.fff",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/competitive_exclusion_paper/competitive_exclusion.tex",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/competitive_exclusion_paper/competitive_exclusion.fff",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/exp_meas/pH.txt",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/exp_meas/Sulphate.txt",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/models_compare.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Roden 2008/data/SO4.txt",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/exp_meas/Acetate_mod.txt",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/competitive_exclusion_paper/bibliography.bib",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/thermodynamic_lib/extras.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/thermodynamic_lib/gibbs_ehergy_of_reaction.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/graphs.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/Watson_original_model.py",
+		"/Users/MarkelovIgor/Downloads/achemso-demo (1).tex",
+		"/Users/MarkelovIgor/Library/texmf/tex/latex/achemso/tex/latex/achemso/achemso.cls",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/competitive_exclusion_paper/achemso-demo.tex",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/competitive_exclusion_paper/achemso.cls",
+		"/usr/local/texlive/2016/texmf-dist/tex/latex/graphics/graphics.sty",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/bioenergetics_paper/model.tex",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/User/Default (OSX).sublime-keymap",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/bioenergetics_paper/bibliography.bib",
+		"/Users/MarkelovIgor/.zshrc",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/model_run.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/calibration/Watson_optimisation_model_class.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/models_compares.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/extra_methods.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/calibration/calibration_routine_class_original.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/calibration/Watson_original_model_calibration.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/build_graphs_all.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/build_graphs_compare.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/thermodynamic_lib/gibbs_energies_of_reactions.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Roden 2008/calibration/calibration_routine.py",
+		"/Users/MarkelovIgor/.ipython/profile_pyspark/startup/00-pyspark-setup.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/calibration/calibration_routine_class.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/exp_meas/CH4_all_updated.txt",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/exp_meas/CH4.txt",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/interpolation.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/build_graphs.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/matlab/graph.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/notes.md",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/m_balance.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/Jacobian.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/test.py",
+		"/Users/MarkelovIgor/.ipython/profile_default/ipython_config.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/calibration/model_run.py",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/User/Anaconda.sublime-settings",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/bioenergetics_paper/model.toc",
+		"/Users/MarkelovIgor/Dropbox/abl.txt",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Roden 2008/calibration/Roden_optimization_calibration.py",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/Anaconda/Anaconda.sublime-settings",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/calibration/Watson_optimisation_model.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Roden 2008/Roden_optimization_model_ode.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Roden 2008/Roden_optimization_model.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/matlab/ode_optimization_new_H2.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/__init__.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Roden 2008/Roden_original_model.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Roden 2008/ploting_routine.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Watson 2003/Watson_optimisation_model.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Roden 2008/extra_methods.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Roden 2008/Roden_original_model_ode.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Roden 2008/calibration/__init__.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/matlab/model_3g.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/matlab/ode_3g.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/thermodynamic_lib/extras.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/Roden 2008/original_model.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/model based on paper/optimisation_model.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/model based on paper/original_model.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/model based on paper/model_exp_opt.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/model based on paper/latex/Exp_model.tex",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/model based on paper/extra_methods.py",
+		"/Users/MarkelovIgor/Dropbox/Sublime/User/python3.sublime-build",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/matlab/model_optimization_new_H2.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model/model based on paper/exp_meas/Acetate.txt",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/User/SublimeLinter.sublime-settings",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/.gitconfig",
+		"/Users/MarkelovIgor/git-latexdiff",
+		"/tmp/git-latexdiff.Q6rkBB/diff.log",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/SublimeLinter/SublimeLinter.sublime-settings",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/User/KeyboardSpellCheck.sublime-settings",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/KeyboardSpellCheck/KeyboardSpellCheck.sublime-settings",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/bioenergetics.sublime-project",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/__init__.py",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/ode_optimization_new_H2.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model_3g.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/ode_3g.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/model_optimization_new_H2.m",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/GitGutter/GitGutter.sublime-settings",
+		"/Users/MarkelovIgor/Library/Application Support/Sublime Text 3/Packages/User/GitGutter.sublime-settings",
+		"/Users/MarkelovIgor/Dropbox/Sublime/User/.vintageousrc",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/bioenergetics_paper/test.tx",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/U exp paper/bibliography.bib",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/fun_optimization_new_H2.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/ode.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/fun_optimization_new.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/ode_optimization_new.m",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/bioenergetics_paper/img/statistical/sigma_root_1/distribution.mp4",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/results/PDF for dG.ipynb",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/results/results_optimization_no_shift.ipynb",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/results/.ipynb_checkpoints/results_optimization_no_shift-checkpoint.ipynb",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/bioenergetics_paper/img/statistical/sigma_root_10/distribution.mp4",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/bioenergetics_paper/old.tex",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/movie.m",
+		"/Users/MarkelovIgor/Dropbox/Sublime/User/latex_own.sublime-build",
+		"/Users/MarkelovIgor/Documents/git/biogeochemistry/bioenergetics/test.tex",
+		"/usr/local/texlive/2015/texmf-dist/tex/latex/mhchem/mhchem.sty"
+	],
+	"find":
+	{
+		"height": 29.0
+	},
+	"find_in_files":
+	{
+		"height": 106.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"path",
+			";",
+			"Raymond",
+			"raymond",
+			"Objective",
+			"objective",
+			"constrains",
+			"Hibbing:2010jw",
+			"Bioenergetic'",
+			"Finla",
+			"nutrient",
+			"bacter",
+			"scholarship",
+			"bacter",
+			"= \"",
+			"Fish status survey of Nordic lakes: effects of acidification, eutroph",
+			"Michalak",
+			"fraz",
+			"New York : Academic Press.",
+			"language",
+			"Leading indica- tors of trophic cascades",
+			"Concentration and mi- crobiological utilization of small organic molecules in the Scheldt Estuary, the Belgian coastal zone of the North Sea and the English Channel",
+			"Casper",
+			"Tranvik",
+			"Joura",
+			"Jour",
+			"On the methane paradox:",
+			"Carpenter",
+			"Brook",
+			"Blanch",
+			"Vincent",
+			"\\ldo",
+			"Sweerts",
+			"\\ldo",
+			"maavara2014worldwide",
+			"Jamialahmadi:1994tq",
+			"Boudreau",
+			"Boudreau1997",
+			"Saloranta2007",
+			"Michalak",
+			"Muller:jBBqHYbe",
+			"abstract =",
+			"abstract",
+			"Canfield:1993fe",
+			"Hoehler",
+			"Hoehler1994",
+			"perthousand",
+			"Schmid2007",
+			"Hastie",
+			"2016EGUGA..1814061H",
+			"wetzel2001limnology",
+			"McCulloch",
+			"McCulloch2013",
+			"FROE",
+			"Slomp2004",
+			"FROELICH:1979kg",
+			"Rezanezhad",
+			"Rezanezhad2014245",
+			"Lovley:1994ca",
+			"megonigal2003anaerobic",
+			"megonigal",
+			"megonigal2003anaerobic",
+			"Fraser",
+			"frazer",
+			"fras",
+			"frase",
+			"fraser",
+			"fraser2000microbial",
+			"date-",
+			"Schlesinger:1997ut",
+			"Schlesinger",
+			"Markov",
+			"Markov2010",
+			"Fern",
+			"bioenergetics",
+			"Bioenergetics",
+			"Michalak:",
+			"Michalak",
+			"plenty of light",
+			"energy limite",
+			"low energy",
+			"light",
+			"To date",
+			"Arndt2013",
+			"Humphrey1972",
+			"equation",
+			"\\ce{CO2}",
+			"\\ce{CH4}",
+			"modelling",
+			"\\epigraph{",
+			"etics\\'",
+			"appendices",
+			"journal",
+			"water column --- sediment",
+			"Bioenergetic\\'s",
+			"Cref{",
+			"Objective",
+			"img/",
+			"img/ph",
+			"citep",
+			"(",
+			"Results to date and expected outcomes",
+			"Northern",
+			"northern",
+			"more",
+			"on~\\cr",
+			"may",
+			"major",
+			"?",
+			"phosporus",
+			".",
+			"Casper",
+			"& ",
+			"&",
+			"X",
+			"c",
+			" ",
+			"K_{ex}",
+			"(end)",
+			"% section",
+			"% (fold)",
+			"autocite",
+			"citep",
+			"path",
+			"PATH",
+			"Ph.D",
+			"auth",
+			"As could be"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"np.exp",
+			"np.log",
+			"np.sqrt",
+			"self.K_",
+			"np.sqrt",
+			"np.log",
+			"np.exp",
+			")",
+			"G2b",
+			"G1b",
+			"R2b",
+			"R1b",
+			"R2b",
+			"R1b",
+			"del",
+			"R2",
+			"modeller",
+			"modeler",
+			"modelling"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 29.0
+	},
+	"input":
+	{
+		"height": 34.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.CppYCM.14":
+	{
+		"height": 0.0
+	},
+	"output.CppYCM.2":
+	{
+		"height": 0.0
+	},
+	"output.CppYCM.3":
+	{
+		"height": 0.0
+	},
+	"output.CppYCM.4":
+	{
+		"height": 0.0
+	},
+	"output.CppYCM.5":
+	{
+		"height": 0.0
+	},
+	"output.exec":
+	{
+		"height": 164.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.latextools":
+	{
+		"height": 243.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 92.0
+	},
+	"pinned_build_system": "Packages/User/conda3.sublime-build",
+	"project": "Vansjo.sublime-project",
+	"replace":
+	{
+		"height": 54.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"plo",
+				"python/plotting_map.py"
+			],
+			[
+				"bibi",
+				"bibliography.bib"
+			],
+			[
+				"propotex",
+				"proposal.tex"
+			],
+			[
+				"back",
+				"bibliography_back.bib"
+			],
+			[
+				"bib",
+				"bibliography.bib"
+			],
+			[
+				"notes",
+				"PhD comp/notes.tex"
+			],
+			[
+				"model",
+				"bioenergetics_paper/model.tex"
+			],
+			[
+				"ph",
+				"model/Watson 2003/exp_meas/pH.txt"
+			],
+			[
+				"h2",
+				"model/Watson 2003/exp_meas/H2.txt"
+			],
+			[
+				"graphs",
+				"model/Watson 2003/graphs.py"
+			],
+			[
+				"watson_original_model",
+				"model/Watson 2003/Watson_original_model.py"
+			],
+			[
+				"modelcp",
+				"model/Watson 2003/models_compare.py"
+			],
+			[
+				"sul",
+				"model/Watson 2003/exp_meas/Sulphate.txt"
+			],
+			[
+				"so",
+				"model/Roden 2008/data/SO4.txt"
+			],
+			[
+				"ace",
+				"model/Watson 2003/exp_meas/Acetate.txt"
+			],
+			[
+				"moder",
+				"model/Watson 2003/model_run.py"
+			],
+			[
+				"extraplo",
+				"model/Watson 2003/extra_plotting_methods.py"
+			],
+			[
+				"model_r",
+				"model/Watson 2003/model_run.py"
+			],
+			[
+				"thermoe",
+				"thermodynamic_lib/extras.py"
+			],
+			[
+				"thermod",
+				"thermodynamic_lib/gibbs_ehergy_of_reaction.py"
+			],
+			[
+				"extrplo",
+				"model/Watson 2003/extra_plotting_methods.py"
+			],
+			[
+				"comp",
+				"competitive_exclusion_paper/competitive_exclusion.tex"
+			],
+			[
+				"b",
+				"bioenergetics_paper/bibliography.bib"
+			],
+			[
+				"extra",
+				"thermodynamic_lib/extras.py"
+			],
+			[
+				"wa",
+				"model/Watson 2003/calibration/Watson_optimisation_model_class.py"
+			],
+			[
+				"grap",
+				"model/Watson 2003/graphs.py"
+			],
+			[
+				"run",
+				"model/Watson 2003/model_run.py"
+			],
+			[
+				"watsclas",
+				"model/Watson 2003/calibration/Watson_optimisation_model_class.py"
+			],
+			[
+				"watscalibra",
+				"model/Watson 2003/calibration/calibration_routine_class.py"
+			],
+			[
+				"watsca",
+				"model/Watson 2003/calibration/Watson_optimisation_model_class.py"
+			],
+			[
+				"model_",
+				"model/Watson 2003/model_run.py"
+			],
+			[
+				"waclas",
+				"model/Watson 2003/calibration/Watson_optimisation_model_class.py"
+			],
+			[
+				"watsonorig",
+				"model/Watson 2003/Watson_original_model.py"
+			],
+			[
+				"model_run",
+				"model/Watson 2003/model_run.py"
+			],
+			[
+				"modelcompa",
+				"model/Watson 2003/models_compares.py"
+			],
+			[
+				"compare",
+				"model/Watson 2003/models_compare.py"
+			],
+			[
+				"watson",
+				"model/Watson 2003/Watson_original_model.py"
+			],
+			[
+				"extra_methods",
+				"model/Watson 2003/extra_methods.py"
+			],
+			[
+				"build",
+				"model/Watson 2003/build_graphs_compare.py"
+			],
+			[
+				"modelc",
+				"model/Watson 2003/models_compare.py"
+			],
+			[
+				"gibbs",
+				"thermodynamic_lib/gibbs_energies_of_reactions.m"
+			],
+			[
+				"calibra",
+				"model/Watson 2003/calibration/calibration_routine_class.py"
+			],
+			[
+				"cali",
+				"model/Roden 2008/calibration/calibration_routine.py"
+			],
+			[
+				"build_graphs_all",
+				"model/Watson 2003/build_graphs_all.py"
+			],
+			[
+				"thermo",
+				"thermodynamic_lib/gibbs_ehergy_of_reaction.py"
+			],
+			[
+				"bui",
+				"model/Watson 2003/build_graphs_all.py"
+			],
+			[
+				"class",
+				"model/Watson 2003/calibration/Watson_optimisation_model_class.py"
+			],
+			[
+				"origi",
+				"model/Watson 2003/Watson_original_model.py"
+			],
+			[
+				"ch4",
+				"model/Watson 2003/exp_meas/CH4.txt"
+			],
+			[
+				"buil",
+				"model/Watson 2003/build_graphs_all.py"
+			],
+			[
+				"build_graphs_c",
+				"model/Watson 2003/build_graphs_compare.py"
+			],
+			[
+				"",
+				"model/Watson 2003/interpolation.py"
+			],
+			[
+				"gra",
+				"model/matlab/graph.m"
+			],
+			[
+				"wats",
+				"model/Watson 2003/Watson_original_model.py"
+			],
+			[
+				"note",
+				"model/Watson 2003/notes.md"
+			],
+			[
+				"calib",
+				"model/Watson 2003/calibration/calibration_routine_class.py"
+			],
+			[
+				"watsonori",
+				"model/Watson 2003/Watson_original_model.py"
+			],
+			[
+				"watco",
+				"model/Watson 2003/calibration/Watson_optimisation_model_class.py"
+			],
+			[
+				"watsoorig",
+				"model/Watson 2003/Watson_original_model.py"
+			],
+			[
+				"rode",
+				"model/Roden 2008/Roden_optimization_model_ode.py"
+			],
+			[
+				"rodeode",
+				"model/Roden 2008/Roden_optimization_model_ode.py"
+			],
+			[
+				"rodenopt",
+				"model/Roden 2008/Roden_optimization_model.py"
+			],
+			[
+				"extr",
+				"thermodynamic_lib/extras.py"
+			],
+			[
+				"the",
+				"thermodynamic_lib/gibbs_ehergy_of_reaction.py"
+			],
+			[
+				"rodenor",
+				"model/Roden 2008/Roden_original_model.py"
+			],
+			[
+				"ode_3g",
+				"model/matlab/ode_3g.m"
+			],
+			[
+				"ther",
+				"thermodynamic_lib/gibbs_ehergy_of_reaction.py"
+			],
+			[
+				"extras",
+				"thermodynamic_lib/extras.py"
+			],
+			[
+				"model3",
+				"model/matlab/model_3g.m"
+			],
+			[
+				"text",
+				"model/model based on paper/latex/Exp_model.tex"
+			],
+			[
+				"ori",
+				"model/model based on paper/original_model.py"
+			],
+			[
+				"modelexp",
+				"model/model based on paper/model_exp_opt.py"
+			],
+			[
+				"py",
+				"model/python/model.py"
+			],
+			[
+				"bi",
+				"bioenergetics_paper/bibliography.bib"
+			],
+			[
+				"reacti",
+				"thermodynamic_lib/gibbs_ehergy_of_reaction.py"
+			],
+			[
+				"modelte",
+				"bioenergetics_paper/model.tex"
+			],
+			[
+				"modeltex",
+				"bioenergetics_paper/model.tex"
+			],
+			[
+				"bio",
+				"bioenergetics_paper/bibliography.bib"
+			],
+			[
+				"ode",
+				"ode.m"
+			],
+			[
+				"th",
+				"thermodynamic_lib/gibbs_ehergy_of_reaction.py"
+			],
+			[
+				"ex",
+				"thermodynamic_lib/extras.py"
+			],
+			[
+				"myfun",
+				"myfun.m"
+			],
+			[
+				"gibbsene.m",
+				"thermodynamic_lib/gibbs_energies_of_reactions.m"
+			],
+			[
+				"exr",
+				"thermodynamic_lib/extras.py"
+			],
+			[
+				"biob",
+				"bioenergetics_paper/bibliography.bib"
+			],
+			[
+				"bbi",
+				"bioenergetics_paper/bibliography.bib"
+			],
+			[
+				"modet",
+				"bioenergetics_paper/model.tex"
+			],
+			[
+				"norm",
+				"norm_fun.m"
+			],
+			[
+				"mov",
+				"movie.m"
+			],
+			[
+				"table",
+				"thermodynamic_lib/gibbs_ehergy_of_reaction.py"
+			],
+			[
+				"mode",
+				"model.m"
+			],
+			[
+				"modete",
+				"paper/model.tex"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/Documents/git/biogeochemistry/bioenergetics/bioenergetics.sublime-project"
+			],
+			[
+				"rtm",
+				"~/Documents/git/rtm-i/RTM.sublime-project"
+			],
+			[
+				"lan",
+				"~/Documents/git/biogeochemistry/Langtjern/langtjern.sublime-project"
+			],
+			[
+				"notes",
+				"~/Documents/git/biogeochemistry/notes/notes.sublime-project"
+			],
+			[
+				"lang",
+				"~/Documents/git/biogeochemistry/Langtjern/langtjern.sublime-project"
+			],
+			[
+				"water",
+				"~/Documents/git/water-601/Water601.sublime-project"
+			],
+			[
+				"web",
+				"~/Documents/git/biogeochemistry/web_site/project.sublime-project"
+			],
+			[
+				"we",
+				"~/Documents/git/biogeochemistry/web_site/project.sublime-project"
+			],
+			[
+				"calibra",
+				"~/Documents/git/biogeochemistry/phreeqc_calibration_exp/phreeqc_calibration.sublime-project"
+			],
+			[
+				"phre",
+				"~/Documents/git/biogeochemistry/phreeqc_calibration_exp/phreeqc_calibration.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 273.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

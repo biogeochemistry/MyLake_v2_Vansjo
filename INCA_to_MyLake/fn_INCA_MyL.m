@@ -3,9 +3,11 @@ function [store_INCAP_input, vanem_INCAP_input, INCA_QC] = fn_INCA_MyL(run_INCA,
 % This script launches INCA, write a MyLake input from INCA, then launches MyLake. In a nutchell, this prepares the "land inputs" for MyLake
 
 %% Run INCA if INCA_run selected
-Working_folder = strcat('C:\OneDrive\PROJECT\O-12111_MARS\4.4_Northern_basin\Vansjø\Model\INCA_to_MyLake\INCA_P\Scenario_Runs\',run_ID,'\');
+% Working_folder = strcat('Model\INCA_to_MyLake\INCA_P\Scenario_Runs\',run_ID,'\');
+Working_folder = ['INCA_to_MyLake' filesep 'INCA_P' filesep 'Scenario_Runs' filesep run_ID filesep];
 
-if run_INCA == 1 
+
+if run_INCA == 1
     cd (Working_folder); % ##### must replace this by the directory list
    !INCA.bat
 else
@@ -15,7 +17,7 @@ end
 
 disp 'reading INCA output ...'
 
-%%  Load Reach 
+%%  Load Reach
 fileID = fopen('inca_out.dsd');% We'll use MATLAB's textscan to read blocks with Reach#{(Q)(SS)(TDP)(PP)(TP)(SRP)(Temp)}
 %             Q                                          SS     TDP PP                        TP SRP T
 formatSpec = '%f %*f %*f %*f %*f %*f %*f %*f %*f %*f %*f %f %*f %f %f %*f %*f %*f %*f %*f %*f %f %f %f %*f %*f %*f %*f'; % %*f ignors the float column
@@ -33,7 +35,7 @@ end
 fclose(fileID);
 
 % We single out reach 7 for use later on
-Reach_7 = Reach{4,1}; % 7VANEM is the reach going direct into Vanemfj. 
+Reach_7 = Reach{4,1}; % 7VANEM is the reach going direct into Vanemfj.
 
 no_days = length(Reach{1,1}{1,1}(:,1));
 m_start=[1983, 1, 1]; %[1983, 1, 4]
@@ -46,11 +48,12 @@ TDP_to_DOP = 0.2;
 
 %% Loading weather
 
-MyLake_weather_only = strcat('C:\OneDrive\PROJECT\O-12111_MARS\4.4_Northern_basin\Vansjø\Model\IO\vansjo_weather_only_',clim_ID,'.txt'); %  this is the weather template pre-made
+% MyLake_weather_only = strcat('Model\IO\vansjo_weather_only_',clim_ID,'.txt'); %  this is the weather template pre-made
+MyLake_weather_only = strcat('IO', filesep, 'vansjo_weather_only_', clim_ID, '.txt')
 
 %% Preparing MyL input
 % Thus  combine reaches 5Vaaler and 6Store together
-New_Reach = fn_INCA_reach_combination(Reach,2,3,7); % Reach array, ID1, ID2, number of variables in the reach file)., We combine reach 5 and 6 basically. 
+New_Reach = fn_INCA_reach_combination(Reach,2,3,7); % Reach array, ID1, ID2, number of variables in the reach file)., We combine reach 5 and 6 basically.
 
 inflow = New_Reach{1,1}.*sec_to_day; % m3/sec to m3/day
 inflowTemp = New_Reach{1,7};
@@ -66,6 +69,8 @@ inflowO = inflowC; %dummy
 %outflowO = O2zt(1, :)';
 
 INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO];
+
+save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/store_INCAP_input', 'MyLake_weather_only', 'INCA_input')
 
 INCA_QC_1 = INCA_input;
 
@@ -85,6 +90,7 @@ inflowDIC = inflowC; %dummy for MyLake TSA
 inflowO = inflowC; %dummy for MyLake TSA
 
 INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO];
+save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/vanem_INCAP_input', 'MyLake_weather_only', 'INCA_input')
 
 INCA_QC_2 = INCA_input;
 
