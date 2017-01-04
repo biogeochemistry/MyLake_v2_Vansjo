@@ -1,0 +1,62 @@
+-999	"MyLake DOCOMO model parameters for Vansjoen (Storefjorden), last modified 23.9.2014"			
+Parameter	Value	Min	Max	Unit
+dz	1	0.5	2	m
+Kz_ak	0.0322	NaN	NaN	(-)
+Kz_ak_ice	0.000898	NaN	NaN	(-)
+Kz_N0	0.0000022136	NaN	NaN	s-2
+C_shelter	0.3627	NaN	NaN	(-)
+latitude	59.42	NaN	NaN	dec.deg
+longitude	10.83	NaN	NaN	dec.deg
+alb_melt_ice	0.3	NaN	NaN	(-)
+alb_melt_snow	0.77	NaN	NaN	(-)
+PAR_sat	3.00E-05	1.00E-05	1.00E-04	mol m-2 s-1
+f_par	0.45	NaN	NaN	(-)
+beta_chl	0.015	0.005	0.045	m2 mg-1
+lambda_I	5	NaN	NaN	m-1
+lambda_s	15	NaN	NaN	m-1
+sed_sld	0.36	NaN	NaN	(m3/m3)
+I_scV 	1	NaN	NaN	(-)
+I_scT	0	NaN	NaN	deg C
+I_scC	1	NaN	NaN	(-)
+I_scS	1	1.1	1.9	(-)
+I_scTP	1	0.4	0.8	(-)
+I_scDOP	1	NaN	NaN	(-)
+I_scChl	1	NaN	NaN	(-)
+I_scDOC	1	NaN	NaN	(-)
+swa_b0	2.5	NaN	NaN	m-1
+swa_b1	1	0.8	1.3	m-1
+S_res_epi	3.30E-07	7.30E-08	1.82E-06	m d-1 (dry mass)
+S_res_hypo	3.30E-08	NaN	NaN	m d-1 (dry mass)
+H_sed	0.03	NaN	NaN	m
+Psat_Lang	2500	NaN	NaN	mg m-3
+Fmax_Lang	8000	5000	10000	mg kg-1
+Uz_Sz	0.3	0.1	1	m d-1
+Uz_Chl	0.16	0.05	0.5	m d-1
+Y_cp	1	NaN	NaN	(-)
+m_twty	0.2	0.1	0.3	d-1
+g_twty	1.5	1	1.5	d-1
+k_sed_twty	2.00E-04	NaN	NaN	d-1
+k_dop_twty	0	NaN	NaN	d-1
+P_half	0.2	0.2	2	mg m-3
+PAR_sat2	3.00E-05	NaN	NaN	mol m-2 s-1
+beta_chl2	0.015	NaN	NaN	m2 mg-1
+Uz_Chl2	0.16	NaN	NaN	m d-1
+m_twty2	0.2	NaN	NaN	d-1
+g_twty2	0.0	NaN	NaN	d-1
+P_half2	0.2	NaN	NaN	mg m-3
+oc_DOC	0.01	NaN	NaN	m2 mg-1
+qy_DOC	0.1	NaN	NaN	mg mol-1
+k_BOD	0.1	NaN	NaN	d-1
+k_SOD	500	NaN	NaN	mg m-2
+theta_BOD	1.047	NaN	NaN	(-)
+theta_BOD_ice	1.13	NaN	NaN	(-)
+open_slot	1	NaN	NaN	(-)
+open_slot	1	NaN	NaN	(-)
+theta_T	4	NaN	NaN	deg.celcius
+pH	5.2	NaN	NaN	(-)
+I_scDIC	2	NaN	NaN	(-)
+Mass_Ratio_C_Chl	100	NaN	NaN	(-)
+57	0.25	NaN NaN 57
+58	1.95	NaN NaN 58
+59	2.65	NaN NaN 59
+I_scO	1	NaN NaN (-)

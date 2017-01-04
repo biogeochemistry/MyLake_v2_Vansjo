@@ -1,0 +1,41 @@
+****************
+Sept 23 2014 RMC
+-Trying to recover what is going on in this folder
+-Removing two useless script placing them in useless folder
+-Renaming RMC_c_modelVAN_v12.m to MARS_storefj_MyL.m
+-Observations in obs folders are .dat comma separeted. Creating an xls file to write these out conveniently. On hold.
+-Copying MARS_storefj_MyL.m --> MARS_vanemfj_MyL.m and updating for Vanem
+-Creating vanem_obs folder, c&p content of store_obs in it
+-Running vanemfj ... crashed on NaNs at line 1141. Reactivated a few good lines I had written in Feb 2014. Runs but no model output.
+-Using INCAP inputs for both, works fine. 
+-simplifying input file names
+-creating xls files for input and init and extending sims using YLI's data
+-c&p weather from YLI 1983-1990, then using TSA weather. Will see that 
+-I used the vanem INCA subcatchment as input for vanemfj. Will have to combine with store outflow at some point. 
+-Unit conversion in INCA to Mylake: See notebook paper version 
+- TP widely overestimated, but input file works with INCA from Reach 7 and flow from Reach 4 (otherwise not enough stuff)
+- Both vanem and store works well with their own INCA inputs
+- Migrating to Langtjern folder structure ... store and vanem ok
+- extending parameter files to MyLake DOCOMO ... store and vanem ... 
+- extending input file for DIC and O (Chla, DIC, DOC, O) ... store and vanem ok
+-log off. 
+
+***************
+Sept 24 2014 RMC
+- creating a unique para file vansjø_para.txt for texting purposes
+- made 100s of mods on MyLake_single run and copied MyLake DOCOMO on top. 
+- convection and model_input.m are reverted back to old MyLake TSA because DIC and O2 not ready yet. 
+***************
+Sept 25 2014 RMC
+Putting data in there maybe ? yes ! using the "intersect" code from "target graphs"
+-plotter done for tp and chl
+***************
+October 10th RMC
+- Reordering the parameter script to match the input file
+- adding algual pool 1 parameter to the MCMC routine
+
+
+
+
+
+
