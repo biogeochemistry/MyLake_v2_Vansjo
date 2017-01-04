@@ -1,0 +1,48 @@
+System name: Vansjo_Hobol 4Kure 1983-2014
+Stream count: 1
+
+======================
+STREAM ID: 1
+======================
+Name: Vansjo_Hobol 4Kure 1983-2014
+Order: 0
+Initial values: 0.1 0 0 0 0 0 0 1 1 1 1 1 1 
+Parameters: 0 0.005 0.005 1 
+Reach count: 4
+Lake count: 0
+
+Reach ID: 4Kure
+-------------------
+Name: 4Kure
+Upstream boundary latitude: 0
+Upstream boundary longitude: 0
+Downstream boundary latitude: 59.684
+Downstream boundary longitude: 11.041
+Inputs: 
+
+Reach ID: 5Vaaler
+-------------------
+Name: 5Vaaler
+Upstream boundary latitude: 59.684
+Upstream boundary longitude: 11.041
+Downstream boundary latitude: 59.684
+Downstream boundary longitude: 11.041
+Inputs: 4Kure 
+
+Reach ID: 6Storefjord
+-------------------
+Name: 6Storefjord
+Upstream boundary latitude: 59.684
+Upstream boundary longitude: 11.041
+Downstream boundary latitude: 59.684
+Downstream boundary longitude: 11.041
+Inputs: 
+
+Reach ID: 7Vanemfjord
+-------------------
+Name: 7Vanemfjord
+Upstream boundary latitude: 59.684
+Upstream boundary longitude: 11.041
+Downstream boundary latitude: 59.684
+Downstream boundary longitude: 11.041
+Inputs: 

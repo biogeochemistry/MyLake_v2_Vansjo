@@ -1,0 +1,1 @@
+inca_p_cmd.exe -par mc.par -dat lb.dat -obs lb.obs -structure vansjo.ssf -lfert vansjo.lfd -out inca_out_456.dsd -errfile NULL & exit &

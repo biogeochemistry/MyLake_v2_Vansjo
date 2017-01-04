@@ -1,0 +1,33 @@
+4Kure
+,R²,N-S,RMSE,RE
+Flow,0.698127,0.678155,77.1103,-143.809
+Suspended sediment,0.340057,0.330415,164.729,-143.228
+Water column TDP,-999,-999,-999,-999
+Water column PP,-999,-999,-999,-999
+Macrophyte mass,-999,-999,-999,-999
+Epiphyte mass,-999,-999,-999,-999
+Water column TP,0.602046,0.573993,95.5889,-40.0525
+Water column SRP,-999,-999,-999,-999
+
+5Vaaler
+,R²,N-S,RMSE,RE
+Flow,-999,-999,-999,-999
+Suspended sediment,-999,-999,-999,-999
+Water column TDP,-999,-999,-999,-999
+Water column PP,-999,-999,-999,-999
+Macrophyte mass,-999,-999,-999,-999
+Epiphyte mass,-999,-999,-999,-999
+Water column TP,-999,-999,-999,-999
+Water column SRP,-999,-999,-999,-999
+
+6Storefjord
+,R²,N-S,RMSE,RE
+Flow,-999,-999,-999,-999
+Suspended sediment,-999,-999,-999,-999
+Water column TDP,-999,-999,-999,-999
+Water column PP,-999,-999,-999,-999
+Macrophyte mass,-999,-999,-999,-999
+Epiphyte mass,-999,-999,-999,-999
+Water column TP,-999,-999,-999,-999
+Water column SRP,-999,-999,-999,-999
+

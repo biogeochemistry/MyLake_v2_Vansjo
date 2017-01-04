@@ -1,0 +1,1 @@
+inca_p_cmd.exe -par Vansjo_1995-2070.par -dat Vansjo_BaseExt_1995-2070_4KURE.dat -spatial Vansjo_1995-2070.sts -structure Vansjo_1995-2070.ssf -errfile NULL
