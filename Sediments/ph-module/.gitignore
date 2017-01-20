@@ -1,0 +1,10 @@
+/CMakeFiles/
+*sublime*
+*.cmake
+/CMakeCache.txt
+/main
+/Makefile
+*.o
+*.mexmaci64
+/cmake/
+/build/
