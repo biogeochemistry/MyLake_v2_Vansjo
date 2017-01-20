@@ -414,7 +414,7 @@ diatomz = diatom0;
 
 
 
-F_IM = FIM0; %initial VOLUME fraction of inorganic particles of total dry sediment solids
+% F_IM = FIM0; %initial VOLUME fraction of inorganic particles of total dry sediment solids
 % Fokema
 %CDOMz = CDOM0;
 %CO2z = NaN*zeros(1,length(zz));
@@ -424,10 +424,10 @@ F_IM = FIM0; %initial VOLUME fraction of inorganic particles of total dry sedime
 %Pdz_store: %diss. inorg. P in sediment pore water (mg m-3)
 %Psz_store: %P conc. in inorganic sediment particles (mg kg-1 dry w.)
 
-[Pdz_store, Psz_store]=Ppart(VolFrac,TP0_sed-(Chl0_sed./Y_cp)-DOP0,Psat_L,Fmax_L_sed,rho_sed,Fstable);
+% [Pdz_store, Psz_store]=Ppart(VolFrac,TP0_sed-(Chl0_sed./Y_cp)-DOP0,Psat_L,Fmax_L_sed,rho_sed,Fstable);
 
 %Chlsz_store: %Chla conc. in organic sediment particles (mg kg-1 dry w.)
-Chlsz_store = Chl0_sed./(rho_org*F_sed_sld*(1-F_IM)); %(mg kg-1 dry w.)
+% Chlsz_store = Chl0_sed./(rho_org*F_sed_sld*(1-F_IM)); %(mg kg-1 dry w.)
 
 
 % assume linear initial temperature profile in sediment (4 deg C at the bottom)
@@ -753,25 +753,25 @@ for i = 1:length(tt)
     Fi_ad = tridiag_HAD_v11([NaN; Kz],w_s,Vz,Az,dz,dt); %Tridiagonal matrix for advection and diffusion
 
 
-    dSz_inorg = rho_sed*S_resusp.*F_IM.*(-diff([Az; 0])./Vz);  % Dry inorganic particle resuspension source from sediment (kg m-3 day-1)
-    if resuspension_enabled == 0
-        dSz_inorg = 0;
-    end
+    % dSz_inorg = rho_sed*S_resusp.*F_IM.*(-diff([Az; 0])./Vz);  % Dry inorganic particle resuspension source from sediment (kg m-3 day-1)
+    % if resuspension_enabled == 0
+    dSz_inorg = 0;
+    % end
     Sz = Fi_ad \ (Sz + dSz_inorg);           %Solving new suspended solids profile (advection + diffusion)
 
-    dPP = dSz_inorg.*Psz_store;  % PP resuspension source from sediment((kg m-3 day-1)*(mg kg-1) = mg m-3 day-1)
-    if resuspension_enabled == 0
-        dPP = 0;
-    end
+    % dPP = dSz_inorg.*Psz_store;  % PP resuspension source from sediment((kg m-3 day-1)*(mg kg-1) = mg m-3 day-1)
+    % if resuspension_enabled == 0
+    dPP = 0;
+    % end
     PPz = Fi_ad \ (PPz + dPP);     %Solving new suspended particulate inorganic P profile (advection + diffusion)
 
     %Chlorophyll, Group 1+2 resuspension (now divided 50/50 between the groups)
-    dSz_org = rho_org*S_resusp.*(1-F_IM).*(-diff([Az; 0])./Vz);  %Dry organic particle resuspension source from sediment (kg m-3 day-1)
-    if resuspension_enabled == 0
-        dSz_org = 0;
-    end
-    dChl_res = dSz_org.*Chlsz_store;  %Chl a resuspension source from sediment resusp. ((kg m-3 day-1)*(mg kg-1) = mg m-3 day-1);
-
+    % dSz_org = rho_org*S_resusp.*(1-F_IM).*(-diff([Az; 0])./Vz);  %Dry organic particle resuspension source from sediment (kg m-3 day-1)
+    % if resuspension_enabled == 0
+    dSz_org = 0;
+    % end
+    % dChl_res = dSz_org.*Chlsz_store;  %Chl a resuspension source from sediment resusp. ((kg m-3 day-1)*(mg kg-1) = mg m-3 day-1);
+    dChl_res = 0;
     %Chlorophyll, Group 1
     % dChl_growth = Chlz .* R_bioz; %Chl a growth source
     % dChl_growth = 0; % NOTE: Moved to reaction module
@@ -886,18 +886,19 @@ for i = 1:length(tt)
     %DIC partitioning in water
     [CO2z,CO2frac] = carbonequilibrium(DICz,Tz,pH);
 
+
     % CO2 production by degraded DOC
-    CO2z = max(0,CO2z + 1.375.*(-O2_diff));
+    % CO2z = max(0,CO2z + 1.375.*(-O2_diff));
     DICz = CO2z./CO2frac;
     %TC = Tz(1); %For monitoring only
 
     %Carbon dioxide surface flux
-    if(IceIndicator==0)
-        [CO2z(1),surfflux,CO2_eq,K0,CO2_ppm] = carbondioxideflux(CO2z(1),C_shelter^(1/3)*Wt(i,6),Wt(i,5),Tz(1),dz,tt(i));
-        DICz(1) = CO2z(1)/CO2frac(1);
-    else
-        surfflux=0;
-    end
+    % if(IceIndicator==0)
+    %     [CO2z(1),surfflux,CO2_eq,K0,CO2_ppm] = carbondioxideflux(CO2z(1),C_shelter^(1/3)*Wt(i,6),Wt(i,5),Tz(1),dz,tt(i));
+    %     DICz(1) = CO2z(1)/CO2frac(1);
+    % else
+    %     surfflux=0;
+    % end
 
     DICz = Fi \ DICz; %Solving new DIC profile (diffusion)
 
@@ -927,89 +928,89 @@ for i = 1:length(tt)
         ksw = 0;
     end
 
-    PwwFrac=ksw*(-diff([Az; 0]))./Vz; %fraction between resuspended porewater and water layer volumes
+    % PwwFrac=ksw*(-diff([Az; 0]))./Vz; %fraction between resuspended porewater and water layer volumes
     %PwwFrac=(((1-F_sed_sld)/F_sed_sld)*S_resusp.*(-diff([Az; 0]))./Vz); %fraction between resuspended porewater and water layer volumes
-    EquP1 = (1-PwwFrac).*Pz + PwwFrac.*Pdz_store; %Mixture of porewater and water
-    dPW_up = EquP1-Pz; %"source/sink" for output purposes
+    % EquP1 = (1-PwwFrac).*Pz + PwwFrac.*Pdz_store; %Mixture of porewater and water
+    % dPW_up = EquP1-Pz; %"source/sink" for output purposes
 
     %-water to porewater
-    PwwFrac=ksw./((1-F_sed_sld)*H_sed); %NEW testing 3.8.05; fraction between resuspended (incoming) water and sediment layer volumes
+    % PwwFrac=ksw./((1-F_sed_sld)*H_sed); %NEW testing 3.8.05; fraction between resuspended (incoming) water and sediment layer volumes
     %PwwFrac=S_resusp./(F_sed_sld*H_sed); %fraction between resuspended (incoming) water and sediment layer volumes
-    EquP2 = PwwFrac.*Pz + (1-PwwFrac).*Pdz_store; %Mixture of porewater and water
-    dPW_down = EquP2-Pdz_store; %"source/sink" for output purposes
+    % EquP2 = PwwFrac.*Pz + (1-PwwFrac).*Pdz_store; %Mixture of porewater and water
+    % dPW_down = EquP2-Pdz_store; %"source/sink" for output purposes
 
     %-update concentrations
-    Pz = EquP1;
-    Pdz_store=EquP2;
+    % Pz = EquP1;
+    % Pdz_store=EquP2;
 
 
     %Calculate the thickness ratio of newly settled net sedimentation and mix these
     %two to get new sediment P concentrations in sediment (taking into account particle resuspension)
-    delPP_inorg=NaN*ones(Nz,1); %initialize
-    delC_inorg=NaN*ones(Nz,1); %initialize
-    delC_org=NaN*ones(Nz,1); %initialize
-    delC_org2=NaN*ones(Nz,1); %initialize % NEW!!! for chlorophyll group 2
-    delC_org3=NaN*ones(Nz,1); % initialize for DOC floculation
+    % delPP_inorg=NaN*ones(Nz,1); %initialize
+    % delC_inorg=NaN*ones(Nz,1); %initialize
+    % delC_org=NaN*ones(Nz,1); %initialize
+    % delC_org2=NaN*ones(Nz,1); %initialize % NEW!!! for chlorophyll group 2
+    % delC_org3=NaN*ones(Nz,1); % initialize for DOC floculation
 
-    delA=diff([Az; 0]); %Area difference for layer i (OBS: negative)
-    meanA=0.5*(Az+[Az(2:end); 0]);
+    % delA=diff([Az; 0]); %Area difference for layer i (OBS: negative)
+    % meanA=0.5*(Az+[Az(2:end); 0]);
 
-    %sedimentation is calculated from "Funnelling-NonFunnelling" difference
-    %(corrected 03.10.05)
-    delPP_inorg(1)=(0 - PPz(1)*delA(1)./meanA(1))./(dz/(dt*w_s) + 1);
-    delC_inorg(1)=(0 - Sz(1)*delA(1)./meanA(1))./(dz/(dt*w_s) + 1);
-    delC_org(1)=(0 - Chlz(1)*delA(1)./meanA(1))./(dz/(dt*w_chl) + 1);
-    delC_org2(1)= (0 - Cz(1)*delA(1)./meanA(1))./(dz/(dt*w_chl_2) + 1); % NEW!!!  for chlorophyll group 2
-    delC_org3(1)= (0 - Sz(1)*delA(1)./meanA(1))./(dz/(dt*w_s) + 1); % NEW!!!  for DOC floculates
+    % %sedimentation is calculated from "Funnelling-NonFunnelling" difference
+    % %(corrected 03.10.05)
+    % delPP_inorg(1)=(0 - PPz(1)*delA(1)./meanA(1))./(dz/(dt*w_s) + 1);
+    % delC_inorg(1)=(0 - Sz(1)*delA(1)./meanA(1))./(dz/(dt*w_s) + 1);
+    % delC_org(1)=(0 - Chlz(1)*delA(1)./meanA(1))./(dz/(dt*w_chl) + 1);
+    % delC_org2(1)= (0 - Cz(1)*delA(1)./meanA(1))./(dz/(dt*w_chl_2) + 1); % NEW!!!  for chlorophyll group 2
+    % delC_org3(1)= (0 - Sz(1)*delA(1)./meanA(1))./(dz/(dt*w_s) + 1); % NEW!!!  for DOC floculates
 
-    for ii=2:Nz
-        delPP_inorg(ii)=(delPP_inorg(ii-1) - PPz(ii)*delA(ii)./meanA(ii))./(dz/(dt*w_s) + 1); %(mg m-3)
-        delC_inorg(ii)=(delC_inorg(ii-1) - Sz(ii)*delA(ii)./meanA(ii))./(dz/(dt*w_s) + 1); %(kg m-3)
-        delC_org(ii)=(delC_org(ii-1) - Chlz(ii)*delA(ii)./meanA(ii))./(dz/(dt*w_chl) + 1); %(mg m-3)
-        delC_org2(ii)=(delC_org2(ii-1) - Cz(ii)*delA(ii)./meanA(ii))./(dz/(dt*w_chl_2) + 1); %(mg m-3) % NEW!!! for chlorophyll group 2
-        delC_org3(ii)=(delC_org3(ii-1) - Sz(ii)*delA(ii)./meanA(ii))./(dz/(dt*w_s) + 1); %(mg m-3) % NEW!!! for DOC floculation
-    end
+    % for ii=2:Nz
+    %     delPP_inorg(ii)=(delPP_inorg(ii-1) - PPz(ii)*delA(ii)./meanA(ii))./(dz/(dt*w_s) + 1); %(mg m-3)
+    %     delC_inorg(ii)=(delC_inorg(ii-1) - Sz(ii)*delA(ii)./meanA(ii))./(dz/(dt*w_s) + 1); %(kg m-3)
+    %     delC_org(ii)=(delC_org(ii-1) - Chlz(ii)*delA(ii)./meanA(ii))./(dz/(dt*w_chl) + 1); %(mg m-3)
+    %     delC_org2(ii)=(delC_org2(ii-1) - Cz(ii)*delA(ii)./meanA(ii))./(dz/(dt*w_chl_2) + 1); %(mg m-3) % NEW!!! for chlorophyll group 2
+    %     delC_org3(ii)=(delC_org3(ii-1) - Sz(ii)*delA(ii)./meanA(ii))./(dz/(dt*w_s) + 1); %(mg m-3) % NEW!!! for DOC floculation
+    % end
 
-    H_netsed_catch=max(0, (Vz./(-diff([Az; 0]))).*delC_inorg./rho_sed - F_IM.*S_resusp); %inorganic(m day-1, dry), always positive
-    H_netsed_org=max(0, (Vz./(-diff([Az; 0]))).*(delC_org+delC_org2+delC_org3)./(F_OM*Y_cp*rho_org) - (1-F_IM).*S_resusp);
+    % H_netsed_catch=max(0, (Vz./(-diff([Az; 0]))).*delC_inorg./rho_sed - F_IM.*S_resusp); %inorganic(m day-1, dry), always positive
+    % H_netsed_org=max(0, (Vz./(-diff([Az; 0]))).*(delC_org+delC_org2+delC_org3)./(F_OM*Y_cp*rho_org) - (1-F_IM).*S_resusp);
     %organic (m day-1, dry), always positive,  NEW!!! for chlorophyll group 2
 
-    H_totsed=H_netsed_org + H_netsed_catch;  %total (m day-1), always positive
+    % H_totsed=H_netsed_org + H_netsed_catch;  %total (m day-1), always positive
 
-    F_IM_NewSed=F_IM;
-    inx=find(H_totsed>0);
-    F_IM_NewSed(inx)=H_netsed_catch(inx)./H_totsed(inx); %volume fraction of inorganic matter in net settling sediment
+    % F_IM_NewSed=F_IM;
+    % inx=find(H_totsed>0);
+    % F_IM_NewSed(inx)=H_netsed_catch(inx)./H_totsed(inx); %volume fraction of inorganic matter in net settling sediment
 
-    NewSedFrac = min(1, H_totsed./(F_sed_sld*H_sed)); %Fraction of newly fallen net sediment of total active sediment depth, never above 1
-    NewSedFrac_inorg = min(1, H_netsed_catch./(F_IM.*F_sed_sld*H_sed)); %Fraction of newly fallen net inorganic sediment of total active sediment depth, never above 1
-    NewSedFrac_org = min(1, H_netsed_org./((1-F_IM).*F_sed_sld*H_sed)); %Fraction of newly fallen net organic sediment of total active sediment depth, never above 1
+    % NewSedFrac = min(1, H_totsed./(F_sed_sld*H_sed)); %Fraction of newly fallen net sediment of total active sediment depth, never above 1
+    % NewSedFrac_inorg = min(1, H_netsed_catch./(F_IM.*F_sed_sld*H_sed)); %Fraction of newly fallen net inorganic sediment of total active sediment depth, never above 1
+    % NewSedFrac_org = min(1, H_netsed_org./((1-F_IM).*F_sed_sld*H_sed)); %Fraction of newly fallen net organic sediment of total active sediment depth, never above 1
 
-    if resuspension_enabled == 0
-        NewSedFrac = 0;
-        NewSedFrac_inorg = 0;
-        NewSedFrac_org = 0;
-    end
+    % if resuspension_enabled == 0
+    %     NewSedFrac = 0;
+    %     NewSedFrac_inorg = 0;
+    %     NewSedFrac_org = 0;
+    % end
 
     %Psz_store: %P conc. in inorganic sediment particles (mg kg-1 dry w.)
-    Psz_store = (1-NewSedFrac_inorg).*Psz_store + NewSedFrac_inorg.*PPz./Sz; %(mg kg-1)
+    % Psz_store = (1-NewSedFrac_inorg).*Psz_store + NewSedFrac_inorg.*PPz./Sz; %(mg kg-1)
 
     %Update counters
-    Sedimentation_counter = Sedimentation_counter + Vz.*(delC_inorg + (delC_org+delC_org2+delC_org3)./(F_OM*Y_cp)); %Inorg.+Org. (kg)
-    Resuspension_counter = Resuspension_counter + Vz.*(dSz_inorg + dSz_org); %Inorg.+Org. (kg)
+    % Sedimentation_counter = Sedimentation_counter + Vz.*(delC_inorg + (delC_org+delC_org2+delC_org3)./(F_OM*Y_cp)); %Inorg.+Org. (kg)
+    % Resuspension_counter = Resuspension_counter + Vz.*(dSz_inorg + dSz_org); %Inorg.+Org. (kg)
 
     %Chlsz_store (for group 1+2): %Chl a conc. in sediment particles (mg kg-1 dry w.)
-    Chlsz_store = (1-NewSedFrac_org).*Chlsz_store + NewSedFrac_org.*F_OM*Y_cp; %(mg kg-1)
+    % Chlsz_store = (1-NewSedFrac_org).*Chlsz_store + NewSedFrac_org.*F_OM*Y_cp; %(mg kg-1)
     %Subtract degradation to P in pore water
-    Chlz_seddeg = k_twty * Chlsz_store .* theta_m.^(Tz-20);
-    Chlsz_store = Chlsz_store - Chlz_seddeg;
-    Pdz_store=Pdz_store + Chlz_seddeg .* (rho_org*F_sed_sld*(1-F_IM))./Y_cp;
+    % Chlz_seddeg = k_twty * Chlsz_store .* theta_m.^(Tz-20);
+    % Chlsz_store = Chlsz_store - Chlz_seddeg;
+    % Pdz_store=Pdz_store + Chlz_seddeg .* (rho_org*F_sed_sld*(1-F_IM))./Y_cp;
 
     %== P-partitioning in sediment==
-    VolFrac=1./(1+(1-F_sed_sld)./(F_sed_sld*F_IM)); %volume fraction: inorg sed. / (inorg.sed + pore water)
-    TIP_sed =rho_sed*VolFrac.*Psz_store + (1-VolFrac).*Pdz_store; %total inorganic P in sediment (mg m-3)
-    [Pdz_store, Psz_store]=Ppart(VolFrac,TIP_sed,Psat_L,Fmax_L_sed,rho_sed,Fstable);
-    %calculate new VOLUME fraction of inorganic particles of total dry sediment
-    F_IM=min(1,((k_twty *(1-F_IM).*theta_m.^(Tz-20)) + F_IM)).*(1-NewSedFrac) + F_IM_NewSed.*NewSedFrac;
+    % VolFrac=1./(1+(1-F_sed_sld)./(F_sed_sld*F_IM)); %volume fraction: inorg sed. / (inorg.sed + pore water)
+    % TIP_sed =rho_sed*VolFrac.*Psz_store + (1-VolFrac).*Pdz_store; %total inorganic P in sediment (mg m-3)
+    % [Pdz_store, Psz_store]=Ppart(VolFrac,TIP_sed,Psat_L,Fmax_L_sed,rho_sed,Fstable);
+    % %calculate new VOLUME fraction of inorganic particles of total dry sediment
+    % F_IM=min(1,((k_twty *(1-F_IM).*theta_m.^(Tz-20)) + F_IM)).*(1-NewSedFrac) + F_IM_NewSed.*NewSedFrac;
 
 
 
@@ -1582,7 +1583,7 @@ for i = 1:length(tt)
             Chlz,               'Chlz';
             Cz,                 'Cz';
             convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 94971),   'DOPz';
-            H_netsed_catch,     'H_netsed_catch';
+            % H_netsed_catch,     'H_netsed_catch';
             convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8),   'O2z';
             convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 32219),'DOCz'; % TODO: for M [ (CH2O)200(NH3)20(H3PO4) ] =  6443.8016 g/mol
             convert_mg_per_qubic_m_to_umol_per_qubic_cm(Pz, 94971),      'Pz';
@@ -1751,14 +1752,14 @@ for i = 1:length(tt)
     Qzt_sed(:,i) = Qz_sed./(60*60*24*dt); %(J m-2 day-1) -> (W m-2)
     lambdazt(:,i) = lambdaz_wtot_avg;
 
-    surfaceflux(1,i) = surfflux; %Carbon dioxide surface flux
-    CO2_eqt(1,i) = CO2_eq;       %Carbon dioxide equilibrium concentration
-    K0t(:,i) = K0;               %Dissolved carbon doxide solubility coefficient
-    CO2_ppmt(:,i) = CO2_ppm;
+    % surfaceflux(1,i) = surfflux; %Carbon dioxide surface flux
+    % CO2_eqt(1,i) = CO2_eq;       %Carbon dioxide equilibrium concentration
+    % K0t(:,i) = K0;               %Dissolved carbon doxide solubility coefficient
+    % CO2_ppmt(:,i) = CO2_ppm;
 
-    O2fluxt(1,i) = O2flux;       %Oxygen surface flux
-    O2_eqt(1,i) = O2_eq;         %Oxygen equilibrium concentration
-    K0_O2t(1,i) = K0_O2;         %Dissolved oxygen solubility coefficient
+    % O2fluxt(1,i) = O2flux;       %Oxygen surface flux
+    % O2_eqt(1,i) = O2_eq;         %Oxygen equilibrium concentration
+    % K0_O2t(1,i) = K0_O2;         %Dissolved oxygen solubility coefficient
     dO2Chlt(:,i) = dO2_Chl;
     dO2BODt(:,i) = dO2_BOD;
     %dO2SODt(:,i) = dO2_SOD;
@@ -1766,26 +1767,26 @@ for i = 1:length(tt)
     testi1t(:,i) = O2_old;
     testi2t(:,i) = O2_diff; testi3t(:,i) = O2_new;
 
-    P3zt_sed(:,i,1) = Pdz_store; %diss. P conc. in sediment pore water (mg m-3)
-    P3zt_sed(:,i,2) = Psz_store; %P conc. in inorganic sediment particles (mg kg-1 dry w.)
-    P3zt_sed(:,i,3) = Chlsz_store; %Chl conc. in organic sediment particles (mg kg-1 dry w.)
-    P3zt_sed(:,i,4) = F_IM; %VOLUME fraction of inorganic particles of total dry sediment
-    P3zt_sed(:,i,5) = Sedimentation_counter; %H_netsed_inorg; %Sedimentation (m/day) of inorganic particles of total dry sediment
-    P3zt_sed(:,i,6) = Resuspension_counter; %H_netsed_org; %Sedimentation (m/day) of organic particles of total dry sediment
-    P3zt_sed(:,i,7) = NewSedFrac; %(monitoring variables)
+    % P3zt_sed(:,i,1) = Pdz_store; %diss. P conc. in sediment pore water (mg m-3)
+    % P3zt_sed(:,i,2) = Psz_store; %P conc. in inorganic sediment particles (mg kg-1 dry w.)
+    % P3zt_sed(:,i,3) = Chlsz_store; %Chl conc. in organic sediment particles (mg kg-1 dry w.)
+    % P3zt_sed(:,i,4) = F_IM; %VOLUME fraction of inorganic particles of total dry sediment
+    % P3zt_sed(:,i,5) = Sedimentation_counter; %H_netsed_inorg; %Sedimentation (m/day) of inorganic particles of total dry sediment
+    % P3zt_sed(:,i,6) = Resuspension_counter; %H_netsed_org; %Sedimentation (m/day) of organic particles of total dry sediment
+    % P3zt_sed(:,i,7) = NewSedFrac; %(monitoring variables)
 
-    P3zt_sed_sc(:,i,1) = dPW_up; %(mg m-3 day-1) change in Pz due to exchange with pore water
-    P3zt_sed_sc(:,i,2) = dPP; %(mg m-3 day-1)
-    P3zt_sed_sc(:,i,3) = dChl_res; %(mg m-3 day-1)
+    % P3zt_sed_sc(:,i,1) = dPW_up; %(mg m-3 day-1) change in Pz due to exchange with pore water
+    % P3zt_sed_sc(:,i,2) = dPP; %(mg m-3 day-1)
+    % P3zt_sed_sc(:,i,3) = dChl_res; %(mg m-3 day-1)
 
-    His(1,i) = Hi;
-    His(2,i) = (rho_fw/rho_snow)*WEQs;
-    His(3,i) = Hsi;
-    His(4,i) = Tice;
-    His(5,i) = Wt(i,3);
-    His(6,i) = rho_snow;
-    His(7,i) = IceIndicator;
-    His(8,i) = HFrazil; %NEW!!!
+    % His(1,i) = Hi;
+    % His(2,i) = (rho_fw/rho_snow)*WEQs;
+    % His(3,i) = Hsi;
+    % His(4,i) = Tice;
+    % His(5,i) = Wt(i,3);
+    % His(6,i) = rho_snow;
+    % His(7,i) = IceIndicator;
+    % His(8,i) = HFrazil; %NEW!!!
 
     %Original MixStat matrix in v.1.2.1b
 
@@ -1833,11 +1834,11 @@ for i = 1:length(tt)
     %             disp('Large inflow!!')
     %         end
     MixStat(14,i) = 1e-6*Iflw*(Pz(1)+PPz(1)+DOPz(1)+Chlz(1)+Cz(1)); %total P outflow (kg day-1)
-    MixStat(15,i) = sum(1e-6*Vz.*(delPP_inorg + delC_org)); %total P sink due to sedimentation (kg day-1)
-    MixStat(16,i) = sum(1e-6*(dPP+dPW_up).*Vz); %Internal P loading (kg day-1, excluding Chla)
-    MixStat(17,i) = sum(1e-6*dChl_res.*Vz); %Internal Chla loading (kg day-1)(resuspension 50/50 between the two groups)
-    MixStat(18,i)= sum(1e-6*Vz.*((Pz+PPz+DOPz+Chlz+Cz) - TP0)); %Net P change kg
-    MixStat(19,i)= sum(1e-6*((dPP+dPW_up-delPP_inorg+dChl_res-delC_org).*Vz - (1-F_sed_sld)*H_sed*(-diff([Az; 0])).*dPW_down)); %Net P flux from sediment kg
+    % MixStat(15,i) = sum(1e-6*Vz.*(delPP_inorg + delC_org)); %total P sink due to sedimentation (kg day-1)
+    % MixStat(16,i) = sum(1e-6*(dPP+dPW_up).*Vz); %Internal P loading (kg day-1, excluding Chla)
+    % MixStat(17,i) = sum(1e-6*dChl_res.*Vz); %Internal Chla loading (kg day-1)(resuspension 50/50 between the two groups)
+    % MixStat(18,i)= sum(1e-6*Vz.*((Pz+PPz+DOPz+Chlz+Cz) - TP0)); %Net P change kg
+    % MixStat(19,i)= sum(1e-6*((dPP+dPW_up-delPP_inorg+dChl_res-delC_org).*Vz - (1-F_sed_sld)*H_sed*(-diff([Az; 0])).*dPW_down)); %Net P flux from sediment kg
     MixStat(20,i) = 1e-6*Iflw*(Iflw_TP-(Iflw_Chl+Iflw_C)./Y_cp-Iflw_DOP-Fstable*Iflw_S); %total algae-available P inflow (kg day-1)
     if (IceIndicator == 1)
         MixStat(21,i) = NaN;
@@ -2004,13 +2005,13 @@ MyLake_results = {
     Daily_BB2t,             'Daily_BB2t';
     Daily_BB3t,             'Daily_BB3t';
     Daily_PBt,              'Daily_PBt';
-    surfaceflux,            'surfaceflux ' ;
-    CO2_eqt,                'CO2_eqt ' ;
-    CO2_ppmt,               'CO2_ppmt ' ;
-    K0t,                    'K0t ' ;
-    O2fluxt,                'O2fluxt ' ;
-    O2_eqt,                 'O2_eqt ' ;
-    K0_O2t,                 'K0_O2t ' ;
+    % surfaceflux,            'surfaceflux ' ;
+    % CO2_eqt,                'CO2_eqt ' ;
+    % CO2_ppmt,               'CO2_ppmt ' ;
+    % K0t,                    'K0t ' ;
+    % O2fluxt,                'O2fluxt ' ;
+    % O2_eqt,                 'O2_eqt ' ;
+    % K0_O2t,                 'K0_O2t ' ;
     dO2Chlt,                'dO2Chlt ' ;
     dO2BODt,                'dO2BODt ' ;
     dfloc,                  'dfloc ' ;
@@ -2018,115 +2019,6 @@ MyLake_results = {
     testi2t,                'testi2t ';
     };
 
-
-
-
-    % Use this only if size of results more than 2 Gb.
-    if false
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Qst_MyLake','Qst')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Kzt_MyLake','Kzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Tzt_MyLake','Tzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Czt_MyLake','Czt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Szt_MyLake','Szt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Pzt_MyLake','Pzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Chlzt_MyLake','Chlzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/PPzt_MyLake','PPzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/DOPzt_MyLake','DOPzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/DOCzt_MyLake','DOCzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/DICzt_MyLake','DICzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/CO2zt_MyLake','CO2zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/O2zt_MyLake','O2zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/d_O2zt_MyLake','d_O2zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/int_R_O2dz_MyLake','int_R_O2dz')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/NO3zt_MyLake','NO3zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/NH4zt_MyLake','NH4zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/SO4zt_MyLake','SO4zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/HSzt_MyLake','HSzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/H2Szt_MyLake','H2Szt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Fe2zt_MyLake','Fe2zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Ca2zt_MyLake','Ca2zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/pHzt_MyLake','pHzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/CH4zt_MyLake','CH4zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Fe3zt_MyLake','Fe3zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Al3zt_MyLake','Al3zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/SiO4zt_MyLake','SiO4zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/SiO2zt_MyLake','SiO2zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/diatomzt_MyLake','diatomzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/O2_diffzt_MyLake','O2_diffzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/O2_sat_relt_MyLake','O2_sat_relt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/O2_sat_abst_MyLake','O2_sat_abst')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Qzt_sed_MyLake','Qzt_sed')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/lambdazt_MyLake','lambdazt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/P3zt_sed_MyLake','P3zt_sed')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/P3zt_sed_sc_MyLake','P3zt_sed_sc')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/His_MyLake','His')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/MixStat_MyLake','MixStat')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/CDOMzt_MyLake','CDOMzt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/DOCzt1_MyLake','DOCzt1')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/DOCzt2_MyLake','DOCzt2')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/DOCzt3_MyLake','DOCzt3')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/DOC1tfrac_MyLake','DOC1tfrac')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/DOC2tfrac_MyLake','DOC2tfrac')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/DOC3tfrac_MyLake','DOC3tfrac')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Daily_BB1t_MyLake','Daily_BB1t')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Daily_BB2t_MyLake','Daily_BB2t')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Daily_BB3t_MyLake','Daily_BB3t')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Daily_PBt_MyLake','Daily_PBt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/surfaceflux_MyLake','surfaceflux')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/CO2_eqt_MyLake','CO2_eqt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/CO2_ppmt_MyLake','CO2_ppmt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/K0t_MyLake','K0t')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/O2fluxt_MyLake','O2fluxt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/O2_eqt_MyLake','O2_eqt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/K0_O2t_MyLake','K0_O2t')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/dO2Chlt_MyLake','dO2Chlt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/dO2BODt_MyLake','dO2BODt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/dfloc_MyLake','dfloc')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/testi1t_MyLake','testi1t')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/testi2t_MyLake','testi2t')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/O2_sediment_zt','O2_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/FeOH3_sediment_zt','FeOH3_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/FeOOH_sediment_zt','FeOOH_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/SO4_sediment_zt','SO4_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Fe2_sediment_zt','Fe2_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/H2S_sediment_zt','H2S_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/HS_sediment_zt','HS_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/FeS_sediment_zt','FeS_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/OM_sediment_zt','OM_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/OMb_sediment_zt','OMb_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/OMS_sediment_zt','OMS_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/AlOH3_sediment_zt','AlOH3_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/S0_sediment_zt','S0_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/S8_sediment_zt','S8_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/FeS2_sediment_zt','FeS2_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/PO4_sediment_zt','PO4_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/PO4adsa_sediment_zt','PO4adsa_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/PO4adsb_sediment_zt','PO4adsb_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/NO3_sediment_zt','NO3_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/NH4_sediment_zt','NH4_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/H_sediment_zt','H_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Ca2_sediment_zt','Ca2_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Ca3PO42_sediment_zt','Ca3PO42_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/H_sediment_zt','H_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/OH_sediment_zt','OH_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/CO2_sediment_zt','CO2_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/CO3_sediment_zt','CO3_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/HCO3_sediment_zt','HCO3_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/NH3_sediment_zt','NH3_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/H2CO3_sediment_zt','H2CO3_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/pH_sediment_zt','pH_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/deltaO2','deltaO2')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/deltaPz','deltaPz')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/w_chl','w_chl')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Mass_Ratio_C_Chl','Mass_Ratio_C_Chl')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/z_sediment','z_sediment')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/R_values_sediment_zt','R_values_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/Bioirrigation_sediment_zt','Bioirrigation_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/MyLake_params','MyLake_params')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/sediment_params','sediment_params')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/SWI_fluxes_sediment_zt','SWI_fluxes_sediment_zt')
-        save('/Volumes/Backups/sed_archives/w_01/s1b/sediment_integrated_over_depth_fluxes_t','sediment_integrated_over_depth_fluxes_t')
-    end
 
 runtime=toc;
 

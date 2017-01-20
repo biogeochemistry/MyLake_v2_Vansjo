@@ -53,7 +53,7 @@ dt = 1.0;
 % (1) Reading exisitng INCA outputs to prepare MyLake input
 % (0) You are running only MyLake, inputs alrady exist in the IO folder
 if use_INCA == 1;
-   [store_INCAP_input,vanem_INCAP_input, INCA_QC]=fn_INCA_MyL(run_INCA, run_ID, clim_ID);
+   [store_INCAP_input,vanem_INCAP_input, INCA_QC]=fn_INCA_MyL(run_INCA, run_ID, clim_ID, m_start, m_stop);
 else
     INCA_QC = 0;
 end
@@ -223,10 +223,13 @@ if ischar(use_INCA) % output for response surfaces run
     
 end
 
+% cd ..;cd ..;cd ..;cd ..;
+
 if isnumeric(use_INCA)
     
-    file_path = ['obs' filesep 'vanem_obs' filesep 'TOTP.dat']
-    load file_path % these are just C&P of vanem ...
+
+    cd 'obs'; cd 'vanem_obs';
+    load 'TOTP.dat' % these are just C&P of vanem ...
     temp=(Pzt(zinx,:)+PPzt(zinx,:)+DOPzt(zinx,:)+Chlzt(zinx,:))'; % total P is computed
     TP_mod_all = [tlims mean(temp,2)]; % this is the mean of depth-averaged time series
     TP_obs = TOTP; % retreiving the observations
@@ -236,8 +239,8 @@ if isnumeric(use_INCA)
     TP_mod = MatchedData (:,3); % fn output
     clear MatchedData
     
-    file_path = ['obs' filesep 'vanem_obs' filesep 'Cha.dat']
-    load file_path % these are just C&P of vanem ...
+    % file_path = ['obs' filesep 'vanem_obs' filesep 'Cha.dat']
+    load 'Cha.dat' % these are just C&P of vanem ...
     temp=(Chlzt(zinx,:)+Czt(zinx,:))'; % this is the mean of depth-averaged time series
     chl_mod_all=[tlims mean(temp,2)];
     chl_obs = Cha;
@@ -247,8 +250,8 @@ if isnumeric(use_INCA)
     chl_mod = MatchedData (:,3); % fn output
     clear MatchedData
     
-    file_path = ['obs' filesep 'vanem_obs' filesep 'PO4.dat']
-    load file_path % these are just C&P of vanem ...
+    % file_path = ['obs' filesep 'vanem_obs' filesep 'PO4.dat']
+    load 'PO4.dat' % these are just C&P of vanem ...
     temp=Pzt(zinx,:)'; % this is the mean of depth-averaged time series
     PO4_mod_all=[tlims mean(temp,2)];
     PO4_obs = PO4;
@@ -258,8 +261,8 @@ if isnumeric(use_INCA)
     PO4_mod = MatchedData (:,3); % fn output
     clear MatchedData
     
-    file_path = ['obs' filesep 'vanem_obs' filesep 'Part.dat']
-    load file_path % these are just C&P of vanem ...
+    % file_path = ['obs' filesep 'vanem_obs' filesep 'Part.dat']
+    load 'Part.dat' % these are just C&P of vanem ...
     temp=PPzt(zinx,:)'; % this is the mean of depth-averaged time series
     Part_mod_all=[tlims mean(temp,2)];
     Part_obs = Part;

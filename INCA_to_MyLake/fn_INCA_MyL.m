@@ -1,4 +1,4 @@
-function [store_INCAP_input, vanem_INCAP_input, INCA_QC] = fn_INCA_MyL(run_INCA, run_ID, clim_ID)
+function [store_INCAP_input, vanem_INCAP_input, INCA_QC] = fn_INCA_MyL(run_INCA, run_ID, clim_ID, m_start, m_stop)
 
 % This script launches INCA, write a MyLake input from INCA, then launches MyLake. In a nutchell, this prepares the "land inputs" for MyLake
 
@@ -38,8 +38,8 @@ fclose(fileID);
 Reach_7 = Reach{4,1}; % 7VANEM is the reach going direct into Vanemfj.
 
 no_days = length(Reach{1,1}{1,1}(:,1));
-m_start=[1983, 1, 1]; %[1983, 1, 4]
-m_stop = m_start + no_days;
+% m_start=[1983, 1, 1]; %[1983, 1, 4]
+% m_stop = m_start + no_days;
 
 %% Unit conversion
 sec_to_day = 60*60*24;
@@ -54,22 +54,34 @@ MyLake_weather_only = strcat('IO', filesep, 'vansjo_weather_only_', clim_ID, '.t
 %% Preparing MyL input
 % Thus  combine reaches 5Vaaler and 6Store together
 New_Reach = fn_INCA_reach_combination(Reach,2,3,7); % Reach array, ID1, ID2, number of variables in the reach file)., We combine reach 5 and 6 basically.
-zo = zeros(no_days,1);
+zero_input = zeros(no_days,1);
 
 inflow = New_Reach{1,1}.*sec_to_day; % m3/sec to m3/day
 inflowTemp = New_Reach{1,7};
-inflowC = zeros(no_days,1);
+inflowC = zero_input;
 inflowS = New_Reach{1,2}.*liter_to_cube; % mg/L to mg/m3
 inflowTP = New_Reach{1,5}.*liter_to_cube; % mg/L to mg/m3
 inflowDOP = New_Reach{1,3}.*liter_to_cube*TDP_to_DOP; % warning this gives a high humber. is TDP really DIP ? Factor 5
-inflowChl = inflowC; % still fixed
-inflowDOC = inflowC + 3000; % still fixed
-inflowDIC = inflowC; %dummy
-inflowO = zo; %dummy
-%outflowDIC = DICzt(1, :)';
-%outflowO = O2zt(1, :)';
+inflowChl = zero_input; % still fixed
+inflowDOC = zero_input + 3000; % still fixed
+inflowDIC = zero_input; %dummy
+inflowO = zero_input; %dummy
+InflowNO3 = zero_input;
+InflowNH4 = zero_input;
+InflowSO4 = zero_input;
+InflowFe2 = zero_input;
+InflowCa2 = zero_input;
+InflowpH = zero_input;
+InflowCH4 = zero_input;
+InflowFe3 = zero_input;
+InflowAl3 = zero_input;
+InflowSiO4 = zero_input;
+InflowSiO2 = zero_input;
+Inflowdiatom = zero_input;
 
-INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO zo zo zo zo zo zo zo zo zo zo zo zo];
+
+
+INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO InflowNO3 InflowNH4 InflowSO4 InflowFe2 InflowCa2 InflowpH InflowCH4 InflowFe3 InflowAl3 InflowSiO4 InflowSiO2 Inflowdiatom];
 
 save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/store_INCAP_input', 'MyLake_weather_only', 'INCA_input')
 
@@ -81,17 +93,29 @@ merge_l_b_inputs(MyLake_weather_only,INCA_input,store_INCAP_input)
 %% Writing Vanemfj.
 inflow = Reach_7{1,1}.*sec_to_day;
 inflowTemp = Reach_7{1,7};
-inflowC = zeros(no_days,1);
+inflowC =zero_input;
 inflowS = Reach_7{1,2}.*liter_to_cube;
 inflowTP = Reach_7{1,5}.*liter_to_cube; %
 inflowDOP = Reach_7{1,3}.*liter_to_cube*TDP_to_DOP; % warning this gives a high humber. is TDP really DIP ?
-inflowChl = inflowC;
-inflowDOC = inflowC + 3000;
-inflowDIC = inflowC; %dummy for MyLake TSA
-inflowO = inflowC; %dummy for MyLake TSA
+inflowChl = zero_input;
+inflowDOC = zero_input + 3000;
+inflowDIC = zero_input; %dummy for MyLake TSA
+inflowO = zero_input; %dummy for MyLake TSA
+InflowNO3 = zero_input;
+InflowNH4 = zero_input;
+InflowSO4 = zero_input;
+InflowFe2 = zero_input;
+InflowCa2 = zero_input;
+InflowpH = zero_input;
+InflowCH4 = zero_input;
+InflowFe3 = zero_input;
+InflowAl3 = zero_input;
+InflowSiO4 = zero_input;
+InflowSiO2 = zero_input;
+Inflowdiatom = zero_input;
 
 
-INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO zo zo zo zo zo zo zo zo zo zo zo zo];
+INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO InflowNO3 InflowNH4 InflowSO4 InflowFe2 InflowCa2 InflowpH InflowCH4 InflowFe3 InflowAl3 InflowSiO4 InflowSiO2 Inflowdiatom];
 save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/vanem_INCAP_input', 'MyLake_weather_only', 'INCA_input')
 
 INCA_QC_2 = INCA_input;

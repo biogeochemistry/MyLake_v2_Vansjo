@@ -1,9 +1,8 @@
-clear all; 					% range
 tic
 MyLake_setPriors_for_MCMC % prepares parameter files
 
 run_INCA = 0; % 1- MyLake will run INCA, 0- No run
-use_INCA = 1; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
+use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
 
 no_runs = 1 % 26/7/2016 ... did not find no_run so I added it again
 
@@ -36,11 +35,11 @@ for current_run = 1:no_runs
         run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
         clim_ID = run_ID
         if use_INCA == 1
-            m_start=[2014, 12, 29]; % for scenario runs
-            m_stop=[2014, 12, 31]; % for scenario runs
+            m_start=[2011, 1, 1]; % for scenario runs
+            m_stop=[2011, 12, 31]; % for scenario runs
         else
-            m_start=[1983, 1, 4]; % for calibration with INCA = 0
-            m_stop=[2014, 5, 31]; % for calibration with INCA = 0
+            m_start=[2011, 1, 1]; % for calibration with INCA = 0
+            m_stop=[2011, 12, 31]; % for calibration with INCA = 0
         end
 
     elseif current_run == 2;

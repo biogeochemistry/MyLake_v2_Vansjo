@@ -15,12 +15,12 @@ function [CO2aq,CO2frac] = carbonequilibrium(DICz,Tz,pH)
 %C_acid      acid carbon (mg/m^3)
 %C_basic     basic carbon (mg/m^3)
 
-%Water density polynomial 
+%Water density polynomial
 
 global ies80;
 
 density = (polyval(ies80,max(0,Tz))+min(Tz,0))*0.001; %kg/l
-% Note: in equations of density it is assumed that every supercooled degree lowers density by 
+% Note: in equations of density it is assumed that every supercooled degree lowers density by
 % 1 kg m-3 due to frazil ice formation (probably no practical meaning, but included for "safety")
 
 DICz = 0.001.*DICz; %mg/l
