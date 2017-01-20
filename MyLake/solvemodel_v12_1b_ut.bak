@@ -6,26 +6,22 @@
 %
 % Main module
 % Code checked by TSA, xx.xx.200x
-% Last modified by TSA, 21.08.2007 
+% Last modified by TSA, 21.08.2007
 
-%% SIMPLE VERSION BY KOJI BASED ON TUOMO'S SUGGESION SEE [SIMPLE] 2011-07-26
-% main differences:
-% no inflow (switch)
-% light attenuation coefficients (lambdaz) TODO
-% does not touch depth profile except for temperature (no
-% advection- or diffusion-effect on concentrations
-% wind-mixing does not affect concentrations (should be already
-% homogenious
-% uses convection_v12_1a_simple.m
-% no use of Ppart()
-%% 
+% Modified to include Fokema-module by Kai Rasmus. 16.5.2007
+% Modified to include the latest Fokema module 30.12.2010 by PK
+% New matrices: DOCzt1,DOCzt2,DOCzt3,Daily_BB1t,Daily_BB2t,Daily_BB3t,Daily_PBt
 
-function [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,Qzt_sed,lambdazt,...
-        P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt] = ...
-    solvemodel_v12_1b_simple(M_start,M_stop,Initfile,Initsheet,Inputfile,Inputsheet,Parafile,Parasheet,varargin);
+% New DIC variable 29.12.2010 (incl. inflow, convection, diffusion) by PK
+% New O2 variable 10.2.2011 by PK
 
-% warning off MATLAB:fzero:UndeterminedSyntax %suppressing a warning message
+function [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,...
+        P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,O2fluxt,CO2_eqt,K0t,O2_eqt,K0_O2t,...
+        CO2_ppmt,dO2Chlt,dO2BODt,dO2SODt,testi1t,testi2t,testi3t,...
+         sediment_results] = ...
+    solvemodel_v12_1b_ut(M_start,M_stop,Initfile,Initsheet,Inputfile,Inputsheet,Parafile,Parasheet,varargin)
 
+warning off MATLAB:fzero:UndeterminedSyntax %suppressing a warning message
 % Inputs (to function)
 %       M_start     : Model start date [year, month, day]
 %       M_stop      : Model stop date [year, month, day]
@@ -42,6 +38,8 @@ function [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,Qzt_sed,lam
 %       In_DOPz  : Initial dissolved organic P profile read from initial profiles file (mg m-3)
 %       In_Chlz : Initial chlorophyll (group 1) profile read from initial profiles file (mg m-3)
 %       In_DOCz  : Initial DOC profile read from initial profiles file (mg m-3)
+%       In_DICz  : Initial DIC profile read from initial profiles file (mg m-3) (PK)
+%       In_O2z  : Initial oxygen profile read from initial profiles file (mg m-3) (PK)
 %       In_TPz_sed  : Initial total P profile in the sediment compartments read from initial profiles file (mg m-3)
 %       In_Chlz_sed : Initial chlorophyll profile  (groups 1+2) in the sediment compartments read from initial profiles file (mg m-3)
 %       In_FIM      : Initial profile of volume fraction of inorganic matter in the sediment solids (dry weight basis)
@@ -62,10 +60,15 @@ function [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,Qzt_sed,lam
 %		Czt	: Predicted chlorophyll (group 2) profile (tt * zz) (-)
 %		Szt	: Predicted passive sedimenting tracer (or suspended inorganic matter) profile (tt * zz) (kg m-3)=(g L-1)
 %		Pzt	: Predicted dissolved inorganic phosphorus profile (tt * zz) (mg m-3)
-%		Chlzt	    : Predicted chlorophyll (group 1) profile (tt * zz) (mg m-3)
+%		Chlzt	    : Predicted chlorophyll (group 1) profileo (tt * zz) (mg m-3)
 %		PPzt	    : Predicted particulate inorganic phosphorus profile (tt * zz) (mg m-3)
 %		DOPzt	    : Predicted dissolved organic phosphorus profile (tt * zz) (mg m-3)
 %		DOCzt	    : Predicted dissolved organic carbon (DOC) profile (tt * zz) (mg m-3)
+%		DICzt	    : Predicted dissolved inorganic carbon (DIC) profile (tt * zz) (mg m-3) (PK)
+%		CO2zt	    : Predicted dissolved carbon dioxide profile (tt * zz) (mg m-3) (PK)
+%		O2zt	    : Predicted dissolved oxygen profile (tt * zz) (mg m-3) (PK)
+%       O2_sat_rel  : Predicted relative oxygen saturation (PK)
+%       O2_sat_abs  : Predicted absolute oxygen saturation (PK)
 %		Qz_sed      : Predicted  sediment-water heat flux (tt * zz) (W m-2, normalised to lake surface area)
 %       lambdazt    : Predicted average total light attenuation coefficient down to depth z (tt * zz) (m-1)
 %       P3zt_sed    : Predicted P conc. in sediment for P (mg m-3), PP(mg kg-1 dry w.) and Chl (mg kg-1 dry w.) (tt * zz * 3)
@@ -74,32 +77,39 @@ function [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,Qzt_sed,lam
 %       DoF, DoM    : Days of freezing and melting (model timestep number)
 %       MixStat     : Temporary variables used in model testing, see code (N * tt)
 
+% Fokema outputs
+%       CDOMzt      : Coloured dissolved organic matter absorption m-1
+%                   : (tt * zz)
+
 % These variables are still global and not transferred by functions
-global ies80;
+global ies80 O2_diffzt;
 
 tic
-% $$$ disp(['Running MyLake v.1.2.1b from ' datestr(datenum(M_start)) ' to ' datestr(datenum(M_stop)) ' ...']);
+disp(['Running MyLake-DOCOMO from ' datestr(datenum(M_start)) ' to ' datestr(datenum(M_stop)) ' ...']);
 
 % ===Switches===
 snow_compaction_switch=1;       %snow compaction: 0=no, 1=yes
-river_inflow_switch=0;          %river inflow: 0=no, 1=yes SIMPLE
-sediment_heatflux_switch=0;     %heatflux from sediments: 0=no, 1=yes
+river_inflow_switch=1;          %river inflow: 0=no, 1=yes
+sediment_heatflux_switch=1;     %heatflux from sediments: 0=no, 1=yes
 selfshading_switch=1;           %light attenuation by chlorophyll a: 0=no, 1=yes
-tracer_switch=0;               %simulate tracers:  0=no, 1=yes SIMPLE
+tracer_switch=1;                %simulate tracers:  0=no, 1=yes
+matsedlab_sediments_module = 1;           % MATSEDLAB sediment module
+%fokema
+photobleaching=1;               %photo bleaching: 0=TSA model, 1=FOKEMA model
 % ==============
 
 dt=1.0; %model time step = 1 day (DO NOT CHANGE!)
 
 if (nargin>8) %if optional command line parameter input is used 
-% $$$     disp('Bypassing input files...Running with input data & parameters given on command line');
-    [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,...
+    disp('Bypassing input files...Running with input data & parameters given on command line');
+    [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,...
             Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names]...
         = deal(varargin{:});
 else
     %Read input data
-    [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,...
+    [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,...
             Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names]...
-        = modelinputs_v12_1b(M_start,M_stop,Initfile,Initsheet,Inputfile,Inputsheet,Parafile,Parasheet,dt);
+        = modelinputs_v12(M_start,M_stop,Initfile,Initsheet,Inputfile,Inputsheet,Parafile,Parasheet,dt);
  end
 
 load albedot1.mat; %load albedot1 table, in order to save execution time
@@ -132,6 +142,23 @@ I_scTP = Phys_par(20); %scaling factor for inflow concentration of total P (-)
 I_scDOP = Phys_par(21); %scaling factor for inflow concentration of diss. organic P (-)
 I_scChl = Phys_par(22); %scaling factor for inflow concentration of Chl a (-)
 I_scDOC = Phys_par(23); %scaling factor for inflow concentration of DOC  (-)
+I_scDIC = Bio_par(32);   %Scaling factor for inflow concentration of DOC  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+
+I_scNOO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
 
 
 % Unpack the more site specific parameter values from input array "Bio_par"
@@ -144,8 +171,8 @@ H_sed = Bio_par(5);          %height of active sediment layer (m, wet mass)
 Psat_L = Bio_par(6);           %Half saturation parameter for Langmuir isotherm
 Fmax_L = Bio_par(7);    %Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
 
-w_s = Bio_par(8);            %settling velocity for S (m day-1)
-w_chl = Bio_par(9);          %settling velocity for Chl a (m day-1)
+w_s = Bio_par(8);              %settling velocity for S (m day-1)  
+w_chl = Bio_par(9);            %settling velocity for Chl a (m day-1)
 Y_cp = Bio_par(10);            %yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)
 m_twty = Bio_par(11);          %loss rate (1/day) at 20 deg C
 g_twty = Bio_par(12);          %specific growth rate (1/day) at 20 deg C
@@ -164,6 +191,26 @@ P_half_2 = Bio_par(21);         %Half saturation growth P level (mg/m3)
 oc_DOC = Bio_par(22);           %Optical cross-section of DOC (m2/mg DOC)
 qy_DOC = Bio_par(23);           %Quantum yield (mg DOC degraded/mol quanta)
 %===========
+
+% Parameters for oxygen
+
+k_BOD = Bio_par(24);            %Organic decomposition rate (1/d)
+k_SOD = Bio_par(25);            %Sedimentary oxygen demand (mg m-2 d-1)
+theta_bod = Bio_par(26);        %Temperature adjustment coefficient for BOD, T ? 10 °C
+theta_bod_ice = Bio_par(27);    %Temperature adjustment coefficient for BOD, T < 10 °C
+theta_sod = Bio_par(28);        %Temperature adjustment coefficient for SOD, T ? 10 °C
+theta_sod_ice = Bio_par(29);    %Temperature adjustment coefficient for SOD, T < 10 °C
+BOD7 = Bio_par(30);             %Biological oxygen demand (mg m-3)
+
+% Parameters for dissolved inorganic carbon
+
+pH = Bio_par(31);               %Lake water pH
+Mass_Ratio_C_Chl = Bio_par(33); % Fixed empirical ratio C:Chl (mass/mass)
+I_scDIC = Bio_par(32);          %Scaling factor for inflow concentration of DOC  (-)
+SS_C = Bio_par(34);             % Carbon fraction in H_netsed_catch
+density_org_H_nc = Bio_par(35); % Density of organic fraction in H_netsed_catch [g cm-3]
+density_inorg_H_nc = Bio_par(36);% Density of inorganic fraction in H_netsed_catch [g cm-3]
+
 
 % ====== Other variables/parameters not read from the input file:
 
@@ -215,12 +262,61 @@ Chlzt = zeros(Nz,length(tt));
 PPzt = zeros(Nz,length(tt));
 DOPzt = zeros(Nz,length(tt));
 DOCzt = zeros(Nz,length(tt));
+DICzt = zeros(Nz,length(tt));
+CO2zt = zeros(Nz,length(tt));
+O2zt = zeros(Nz,length(tt));
+
+NO3zt  = zeros(Nz,length(tt));
+NH4zt  = zeros(Nz,length(tt));
+SO4zt  = zeros(Nz,length(tt));
+HSzt  = zeros(Nz,length(tt));
+H2Szt  = zeros(Nz,length(tt));
+Fe2zt  = zeros(Nz,length(tt));
+Ca2zt  = zeros(Nz,length(tt));
+pHzt  = zeros(Nz,length(tt));
+CH4zt  = zeros(Nz,length(tt));
+Fe3zt  = zeros(Nz,length(tt));
+Al3zt  = zeros(Nz,length(tt));
+SiO4zt  = zeros(Nz,length(tt));
+SiO2zt  = zeros(Nz,length(tt));
+diatomzt  = zeros(Nz,length(tt));
+
+O2_diffzt = zeros(Nz,length(tt));
+O2_sat_relt = zeros(Nz,length(tt));
+O2_sat_abst = zeros(Nz,length(tt));
 Qzt_sed = zeros(Nz,length(tt));
 lambdazt = zeros(Nz,length(tt));
 P3zt_sed = zeros(Nz,length(tt),4); %3-D
 P3zt_sed_sc = zeros(Nz,length(tt),3); %3-D
 His = zeros(8,length(tt)); %NEW!!!
-MixStat = zeros(10,length(tt)); 
+MixStat = zeros(23,length(tt)); 
+% Fokema 
+CDOMzt=zeros(Nz,length(tt));
+DOCzt1=zeros(Nz,length(tt)); %Fokema-model subpool 1
+DOCzt2=zeros(Nz,length(tt)); %Fokema-model subpool 2
+DOCzt3=zeros(Nz,length(tt)); %Fokema-model subpool 3
+DOC1tfrac=zeros(Nz,length(tt)); %Fokema-model subpool 1
+DOC2tfrac=zeros(Nz,length(tt)); %Fokema-model subpool 2 fraction
+DOC3tfrac=zeros(Nz,length(tt)); %Fokema-model subpool 3 fraction
+Daily_BB1t=zeros(Nz,length(tt)); %Fokema-model subpool 1 daily bacterial decomposition
+Daily_BB2t=zeros(Nz,length(tt)); %Fokema-model subpool 2 daily bacterial decomposition
+Daily_BB3t=zeros(Nz,length(tt)); %Fokema-model subpool 3 daily bacterial decomposition
+Daily_PBt=zeros(Nz,length(tt)); %Fokema-model daily photobleaching
+
+surfaceflux = zeros(1,length(tt)); %CO2 surface flux
+CO2_eqt = zeros(1,length(tt));     %CO2 equilibrium concentration
+CO2_ppmt = zeros(1,length(tt));    %CO2 fraction in air
+K0t = zeros(1,length(tt));         %CO2 solubility coefficient
+
+O2fluxt = zeros(1,length(tt));     %oxygen surface flux
+O2_eqt = zeros(1,length(tt));      %O2 equilibrium concentration
+K0_O2t = zeros(1,length(tt));      %O2 solubility coefficient
+dO2Chlt = zeros(Nz,length(tt));    %Oxygen change due to phytoplankton (mg m-3))
+dO2BODt = zeros(Nz,length(tt));    %Oxygen consumption due to BOD (mg m-3))
+dO2SODt = zeros(Nz,length(tt));    %Oxygen consumption due to SOD (mg m-3))
+
+testi1t = zeros(Nz,length(tt));
+testi2t = zeros(Nz,length(tt));testi3t = zeros(Nz,length(tt));
 
 % Initial profiles
 
@@ -234,11 +330,32 @@ TP0 = interp1(In_Z,In_TPz,zz+dz/2);	% Initial total P distribution (incl. DOP & 
 DOP0 = interp1(In_Z,In_DOPz,zz+dz/2);	% Initial dissolved organic P distribution (mg m-3)
 Chl0 = interp1(In_Z,In_Chlz,zz+dz/2);	% Initial chlorophyll (group 2) distribution (mg m-3)
 DOC0 = interp1(In_Z,In_DOCz,zz+dz/2);	% Initial DOC distribution (mg m-3)
+DIC0 = interp1(In_Z,In_DICz,zz+dz/2);   % Initial DIC distribution (mg m-3)
+O20 = interp1(In_Z,In_O2z,zz+dz/2);   % Initial oxygen distribution (mg m-3)
 TP0_sed = interp1(In_Z,In_TPz_sed,zz+dz/2); % Initial total P distribution in bulk wet sediment ((mg m-3); particles + porewater)
 Chl0_sed = interp1(In_Z,In_Chlz_sed,zz+dz/2); % Initial chlorophyll (group 1+2) distribution in bulk wet sediment (mg m-3)
 FIM0 = interp1(In_Z,In_FIM,zz+dz/2);     % Initial sediment solids volume fraction of inorganic matter (-) 
 
+NO30 = interp1(In_Z,In_NO3z,zz+dz/2);
+NH40 = interp1(In_Z,In_NH4z,zz+dz/2);
+SO40 = interp1(In_Z,In_SO4z,zz+dz/2);
+HS0 = interp1(In_Z,In_HSz,zz+dz/2);
+H2S0 = interp1(In_Z,In_H2Sz,zz+dz/2);
+Fe20 = interp1(In_Z,In_Fe2z,zz+dz/2);
+Ca20 = interp1(In_Z,In_Ca2z,zz+dz/2);
+pH0 = interp1(In_Z,In_pHz,zz+dz/2);
+CH40 = interp1(In_Z,In_CH4z,zz+dz/2);
+Fe30 = interp1(In_Z,In_Fe3z,zz+dz/2);
+Al30 = interp1(In_Z,In_Al3z,zz+dz/2);
+SiO40 = interp1(In_Z,In_SiO4z,zz+dz/2);
+SiO20 = interp1(In_Z,In_SiO2z,zz+dz/2);
+diatom0 = interp1(In_Z,In_diatomz,zz+dz/2);
+
+
 VolFrac=1./(1+(1-F_sed_sld)./(F_sed_sld*FIM0)); %volume fraction: inorg sed. / (inorg.sed + pore water)
+
+%Fokema
+%CDOM0=interp1(In_Z,In_DOCz,zz+dz/2); %%!!!!NB: assumed CDOM=DOC!!!
 
 if any((TP0-DOP0-(Chl0 + C0)./Y_cp-S0*Fstable)<0) %NEW!!!
     error('Sum of initial DOP, stably particle bound P, and P contained in Chl (both groups) a cannot be larger than TP')
@@ -248,7 +365,7 @@ if any((TP0_sed-DOP0-Chl0_sed./Y_cp-VolFrac*rho_sed*Fstable)<0)
     error('Sum of initial DOP stably, particle bound P, and P contained in Chl_sed a cannot be larger than TP_sed')
 end
 
-if (any(FIM0<0)|any(FIM0>1))
+if (any(FIM0<0)||any(FIM0>1))
     error('Initial fraction of inorganic matter in sediments must be between 0 and 1')
 end
 
@@ -262,10 +379,33 @@ Cz = C0; % (mg m-3)
 Sz = S0; % (kg m-3)
 Chlz = Chl0;  % (mg m-3)
 DOPz = DOP0;  % (mg m-3)
-[Pz, trash] =Ppart(S0./rho_sed,TP0-DOP0-((Chl0 + C0)./Y_cp),Psat_L,Fmax_L,rho_sed,Fstable);  % (mg m-3) NEW!!! SIMPLE
+[Pz, trash] =Ppart(S0./rho_sed,TP0-DOP0-((Chl0 + C0)./Y_cp),Psat_L,Fmax_L,rho_sed,Fstable);  % (mg m-3) NEW!!!
 PPz = TP0-DOP0-((Chl0 + C0)./Y_cp)-Pz; % (mg m-3) NEW!!! 
 DOCz = DOC0;   % (mg m-3)
+DICz = DIC0;   % (mg m-3)
+O2z = O20;   % (mg m-3)
+
+NO3z = NO30;
+NH4z =NH40;
+SO4z = SO40;
+HSz = HS0;
+H2Sz = H2S0;
+Fe2z = Fe20;
+Ca2z = Ca20;
+pHz = pH0;
+CH4z = CH40;
+Fe3z = Fe30;
+Al3z = Al30;
+SiO4z = SiO40;
+SiO2z = SiO20;
+diatomz = diatom0;
+
+
 F_IM = FIM0; %initial VOLUME fraction of inorganic particles of total dry sediment solids
+% Fokema
+%CDOMz = CDOM0;
+%CO2z = NaN*zeros(1,length(zz));
+%surfflux = 0;
 
 %== P-partitioning in sediments==
 %Pdz_store: %diss. inorg. P in sediment pore water (mg m-3)
@@ -297,7 +437,7 @@ Hsi=0;                %snow ice thickness (initial value = 0 m)
 HFrazil=0;              % (initial value, m) NEW!!! 
 
 
-if ((Hi<=0)&(WEQs>0))
+if ((Hi<=0)&&(WEQs>0))
     error('Mismatch in initial ice and snow thicknesses')    
 end
 
@@ -312,10 +452,17 @@ qq=1;
 DoF=[]; %initialize
 DoM=[]; %initialize
 
+% ============ Sediments module ============
+% Allocation and initial sediments profiles concentrations and reading initial concentrations for sediments from file
+[sediment_concentrations, sediment_params, sediment_matrix_templates, species_sediments]  = sediments_init( pH, zm, In_Tz(end) );
+% ==========================================
+
+
 % >>>>>> Start of the time loop >>>>>>
 Resuspension_counter=zeros(Nz,1); %kg
 Sedimentation_counter=zeros(Nz,1); %kg
 SS_decr=0; %kg
+
 for i = 1:length(tt)
        
     % Surface heat fluxes (W m-2), wind stress (N m-2) & daylight fraction (-), based on Air-Sea Toolbox
@@ -404,8 +551,7 @@ for i = 1:length(tt)
     % Convective mixing adjustment (mix successive layers until stable density profile)
     % and 
     % Spring/autumn turnover (don't allow temperature jumps over temperature of maximum density)
-    [Tz] = convection_v12_1a_simple(Tz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
-% $$$     [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz] = convection_v12_1a(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
+    [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz] = convection_v12_1a(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
     Tprof_prev=Tz; %NEW!!! Update Tprof_prev
     
     if(IceIndicator==0)
@@ -433,8 +579,7 @@ for i = 1:length(tt)
         % Convective mixing adjustment (mix successive layers until stable density profile)  
         % and 
         % Spring/autumn turnover (don't allow temperature jumps over temperature of maximum density)
-    [Tz] = convection_v12_1a_simple(Tz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
-% $$$     [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz] = convection_v12_1a(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
+        [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz] = convection_v12_1a(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
          
         Qlw = DayFracHeating*Qlw + (1-DayFracHeating)*Qlw_2; %total amounts, only for output purposes
         Qsl = DayFracHeating*Qsl + (1-DayFracHeating)*Qsl_2; %total amounts, only for output purposes
@@ -461,8 +606,7 @@ for i = 1:length(tt)
     
     % Convective mixing adjustment (mix successive layers until stable density profile)  
     % (don't allow temperature jumps over temperature of maximum density, no summer/autumn turnover here!)
-    [Tz] = convection_v12_1a_simple(Tz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
-% $$$     [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz] = convection_v12_1a(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
+    [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz] = convection_v12_1a(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,0);
 
      
     % NEW!!! === Code rearranging 
@@ -484,10 +628,10 @@ for i = 1:length(tt)
     H_sw_z=NaN*zeros(Nz,1);
     
     % ===== NEW!!! bug (when Dayfrac==0) fixed 071107 
-    if ((IceIndicator==0)&(DayFrac>0))
+    if ((IceIndicator==0)&&(DayFrac>0))
         PAR_z=((3/2) / (e_par * DayFrac)) * f_par * Qsw  * exp(-lambdaz_wtot_avg .* zz);   
         %Irradiance at noon (mol m-2 s-1) at levels zz 
-    elseif ((IceIndicator==1)&(DayFrac>0))    %extra light attenuation due to ice and snow
+    elseif ((IceIndicator==1)&&(DayFrac>0))    %extra light attenuation due to ice and snow
         PAR_z=((3/2) / (e_par * DayFrac)) * IceSnowAttCoeff * f_par *...
             Qsw  * exp(-lambdaz_wtot_avg .* zz); 
     else PAR_z=zeros(Nz,1); %DayFrac==0, polar night
@@ -528,62 +672,164 @@ for i = 1:length(tt)
     Growth_bioz_2=g_twty_2*theta_m.^(Tz-20) .* (Pz./(P_half_2+Pz)) .* (DayFrac./(dz*lambdaz_wtot)) .* diff([-H_sw_z; 0]); 
     Loss_bioz_2=m_twty_2*theta_m.^(Tz-20);
     R_bioz_2 = Growth_bioz_2-Loss_bioz_2;
-    
+        
     %growth rate is limited by available phosphorus 
     exinx = find( (R_bioz.*Chlz*dt + R_bioz_2.*Cz*dt)>(Y_cp*Pz) );
     
-    if (isempty(exinx)==0) 
+    if (isempty(exinx)==0)    
     R_bioz_ratio = (R_bioz(exinx).*Chlz(exinx)*dt)./((R_bioz(exinx).*Chlz(exinx)*dt) + (R_bioz_2(exinx).*Cz(exinx)*dt)); %fraction of Growth rate 1 of total growth rate
     R_bioz(exinx) = R_bioz_ratio.*(Y_cp*Pz(exinx)./(Chlz(exinx)*dt));
-%     R_bioz_2(exinx) =
-%     (1-R_bioz_ratio).*(Y_cp*Pz(exinx)./(Cz(exinx)*dt)); %% quick
-%     fix by KOJI 20110607
+    R_bioz_2(exinx) = (1-R_bioz_ratio).*(Y_cp*Pz(exinx)./(Cz(exinx)*dt)); 
     end
 %================================    
    
-
-
-%%% SIMPLE
-% $$$     dDOP =  dop_twty * DOPz .* theta_m.^(Tz-20);  %Mineralisation to P
-% $$$     DOPz = Fi \ (DOPz - dDOP);         %Solving new dissolved inorganic P profile (diffusion)
-% $$$     
-% $$$     % Suspended solids, particulate inorganic P 
-% $$$     Fi_ad = tridiag_HAD_v11([NaN; Kz],w_s,Vz,Az,dz,dt); %Tridiagonal matrix for advection and diffusion 
-% $$$     
+    dDOP =  dop_twty * DOPz .* theta_m.^(Tz-20);  %Mineralisation to P
+    DOPz = Fi \ (DOPz - dDOP);         %Solving new dissolved inorganic P profile (diffusion)
+    
+    % Suspended solids, particulate inorganic P 
+    Fi_ad = tridiag_HAD_v11([NaN; Kz],w_s,Vz,Az,dz,dt); %Tridiagonal matrix for advection and diffusion 
+    
     dSz_inorg = rho_sed*S_resusp.*F_IM.*(-diff([Az; 0])./Vz);  % Dry inorganic particle resuspension source from sediment (kg m-3 day-1)
-% $$$     Sz = Fi_ad \ (Sz + dSz_inorg);           %Solving new suspended solids profile (advection + diffusion)        
-% $$$     
+    Sz = Fi_ad \ (Sz + dSz_inorg);           %Solving new suspended solids profile (advection + diffusion)        
+    
     dPP = dSz_inorg.*Psz_store;  % PP resuspension source from sediment((kg m-3 day-1)*(mg kg-1) = mg m-3 day-1) 
-% $$$     PPz = Fi_ad \ (PPz + dPP);     %Solving new suspended particulate inorganic P profile (advection + diffusion)
-% $$$         
-% $$$     %Chlorophyll, Group 1+2 resuspension (now divided 50/50 between the groups)
+    PPz = Fi_ad \ (PPz + dPP);     %Solving new suspended particulate inorganic P profile (advection + diffusion)
+        
+    %Chlorophyll, Group 1+2 resuspension (now divided 50/50 between the groups)
     dSz_org = rho_org*S_resusp.*(1-F_IM).*(-diff([Az; 0])./Vz);  %Dry organic particle resuspension source from sediment (kg m-3 day-1)
     dChl_res = dSz_org.*Chlsz_store;  %Chl a resuspension source from sediment resusp. ((kg m-3 day-1)*(mg kg-1) = mg m-3 day-1);  
-% $$$     
-% $$$     %Chlorophyll, Group 1
-% $$$     dChl_growth = Chlz .* R_bioz; %Chl a growth source 
-% $$$     dChl = dChl_growth + 0.5*dChl_res; % Total Chl a source (resuspension 50/50 between the two groups, NEW!!!)
-% $$$     Fi_ad = tridiag_HAD_v11([NaN; Kz],w_chl,Vz,Az,dz,dt); %Tridiagonal matrix for advection and diffusion    
-% $$$     Chlz = Fi_ad \ (Chlz + dChl);  %Solving new phytoplankton profile (advection + diffusion) (always larger than background level)
-% $$$     
-% $$$     %Chlorophyll, Group 2
-% $$$     dCz_growth = Cz .* R_bioz_2; %Chl a growth source 
-% $$$     dCz = dCz_growth + 0.5*dChl_res; % Total Chl a source (resuspension 50/50 between the two groups, NEW!!!)
-% $$$     Fi_ad = tridiag_HAD_v11([NaN; Kz],w_chl_2,Vz,Az,dz,dt); %Tridiagonal matrix for advection and diffusion    
-% $$$     Cz = Fi_ad \ (Cz + dCz);  %Solving new phytoplankton profile (advection + diffusion) (always larger than background level)
-% $$$ 
-% $$$     %Dissolved inorganic phosphorus
-% $$$     dP = dDOP - (dChl_growth + dCz_growth)./ Y_cp; %DOP source, P sink = Chla growth source !!!NEW
-% $$$     Pz = Fi \ (Pz + dP); %Solving new dissolved inorganic P profile (diffusion)
-% $$$     
-% $$$     %Dissolved organic carbon
-% $$$     dDOC = -oc_DOC*qy_DOC*f_par*(1/e_par)*(60*60*24*dt)*Qsw*Attn_z; %photochemical degradation
-% $$$            %[m2/mg_doc]*[mg_doc/mol_qnt]*[-]*[mol_qnt/J]*[s/day]*[J/s/m2]*[-] = [1/day]
-% $$$     DOCz = Fi \ (DOCz + dDOC.*DOCz); %Solving new dissolved inorganic P profile (diffusion)
-% $$$     
-%%%%%% SIMPLE
+    
+    %Chlorophyll, Group 1
+    dChl_growth = Chlz .* R_bioz; %Chl a growth source
+    dChl = dChl_growth + 0.5*dChl_res; % Total Chl a source (resuspension 50/50 between the two groups, NEW!!!)
+    Fi_ad = tridiag_HAD_v11([NaN; Kz],w_chl,Vz,Az,dz,dt); %Tridiagonal matrix for advection and diffusion    
+    Chlz = Fi_ad \ (Chlz + dChl);  %Solving new phytoplankton profile (advection + diffusion) (always larger than background level)
+    
+    %Chlorophyll, Group 2
+    dCz_growth = Cz .* R_bioz_2; %Chl a growth source 
+    dCz = dCz_growth + 0.5*dChl_res; % Total Chl a source (resuspension 50/50 between the two groups, NEW!!!)
+    Fi_ad = tridiag_HAD_v11([NaN; Kz],w_chl_2,Vz,Az,dz,dt); %Tridiagonal matrix for advection and diffusion    
+    Cz = Fi_ad \ (Cz + dCz);  %Solving new phytoplankton profile (advection + diffusion) (always larger than background level)
 
+    %Dissolved inorganic phosphorus
+    dP = dDOP - (dChl_growth + dCz_growth)./ Y_cp; %DOP source, P sink = Chla growth source !!!NEW
+    Pz = Fi \ (Pz + dP); %Solving new dissolved inorganic P profile (diffusion)
+    
+    %Dissolved organic carbon
+    %Fokema - current version
+    Kd_old=0;
+    Theeta=0;
+    Currdate=datevec(tt(i)); %Date
+    %Date=0;
+    Date=Currdate(1,2); %Month number
+    if (photobleaching==1) %Fokema
+        %[DOCz,Kd_new] = fokema(DOCz,Kd_old,Qsw,Tz,Theeta,Date,zz);
+        DOCz1 = 0.0775.*DOCz; %Subpools
+        DOCz2 = 0.1486.*DOCz;
+        DOCz3 = 0.7739.*DOCz;
+        [DOCz1_new,DOCz2_new,DOCz3_new,DOC1frac,DOC2frac,DOC3frac,Kd_new,Daily_BB1,Daily_BB2,Daily_BB3,Daily_PB] = fokema_new(DOCz1,DOCz2,DOCz3,Kd_old,Qsw,Tz,Theeta,Date,zz);
+        DOCz = DOCz1_new + DOCz2_new + DOCz3_new; %Total DOC
+        DOCz = Fi \ DOCz; %Solving new dissolved organic C profile (diffusion)
+        %DOCz1_new = Fi \ DOCz1_new; %Solving new dissolved organic C profile (diffusion)
+        %DOCz2_new = Fi \ DOCz2_new; %Solving new dissolved organic C profile (diffusion)
+        %DOCz3_new = Fi \ DOCz3_new; %Solving new dissolved organic C profile (diffusion)
+        
+    else %TSA model
+       dDOC = -oc_DOC*qy_DOC*f_par*(1/e_par)*(60*60*24*dt)*Qsw*Attn_z; %photochemical degradation
+           %[m2/mg_doc]*[mg_doc/mol_qnt]*[-]*[mol_qnt/J]*[s/day]*[J/s/m2]*[-] = [1/day]
+       DOCz = Fi \ (DOCz + dDOC.*DOCz); %Solving new dissolved organic C profile (diffusion)
+    end
+    
+    %Oxygen
+    
+    %Oxygen production/consumption in phytoplankton growth & mineralization
+    dO2_Chl = 110.*(dChl_growth+dCz_growth);
+    
+    %Biochemical & sediment oxygen demand
+    
+    BOD = 1*ones(length(zz),1);
+    theta_b = NaN*ones(length(zz),1);
+    %theta_s = NaN*ones(length(zz),1);
+    
+    for k = 1:length(Tz)
+        if(Tz(k)<BOD7)
+            theta_b(k) = theta_bod_ice;
+            %theta_s(k) = theta_sod_ice;
+        else
+            theta_b(k) = theta_bod;
+            %theta_s(k) = theta_sod;
+        end
+    end
+        % This is where DOC is consummed and oxidized 
 
+    dO2_BOD = DOCz .* k_BOD.*theta_b.^(Tz-20);
+    %dO2_SOD = k_SOD.*theta_s.^(Tz-20).*(-diff([Az; 0])./Vz);
+    
+%     if(IceIndicator==0)
+%         BOD = 1.5*BOD7*ones(length(zz),1);
+%         dO2_BOD = k_BOD*theta_bod.^(Tz-20).*BOD;
+%         dO2_SOD = k_SOD.*theta_sod.^(Tz-20).*(-diff([Az; 0])./Vz);
+%     else
+%         BOD_ice = 1.5*BOD7_ice*ones(length(zz),1);
+%         dO2_BOD = k_BOD*theta_bod_ice.^(Tz-20).*BOD_ice;
+%         dO2_SOD = k_SOD_ice.*theta_sod_ice.^(Tz-20).*(-diff([Az; 0])./Vz);   
+%     %    dO2_BOD = k_BOD.*0.25.*Tz.*BOD;
+%     %    dO2_SOD = k_SOD.*0.25.*Tz.*(-diff([Az; 0])./Vz); 
+%     end
+    
+    O2_old = O2z;
+    O2z = max(0,O2z + dO2_Chl - dO2_BOD);% - dO2_SOD);
+    O2_diff = O2z - O2_old;
+    O2_new = O2z;
+    
+    %Oxygen surface flux
+    if(IceIndicator==0)
+        [O2z(1),O2flux,O2_eq,K0_O2] = oxygenflux(O2z(1),C_shelter^(1/3)*Wt(i,6),Wt(i,5),Tz(1),dz);
+    else
+         O2flux = 0;         
+    end
+            
+    O2z = Fi \ O2z; %Solving new dissolved oxygen profile (diffusion)
+    
+    %Dissolved inorganic carbon
+   
+    %DIC partitioning in water
+    [CO2z,CO2frac] = carbonequilibrium(DICz,Tz,pH);
+    
+	% CO2 production by degraded DOC
+    CO2z = max(0,CO2z + 1.375.*(-O2_diff));
+    DICz = CO2z./CO2frac;
+    %TC = Tz(1); %For monitoring only
+    
+    %Carbon dioxide surface flux
+    if(IceIndicator==0)
+        [CO2z(1),surfflux,CO2_eq,K0,CO2_ppm] = carbondioxideflux(CO2z(1),C_shelter^(1/3)*Wt(i,6),Wt(i,5),Tz(1),dz,tt(i));
+        DICz(1) = CO2z(1)/CO2frac(1);
+    else
+        surfflux=0;
+    end
+    
+    DICz = Fi \ DICz; %Solving new DIC profile (diffusion)
+    
+    %==================================
+    %Dissolved inorganic carbon - version II 
+%     
+%     pH = 7*ones(1,length(zz));
+%     TC = Tz(1); %For monitoring only
+%     [CO2z,CO2frac,C_acid,C_basic] = carbonequilibrium(DICz,Tz,pH);
+%        
+%     C_acid = C_acid + 1.375.*(-O2_erotus); 
+%     DICz = C_acid+C_basic;    
+%     [CO2z,CO2frac,C_acid,C_basic] = carbonequilibrium(DICz,Tz,pH);    
+%     if(IceIndicator==0)
+%         [CO2z(1),surfflux,CO2_eq,K0,CO2_ppm] = carbondioxideflux(CO2z(1),Wt(i,6),Wt(i,5),Tz(1),dz,tt(i));
+%         DICz(1) = CO2z(1)/CO2frac(1);
+%     else
+%         surfflux=0;
+%     end
+%     DICz = Fi \ DICz;
+    %==================================
+    
     %Sediment-water exchange (DOP source neglected)
     %-porewater to water
     
@@ -627,17 +873,18 @@ for i = 1:length(tt)
         delC_org2(ii)=(delC_org2(ii-1) - Cz(ii)*delA(ii)./meanA(ii))./(dz/(dt*w_chl_2) + 1); %(mg m-3) % NEW!!! for chlorophyll group 2
     end
     
-    H_netsed_inorg=max(0, (Vz./(-diff([Az; 0]))).*delC_inorg./rho_sed - F_IM.*S_resusp); %inorganic(m day-1, dry), always positive
-    H_netsed_org=max(0, (Vz./(-diff([Az; 0]))).*(delC_org+delC_org2)./(F_OM*Y_cp*rho_org) - (1-F_IM).*S_resusp); %organic (m day-1, dry), always positive,  NEW!!! for chlorophyll group 2
+    H_netsed_catch=max(0, (Vz./(-diff([Az; 0]))).*delC_inorg./rho_sed - F_IM.*S_resusp); %inorganic(m day-1, dry), always positive
+    H_netsed_org=max(0, (Vz./(-diff([Az; 0]))).*(delC_org+delC_org2)./(F_OM*Y_cp*rho_org) - (1-F_IM).*S_resusp);
+    %organic (m day-1, dry), always positive,  NEW!!! for chlorophyll group 2
     
-    H_totsed=H_netsed_org + H_netsed_inorg;  %total (m day-1), always positive
+    H_totsed=H_netsed_org + H_netsed_catch;  %total (m day-1), always positive
     
     F_IM_NewSed=F_IM;    
     inx=find(H_totsed>0);
-    F_IM_NewSed(inx)=H_netsed_inorg(inx)./H_totsed(inx); %volume fraction of inorganic matter in net settling sediment
+    F_IM_NewSed(inx)=H_netsed_catch(inx)./H_totsed(inx); %volume fraction of inorganic matter in net settling sediment
     
     NewSedFrac = min(1, H_totsed./(F_sed_sld*H_sed)); %Fraction of newly fallen net sediment of total active sediment depth, never above 1
-    NewSedFrac_inorg = min(1, H_netsed_inorg./(F_IM.*F_sed_sld*H_sed)); %Fraction of newly fallen net inorganic sediment of total active sediment depth, never above 1
+    NewSedFrac_inorg = min(1, H_netsed_catch./(F_IM.*F_sed_sld*H_sed)); %Fraction of newly fallen net inorganic sediment of total active sediment depth, never above 1
     NewSedFrac_org = min(1, H_netsed_org./((1-F_IM).*F_sed_sld*H_sed)); %Fraction of newly fallen net organic sediment of total active sediment depth, never above 1
     
     %Psz_store: %P conc. in inorganic sediment particles (mg kg-1 dry w.)
@@ -657,7 +904,7 @@ for i = 1:length(tt)
     %== P-partitioning in sediments==   
     VolFrac=1./(1+(1-F_sed_sld)./(F_sed_sld*F_IM)); %volume fraction: inorg sed. / (inorg.sed + pore water)
     TIP_sed =rho_sed*VolFrac.*Psz_store + (1-VolFrac).*Pdz_store; %total inorganic P in sediments (mg m-3) 
-% $$$     [Pdz_store, Psz_store]=Ppart(VolFrac,TIP_sed,Psat_L,Fmax_L_sed,rho_sed,Fstable); SIMPLE
+    [Pdz_store, Psz_store]=Ppart(VolFrac,TIP_sed,Psat_L,Fmax_L_sed,rho_sed,Fstable);
     %calculate new VOLUME fraction of inorganic particles of total dry sediment
     F_IM=min(1,((k_twty *(1-F_IM).*theta_m.^(Tz-20)) + F_IM)).*(1-NewSedFrac) + F_IM_NewSed.*NewSedFrac; 
     
@@ -671,7 +918,9 @@ for i = 1:length(tt)
     % Inflw(:,6) Inflow dissolved organic phosphorus (DOP) concentration (mg m-3)
     % Inflw(:,7) Inflow chlorophyll (group 1) concentration (mg m-3)
     % Inflw(:,8) Inflow DOC concentration (mg m-3)
-    
+    % Inflw(:,9) Inflow DIC concentration (mg m-3)
+    % Inflw(:,10) Inflow O2 concentration (mg m-3)
+       
     if (river_inflow_switch==1)
         Iflw = I_scV * Inflw(i,1); % (scaled) inflow rate
         Iflw_T = I_scT + Inflw(i,2); %(adjusted) inflow temperature
@@ -684,9 +933,25 @@ for i = 1:length(tt)
         Iflw_DOP = I_scDOP * Inflw(i,6); %(scaled) inflow DOP concentration
         Iflw_Chl = I_scChl * Inflw(i,7); %(scaled) inflow Chl a concentration
         Iflw_DOC = I_scDOC * Inflw(i,8); %(scaled) inflow DOC concentration
-
+        Iflw_DIC = I_scDIC * Inflw(i,9); %(scaled) inflow DIC concentration
+        Iflw_O2 = I_scO * Inflw(i,10); %(scaled) inflow O2 concentration   
+       
+        % inflow HS and H2S are neglected
         
-        %Added suspended solids correction: minimum allowed P bioavailability factor is 0.1 
+      Iflw_NO3 = I_scNO3 * Inflw(i,11); 
+      Iflw_NH4 = I_scNH4 * Inflw(i,12); 
+      Iflw_SO4 = I_scSO4 * Inflw(i,13); 
+      Iflw_Fe2 = I_scFe2 * Inflw(i,14); 
+      Iflw_Ca2 = I_scCa2 * Inflw(i,15); 
+      Iflw_pH = I_scpH * Inflw(i,16); 
+      Iflw_CH4 = I_scCH4 * Inflw(i,17); 
+      Iflw_Fe3 = I_scFe3 * Inflw(i,18); 
+      Iflw_Al3 = I_scAl3 * Inflw(i,19); 
+      Iflw_SiO4 = I_scSiO4 * Inflw(i,20); 
+      Iflw_SiO2 = I_scSiO2 * Inflw(i,21); 
+      Iflw_diatom = I_scdiatom * Inflw(i,22); 
+
+   %Added suspended solids correction: minimum allowed P bioavailability factor is 0.1 
         if any((1-(Iflw_DOP+(Iflw_Chl+Iflw_C)./Y_cp)./Iflw_TP-(Iflw_S*Fstable)./Iflw_TP)<0.1); % NEW!!!!
             Iflw_S_dum = (1 - (Iflw_DOP+(Iflw_Chl+Iflw_C)./Y_cp)./Iflw_TP - 0.1).*(Iflw_TP./Fstable); %NEW!!!
             SS_decr=SS_decr+(Iflw_S-Iflw_S_dum)*Iflw;
@@ -714,34 +979,36 @@ for i = 1:length(tt)
             
             
             %Changes in properties due to inflow 
-            dummy=IOflow_v11(dz, zz, Vz, Tz, lvlD, Iflw, Iflw_T);
-            Tz=dummy; %Temperature
-            
-            
-            dummy=IOflow_v11(dz, zz, Vz, Sz, lvlD, Iflw, Iflw_S);
-            Sz=dummy; %Sedimenting tracer
-            
-            dummy=IOflow_v11(dz, zz, Vz, DOPz, lvlD, Iflw, Iflw_DOP);
-            DOPz=dummy; %Particulate organic P
+            dummy=IOflow_v11(dz, zz, Vz, Tz, lvlD, Iflw, Iflw_T); Tz=dummy; %Temperature
+            dummy=IOflow_v11(dz, zz, Vz, Sz, lvlD, Iflw, Iflw_S); Sz=dummy; %Sedimenting tracer
+            dummy=IOflow_v11(dz, zz, Vz, DOPz, lvlD, Iflw, Iflw_DOP); DOPz=dummy; %Particulate organic P
             
             TIPz=Pz + PPz; % Total inorg. phosphorus (excl. Chla and DOP) in the water column (mg m-3)
+            
             dummy=IOflow_v11(dz, zz, Vz, TIPz, lvlD, Iflw, Iflw_TP-((Iflw_Chl+Iflw_C)./Y_cp)-Iflw_DOP); %NEW!!!
             TIPz=dummy; %Total inorg. phosphorus (excl. Chla and DOP) 
-            
-            
+                        
             %== P-partitioning in water==
-% $$$             [Pz, trash]=Ppart(Sz./rho_sed,TIPz,Psat_L,Fmax_L,rho_sed,Fstable); SIMPLE
+            [Pz, trash]=Ppart(Sz./rho_sed,TIPz,Psat_L,Fmax_L,rho_sed,Fstable);
             PPz=TIPz-Pz;
             
-            dummy=IOflow_v11(dz, zz, Vz, Cz, lvlD, Iflw, Iflw_C);
-            Cz=dummy; %Chlorophyll (group 2) 
-            
-            dummy=IOflow_v11(dz, zz, Vz, Chlz, lvlD, Iflw, Iflw_Chl);
-            Chlz=dummy; %Chlorophyll (group 1)
-            
-            dummy=IOflow_v11(dz, zz, Vz, DOCz, lvlD, Iflw, Iflw_DOC);
-            DOCz=dummy; %DOC
-            
+            dummy=IOflow_v11(dz, zz, Vz, Cz, lvlD, Iflw, Iflw_C); Cz=dummy; %Chlorophyll (group 2) 
+            dummy=IOflow_v11(dz, zz, Vz, Chlz, lvlD, Iflw, Iflw_Chl); Chlz=dummy; %Chlorophyll (group 1)            
+            dummy=IOflow_v11(dz, zz, Vz, DOCz, lvlD, Iflw, Iflw_DOC); DOCz=dummy; %DOC            
+            dummy=IOflow_v11(dz, zz, Vz, DICz, lvlD, Iflw, Iflw_DIC); DICz=dummy; %DIC            
+            dummy=IOflow_v11(dz, zz, Vz, O2z, lvlD, Iflw, Iflw_O2); O2z=dummy; %O2            
+            dummy=IOflow_v11(dz, zz, Vz, NO3z, lvlD, Iflw, Iflw_NO3); NO3z=dummy; %NO3            
+            dummy=IOflow_v11(dz, zz, Vz, NH4z, lvlD, Iflw, Iflw_NH4); NH4z=dummy; %NH4            
+            dummy=IOflow_v11(dz, zz, Vz, SO4z, lvlD, Iflw, Iflw_SO4); SO4z=dummy; %SO4            
+            dummy=IOflow_v11(dz, zz, Vz, Fe2z, lvlD, Iflw, Iflw_Fe2); Fe2z=dummy; %Fe2            
+            dummy=IOflow_v11(dz, zz, Vz, Ca2z, lvlD, Iflw, Iflw_Ca2);Ca2z=dummy; %Ca2            
+            dummy=IOflow_v11(dz, zz, Vz, pHz, lvlD, Iflw, Iflw_pH); pHz=dummy; %pH            
+            dummy=IOflow_v11(dz, zz, Vz, CH4z, lvlD, Iflw, Iflw_CH4); CH4z=dummy; %CH4            
+            dummy=IOflow_v11(dz, zz, Vz, Fe3z, lvlD, Iflw, Iflw_Fe3); Fe3z=dummy; %Fe3
+            dummy=IOflow_v11(dz, zz, Vz, Al3z, lvlD, Iflw, Iflw_Al3); Al3z=dummy; %Al3            
+            dummy=IOflow_v11(dz, zz, Vz, SiO4z, lvlD, Iflw, Iflw_SiO4); SiO4z=dummy; %SiO4
+            dummy=IOflow_v11(dz, zz, Vz, Al3z, lvlD, Iflw, Iflw_SiO2); SiO2z=dummy; %SiO2            
+            dummy=IOflow_v11(dz, zz, Vz, SiO4z, lvlD, Iflw, Iflw_diatom); diatomz=dummy; %diatom
         else
             lvlD=NaN;
         end %if(Iflw>0)
@@ -755,13 +1022,26 @@ for i = 1:length(tt)
         Iflw_DOP = NaN; %(scaled) inflow DOP concentration
         Iflw_Chl = NaN; %(scaled) inflow Chl a concentration
         Iflw_DOC = NaN; %(scaled) inflow DOC concentration
+        Iflw_DIC = NaN; %(scaled) inflow DIC concentration
+        Iflw_O2 = NaN; %(scaled) inflow concentration
+        Iflw_NO3 = NaN; %(scaled) inflow concentration
+        Iflw_NH4 = NaN; %(scaled) inflow concentration
+        Iflw_SO4 = NaN; %(scaled) inflow  concentration
+        Iflw_Fe2 = NaN; %(scaled) inflow concentration
+        Iflw_Ca2 = NaN; %(scaled) inflow concentration
+        Iflw_pH = NaN; %(scaled) inflow concentration
+        Iflw_CH4 = NaN; %(scaled) inflow concentration
+        Iflw_Fe3 = NaN; %(scaled) inflow concentration
+        Iflw_Al3 = NaN; %(scaled) inflow concentration
+        Iflw_SiO4 = NaN; %(scaled) inflow concentration
+        Iflw_SiO2 = NaN; %(scaled) inflow concentration
+        Iflw_diatom = NaN; %(scaled) inflow concentration
         lvlD=NaN;     
     end  %if (river_inflow_switch==1)
     
     % Convective mixing adjustment (mix successive layers until stable density profile,  no summer/autumn turnover here!)  
     
-    [Tz] = convection_v12_1a_simple(Tz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
-% $$$     [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz] = convection_v12_1a(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
+    [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatom] = convection_v12_1a(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatom,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,0);
 
     if (IceIndicator==0)
         
@@ -782,31 +1062,78 @@ for i = 1:length(tt)
                 POE=(dD*g*V_weight*(MLD + dz/2 - Zg));
                 KP_ratio=TKE/POE;
                 if (KP_ratio>=1)
+                    
                     Tmix=sum( Vz(1:zb+1).*Tz(1:zb+1) ) / sum(Vz(1:zb+1));
                     Tz(1:zb+1)=Tmix;
                     
-%%%%% SIMPLE
-% $$$                     Cmix=sum( Vz(1:zb+1).*Cz(1:zb+1) ) / sum(Vz(1:zb+1));
-% $$$                     Cz(1:zb+1)=Cmix;
-% $$$ 
-% $$$                     Smix=sum( Vz(1:zb+1).*Sz(1:zb+1) ) / sum(Vz(1:zb+1));
-% $$$                     Sz(1:zb+1)=Smix;
-% $$$                     
-% $$$                     Pmix=sum( Vz(1:zb+1).*Pz(1:zb+1) ) / sum(Vz(1:zb+1));
-% $$$                     Pz(1:zb+1)=Pmix;
-% $$$                     
-% $$$                     Chlmix=sum( Vz(1:zb+1).*Chlz(1:zb+1) ) / sum(Vz(1:zb+1));
-% $$$                     Chlz(1:zb+1)=Chlmix;
-% $$$                     
-% $$$                     PPmix=sum( Vz(1:zb+1).*PPz(1:zb+1) ) / sum(Vz(1:zb+1));
-% $$$                     PPz(1:zb+1)=PPmix;
-% $$$                     
-% $$$                     DOPmix=sum( Vz(1:zb+1).*DOPz(1:zb+1) ) / sum(Vz(1:zb+1));
-% $$$                     DOPz(1:zb+1)=DOPmix;
-% $$$                     
-% $$$                     DOCmix=sum( Vz(1:zb+1).*DOCz(1:zb+1) ) / sum(Vz(1:zb+1));
-% $$$                     DOCz(1:zb+1)=DOCmix;
-%%%%% SIMPLE
+                    Cmix=sum( Vz(1:zb+1).*Cz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    Cz(1:zb+1)=Cmix;
+
+                    Smix=sum( Vz(1:zb+1).*Sz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    Sz(1:zb+1)=Smix;
+                    
+                    Pmix=sum( Vz(1:zb+1).*Pz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    Pz(1:zb+1)=Pmix;
+                    
+                    Chlmix=sum( Vz(1:zb+1).*Chlz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    Chlz(1:zb+1)=Chlmix;
+                    
+                    PPmix=sum( Vz(1:zb+1).*PPz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    PPz(1:zb+1)=PPmix;
+                    
+                    DOPmix=sum( Vz(1:zb+1).*DOPz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    DOPz(1:zb+1)=DOPmix;
+                    
+                    DOCmix=sum( Vz(1:zb+1).*DOCz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    DOCz(1:zb+1)=DOCmix;
+                    
+                    DICmix=sum( Vz(1:zb+1).*DICz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    DICz(1:zb+1)=DICmix;
+                    
+                    O2mix=sum( Vz(1:zb+1).*O2z(1:zb+1) ) / sum(Vz(1:zb+1));
+                    O2z(1:zb+1)=O2mix;
+                    
+                       NO3mix=sum( Vz(1:zb+1).*NO3z(1:zb+1) ) / sum(Vz(1:zb+1));
+                    NO3z(1:zb+1)=NO3mix;
+                    
+                       NH4mix=sum( Vz(1:zb+1).*NH4z(1:zb+1) ) / sum(Vz(1:zb+1));
+                    NH4z(1:zb+1)=NH4mix;
+                    
+                       SO4mix=sum( Vz(1:zb+1).*SO4z(1:zb+1) ) / sum(Vz(1:zb+1));
+                    SO4z(1:zb+1)=SO4mix;
+                    
+                       HSmix=sum( Vz(1:zb+1).*HSz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    HSz(1:zb+1)=HSmix;
+                    
+                       H2Smix=sum( Vz(1:zb+1).*H2Sz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    H2Sz(1:zb+1)=H2Smix;
+                    
+                       Fe2mix=sum( Vz(1:zb+1).*Fe2z(1:zb+1) ) / sum(Vz(1:zb+1));
+                    Fe2z(1:zb+1)=Fe2mix;
+                    
+                       Ca2mix=sum( Vz(1:zb+1).*Ca2z(1:zb+1) ) / sum(Vz(1:zb+1));
+                    Ca2z(1:zb+1)=Ca2mix;
+                    
+                       pHmix=sum( Vz(1:zb+1).*pHz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    pHz(1:zb+1)=pHmix;
+                    
+                       CH4mix=sum( Vz(1:zb+1).*CH4z(1:zb+1) ) / sum(Vz(1:zb+1));
+                    CH4z(1:zb+1)=CH4mix;
+                    
+                       Fe3mix=sum( Vz(1:zb+1).*Fe3z(1:zb+1) ) / sum(Vz(1:zb+1));
+                    Fe3z(1:zb+1)=Fe3mix;
+                    
+                       Al3mix=sum( Vz(1:zb+1).*Al3z(1:zb+1) ) / sum(Vz(1:zb+1));
+                    Al3z(1:zb+1)=Al3mix;
+                    
+                         SiO4mix=sum( Vz(1:zb+1).*SiO4z(1:zb+1) ) / sum(Vz(1:zb+1));
+                    SiO4z(1:zb+1)=SiO4mix;
+                    
+                         SiO2mix=sum( Vz(1:zb+1).*SiO2z(1:zb+1) ) / sum(Vz(1:zb+1));
+                    SiO2z(1:zb+1)=SiO2mix;
+                    
+                         diatommix=sum( Vz(1:zb+1).*diatomz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    diatomz(1:zb+1)=diatommix;
                     
                     rho = polyval(ies80,max(0,Tz(:))) + min(Tz(:),0);
                     TKE=TKE-POE;
@@ -815,38 +1142,98 @@ for i = 1:length(tt)
                     Tz(1:zb)=Tmix;
                     Tz(zb+1)=KP_ratio*Tmix + (1-KP_ratio)*Tz(zb+1);
                     
-%%%% SIMPLE
-% $$$                     Cmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Cz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
-% $$$                     Cz(1:zb)=Cmix;
-% $$$                     Cz(zb+1)=KP_ratio*Cmix + (1-KP_ratio)*Cz(zb+1);
-% $$$                     
-% $$$                     Smix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Sz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
-% $$$                     Sz(1:zb)=Smix;
-% $$$                     Sz(zb+1)=KP_ratio*Smix + (1-KP_ratio)*Sz(zb+1);
-% $$$                     
-% $$$                     Pmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Pz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
-% $$$                     Pz(1:zb)=Pmix;
-% $$$                     Pz(zb+1)=KP_ratio*Pmix + (1-KP_ratio)*Pz(zb+1);
-% $$$                     
-% $$$                     Chlmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Chlz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
-% $$$                     Chlz(1:zb)=Chlmix;
-% $$$                     Chlz(zb+1)=KP_ratio*Chlmix + (1-KP_ratio)*Chlz(zb+1);
-% $$$                     
-% $$$                     PPmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*PPz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
-% $$$                     PPz(1:zb)=PPmix;
-% $$$                     PPz(zb+1)=KP_ratio*PPmix + (1-KP_ratio)*PPz(zb+1);
-% $$$                     
-% $$$                     DOPmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*DOPz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
-% $$$                     DOPz(1:zb)=DOPmix;
-% $$$                     DOPz(zb+1)=KP_ratio*DOPmix + (1-KP_ratio)*DOPz(zb+1);
-% $$$                     
-% $$$                     DOCmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*DOCz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
-% $$$                     DOCz(1:zb)=DOCmix;
-% $$$                     DOCz(zb+1)=KP_ratio*DOCmix + (1-KP_ratio)*DOCz(zb+1);
-%%% SIMPLE
-
-
-
+                    Cmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Cz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    Cz(1:zb)=Cmix;
+                    Cz(zb+1)=KP_ratio*Cmix + (1-KP_ratio)*Cz(zb+1);
+                    
+                    Smix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Sz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    Sz(1:zb)=Smix;
+                    Sz(zb+1)=KP_ratio*Smix + (1-KP_ratio)*Sz(zb+1);
+                    
+                    Pmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Pz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    Pz(1:zb)=Pmix;
+                    Pz(zb+1)=KP_ratio*Pmix + (1-KP_ratio)*Pz(zb+1);
+                    
+                    Chlmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Chlz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    Chlz(1:zb)=Chlmix;
+                    Chlz(zb+1)=KP_ratio*Chlmix + (1-KP_ratio)*Chlz(zb+1);
+                    
+                    PPmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*PPz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    PPz(1:zb)=PPmix;
+                    PPz(zb+1)=KP_ratio*PPmix + (1-KP_ratio)*PPz(zb+1);
+                    
+                    DOPmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*DOPz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    DOPz(1:zb)=DOPmix;
+                    DOPz(zb+1)=KP_ratio*DOPmix + (1-KP_ratio)*DOPz(zb+1);
+                    
+                    DOCmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*DOCz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    DOCz(1:zb)=DOCmix;
+                    DOCz(zb+1)=KP_ratio*DOCmix + (1-KP_ratio)*DOCz(zb+1);
+                    
+                    DICmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*DICz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    DICz(1:zb)=DICmix;
+                    DICz(zb+1)=KP_ratio*DICmix + (1-KP_ratio)*DICz(zb+1);
+                    
+                    O2mix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*O2z(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    O2z(1:zb)=O2mix;
+                    O2z(zb+1)=KP_ratio*O2mix + (1-KP_ratio)*O2z(zb+1);
+                    
+                    NO3mix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*NO3z(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    NO3z(1:zb)=NO3mix;
+                    NO3z(zb+1)=KP_ratio*NO3mix + (1-KP_ratio)*NO3z(zb+1);
+                    
+                    NH4mix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*NH4z(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    NH4z(1:zb)=NH4mix;
+                    NH4z(zb+1)=KP_ratio*NH4mix + (1-KP_ratio)*NH4z(zb+1);
+                    
+                    SO4mix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*SO4z(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    SO4z(1:zb)=SO4mix;
+                    SO4z(zb+1)=KP_ratio*SO4mix + (1-KP_ratio)*SO4z(zb+1);
+                    
+                    HSmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*HSz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    HSz(1:zb)=HSmix;
+                    HSz(zb+1)=KP_ratio*HSmix + (1-KP_ratio)*HSz(zb+1);
+                    
+                    H2Smix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*H2Sz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    H2Sz(1:zb)=H2Smix;
+                    H2Sz(zb+1)=KP_ratio*H2Smix + (1-KP_ratio)*H2Sz(zb+1);
+                    
+                    Fe2mix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Fe2z(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    Fe2z(1:zb)=Fe2mix;
+                    Fe2z(zb+1)=KP_ratio*Fe2mix + (1-KP_ratio)*Fe2z(zb+1);
+                    
+                    Ca2mix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Ca2z(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    Ca2z(1:zb)=Ca2mix;
+                    Ca2z(zb+1)=KP_ratio*Ca2mix + (1-KP_ratio)*Ca2z(zb+1);
+                    
+                    pHmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*pHz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    pHz(1:zb)=pHmix;
+                    pHz(zb+1)=KP_ratio*pHmix + (1-KP_ratio)*pHz(zb+1);
+                    
+                    CH4mix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*CH4z(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    CH4z(1:zb)=CH4mix;
+                    CH4z(zb+1)=KP_ratio*CH4mix + (1-KP_ratio)*CH4z(zb+1);
+                    
+                    Fe3mix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Fe3z(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    Fe3z(1:zb)=Fe3mix;
+                    Fe3z(zb+1)=KP_ratio*Fe3mix + (1-KP_ratio)*Fe3z(zb+1);
+                    
+                    Al3mix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*Al3z(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    Al3z(1:zb)=Al3mix;
+                    Al3z(zb+1)=KP_ratio*Al3mix + (1-KP_ratio)*Al3z(zb+1);
+                    
+                    SiO4mix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*SiO4z(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    SiO4z(1:zb)=SiO4mix;
+                    SiO4z(zb+1)=KP_ratio*SiO4mix + (1-KP_ratio)*SiO4z(zb+1);
+                    
+                    SiO2mix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*SiO2z(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    SiO2z(1:zb)=SiO2mix;
+                    SiO2z(zb+1)=KP_ratio*SiO2mix + (1-KP_ratio)*SiO2z(zb+1);
+                    
+                    diatommix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*diatomz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    diatomz(1:zb)=diatommix;
+                    diatomz(zb+1)=KP_ratio*diatommix + (1-KP_ratio)*diatomz(zb+1);
+                    
                     rho = polyval(ies80,max(0,Tz(:))) + min(Tz(:),0);
                     TKE=0;       
                     WmixIndicator=0;
@@ -952,8 +1339,16 @@ for i = 1:length(tt)
     
     %== P-partitioning in water==
     TIPz=Pz + PPz; % Total inorg. phosphorus (excl. Chla and DOP) in the water column (mg m-3)
-% $$$     [Pz, trash]=Ppart(Sz./rho_sed,TIPz,Psat_L,Fmax_L,rho_sed,Fstable);
+    [Pz, trash]=Ppart(Sz./rho_sed,TIPz,Psat_L,Fmax_L,rho_sed,Fstable);
     PPz=TIPz-Pz;
+    
+    %DIC-partitioning in water
+    
+    [CO2z,~] = carbonequilibrium(DICz,Tz,pH);
+    
+    % Relative dissolved oxygen concentration
+    
+    [O2_sat_rel, O2_sat_abs] = relative_oxygen(O2z,Tz,Wt(i,5),dz);
     
     %Initial freezing
     Supercooled=find(Tz<Tf);
@@ -987,10 +1382,10 @@ for i = 1:length(tt)
     rho = polyval(ies80,max(0,Tz(:))) + min(Tz(:),0);
     dRdz = [NaN; abs(diff(rho))];
     di=find((dRdz<(pycno_thres*dz)) | isnan(dRdz));
-    dRdz(di)=NaN; 
-    TCz = nansum(zz .* dRdz) ./ nansum(dRdz);
-    %dRdz(di)=0; %modified for MATLAB version 7
-    %TCz = sum(zz .* dRdz) ./ sum(dRdz);
+    %dRdz(di)=NaN; 
+    %TCz = nansum(zz .* dRdz) ./ nansum(dRdz);
+    dRdz(di)=0; %modified for MATLAB version 7
+    TCz = sum(zz .* dRdz) ./ sum(dRdz);
     
     %vector with S_res_epi above, and S_res_hypo below the pycnocline
     inx=find(zz <= TCz);
@@ -1005,9 +1400,105 @@ for i = 1:length(tt)
     if( isnan(TCz) & (IceIndicator==0) )  
         S_resusp(:)=S_res_epi;   %if no pycnocline and open water, resuspension allowed from top to bottom   
     end
+
+    if any(isnan(O2z)), error('MyLake error::O2zt is NaN'), end
+
+    % sediment module
+    if matsedlab_sediments_module == 1
+        % Making cells of params for using during coupling
+        MyLake_concentrations = {...
+            O2z,                'O2z';
+            Chlz,               'Chlz';
+            H_netsed_catch,     'H_netsed_catch';
+            Pz,                 'Pz';
+        };
+        MyLake_concentrations = containers.Map({MyLake_concentrations{:,2}},{MyLake_concentrations{:,1}});
+
+        MyLake_params = {...
+            SS_C,               'SS_C';
+            density_org_H_nc,   'density_org_H_nc';
+            w_chl,              'w_chl';
+            Mass_Ratio_C_Chl,   'Mass_Ratio_C_Chl';
+            Az(end),            'Az(end)';
+            Vz(end),            'Vz(end)';
+            dt,                 'dt';
+        };
+        MyLake_params = containers.Map({MyLake_params{:,2}},{MyLake_params{:,1}});
+
+        % Preparing units and estimate flux from [WC] ----> [Sediments]
+        sediments_bc = convert_wc_to_sediment(MyLake_concentrations, MyLake_params, sediment_params);
+        
+        % Running sediment module
+        [sediment_bioirrigation, sediment_fluxes, sediment_concentrations, z_matsedlab, R_values_matsedlabz] = sediments(...
+            sediment_concentrations, sediment_params, sediment_matrix_templates, species_sediments, sediments_bc);
+
+        % Update WC:  [Sediments] ----> [WC]
+        [O2z, Pz] = update_wc(O2z, Pz, MyLake_params, sediment_fluxes, sediment_bioirrigation);
+
+        deltaO2(i) = - sediment_fluxes{1} * dt * Az(end) / Vz (end);
+        deltaPz(i) = - sediment_fluxes{4} * dt * Az(end) / Vz (end);
+
+        % checking the calculations
+        % if deltaO2(i)>0, error('Sediments:: deltaO2 > 0'), end
+        % if deltaPz(i)<0, error('Sediments:: deltaPz < 0'), end
+    end
     
+
+    % Sediment module output
+    % Output:
+    O2_matsedlabzt(:,i) = sediment_concentrations('Oxygen');
+    OM_matsedlabzt(:,i) = sediment_concentrations('OM1');
+    OMb_matsedlabzt(:,i) = sediment_concentrations('OM2');
+    NO3_matsedlabzt(:,i) = sediment_concentrations('NO3');
+    FeOH3_matsedlabzt(:,i) = sediment_concentrations('FeOH3');
+    SO4_matsedlabzt(:,i) = sediment_concentrations('SO4');
+    NH4_matsedlabzt(:,i) = sediment_concentrations('NH4');
+    Fe2_matsedlabzt(:,i) = sediment_concentrations('Fe2');
+    FeOOH_matsedlabzt(:,i) = sediment_concentrations('FeOOH');
+    H2S_matsedlabzt(:,i) = sediment_concentrations('H2S');
+    HS_matsedlabzt(:,i)  = sediment_concentrations('HS');
+    FeS_matsedlabzt(:,i) = sediment_concentrations('FeS');
+    S0_matsedlabzt(:,i)  = sediment_concentrations('S0');
+    PO4_matsedlabzt(:,i) = sediment_concentrations('PO4');
+    S8_matsedlabzt(:,i) = sediment_concentrations('S8');
+    FeS2_matsedlabzt(:,i) = sediment_concentrations('FeS2');
+    AlOH3_matsedlabzt(:,i) = sediment_concentrations('AlOH3');
+    PO4adsa_matsedlabzt(:,i) = sediment_concentrations('PO4adsa');
+    PO4adsb_matsedlabzt(:,i) = sediment_concentrations('PO4adsb');
+    Ca2_matsedlabzt(:,i) = sediment_concentrations('Ca2');
+    Ca3PO42_matsedlabzt(:,i) = sediment_concentrations('Ca3PO42');
+    OMS_matsedlabzt(:,i) = sediment_concentrations('OMS');
+    H_matsedlabzt(:,i) = sediment_concentrations('H');
+    OH_matsedlabzt(:,i) = sediment_concentrations('OH');
+    CO2_matsedlabzt(:,i) = sediment_concentrations('CO2');
+    CO3_matsedlabzt(:,i) = sediment_concentrations('CO3');
+    HCO3_matsedlabzt(:,i) = sediment_concentrations('HCO3');
+    NH3_matsedlabzt(:,i) = sediment_concentrations('NH3');
+    H2CO3_matsedlabzt(:,i) = sediment_concentrations('H2CO3');
+    pH_matsedlabzt(:,i) = -log10(H_matsedlabzt(:,i)*10^-6);
+    O2_flux_matsedlabzt(i) = sediment_fluxes{1};
+    OM_flux_matsedlabzt(i) = sediment_fluxes{2};
+    OM2_flux_matsedlabzt(i) = sediment_fluxes{3};
+    PO4_flux_matsedlabzt(i) = sediment_fluxes{4};
+    R1_matsedlabzt(:,i) = R_values_matsedlabz{1};
+    R1_int_matsedlabzt(:,i) = R_values_matsedlabz{2};
+    R2_matsedlabzt(:,i) = R_values_matsedlabz{3};
+    R2_int_matsedlabzt(:,i) = R_values_matsedlabz{4};
+    R3_matsedlabzt(:,i) = R_values_matsedlabz{5};
+    R3_int_matsedlabzt(:,i) = R_values_matsedlabz{6};
+    R4_matsedlabzt(:,i) = R_values_matsedlabz{7};
+    R4_int_matsedlabzt(:,i) = R_values_matsedlabz{8};
+    R5_matsedlabzt(:,i) = R_values_matsedlabz{9};
+    R5_int_matsedlabzt(:,i) = R_values_matsedlabz{10};
+    O2_Bioirrigation_matsedlabz(:,i) = sediment_bioirrigation{1};
+    PO4_Bioirrigation_matsedlabz(:,i) = sediment_bioirrigation{2};
+    NO3_flux_matsedlabzt(i) = sediment_fluxes{5};
+    FeOH3_flux_matsedlabzt(i) = sediment_fluxes{6};
+    R6_matsedlabzt(:,i) = R_values_matsedlabz{11};
+    R6_int_matsedlabzt(:,i) = R_values_matsedlabz{12};
+   
     
-    % Output matrices     
+    % Output MyLake matrices     
     Qst(:,i) = [Qsw Qlw Qsl]';
     Kzt(:,i) = [0;Kz];
     Tzt(:,i) = Tz;
@@ -1018,9 +1509,64 @@ for i = 1:length(tt)
     PPzt(:,i) = PPz;
     DOPzt(:,i) = DOPz;
     DOCzt(:,i) = DOCz;
+    DICzt(:,i) = DICz;
+    O2zt(:,i) = O2z;
+    
+    NO3zt(:,i) = NO3z;
+    NH4zt(:,i) = NH4z;
+    SO4zt(:,i) = SO4z;
+    HSzt(:,i) = HSz;
+    H2Szt(:,i) = H2Sz;
+    Fe2zt(:,i) = Fe2z;
+    Ca2zt(:,i) = Ca2z;
+    pHzt(:,i) = pHz;
+    CH4zt(:,i) = CH4z;
+    Fe3zt(:,i) = Fe3z;
+    Al3zt(:,i) = Al3z;
+    SiO4zt(:,i) = SiO4z;
+    SiO2zt(:,i) = SiO2z;
+    diatomzt(:,i) = diatomz;
+       
+	O2diffzt(:,i) = O2_diff;
+    CO2zt(:,i) = CO2z;
+    O2_sat_relt(:,i) = O2_sat_rel;
+    O2_sat_abst(:,i) = O2_sat_abs;
+    BODzt = 0; %for compatibility with the other code
+    
+
+    %Fokema
+    %CDOMzt(:,i)=CDOMz;
+    if (photobleaching==1)
+        DOCzt1(:,i) = DOCz1_new; %Fokema-model DOC subpool 1
+        DOCzt2(:,i) = DOCz2_new; %Fokema-model DOC subpool 2
+        DOCzt3(:,i) = DOCz3_new; %Fokema-model DOC subpool 3
+        DOC1tfrac(:,i) = DOC1frac; %Fokema-model subpool 1 fraction
+        DOC2tfrac(:,i) = DOC2frac; %Fokema-model subpool 2 fraction
+        DOC3tfrac(:,i) = DOC3frac; %Fokema-model subpool 3 fraction
+        Daily_BB1t(:,i) = Daily_BB1; %Fokema-model subpool 1 daily bacterial decomposition
+        Daily_BB2t(:,i) = Daily_BB2; %Fokema-model subpool 2 daily bacterial decomposition
+        Daily_BB3t(:,i) = Daily_BB3; %Fokema-model subpool 3 daily bacterial decomposition
+        Daily_PBt(:,i) = Daily_PB; %Fokema-model daily photobleaching
+    end
+    
     Qzt_sed(:,i) = Qz_sed./(60*60*24*dt); %(J m-2 day-1) -> (W m-2)
     lambdazt(:,i) = lambdaz_wtot_avg;
     
+    surfaceflux(1,i) = surfflux; %Carbon dioxide surface flux
+    CO2_eqt(1,i) = CO2_eq;       %Carbon dioxide equilibrium concentration
+    K0t(:,i) = K0;               %Dissolved carbon doxide solubility coefficient
+    CO2_ppmt(:,i) = CO2_ppm;
+    
+    O2fluxt(1,i) = O2flux;       %Oxygen surface flux
+    O2_eqt(1,i) = O2_eq;         %Oxygen equilibrium concentration
+    K0_O2t(1,i) = K0_O2;         %Dissolved oxygen solubility coefficient
+    dO2Chlt(:,i) = dO2_Chl;
+    dO2BODt(:,i) = dO2_BOD;
+    %dO2SODt(:,i) = dO2_SOD;
+    
+    testi1t(:,i) = O2_old;
+    testi2t(:,i) = O2_diff; testi3t(:,i) = O2_new;
+       
     P3zt_sed(:,i,1) = Pdz_store; %diss. P conc. in sediment pore water (mg m-3)
     P3zt_sed(:,i,2) = Psz_store; %P conc. in inorganic sediment particles (mg kg-1 dry w.)
     P3zt_sed(:,i,3) = Chlsz_store; %Chl conc. in organic sediment particles (mg kg-1 dry w.)
@@ -1042,23 +1588,140 @@ for i = 1:length(tt)
     His(7,i) = IceIndicator; 
     His(8,i) = HFrazil; %NEW!!!
     
-    MixStat(1,i) = Iflw_S;
-    MixStat(2,i) = Iflw_TP;
-    MixStat(3,i) = sum(Sz.*Vz);
-    MixStat(4,i) = Growth_bioz(1);%mean(Growth_bioz(1:4)); %Obs! changed to apply to layers 1-4 only
-    MixStat(5,i) = Loss_bioz(1);%mean(Loss_bioz(1:4)); %Obs! changed to apply to layers 1-4 only
-    MixStat(6,i) = Iflw;
-    MixStat(7:10,i) = NaN;
-    % KOJI
-            MixStat(7,i) = TCz; %pycnocline depth
+   %Original MixStat matrix in v.1.2.1b
+    
+    %MixStat(1,i) = Iflw_S;
+    %MixStat(2,i) = Iflw_TP;
+    %MixStat(3,i) = sum(Sz.*Vz);
+    %MixStat(4,i) = Growth_bioz(1);%mean(Growth_bioz(1:4)); %Obs! changed to apply to layers 1-4 only
+    %MixStat(5,i) = Loss_bioz(1);%mean(Loss_bioz(1:4)); %Obs! changed to apply to layers 1-4 only
+    %%MixStat(6,i) = Iflw;
+    %MixStat(7:10,i) = NaN;
+    
+   % MixStat matrix from v.1.2 for figure output purposes
+    
+   MixStat(1,i) = Iflw_S;
+   MixStat(2,i) = Iflw_TP;
+   MixStat(3,i) = lambdaz_wtot(2);%Iflw_DOC;
+        MixStat(4,i) = mean(Growth_bioz); %Only for chlorophyll group 1 (a)
+        MixStat(5,i) = mean(Loss_bioz);  %Only for chlorophyll group 1 (a)
+        MixStat(6,i) = Iflw;
+          if (IceIndicator == 1)
+           MixStat(7:11,i) = NaN;
+          else
+           dum=interp1(zz,Pz,[0:0.1:4]);
+           MixStat(7,i) = mean(dum); %diss-P conc. 0-4m in ice-free period
+              
+           dum=interp1(zz,Chlz,[0:0.1:4]);
+           MixStat(8,i) = mean(dum); %Chla conc. 0-4m in ice-free period
+           
+           dum=interp1(zz,PPz,[0:0.1:4]);
+           MixStat(9,i) = mean(dum); %particulate inorg. P conc. 0-4m in ice-free period
 
+           dum=interp1(zz,DOPz,[0:0.1:4]);
+           MixStat(10,i) = mean(dum); %dissolved organic P conc. 0-4m in ice-free period
+           
+           dum=interp1(zz,Sz,[0:0.1:4]);
+           MixStat(11,i) = mean(dum); %particulate matter conc. 0-4m in ice-free period
+          end
 
+        MixStat(12,i) = TCz; %pycnocline depth
+
+        MixStat(13,i) = 1e-6*Iflw*Iflw_TP; %total P inflow (kg day-1)
+%         if (Iflw>Vz(1))
+%             disp('Large inflow!!')
+%         end
+        MixStat(14,i) = 1e-6*Iflw*(Pz(1)+PPz(1)+DOPz(1)+Chlz(1)+Cz(1)); %total P outflow (kg day-1)
+        MixStat(15,i) = sum(1e-6*Vz.*(delPP_inorg + delC_org)); %total P sink due to sedimentation (kg day-1)
+        MixStat(16,i) = sum(1e-6*(dPP+dPW_up).*Vz); %Internal P loading (kg day-1, excluding Chla)
+        MixStat(17,i) = sum(1e-6*dChl_res.*Vz); %Internal Chla loading (kg day-1)(resuspension 50/50 between the two groups)
+        MixStat(18,i)= sum(1e-6*Vz.*((Pz+PPz+DOPz+Chlz+Cz) - TP0)); %Net P change kg
+        MixStat(19,i)= sum(1e-6*((dPP+dPW_up-delPP_inorg+dChl_res-delC_org).*Vz - (1-F_sed_sld)*H_sed*(-diff([Az; 0])).*dPW_down)); %Net P flux from sediment kg
+        MixStat(20,i) = 1e-6*Iflw*(Iflw_TP-(Iflw_Chl+Iflw_C)./Y_cp-Iflw_DOP-Fstable*Iflw_S); %total algae-available P inflow (kg day-1)
+        if (IceIndicator == 1)
+         MixStat(21,i) = NaN;
+        else 
+         dum=interp1(zz,Cz,[0:0.1:4]);
+         MixStat(21,i) = mean(dum); %Chl group 2 conc. 0-4m in ice-free period
+        end 
+        MixStat(22,i) = mean(Growth_bioz_2); %For chlorophyll group 2
+        MixStat(23,i) = mean(Loss_bioz_2);  %For chlorophyll group 2
+         
 end; %for i = 1:length(tt)
+
+
+%Saving sediment values
+R_values_matsedlabzt = { 
+
+      R1_matsedlabzt,         'R1';
+      R1_int_matsedlabzt,     'R1 integrated';
+      R2_matsedlabzt,         'R2';
+      R2_int_matsedlabzt,     'R2 integrated';
+      R3_matsedlabzt,         'R3';
+      R3_int_matsedlabzt,     'R3 integrated';
+      R4_matsedlabzt,         'R4';
+      R4_int_matsedlabzt,     'R4 integrated';
+      R5_matsedlabzt,         'R5';
+      R5_int_matsedlabzt,     'R5 integrated';
+      R6_matsedlabzt,         'R6'; 
+      R6_int_matsedlabzt,     'R6 integrated'; 
+};
+
+Bioirrigation_matsedlabzt = { O2_Bioirrigation_matsedlabz,  'Oxygen';
+                              PO4_Bioirrigation_matsedlabz, 'PO4'};
+
+            MyLake_params = [ (keys(MyLake_params))', (values(MyLake_params))'];
+            sediment_params = [ (keys(sediment_params))', (values(sediment_params))'];
+
+sediment_results = {O2_matsedlabzt,     'Oxygen (aq)';
+                   FeOH3_matsedlabzt,   'Iron hydroxide pool 1 Fe(OH)3 (s)';
+                   FeOOH_matsedlabzt,   'Iron Hydroxide pool 2 FeOOH (s)';
+                   SO4_matsedlabzt,     'Sulfate SO4(2-) (aq)';
+                   Fe2_matsedlabzt,     'Iron Fe(2+) (aq)'; 
+                   H2S_matsedlabzt,     'Sulfide H2S (aq)';
+                   HS_matsedlabzt,      'Sulfide HS(-) (aq)'; 
+                   FeS_matsedlabzt,     'Iron Sulfide FeS (s)';
+                   OM_matsedlabzt,      'Organic Matter pool 1 OMa (s)';
+                   OMb_matsedlabzt,     'Organic Matter pool 2 OMb (s)';
+                   OMS_matsedlabzt,     'Sulfured Organic Matter (s)';
+                   AlOH3_matsedlabzt,   'Aluminum oxide Al(OH)3 (s)'; 
+                   S0_matsedlabzt,      'Elemental sulfur S(0) (aq)'; 
+                   S8_matsedlabzt,      'Rhombic sulfur S8 (s)'; 
+                   FeS2_matsedlabzt,    'Pyrite FeS2 (s)'; 
+                   PO4_matsedlabzt,     'Phosphate PO4(3-) (aq)';
+                   PO4adsa_matsedlabzt, 'Solid phosphorus pool a PO4adsa (s)';
+                   PO4adsb_matsedlabzt, 'Solid phosphorus pool b PO4adsb (s)';
+                   NO3_matsedlabzt,     'Nitrate NO3(-) (aq)';
+                   NH4_matsedlabzt,     'Ammonium NH4(+) (aq)';
+                   H_matsedlabzt,       'H+ concentration';
+                   Ca2_matsedlabzt,     'Calcium Ca(2+) (aq)';
+                   Ca3PO42_matsedlabzt, 'Apatite Ca3PO42 (s)';
+                   H_matsedlabzt,       'H(+)(aq)';
+                   OH_matsedlabzt,      'OH(-)(aq)';
+                   CO2_matsedlabzt,     'CO2(aq)';
+                   CO3_matsedlabzt,     'CO3(2-)(aq)';
+                   HCO3_matsedlabzt,    'HCO3(-)(aq)';
+                   NH3_matsedlabzt,     'NH3(aq)';
+                   H2CO3_matsedlabzt,   'H2CO3(aq)';
+                   pH_matsedlabzt,      'pH in sediment';
+                   OM_flux_matsedlabzt, 'OM flux to sediments';
+                   OM2_flux_matsedlabzt,'OM2 flux to sediments';
+                   O2_flux_matsedlabzt, 'Oxygen flux WC to Sediments';
+                   deltaO2,             'dO2';
+                   PO4_flux_matsedlabzt,'PO4 flux WC to Sediments';
+                   deltaPz,             'dPz';
+                   w_chl,               'Chl settling velocity m day-1';
+                   Mass_Ratio_C_Chl,    'Mass ratio C:Chl';
+                   z_matsedlab,         'z';
+                   R_values_matsedlabzt,'R values';
+                   Bioirrigation_matsedlabzt, 'Fluxes of bioirrigation';
+                   MyLake_params,       'MyLake Params important for sediments';
+                   sediment_params,     'Sediments params'};
 
 runtime=toc;
 
-disp(['Total model runtime: ' int2str(floor(runtime/60)) ' min ' int2str(round(mod(runtime,60))) ' s']);
-disp(['Reduced SS load due to inconsistencies: '  num2str(round(SS_decr)) ' kg']); 
+%disp(['Total model runtime: ' int2str(floor(runtime/60)) ' min ' int2str(round(mod(runtime,60))) ' s']);
+%disp(['Reduced SS load due to inconsistencies: '  num2str(round(SS_decr)) ' kg']); 
 
 % >>>>>> End of the time loop >>>>>>
 
@@ -1168,23 +1831,23 @@ for w=1:N
     c = Psat*TIP(w) - vf(w)*rho_sed*Fstable*Psat ;
     Pdiss(w) = max(real(roots([a b c])));
 end
-% $$$
-%NEW!!!! Treshold value for numerical stability (added 020707):
+
+
+%NEW!!!! Threshold value for numerical stability (added 020707):
 %truncate negative values
 cutinx=find(Pdiss < 0);
 if (isempty(cutinx)==0)
     Pdiss(cutinx)=0;
-    disp('NOTE: Pdiss < 0, values truncated') 
+    %disp('NOTE: Pdiss < 0, values truncated') 
 end    
 
 %truncate too high values
 cutinx=find(Pdiss > (TIP - Fstable*rho_sed*vf));
 if (isempty(cutinx)==0)
     Pdiss(cutinx)=(TIP(cutinx) - Fstable*rho_sed*vf(cutinx));
-    disp('NOTE: Pdiss > (TIP - Fstable*rho_sed*vf), values truncated') 
+    %disp('NOTE: Pdiss > (TIP - Fstable*rho_sed*vf), values truncated') 
 end    
 
 Pfpart = (TIP - (1-vf).*Pdiss)./(rho_sed*vf); %inorg. P conc. in sediment particles(mg kg-1 dry w.) 
 %end of function
-% SIMPLE
 

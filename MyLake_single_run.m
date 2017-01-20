@@ -29,13 +29,14 @@ big_inputs = cell(1,no_runs);   % collects the inputs
 % 'NO_Vansjo_I4Cons_',...
 % 'NO_Vansjo_I8Frag_',};
 
-parfor current_run = 1:no_runs
+% parfor
+for current_run = 1:no_runs
 
     if current_run == 1;
         run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
         clim_ID = run_ID
         if use_INCA == 1
-            m_start=[1983, 1, 1]; % for scenario runs
+            m_start=[2014, 12, 29]; % for scenario runs
             m_stop=[2014, 12, 31]; % for scenario runs
         else
             m_start=[1983, 1, 4]; % for calibration with INCA = 0
@@ -122,7 +123,7 @@ parfor current_run = 1:no_runs
 
     end
 
-    [TP_obs,TP_mod,chl_obs,chl_mod, mod_all, input_all, INCA_QC] = fn_MyL_application(m_start, m_stop, K_values_sediments, K_values_lake, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
+    [TP_obs,TP_mod,chl_obs,chl_mod, mod_all, input_all, INCA_QC] = fn_MyL_application(m_start, m_stop, K_values_sediment, K_values_lake, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
 
     % big_results{current_run}= mod_all; %
     % big_inputs{current_run}= input_all; %

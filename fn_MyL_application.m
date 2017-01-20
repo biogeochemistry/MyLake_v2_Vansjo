@@ -5,7 +5,7 @@ global sed_par_file lake_par_file Eevapor
 
 Eevapor=0;    disp('init ...');
 
-calibration_k_values = [(1:32)',cell2mat(K_sediments(:,1)) ]; % writing sediments parameters file
+calibration_k_values = [(1:50)',cell2mat(K_sediments(:,1)) ]; % writing sediments parameters file
 
 %% generates unique files
 
@@ -18,32 +18,29 @@ dlmwrite(sed_par_file, calibration_k_values,'delimiter','\t');
 f = fopen('IO/vansjo_para.txt');
 garbage = fgetl(f); % file get line
 garbage = fgetl(f); % file get line
-data_lake = textscan(f, '%s%f%f%f%s', 60, 'Delimiter', '\t');
+data_lake = textscan(f, '%s%f%f%f%s', 63, 'Delimiter', '\t');
 fclose(f); % the parameter line (xx,1) + 2 lines gives the location of the paramter in the input txt file.
 % array position + 2 = input file line
 
-data_lake{1, 2}(17,1) = K_lake{1}; % I_scT
-data_lake{1, 2}(23,1) = K_lake{2}; % I_scDOC
-data_lake{1, 2}(31,1) = K_lake{3}; % Uz_Sz or w_s
-data_lake{1, 2}(32,1) = K_lake{4}; % Uz_Chl or w_chl
-data_lake{1, 2}(33,1) = K_lake{5}; % Y_cp
-data_lake{1, 2}(34,1) = K_lake{6}; % m_twty
-data_lake{1, 2}(35,1) = K_lake{7}; % g_twty
-data_lake{1, 2}(36,1) = K_lake{8}; % k_sed_twty
-data_lake{1, 2}(37,1) = K_lake{9}; % k_dop_twty
-data_lake{1, 2}(38,1) = K_lake{10}; % P_half
-data_lake{1, 2}(45,1) = K_lake{11}; % oc_DOC
-data_lake{1, 2}(46,1) = K_lake{12}; % qy_DOC
-data_lake{1, 2}(47,1) = K_lake{13}; % k_bod
-data_lake{1, 2}(49,1) = K_lake{14}; % theta_bod
-data_lake{1, 2}(50,1) = K_lake{15}; % theta_bod_ice
-data_lake{1, 2}(53,1) = K_lake{16}; % theta_T
-data_lake{1, 2}(60,1) = K_lake{17}; % I_scO
+data_lake{1, 2}(23,1) = K_lake{1}; % I_scDOC
+data_lake{1, 2}(46,1) = K_lake{2}; % qy_DOC
+data_lake{1, 2}(45,1) = K_lake{3}; % oc_DOC
+data_lake{1, 2}(47,1) = K_lake{4}; % k_bod
+data_lake{1, 2}(49,1) = K_lake{5}; % theta_bod
+data_lake{1, 2}(50,1) = K_lake{6}; % theta_bod_ice
+data_lake{1, 2}(17,1) = K_lake{7};
+data_lake{1, 2}(31,1) = K_lake{8};
+data_lake{1, 2}(32,1) = K_lake{9};
+data_lake{1, 2}(53,1) = K_lake{10}; % BOD7  on line 55 of the txt file
+data_lake{1, 2}(60,1) = K_lake{11}; % I_scO
+data_lake{1, 2}(61,1) = K_lake{12}; % Q10
+data_lake{1, 2}(62,1) = K_lake{13}; % wc_factor
+data_lake{1, 2}(63,1) = K_lake{14}; % T_ref
 
 fid=fopen(lake_par_file,'wt');
 fprintf(fid,'\n\n');
 fclose(fid);
-dlmwrite(lake_par_file, [[1:60]',data_lake{2},data_lake{3},data_lake{4},(1:60)'],'delimiter','\t','-append'); % 1:60 is the lenght of the parameter file.
+dlmwrite(lake_par_file, [[1:63]',data_lake{2},data_lake{3},data_lake{4},(1:63)'],'delimiter','\t','-append'); % 1:63 is the lenght of the parameter file.
 
 %% Specific MyLake application
 
@@ -99,17 +96,21 @@ end
 
 % note: I removed the DIC/O2 bits here ... take them again from Langtjern
 % app when migrating to Mylake DOCOMO
+Deposition = 0;
 
 disp('Storefjorden ...')
 
-[In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz, In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,...
+[In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DICz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
     Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
-    = modelinputs_v12_1b(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parafile, 'lake', dt);
+    = modelinputs_v2(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parafile, 'lake', dt);
 
 
-[zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,Qzt_sed,lambdazt,...
-    P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt]...
-    = solvemodel_v12_1b(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake');
+[zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,...
+    P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,O2fluxt,CO2_eqt,K0t,O2_eqt,K0_O2t,...
+    CO2_ppmt,dO2Chlt,dO2BODt,testi1t,testi2t,testi3t,...
+    MyLake_results_basin1, sediment_data_basin1] ...
+    = solvemodel_v2(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake',In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM, ...
+    Ice0,Wt,Inflw,Phys_par,Phys_par_range,Phys_par_names, Bio_par,Bio_par_range,Bio_par_names, Deposition);
 
 %% Old KOJI stuff
 % date_temp = datevec(tt);
@@ -139,8 +140,23 @@ outflowChl = Chlzt(1, :)';
 outflowDOC = DOCzt(1, :)';
 outflowDIC = DOCzt(1, :)'; %dummy for MyLake TSA
 outflowO = DOCzt(1, :)'; %dummy for MyLake TSA
-%outflowDIC = DICzt(1, :)';
-%outflowO = O2zt(1, :)';
+outflowDIC = DICzt(1, :)';
+outflowO = O2zt(1, :)';
+outflowNO3zt = NO3zt(1,:)';
+outflowNH4zt = NH4zt(1,:)';
+outflowSO4zt = SO4zt(1,:)';
+outflowHSzt = HSzt(1,:)';
+outflowH2Szt = H2Szt(1,:)';
+outflowFe2zt = Fe2zt(1,:)';
+outflowCa2zt = Ca2zt(1,:)';
+outflowpHzt = pHzt(1,:)';
+outflowCH4zt = CH4zt(1,:)';
+outflowFe3zt = Fe3zt(1,:)';
+outflowAl3zt = Al3zt(1,:)';
+outflowSiO4zt = SiO4zt(1,:)';
+outflowSiO2zt = SiO2zt(1,:)';
+outflowdiatomzt = diatomzt(1,:)';
+
 
 %# ############ This is Vansjø Vanemfj. ##############
 if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis. 
@@ -152,7 +168,7 @@ if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis.
     end
     
     
-    store_to_vanem = [outflow outflowTemp outflowC outflowS outflowTP outflowDOP outflowChl outflowDOC outflowDIC outflowO];
+    store_to_vanem = [outflow outflowTemp outflowC outflowS outflowTP outflowDOP outflowChl outflowDOC outflowDIC outflowO outflowDIC outflowO outflowNO3zt outflowNH4zt outflowSO4zt outflowHSzt outflowH2Szt outflowFe2zt outflowCa2zt outflowpHzt outflowCH4zt outflowFe3zt outflowAl3zt outflowSiO4zt outflowSiO2zt outflowdiatomzt];
    
     Q_lake = outflow;
     
@@ -171,13 +187,16 @@ if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis.
     
     disp('Vanemfjorden ...')
     
-    [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,~, In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,...
-        Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
-        = modelinputs_v12_1b(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parafile, 'lake', dt);
+    [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DICz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
+    Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
+        = modelinputs_v2(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parafile, 'lake', dt);
     
-    [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,Qzt_sed,lambdazt,...
-        P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt]...
-        = solvemodel_v12_1b(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake');
+    [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,...
+    P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,O2fluxt,CO2_eqt,K0t,O2_eqt,K0_O2t,...
+    CO2_ppmt,dO2Chlt,dO2BODt,testi1t,testi2t,testi3t,...
+    MyLake_results_basin1, sediment_data_basin1] ...
+        = solvemodel_v2(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake',In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM, ...
+    Ice0,Wt,Inflw,Phys_par,Phys_par_range,Phys_par_names, Bio_par,Bio_par_range,Bio_par_names, Deposition);
    
     % delete (vanem_input)
     disp('Cleanup ... done.')

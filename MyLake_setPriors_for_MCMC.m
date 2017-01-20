@@ -2,8 +2,8 @@
 % into the Prior even for parameters not varied. Put in a switch for that.
 
 MaxMinSed = ...
-    [1 1; ... 
-    0.01 0.01; ...
+    [0.1 10;
+    0.01 1; ...
     0.0123 0.0123;...
     0.01 0.01;...
      3.92  3.92;...
@@ -11,7 +11,7 @@ MaxMinSed = ...
     0.0293 0.0293;...
     0.001 0.001; ...
     0.1 0.1;...
-    1e-2 1e-2;...
+    1e-2 1;...
     0.1 0.1;...
     0.1 0.1; ...
     0.1 0.1;...
@@ -33,92 +33,121 @@ MaxMinSed = ...
     8e-2 8e-2; ...
     1000 1000;...
     0.001 0.001;...
-    0 0];
+    0.01 50
 
+    1e-6 1e-6;...
+    1.35 1.35;...
 
-K_values_sediments ...
-    = {0,   'K_OM1'; 	% optimized
-    0,      'K_OM2'; 		% optimized
-    0.0123, 'Km_O2'; 	% optimized 
-    0.01,   'Km_NO3'; 	% not varied
-    3.92,   'Km_Fe(OH)3';% optimized
-    2415,   'Km_FeOOH'; 	% optimized
-    0.0293, 'Km_SO4'; 	% not varied
-    0.001,  'Km_O2ao'; 	% optimized
-    0.1,    'Km_NH4ao'; 	% not varied
-    0.0219, 'Kin_O2'; 	% 1e-2, 1
-    0.1,    'Kin_NO3'; 	% not varied
-    0.1,    'Kin_FeOH3'; 	% not varied
-    0.1,    'Kin_FeOOH'; 	% not varied
-    100,    'K_NH4ox'; 	% not varied
-    8.7e4,  'K_Feox'; 	% optimized
-    0.1,    'K_Sdis'; 	% not varied
-    0.1,    'K_Spre'; 	% not varied
-    3.17,   'K_FeS2pre'; 	% not varied
-    0.1,    'K_AlOH3'; 	% not varied
-    1.35,   'K_P_sorb_a'; 	% not varied
-    1.35,   'K_P_sorb_b'; 	% not varied
-    6500,   'K_rhom'; 	% not varied
-    0.1,    'K_tS_Fe';  	% not varied
-    2500,   'K_Fe_S'; 	% not varied
-    0.001,  'K_Fe_dis'; 	% not varied
-    21.3,   'K_Fe_pre'; 	% not varied
-    0.37,   'K_apa'; 		% not varied
-    3e-6,   'Kapa'; 	% not varied
-    8e-2,   'K_sorg'; 	% not varied
-    1000,   'K_tsox'; 	% not varid
-    0.001,  'K_FeS_FeS2'; 	% not varied
-    0,      'accel'};		% , 0.01-50 #1
+    0.98 0.98;...
+    0.85 0.85;...
+    0.5 0.5;...
+    1 1;...
 
-MaxMinLake =     ... 
-    [0 2; ...       % I_scT
-    1 1; ...        % I_scDOC
-    0.2 0.2; ...    % w_s
-    0.2 0.2; ...    % w_chl
-    0.7 1.3; ...        % Y_cp
-    0.1 0.4; ...    % m_twty mortality rate
-    0.75 3.0; ...    % g_twty growth rate
-    1e-4 4e-4; ...  % k_sed_twty
-    0 0; ...        % k_dop_twty
-    0.1 0.4; ...    % P_half
-    0.01 0.01; ...  % oc_DOC
-    0.1 0.1; ...    % qy_DOC
-    0.1 0.1; ...    % k_BOD
-    1.05 1.05; ...  % theta_BOD
-    1.13 1.13; ...  % theta_BOD_ice
-    4 4; ...        % theta_T
-    1 1];           % I_scO
+    10 10;...
+    64 64;...
+    15 15;...
+    0.26 0.26;...
+    14.4 14.4;...;
 
+    112 112;...
+    10 10;...
+    1 1;...
+    200 200;...
+    20 20;...
+    1 1;...
+
+    0.001 0.001];
+
+K_values_sediment ...
+    = {1,  'k_OM1';  % 1
+    0.1,   'k_OM2';  % 0.01
+    0.0123,'Km_O2';
+    0.01,  'Km_NO3';
+    3.92,  'Km_Fe(OH)3';
+    2415,  'Km_FeOOH';
+    0.0293,'Km_SO4';
+    0.001, 'Km_oxao';
+    0.1,   'Km_amao';
+    0.3292,'Kin_O2';
+    0.1,   'Kin_NO3';
+    0.1,   'Kin_FeOH3';
+    0.1,   'Kin_FeOOH';
+    2000,  'k_amox';
+    % 8.7e4, 'k_Feox';
+    8.7e1, 'k_Feox'; % Original is too fast for our time steps. This term cause instability in R8 and mass balance for Fe fails
+    0.1,   'k_Sdis';
+    2500,  'k_Spre';
+    3.17,  'k_FeS2pre';
+    0.1,   'k_alum';
+    1.35,  'k_pdesorb_a';
+    1.35,  'k_pdesorb_b';
+    6500,  'k_rhom';
+    0.1,   'k_tS_Fe';
+    2510,  'Ks_FeS';
+    0.001, 'k_Fe_dis';
+    21.3,  'k_Fe_pre';
+    0.37,  'k_apa';
+    3e-6,  'kapa';
+    0.3134,'k_oms';
+    1000,  'k_tsox';
+    0.001, 'k_FeSpre';
+    30,    'accel';
+
+    1e-6,   'f_pfe';
+    1.35,   'k_pdesorb_c';
+
+    % Added porosity modeling parameters:
+    0.98,   'fi_in';
+    0.85,   'fi_f';
+    0.5,    'X_b';
+    1,      'tortuosity';
+
+    0.1,    'w';
+    128,    'n';
+    10,     'depth';
+    0.26,   'F';
+    14.4,   'alfa0';
+
+    % OM composition
+    112,    'Cx1';
+    10,     'Ny1';
+    1,      'Pz1';
+    200,    'Cx2';
+    20,     'Ny2';
+    1,      'Pz2';
+
+    0.001,  'ts';
+    };
+
+MaxMinLake = [0.9 1.1; 1e-6 1e-2; 1e-6 0.1; 1e-6 0.01; 0 1; 0 4; 1.97 1.97; 1 20; 1 20; 1 20; 0.9 1.1];
 K_values_lake =      ...
-   {0,      'I_scT'; 	% 
-    1,      'I_scDOC'; 	% 
-    0.2,    'w_s'; 		% 
-    0.02,    'w_chl';    % 
-    2.0,    'Y_cp'      %
-    0.2,    'm_twty'    %
-    1.5     'g_twty'     %
-    2e-4    'k_sed_twty' %
-    0       'k_dop_twty' %    
-    0.2     'P_half'     %
-    0.01,   'oc_DOC'; 	 % 
-    0.1,    'qy_DOC'; 	 % 
-    0.1,    'k_BOD'; 	 % 
-    1.05,   'theta_bod';	 % 
-    1.13,   'theta_bod_ice'; 	% 
-    4,      'theta_T';     % 
-    1,      'I_scO'}; 	% 
+   {1.05,     'I_scDOC';    % 0.1, 2 #2
+    0,   'qy_DOC';  % optimized 0.165
+    0,  'oc_DOC';   % optimized 0.039
+    1e-3,   'k_BOD';        % 0.01, 10 #3 optimized 0.25
+    1, 'theta_bod'; % 0.5 1.1 #4
+    1,  'theta_bod_ice';    % 0.5 1.1 # higher reduces DOC reduction
+    1.97,    'I_scT';       % optimized
+    2,   'w_s';         % 0.01-10
+    1,  'w_chl';    % 0.1-50
+    10,   'theta_T'; % 0 20
+    0.9,     'I_scO'; % 1e-1, 2 #6
+    1.7,   'Q10';
+    10^-4,  'wc_factor';
+    4.8497, 'T_ref';
+    };
 
-for ii=1:32 %for sediment priors
-    Priors(ii).name = K_values_sediments(ii,2);
+for ii=1:50 %for sediment priors
+    Priors(ii).name = K_values_sediment(ii,2);
     Priors(ii).min  = MaxMinSed(ii,1);
     Priors(ii).max  = MaxMinSed(ii,2);
-    Priors(ii).default = K_values_sediments(ii,1);
+    Priors(ii).default = K_values_sediment(ii,1);
+end
+for ii=1:11 %for lake parameters
+    Param(50+ii).name = K_values_lake(ii,2);
+    Param(50+ii).type   = 'uniform';
+    Param(50+ii).values(1) = MaxMinLake(ii,1);
+    Param(50+ii).values(2) = MaxMinLake(ii,2);
 end
 
-for ii=1:17 %for lake parameters
-    Priors(32+ii).name = K_values_lake(ii,2);
-    Priors(32+ii).min = MaxMinLake(ii,1);
-    Priors(32+ii).max = MaxMinLake(ii,2);
-    Priors(32+ii).default = K_values_lake(ii,1);
-end
 

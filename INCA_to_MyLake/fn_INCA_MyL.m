@@ -54,6 +54,7 @@ MyLake_weather_only = strcat('IO', filesep, 'vansjo_weather_only_', clim_ID, '.t
 %% Preparing MyL input
 % Thus  combine reaches 5Vaaler and 6Store together
 New_Reach = fn_INCA_reach_combination(Reach,2,3,7); % Reach array, ID1, ID2, number of variables in the reach file)., We combine reach 5 and 6 basically.
+zo = zeros(no_days,1);
 
 inflow = New_Reach{1,1}.*sec_to_day; % m3/sec to m3/day
 inflowTemp = New_Reach{1,7};
@@ -64,11 +65,11 @@ inflowDOP = New_Reach{1,3}.*liter_to_cube*TDP_to_DOP; % warning this gives a hig
 inflowChl = inflowC; % still fixed
 inflowDOC = inflowC + 3000; % still fixed
 inflowDIC = inflowC; %dummy
-inflowO = inflowC; %dummy
+inflowO = zo; %dummy
 %outflowDIC = DICzt(1, :)';
 %outflowO = O2zt(1, :)';
 
-INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO];
+INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO zo zo zo zo zo zo zo zo zo zo zo zo];
 
 save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/store_INCAP_input', 'MyLake_weather_only', 'INCA_input')
 
@@ -89,7 +90,8 @@ inflowDOC = inflowC + 3000;
 inflowDIC = inflowC; %dummy for MyLake TSA
 inflowO = inflowC; %dummy for MyLake TSA
 
-INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO];
+
+INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO zo zo zo zo zo zo zo zo zo zo zo zo];
 save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/vanem_INCAP_input', 'MyLake_weather_only', 'INCA_input')
 
 INCA_QC_2 = INCA_input;

@@ -1,4 +1,4 @@
--999	"MyLake DOCOMO model parameters for Vansjoen (Storefjorden), last modified 23.9.2014"			
+-999	"MyLake	DOCOMO	model	parameters	for	Vansjoen (Storefjorden), last modified 23.9.2014"
 Parameter	Value	Min	Max	Unit
 dz	1	0.5	2	m
 Kz_ak	0.0322	NaN	NaN	(-)
@@ -60,3 +60,6 @@ Mass_Ratio_C_Chl	100	NaN	NaN	(-)
 58	1.95	NaN NaN 58
 59	2.65	NaN NaN 59
 I_scO	1	NaN NaN (-)
+Q10	1.7	NaN	NaN	(-)
+wc_factor	0.0001	NaN	NaN	(-)
+T_ref	4.8497	NaN	NaN	(-)
