@@ -126,7 +126,7 @@ end
 load albedot1.mat; %load albedot1 table, in order to save execution time
 
 % Unpack the more fixed parameter values from input array "Phys_par"
-dz = 0.1; %Phys_par(1); %grid step size (m)
+dz = 1; %Phys_par(1); %grid step size (m)
 
 zm = In_Z(end); %max depth
 zz = [0:dz:zm-dz]'; %solution depth domain
@@ -471,8 +471,8 @@ DoM=[]; %initialize
 % ==========================================
 
 % ============ water-column module ============
-k_OM_wc          = sediment_params('k_OM') * wc_factor;
-k_OMb_wc         = sediment_params('k_OMb')* wc_factor;
+k_OM_wc          = sediment_params('k_OM')  * wc_factor;
+k_OMb_wc         = sediment_params('k_OMb') * wc_factor;
 Km_O2_wc         = sediment_params('Km_O2');
 Km_NO3_wc        = sediment_params('Km_NO3');
 Km_FeOH3_wc      = sediment_params('Km_FeOH3');
@@ -1518,16 +1518,16 @@ for i = 1:length(tt)
 
     if wc_chemistry_module
 
-        k_OM_wc_q10        = k_OM_wc .* Q10_wc.^(Tz-T_ref_wc)/10;
-        k_OMb_wc_q10       = k_OMb_wc .* Q10_wc.^(Tz-T_ref_wc)/10;
-        k_tsox_wc_q10      = k_tsox_wc .* Q10_wc.^(Tz-T_ref_wc)/10;
-        k_tS_Fe_wc_q10     = k_tS_Fe_wc .* Q10_wc.^(Tz-T_ref_wc)/10;
-        k_Feox_wc_q10      = k_Feox_wc .* Q10_wc.^(Tz-T_ref_wc)/10;
-        k_amox_wc_q10      = k_amox_wc .* Q10_wc.^(Tz-T_ref_wc)/10;
-        k_oms_wc_q10       = k_oms_wc .* Q10_wc.^(Tz-T_ref_wc)/10;
-        k_pdesorb_a_wc_q10 = k_pdesorb_a_wc .* Q10_wc.^(Tz-T_ref_wc)/10;
-        k_pdesorb_c_wc_q10 = k_pdesorb_c_wc .* Q10_wc.^(Tz-T_ref_wc)/10;
-        k_apa_wc_q10       = k_apa_wc .* Q10_wc.^(Tz-T_ref_wc)/10;
+        k_OM_wc_q10        = k_OM_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
+        k_OMb_wc_q10       = k_OMb_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
+        k_tsox_wc_q10      = k_tsox_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
+        k_tS_Fe_wc_q10     = k_tS_Fe_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
+        k_Feox_wc_q10      = k_Feox_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
+        k_amox_wc_q10      = k_amox_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
+        k_oms_wc_q10       = k_oms_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
+        k_pdesorb_a_wc_q10 = k_pdesorb_a_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
+        k_pdesorb_c_wc_q10 = k_pdesorb_c_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
+        k_apa_wc_q10       = k_apa_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
 
         O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
         Chlz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz * Mass_Ratio_C_Chl / sediment_params('Cx1'), 12011);
@@ -2256,7 +2256,6 @@ function [dcdt] = rates(C, dt)
 
     % MyLake "old" chemistry:
     % Conversion of units to "per year" and umoles
-    dop_twty = 0; % we treed this as bio reaction (see rate "Rc");
     dop_twty_y = dop_twty*365; % In MyLake parameters with set to 0;
     g_twty_y = g_twty*365;
     m_twty_y = m_twty*365;
@@ -2265,8 +2264,8 @@ function [dcdt] = rates(C, dt)
     P_half_molar = P_half/94971;
     P_half_2_molar = P_half_2/94971;
 
-    % DOP:
-    R_dDOP =  dop_twty_y .* DOPz .* theta_m.^(Tz-20);  %Mineralisation to P
+    % DOP: ( we treed this as bio reaction, see rate "Rc")
+    R_dDOP = 0; % dop_twty_y .* DOPz .* theta_m.^(Tz-20);  %Mineralisation to P
 
     % Chlz:
     Growth_bioz=g_twty_y*theta_m.^(Tz-20) .* (Pz./(P_half_molar+Pz)) .* (DayFrac./(dz*lambdaz_wtot)) .* diff([-H_sw_z; 0]);
@@ -2300,8 +2299,8 @@ function [dcdt] = rates(C, dt)
 
     Sum_H2S = H2Sz + HSz;
 
-    R1a =  k_OM_wc_q10  .* Chlz .* f_O2 .* accel_wc;
-    R1b =  k_OM_wc_q10  .* Cz .* f_O2 .* accel_wc;
+    R1a =  0; %k_OM_wc_q10  .* Chlz .* f_O2 .* accel_wc;
+    R1b =  0; % k_OM_wc_q10  .* Cz .* f_O2 .* accel_wc;
     R1c =  k_OMb_wc_q10  .* DOPz .* f_O2 .* accel_wc;
     R1d =  k_OMb_wc_q10 .* DOCz .* f_O2 .* accel_wc;
 
@@ -2380,11 +2379,11 @@ function [dcdt] = rates(C, dt)
     dcdt(:,4)  = - 0.8*R2 + R9; % NO3z
     dcdt(:,5)  = - 4*R3 - 2*R7  + R8 - R16a ; % Fe3z
     dcdt(:,6)  = - 0.5*R5 + R6 ; % SO4z
-    dcdt(:,7)  =  (N_index1_wc * Ra + N_index2_wc * Rb) - R9 ;% NH4z
+    dcdt(:,7)  =  (N_index1_wc * Ra + N_index1_wc * Rb + N_index2_wc * Rc + N_index2_wc * Rd) - R9 ;% NH4z
     dcdt(:,8)  = 4*R3 + 2*R7 - R8 + R14b - R14a; % Fe2z
     dcdt(:,9)  =  0;% H2Sz
     dcdt(:,10) = 0.5*R5 - R6 - R7  - R10a - R10b - R10c - R10d + R14b - R14a - R13 ;% HSz
-    dcdt(:,11) = (P_index1_wc * Ra + P_index2_wc * Rb) - R18a + R18b - R16a - R17a + R16b + R17b - 2*R19 + R_dDOP - (R_dChl_growth + R_dCz_growth)./ Y_cp;% Pz
+    dcdt(:,11) = (P_index1_wc * Ra + P_index1_wc * Rb + P_index2_wc * Rc + P_index2_wc * Rd) - R18a + R18b - R16a - R17a + R16b + R17b - 2*R19 + R_dDOP - (R_dChl_growth + R_dCz_growth)./ Y_cp;% Pz
     dcdt(:,12) = -R18a ;% Al3z
     dcdt(:,13) =  R16a - R16b  ;% PPz
     dcdt(:,14) = -3*R19 ;% Ca2z
