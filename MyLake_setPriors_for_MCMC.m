@@ -133,7 +133,7 @@ K_values_lake =      ...
     10,   'theta_T'; % 0 20
     0.9,     'I_scO'; % 1e-1, 2 #6
     1.7,   'Q10';
-    10^-4,  'wc_factor';
+    1,  'wc_factor';
     4.8497, 'T_ref';
     };
 

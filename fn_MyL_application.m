@@ -1,4 +1,4 @@
-function [TP_obs,TP_mod,chl_obs,chl_mod, mod_all, input_all, INCA_QC] = fn_MyL_application(m_start,m_stop, K_sediments, K_lake, use_INCA, run_INCA, run_ID, clim_ID)
+function [TP_obs,TP_mod,chl_obs,chl_mod, mod_all, input_all, INCA_QC, MyLake_results, Sediment_results] = fn_MyL_application(m_start,m_stop, K_sediments, K_lake, use_INCA, run_INCA, run_ID, clim_ID)
 global sed_par_file lake_par_file Eevapor
 % This is the main MyLake application configuration file. INCA is a switch
 % It is made to run a after the parameter are set by Set_Prior
@@ -127,80 +127,80 @@ disp('Storefjorden ...')
 % % Qst : Estimated surface heat fluxes ([sw, lw, sl] * tt) (W m-2)
 % #################################################################
 
-surfacearea = Az(1); % m2
-precipvolume = surfacearea * Wt(:, 7) / 1000; % m3 day-1
-runoffintolake = Phys_par(16) * Inflw(:, 1); % I_scV should be 1'is input scaling 1?'
-outflow = precipvolume + runoffintolake; %% dd x 1
-outflowTemp = Tzt(1, :)';
-outflowC = Czt(1, :)';
-outflowS = Szt(1, :)';
-outflowTP = Czt(1, :)' + Pzt(1, :)' + Chlzt(1, :)' + PPzt(1, :)' + DOPzt(1, :)' ;
-outflowDOP = DOPzt(1, :)';
-outflowChl = Chlzt(1, :)';
-outflowDOC = DOCzt(1, :)';
-outflowDIC = DOCzt(1, :)'; %dummy for MyLake TSA
-outflowO = DOCzt(1, :)'; %dummy for MyLake TSA
-outflowDIC = DICzt(1, :)';
-outflowO = O2zt(1, :)';
-outflowNO3zt = NO3zt(1,:)';
-outflowNH4zt = NH4zt(1,:)';
-outflowSO4zt = SO4zt(1,:)';
-outflowHSzt = HSzt(1,:)';
-outflowH2Szt = H2Szt(1,:)';
-outflowFe2zt = Fe2zt(1,:)';
-outflowCa2zt = Ca2zt(1,:)';
-outflowpHzt = pHzt(1,:)';
-outflowCH4zt = CH4zt(1,:)';
-outflowFe3zt = Fe3zt(1,:)';
-outflowAl3zt = Al3zt(1,:)';
-outflowSiO4zt = SiO4zt(1,:)';
-outflowSiO2zt = SiO2zt(1,:)';
-outflowdiatomzt = diatomzt(1,:)';
+% surfacearea = Az(1); % m2
+% precipvolume = surfacearea * Wt(:, 7) / 1000; % m3 day-1
+% runoffintolake = Phys_par(16) * Inflw(:, 1); % I_scV should be 1'is input scaling 1?'
+% outflow = precipvolume + runoffintolake; %% dd x 1
+% outflowTemp = Tzt(1, :)';
+% outflowC = Czt(1, :)';
+% outflowS = Szt(1, :)';
+% outflowTP = Czt(1, :)' + Pzt(1, :)' + Chlzt(1, :)' + PPzt(1, :)' + DOPzt(1, :)' ;
+% outflowDOP = DOPzt(1, :)';
+% outflowChl = Chlzt(1, :)';
+% outflowDOC = DOCzt(1, :)';
+% outflowDIC = DOCzt(1, :)'; %dummy for MyLake TSA
+% outflowO = DOCzt(1, :)'; %dummy for MyLake TSA
+% outflowDIC = DICzt(1, :)';
+% outflowO = O2zt(1, :)';
+% outflowNO3zt = NO3zt(1,:)';
+% outflowNH4zt = NH4zt(1,:)';
+% outflowSO4zt = SO4zt(1,:)';
+% outflowHSzt = HSzt(1,:)';
+% outflowH2Szt = H2Szt(1,:)';
+% outflowFe2zt = Fe2zt(1,:)';
+% outflowCa2zt = Ca2zt(1,:)';
+% outflowpHzt = pHzt(1,:)';
+% outflowCH4zt = CH4zt(1,:)';
+% outflowFe3zt = Fe3zt(1,:)';
+% outflowAl3zt = Al3zt(1,:)';
+% outflowSiO4zt = SiO4zt(1,:)';
+% outflowSiO2zt = SiO2zt(1,:)';
+% outflowdiatomzt = diatomzt(1,:)';
 
 
-%# ############ This is Vansjø Vanemfj. ##############
-if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis. 
+% %# ############ This is Vansjø Vanemfj. ##############
+% if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis. 
     
-    if use_INCA == 0
-        land_to_vanem = 'IO/vanem_INCAP_input_baseline.txt';
-    else
-        land_to_vanem = vanem_INCAP_input;  % created above by calling fn_INCA_MyL.m
-    end
+%     if use_INCA == 0
+%         land_to_vanem = 'IO/vanem_INCAP_input_baseline.txt'
+%     else
+%         land_to_vanem = vanem_INCAP_input;  % created above by calling fn_INCA_MyL.m
+%     end
     
     
-    store_to_vanem = [outflow outflowTemp outflowC outflowS outflowTP outflowDOP outflowChl outflowDOC outflowDIC outflowO outflowDIC outflowO outflowNO3zt outflowNH4zt outflowSO4zt outflowHSzt outflowH2Szt outflowFe2zt outflowCa2zt outflowpHzt outflowCH4zt outflowFe3zt outflowAl3zt outflowSiO4zt outflowSiO2zt outflowdiatomzt];
+%     store_to_vanem = [outflow outflowTemp outflowC outflowS outflowTP outflowDOP outflowChl outflowDOC outflowDIC outflowO outflowDIC outflowO outflowNO3zt outflowNH4zt outflowSO4zt outflowHSzt outflowH2Szt outflowFe2zt outflowCa2zt outflowpHzt outflowCH4zt outflowFe3zt outflowAl3zt outflowSiO4zt outflowSiO2zt outflowdiatomzt];
    
-    Q_lake = outflow;
+%     Q_lake = outflow;
     
-    vanem_input = tempname;
-    merge_l_b_inputs(land_to_vanem,store_to_vanem,vanem_input)
+%     vanem_input = tempname;
+%     merge_l_b_inputs(land_to_vanem,store_to_vanem,vanem_input)
     
-    %parafile='k_values_lake.txt';
-    parafile = lake_par_file;
-    initfile='IO/vanem_init.txt';
-    inputfile = vanem_input;
+%     %parafile='k_values_lake.txt';
+%     parafile = lake_par_file;
+%     initfile='IO/vanem_init.txt';
+%     inputfile = vanem_input
     
-    % note: I removed the DIC/O2 bits here ... take them again from Langtjern
-    % app when migrating to Mylake DOCOMO
+%     % note: I removed the DIC/O2 bits here ... take them again from Langtjern
+%     % app when migrating to Mylake DOCOMO
     
     
     
-    disp('Vanemfjorden ...')
+%     disp('Vanemfjorden ...')
     
-    [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DICz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
-    Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
-        = modelinputs_v2(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parafile, 'lake', dt);
+%     [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DICz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
+%     Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
+%         = modelinputs_v2(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parafile, 'lake', dt);
     
-    [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,...
-    P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,O2fluxt,CO2_eqt,K0t,O2_eqt,K0_O2t,...
-    CO2_ppmt,dO2Chlt,dO2BODt,testi1t,testi2t,testi3t,...
-    MyLake_results_basin1, sediment_data_basin1] ...
-        = solvemodel_v2(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake',In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM, ...
-    Ice0,Wt,Inflw,Phys_par,Phys_par_range,Phys_par_names, Bio_par,Bio_par_range,Bio_par_names, Deposition);
+%     [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,...
+%     P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,O2fluxt,CO2_eqt,K0t,O2_eqt,K0_O2t,...
+%     CO2_ppmt,dO2Chlt,dO2BODt,testi1t,testi2t,testi3t,...
+%     MyLake_results_basin2, sediment_data_basin2] ...
+%         = solvemodel_v2(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake',In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM, ...
+%     Ice0,Wt,Inflw,Phys_par,Phys_par_range,Phys_par_names, Bio_par,Bio_par_range,Bio_par_names, Deposition);
    
-    % delete (vanem_input)
-    disp('Cleanup ... done.')
-end
+%     % delete (vanem_input)
+%     disp('Cleanup ... done.')
+% end
 
 %% returns observed and simulated
 
@@ -277,8 +277,13 @@ if isnumeric(use_INCA)
     
 end    
 
-mod_all = [TP_mod_all, chl_mod_all(:,2), PO4_mod_all(:,2), Part_mod_all(:,2) Temp_mod_all(:,2) Q_lake]; % P speciation epilimnion 2m
-input_all = [Wt,Inflw]; % weather and inflows 
+% MyLake_results = [MyLake_results_basin1, MyLake_results_basin2];
+MyLake_results = [MyLake_results_basin1];
+% Sediment_results = [sediment_data_basin1, sediment_data_basin2];
+Sediment_results = [sediment_data_basin1];
+
+mod_all =  0; %[TP_mod_all, chl_mod_all(:,2), PO4_mod_all(:,2), Part_mod_all(:,2) Temp_mod_all(:,2) Q_lake]; % P speciation epilimnion 2m
+input_all = 0; %[Wt,Inflw]; % weather and inflows 
 
 %% cleaning
 fclose('all');

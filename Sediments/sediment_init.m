@@ -465,7 +465,7 @@ function [LU_solid, RK_solid, LD, LA, RD, RA] = matrices_template_solid(D_m, the
 
   D = D_m / theta^2;
 
-  % NOTE: Removed porosity
+  % NOTE: check the porosity
 
   % Coefficients solid:
   LD = (1-fi) * D * dt * betta / dx^2 ;

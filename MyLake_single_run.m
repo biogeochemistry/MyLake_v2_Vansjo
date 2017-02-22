@@ -35,11 +35,11 @@ for current_run = 1:no_runs
         run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
         clim_ID = run_ID
         if use_INCA == 1
-            m_start=[2011, 1, 1]; % for scenario runs
+            m_start=[2001, 1, 1]; % for scenario runs
             m_stop=[2011, 12, 31]; % for scenario runs
         else
-            m_start=[2011, 1, 1]; % for calibration with INCA = 0
-            m_stop=[2011, 12, 31]; % for calibration with INCA = 0
+            m_start=[2010, 1, 1]; % for calibration with INCA = 0
+            m_stop=[2013, 12, 31]; % for calibration with INCA = 0
         end
 
     elseif current_run == 2;
@@ -122,11 +122,11 @@ for current_run = 1:no_runs
 
     end
 
-    [TP_obs,TP_mod,chl_obs,chl_mod, mod_all, input_all, INCA_QC] = fn_MyL_application(m_start, m_stop, K_values_sediment, K_values_lake, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
+    [TP_obs,TP_mod,chl_obs,chl_mod, mod_all, input_all, INCA_QC, MyLake_results, Sediment_results] = fn_MyL_application(m_start, m_stop, K_values_sediment, K_values_lake, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
 
     % big_results{current_run}= mod_all; %
     % big_inputs{current_run}= input_all; %
-    big_results{current_run} = [TP_obs,TP_mod,chl_obs,chl_mod, mod_all, input_all, INCA_QC]
+%     big_results{current_run} = [TP_obs,TP_mod,chl_obs,chl_mod, mod_all, input_all, INCA_QC]
     % big_results{current_run} = TP_obs
     % big_results{current_run} = TP_mod
     % big_results{current_run} = chl_obs
