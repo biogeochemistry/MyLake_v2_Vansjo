@@ -1,8 +1,8 @@
 tic
-MyLake_setPriors_for_MCMC % prepares parameter files
+load_params;
 
 run_INCA = 0; % 1- MyLake will run INCA, 0- No run
-use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
+use_INCA = 1; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
 
 no_runs = 1 % 26/7/2016 ... did not find no_run so I added it again
 
@@ -30,16 +30,15 @@ big_inputs = cell(1,no_runs);   % collects the inputs
 
 % parfor
 for current_run = 1:no_runs
-
     if current_run == 1;
         run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
         clim_ID = run_ID
         if use_INCA == 1
-            m_start=[2001, 1, 1]; % for scenario runs
-            m_stop=[2011, 12, 31]; % for scenario runs
+            m_start=[2004, 1, 1]; % for scenario runs
+            m_stop=[2009, 12, 31]; % for scenario runs
         else
-            m_start=[2010, 1, 1]; % for calibration with INCA = 0
-            m_stop=[2013, 12, 31]; % for calibration with INCA = 0
+            m_start=[2004, 1, 1]; %
+            m_stop=[2009, 12, 31]; %
         end
 
     elseif current_run == 2;
@@ -52,13 +51,13 @@ for current_run = 1:no_runs
         run_ID = 'Vansjo_Hist_M2' ; %
         clim_ID = 'Vansjo_Hist_M0' ;
         m_start=[1983, 1, 1]; %
-        m_stop=[2014, 12, 31]; %
+        m_stop=[2013, 12, 31]; %
 
     elseif current_run == 4;
         run_ID = 'Vansjo_Hist_M3' ; %
         clim_ID = 'Vansjo_Hist_M0' ;
         m_start=[1983, 1, 1]; %
-        m_stop=[2014, 12, 31]; %
+        m_stop=[2013, 12, 31]; %
 
     elseif current_run == 5;
         run_ID = 'Vansjo_RCP4_GFDL_M0' ; %
@@ -122,21 +121,21 @@ for current_run = 1:no_runs
 
     end
 
-    [TP_obs,TP_mod,chl_obs,chl_mod, mod_all, input_all, INCA_QC, MyLake_results, Sediment_results] = fn_MyL_application(m_start, m_stop, K_values_sediment, K_values_lake, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
 
-    % big_results{current_run}= mod_all; %
-    % big_inputs{current_run}= input_all; %
-%     big_results{current_run} = [TP_obs,TP_mod,chl_obs,chl_mod, mod_all, input_all, INCA_QC]
-    % big_results{current_run} = TP_obs
-    % big_results{current_run} = TP_mod
-    % big_results{current_run} = chl_obs
-    % big_results{current_run} = chl_mod
-    % big_results{current_run} = mod_all
-    % big_results{current_run} = input_all
-    % big_results{current_run} = INCA_QC
-
+    try
+        [TP_obs,TP_mod, TP_date,chl_obs,chl_mod, Chl_date, PO4_obs, PO4_mod, PO4_date, Part_obs, Part_mod, Part_date, MyLake_results, Sediment_results, input_all]  = fn_MyL_application(m_start, m_stop, K_values_sediment, K_values_lake, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
+        big_results{current_run} = {TP_obs,TP_mod, TP_date,chl_obs,chl_mod, Chl_date, PO4_obs, PO4_mod, PO4_date, Part_obs, Part_mod, Part_date, MyLake_results, Sediment_results, input_all}
+    catch ME
+        fprintf('Process crashed: %s\n', num2str(current_run))
+        fprintf('\tID: %s\n', ME.identifier)
+        fprintf('\tMessage: %s\n', ME.message)
+        fprintf('\tStack::')
+        disp(ME.stack(1))
+    end
 
 end
+
+% cd .. ; cd .. ;
 
 % big_results(2,:) = {'Hist_M0','Hist_M1','Hist_M2','Hist_M3','RCP4_GFDL_M0','RCP4_ISPL_M0','RCP8_GFDL_M0','RCP8_ISPL_M0','RCP8_GFDL_M4','RCP4_GFDL_M5','RCP8_GFDL_M6','RCP8_IPSL_M4','RCP4_IPSL_M5','RCP8_IPSL_M6',};
 % big_inputs(2,:) = {'Hist_M0','Hist_M1','Hist_M2','Hist_M3','RCP4_GFDL_M0','RCP4_ISPL_M0','RCP8_GFDL_M0','RCP8_ISPL_M0','RCP8_GFDL_M4','RCP4_GFDL_M5','RCP8_GFDL_M6','RCP8_IPSL_M4','RCP4_IPSL_M5','RCP8_IPSL_M6',};
