@@ -49,7 +49,7 @@ TDP_to_DOP = 0.2;
 %% Loading weather
 
 % MyLake_weather_only = strcat('Model\IO\vansjo_weather_only_',clim_ID,'.txt'); %  this is the weather template pre-made
-MyLake_weather_only = strcat('IO', filesep, 'vansjo_weather_only_', clim_ID, '.txt')
+MyLake_weather_only = strcat('IO', filesep, 'vansjo_weather_only_', clim_ID, '.txt');
 
 %% Preparing MyL input
 % Thus  combine reaches 5Vaaler and 6Store together
