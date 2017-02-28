@@ -1,4 +1,4 @@
-function [TP_obs,TP_mod,chl_obs,chl_mod, mod_all, input_all, INCA_QC, MyLake_results, Sediment_results] = fn_MyL_application(m_start,m_stop, K_sediments, K_lake, use_INCA, run_INCA, run_ID, clim_ID)
+function [TP_obs,TP_mod, TP_date,chl_obs,chl_mod, Chl_date, PO4_obs, PO4_mod, PO4_date, PP_obs, PP_mod, PP_date, MyLake_results, Sediment_results, input_all] = fn_MyL_application(m_start,m_stop, K_sediments, K_lake, use_INCA, run_INCA, run_ID, clim_ID)
 global sed_par_file lake_par_file Eevapor
 % This is the main MyLake application configuration file. INCA is a switch
 % It is made to run a after the parameter are set by Set_Prior
@@ -22,29 +22,79 @@ data_lake = textscan(f, '%s%f%f%f%s', 63, 'Delimiter', '\t');
 fclose(f); % the parameter line (xx,1) + 2 lines gives the location of the paramter in the input txt file.
 % array position + 2 = input file line
 
-data_lake{1, 2}(23,1) = K_lake{1}; % I_scDOC
-data_lake{1, 2}(46,1) = K_lake{2}; % qy_DOC
-data_lake{1, 2}(45,1) = K_lake{3}; % oc_DOC
-data_lake{1, 2}(47,1) = K_lake{4}; % k_bod
-data_lake{1, 2}(49,1) = K_lake{5}; % theta_bod
-data_lake{1, 2}(50,1) = K_lake{6}; % theta_bod_ice
-data_lake{1, 2}(17,1) = K_lake{7};
-data_lake{1, 2}(31,1) = K_lake{8};
-data_lake{1, 2}(32,1) = K_lake{9};
-data_lake{1, 2}(53,1) = K_lake{10}; % BOD7  on line 55 of the txt file
-data_lake{1, 2}(60,1) = K_lake{11}; % I_scO
-data_lake{1, 2}(61,1) = K_lake{12}; % Q10
-data_lake{1, 2}(62,1) = K_lake{13}; % wc_factor
-data_lake{1, 2}(63,1) = K_lake{14}; % T_ref
+data_lake{1, 2}(1,1) = K_lake{1}; % I_scDOC
+data_lake{1, 2}(2,1) = K_lake{2}; % qy_DOC
+data_lake{1, 2}(3,1) = K_lake{3}; % oc_DOC
+data_lake{1, 2}(4,1) = K_lake{4}; % k_bod
+data_lake{1, 2}(5,1) = K_lake{5}; % theta_bod
+data_lake{1, 2}(6,1) = K_lake{6}; % theta_bod_ice
+data_lake{1, 2}(7,1) = K_lake{7};
+data_lake{1, 2}(8,1) = K_lake{8};
+data_lake{1, 2}(9,1) = K_lake{9};
+data_lake{1, 2}(10,1) = K_lake{10}; % BOD7  on line 55 of the txt file
+data_lake{1, 2}(11,1) = K_lake{11}; % I_scO
+data_lake{1, 2}(12,1) = K_lake{12}; % Q10
+data_lake{1, 2}(13,1) = K_lake{13}; % wc_factor
+data_lake{1, 2}(14,1) = K_lake{14}; % T_ref
+data_lake{1, 2}(15,1) = K_lake{15}; % T_ref
+data_lake{1, 2}(16,1) = K_lake{16}; % T_ref
+data_lake{1, 2}(17,1) = K_lake{17}; % T_ref
+data_lake{1, 2}(18,1) = K_lake{18}; % T_ref
+data_lake{1, 2}(19,1) = K_lake{19}; % T_ref
+data_lake{1, 2}(20,1) = K_lake{20}; % T_ref
+data_lake{1, 2}(21,1) = K_lake{21}; % T_ref
+data_lake{1, 2}(22,1) = K_lake{22}; % T_ref
+data_lake{1, 2}(23,1) = K_lake{23}; % T_ref
+data_lake{1, 2}(24,1) = K_lake{24}; % T_ref
+data_lake{1, 2}(25,1) = K_lake{25}; % T_ref
+data_lake{1, 2}(26,1) = K_lake{26}; % T_ref
+data_lake{1, 2}(27,1) = K_lake{27}; % T_ref
+data_lake{1, 2}(28,1) = K_lake{28}; % T_ref
+data_lake{1, 2}(29,1) = K_lake{29}; % T_ref
+data_lake{1, 2}(30,1) = K_lake{30}; % T_ref
+data_lake{1, 2}(31,1) = K_lake{31}; % T_ref
+data_lake{1, 2}(32,1) = K_lake{32}; % T_ref
+data_lake{1, 2}(33,1) = K_lake{33}; % T_ref
+data_lake{1, 2}(34,1) = K_lake{34}; % T_ref
+data_lake{1, 2}(35,1) = K_lake{35}; % T_ref
+data_lake{1, 2}(36,1) = K_lake{36}; % T_ref
+data_lake{1, 2}(37,1) = K_lake{37}; % T_ref
+data_lake{1, 2}(38,1) = K_lake{38}; % T_ref
+data_lake{1, 2}(39,1) = K_lake{39}; % T_ref
+data_lake{1, 2}(40,1) = K_lake{40}; % T_ref
+data_lake{1, 2}(41,1) = K_lake{41}; % T_ref
+data_lake{1, 2}(42,1) = K_lake{42}; % T_ref
+data_lake{1, 2}(43,1) = K_lake{43}; % T_ref
+data_lake{1, 2}(44,1) = K_lake{44}; % T_ref
+data_lake{1, 2}(45,1) = K_lake{45}; % T_ref
+data_lake{1, 2}(46,1) = K_lake{46}; % T_ref
+data_lake{1, 2}(47,1) = K_lake{47}; % T_ref
+data_lake{1, 2}(48,1) = K_lake{48}; % T_ref
+data_lake{1, 2}(49,1) = K_lake{49}; % T_ref
+data_lake{1, 2}(50,1) = K_lake{50}; % T_ref
+data_lake{1, 2}(51,1) = K_lake{51}; % T_ref
+data_lake{1, 2}(52,1) = K_lake{52}; % T_ref
+data_lake{1, 2}(53,1) = K_lake{53}; % T_ref
+data_lake{1, 2}(54,1) = K_lake{54}; % T_ref
+data_lake{1, 2}(55,1) = K_lake{55}; % T_ref
+data_lake{1, 2}(56,1) = K_lake{56}; % T_ref
+data_lake{1, 2}(57,1) = K_lake{57}; % T_ref
+data_lake{1, 2}(58,1) = K_lake{58}; % T_ref
+data_lake{1, 2}(59,1) = K_lake{59}; % T_ref
+data_lake{1, 2}(60,1) = K_lake{60}; % T_ref
+data_lake{1, 2}(61,1) = K_lake{61}; % T_ref
+data_lake{1, 2}(62,1) = K_lake{62}; % T_ref
+data_lake{1, 2}(63,1) = K_lake{63}; % T_ref
+
 
 fid=fopen(lake_par_file,'wt');
 fprintf(fid,'\n\n');
-fclose(fid);
 dlmwrite(lake_par_file, [[1:63]',data_lake{2},data_lake{3},data_lake{4},(1:63)'],'delimiter','\t','-append'); % 1:63 is the lenght of the parameter file.
+fclose(fid);
 
 %% Specific MyLake application
 
-warning('off', 'all')
+% warning('off', 'all')
 lake='Vansjo';
 year=1983;
 dt = 1.0;
@@ -228,48 +278,47 @@ end
 if isnumeric(use_INCA)
     
 
-    cd 'obs'; cd 'vanem_obs';
-    load 'TOTP.dat' % these are just C&P of vanem ...
+    load 'obs/store_obs/TOTP.dat' % these are just C&P of vanem ...
     temp=(Pzt(zinx,:)+PPzt(zinx,:)+DOPzt(zinx,:)+Chlzt(zinx,:))'; % total P is computed
     TP_mod_all = [tlims mean(temp,2)]; % this is the mean of depth-averaged time series
     TP_obs = TOTP; % retreiving the observations
-    [v,loc_obs,loc_sim] = intersect(TP_obs(:,1), TP_mod_all(:,1)); % returns the datum, and the index for both obs and sim
-    MatchedData = [v TP_obs(loc_obs,2) TP_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
+    [TP_date,loc_obs,loc_sim] = intersect(TP_obs(:,1), TP_mod_all(:,1)); % returns the datum, and the index for both obs and sim
+    MatchedData = [TP_date TP_obs(loc_obs,2) TP_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
     TP_obs = MatchedData (:,2); % fn output
     TP_mod = MatchedData (:,3); % fn output
     clear MatchedData
     
     % file_path = ['obs' filesep 'vanem_obs' filesep 'Cha.dat']
-    load 'Cha.dat' % these are just C&P of vanem ...
+    load 'obs/store_obs/Cha.dat' % these are just C&P of vanem ...
     temp=(Chlzt(zinx,:)+Czt(zinx,:))'; % this is the mean of depth-averaged time series
     chl_mod_all=[tlims mean(temp,2)];
     chl_obs = Cha;
-    [v,loc_obs,loc_sim] = intersect(chl_obs(:,1), chl_mod_all(:,1)); % returns the datum, and the index for both obs and sim
-    MatchedData = [v chl_obs(loc_obs,2) chl_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
+    [Chl_date,loc_obs,loc_sim] = intersect(chl_obs(:,1), chl_mod_all(:,1)); % returns the datum, and the index for both obs and sim
+    MatchedData = [Chl_date chl_obs(loc_obs,2) chl_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
     chl_obs = MatchedData (:,2); % fn output
     chl_mod = MatchedData (:,3); % fn output
     clear MatchedData
     
     % file_path = ['obs' filesep 'vanem_obs' filesep 'PO4.dat']
-    load 'PO4.dat' % these are just C&P of vanem ...
+    load 'obs/store_obs/PO4.dat' % these are just C&P of vanem ...
     temp=Pzt(zinx,:)'; % this is the mean of depth-averaged time series
     PO4_mod_all=[tlims mean(temp,2)];
     PO4_obs = PO4;
-    [v,loc_obs,loc_sim] = intersect(PO4_obs(:,1), PO4_mod_all(:,1)); % returns the datum, and the index for both obs and sim
-    MatchedData = [v PO4_obs(loc_obs,2) PO4_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
+    [PO4_date,loc_obs,loc_sim] = intersect(PO4_obs(:,1), PO4_mod_all(:,1)); % returns the datum, and the index for both obs and sim
+    MatchedData = [PO4_date PO4_obs(loc_obs,2) PO4_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
     PO4_obs = MatchedData (:,2); % fn output
     PO4_mod = MatchedData (:,3); % fn output
     clear MatchedData
     
     % file_path = ['obs' filesep 'vanem_obs' filesep 'Part.dat']
-    load 'Part.dat' % these are just C&P of vanem ...
+    load 'obs/store_obs/Part.dat' % these are just C&P of vanem ...
     temp=PPzt(zinx,:)'; % this is the mean of depth-averaged time series
-    Part_mod_all=[tlims mean(temp,2)];
-    Part_obs = Part;
-    [v,loc_obs,loc_sim] = intersect(Part_obs(:,1), Part_mod_all(:,1)); % returns the datum, and the index for both obs and sim
-    MatchedData = [v Part_obs(loc_obs,2) Part_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
-    Part_obs = MatchedData (:,2); % fn output
-    Part_mod = MatchedData (:,3); % fn output
+    PP_mod_all=[tlims mean(temp,2)];
+    PP_obs = Part;
+    [PP_date,loc_obs,loc_sim] = intersect(PP_obs(:,1), PP_mod_all(:,1)); % returns the datum, and the index for both obs and sim
+    MatchedData = [PP_date PP_obs(loc_obs,2) PP_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
+    PP_obs = MatchedData (:,2); % fn output
+    PP_mod = MatchedData (:,3); % fn output
     clear MatchedData
     
     temp=Tzt(zinx,:)'; % this is the mean of depth-averaged time series
@@ -282,8 +331,8 @@ MyLake_results = [MyLake_results_basin1];
 % Sediment_results = [sediment_data_basin1, sediment_data_basin2];
 Sediment_results = [sediment_data_basin1];
 
-mod_all =  0; %[TP_mod_all, chl_mod_all(:,2), PO4_mod_all(:,2), Part_mod_all(:,2) Temp_mod_all(:,2) Q_lake]; % P speciation epilimnion 2m
-input_all = 0; %[Wt,Inflw]; % weather and inflows 
+% mod_all =  [TP_mod_all, chl_mod_all(:,2), PO4_mod_all(:,2), PP_mod_all(:,2) Temp_mod_all(:,2)]; % P speciation epilimnion 2m
+input_all = [Wt,Inflw]; % weather and inflows 
 
 %% cleaning
 fclose('all');
