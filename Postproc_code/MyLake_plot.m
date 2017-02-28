@@ -1,34 +1,41 @@
-% Plots TOC, temperature and oxygen MyLake output vs observations 
+% Plots TOC, temperature and oxygen MyLake output vs observations
 
 figure(1)
 
-subplot(2,2,1:2)
-dev1 = (TOC_mod_matched)-TOC_obs;
-plot(Date_mod, (TOC_mod),'Color','r','LineWidth',2)
+subplot(4,1,1)
+% dev1 = (PO4_mod)-PO4_obs;
+plot(TP_date, TP_mod,'Color','r','LineWidth',2)
 hold on
-plot(Date_matched_toc, TOC_obs,'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
-set(gca,'XTick', Date_mod(1):120:Date_mod(end));
+plot(TP_date, TP_obs,'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
+set(gca,'XTick', PO4_date(1):120:PO4_date(end));
 datetick('x','mm/yy')
+legend('TP')
 
-hold on 
 
-plot (Date_matched_toc(1:length(dev1)),dev1,'Color','k')
-plot([Date_matched_toc(1),Date_matched_toc(end)],[ 0 0], 'k-')
+subplot(4,1,2)
 
-hold on 
-
-subplot(2,2,3)
-
-plot(Date_mod_temp, T_mod,'Color','r','LineWidth',2)
+plot(Chl_date, chl_mod,'Color','r','LineWidth',2)
 hold on
-plot(Date_mod_temp, T_obs,'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
-set(gca,'XTick', Date_matched_toc(1):120:Date_matched_toc(end));
+plot(Chl_date, chl_obs,'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
+set(gca,'XTick', PO4_date(1):120:PO4_date(end));
 datetick('x','mm/yy')
+legend('Chl')
 
-subplot(2,2,4)
-
-plot(Date_mod_O2, O2_mod_top,'Color','r','LineWidth',2)
+subplot(4,1,3)
+plot(Part_date, Part_mod,'Color','r','LineWidth',2)
 hold on
-plot(Date_mod_O2, O2_obs_top,'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
-set(gca,'XTick', Date_matched_toc(1):120:Date_matched_toc(end));
+plot(Part_date, Part_obs,'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
+ylim([0,40])
+set(gca,'XTick', PO4_date(1):120:PO4_date(end));
 datetick('x','mm/yy')
+legend('PP')
+
+
+subplot(4,1,4)
+
+plot(PO4_date, PO4_mod,'Color','r','LineWidth',2')
+hold on
+plot(PO4_date, PO4_obs,'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
+set(gca,'XTick', PO4_date(1):120:PO4_date(end));
+datetick('x','mm/yy')
+legend('PO_4')
