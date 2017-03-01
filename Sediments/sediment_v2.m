@@ -1137,17 +1137,21 @@ function [dcdt] = sediment_rates(C, dt)
     R19 = k_apa * (PO4 - kapa);
     R19 = (R19 >= 0) .* R19;
 
-    dcdt(:,1)  = -0.25 * R8  - 2 * R9  - R1 * F - 3 * R12 + bioirrigation(Ox, alfax, fi); % Ox
-    dcdt(:,2)  = -1/Cx1*Ra - R10 ; % OM NOTE: added 1/Cx
-    dcdt(:,3)  = -1/Cx2*Rb - R10; % OMb NOTE: added 1/Cx
-    dcdt(:,4)  = - 0.8*R2*F + R9 + bioirrigation(NO3, alfax, fi); % NO3
-    dcdt(:,5)  = -4 * R3 - R16a - 2*R7 + R8; % FeOH3
-    dcdt(:,6)  = - 0.5*R5 * F + R6 + bioirrigation(SO4, alfax, fi); % SO4
+    % for stoichiometry check:
+    % Canavan, R. W., Slomp, C. P., Jourabchi, P., Van Cappellen, P., Laverman, A. M., & van den Berg, G. A. (2006). Organic matter mineralization in sediment of a coastal freshwater lake and response to salinization. Geochimica Et Cosmochimica Acta, 70(11), 2836–2855. http://doi.org/10.1016/j.gca.2006.03.012
+
+
+    dcdt(:,1)  = -0.25 * R8  - 2 * R9  - (Cx1*R1a + Cx2*R1b) * F - 3 * R12 + bioirrigation(Ox, alfax, fi); % Ox
+    dcdt(:,2)  = -1*Ra - R10;
+    dcdt(:,3)  = -1*Rb - R10;
+    dcdt(:,4)  = - 0.8*(Cx1*R2a+Cx1*R2b)*F + R9 + bioirrigation(NO3, alfax, fi); % NO3
+    dcdt(:,5)  = -4 * (Cx1*R3a + Cx2*R3b) - R16a - 2*R7 + R8; % FeOH3
+    dcdt(:,6)  = - 0.5*(Cx1*R5a + Cx2*R5b) * F + R6 + bioirrigation(SO4, alfax, fi); % SO4
     dcdt(:,7)  = (N_index1 * Ra + N_index2 * Rb) * F - R9 + bioirrigation(NH4, alfax, fi); % NH4
-    dcdt(:,8)  = 4*R3*F + 4*R4*F + 2*R7 - R8 + R14b - R14a + bioirrigation(Fe2, alfax, fi); % Fe2
-    dcdt(:,9)  = -4*R4 - R17a + R12; % FeOOH
+    dcdt(:,8)  = 4*(Cx1*R3a + Cx2*R3b)*F + 4*(Cx1*R4a + Cx2*R4b)*F + 2*R7 - R8 + R14b - R14a + bioirrigation(Fe2, alfax, fi); % Fe2
+    dcdt(:,9)  = -4*(Cx1*R4a + Cx2*R4b) - R17a + R12; % FeOOH
     dcdt(:,10) = +bioirrigation(H2S, alfax, fi); % H2S
-    dcdt(:,11) = 0.5*R5*F - R6 - R7 + R14b - R14a - R10 -R13 +bioirrigation(HS, alfax, fi); % HS
+    dcdt(:,11) = 0.5*(Cx1*R5a + Cx2*R5b)*F - R6 - R7 + R14b - R14a - R10 -R13 +bioirrigation(HS, alfax, fi); % HS
     dcdt(:,12) = - R14b - R11 - 4*R12 -R13 + R14a; % FeS
     dcdt(:,13) = - R11 - R15a + R7 + R15b; % S0
     dcdt(:,14) = (P_index1 * Ra + P_index2 * Rb)*F + R16b + R17b - 2 * R19 - R18a - R16a - R17a + bioirrigation(PO4, alfax, fi); % PO4
@@ -1161,9 +1165,9 @@ function [dcdt] = sediment_rates(C, dt)
     dcdt(:,22) = R10; % OMS
     dcdt(:,23) = 0; % H
     dcdt(:,24) = 0; % OH
-    dcdt(:,25) = ((1 - N_index1 + 2*P_index1)*R1a + (1 - N_index2 + 2*P_index2)*R1b + (0.2 - N_index1 + 2*P_index1)*R2a +  (0.2 - N_index2 + 2*P_index2)*R2b - (7 + N_index1 + 2*P_index1)*(R3a+R4a) - (7 + N_index2 + 2*P_index2)*(R3b+R4b) - (N_index1 - 2*P_index1)*R5a - (N_index2 - 2*P_index2)*R5b)*F  +  2*R8 + 2*R9 + bioirrigation(CO2, alfax, fi);  % CO2
+    dcdt(:,25) = ((Cx1 - N_index1 + 2*P_index1)*R1a + (Cx2 - N_index2 + 2*P_index2)*R1b + (0.2*Cx1 - N_index1 + 2*P_index1)*R2a +  (0.2*Cx2 - N_index2 + 2*P_index2)*R2b - (7*Cx1 + N_index1 + 2*P_index1)*(R3a+R4a) - (7*Cx2 + N_index2 + 2*P_index2)*(R3b+R4b) - (N_index1 - 2*P_index1)*R5a + (N_index2 - 2*P_index2)*R5b)*F  +  2*R8 + 2*R9 + bioirrigation(CO2, alfax, fi);  % CO2
     dcdt(:,26) = bioirrigation(CO3, alfax, fi); % CO3
-    dcdt(:,27) = ((0.8 + N_index1 - 2*P_index1)*R2a + (0.8 + N_index2 - 2*P_index2)*R2b + (8+N_index1-2*P_index1)*(R3a + R4a) +(8+N_index2-2*P_index2)*(R3b + R4b) + (1+N_index1-2*P_index1)*R5a + (1+N_index2-2*P_index2)*R5b)*F -  2*R8 - 2*R9 + bioirrigation(HCO3, alfax, fi); % HCO3
+    dcdt(:,27) = ((0.8*Cx1 + N_index1 - 2*P_index1)*R2a + (0.8*Cx2 + N_index2 - 2*P_index2)*R2b + (8*Cx1+N_index1-2*P_index1)*(R3a + R4a) +(8*Cx2+N_index2-2*P_index2)*(R3b + R4b) + (Cx1+N_index1-2*P_index1)*R5a + (1*Cx2+N_index2-2*P_index2)*R5b)*F -  2*R8 - 2*R9 + bioirrigation(HCO3, alfax, fi); % HCO3
     dcdt(:,28) = bioirrigation(NH3, alfax, fi); % NH3
     dcdt(:,29) = +bioirrigation(H2CO3, alfax, fi); % H2CO3
   end

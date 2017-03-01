@@ -2076,8 +2076,8 @@ function [dcdt] = rates(C, dt)
     R_dChl_growth = Chlz .* R_bioz; %Chl a growth source
     R_dCz_growth = Cz .* R_bioz_2;
 
-    %Oxygen production/consumption in phytoplankton growth & mineralization
-    R_dO2_Chl = 110.*(R_dChl_growth+R_dCz_growth);
+    %Oxygen production in phytoplankton growth
+    R_dO2_Chl = (R_dChl_growth+R_dCz_growth);
 
 
     % New chemistry
@@ -2088,8 +2088,8 @@ function [dcdt] = rates(C, dt)
 
     Sum_H2S = H2Sz + HSz;
 
-    R1a =  k_OM_wc_q10  .* Chlz .* f_O2;
-    R1b =  k_OM_wc_q10  .* Cz .* f_O2;
+    R1a =  k_OM_wc_q10  .* Chlz .* f_O2 * accel_wc;
+    R1b =  k_OM_wc_q10  .* Cz .* f_O2 * accel_wc;
     R1c =  k_OMb_wc_q10  .* DOPz .* f_O2;
     R1d =  k_OMb_wc_q10 .* DOCz .* f_O2;
 
@@ -2149,16 +2149,16 @@ function [dcdt] = rates(C, dt)
         end
     end
 
-    dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - R1 - 3*R12 + R_dO2_Chl; % O2z
+    dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1_wc*R1a + Cx1_wc*R1b + Cx2_wc*R1c + Cx2_wc*R1d) - 3*R12 + 110*R_dO2_Chl; % O2z
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R10d ;% POCz
-    dcdt(:,4)  = - 0.8*R2 + R9; % NO3z
-    dcdt(:,5)  = - 4*R3 - 2*R7  + R8 - R16a ; % Fe3z
-    dcdt(:,6)  = - 0.5*R5 + R6 ; % SO4z
+    dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx2_wc*R2c + Cx2_wc*R2d) + R9; % NO3z
+    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx2_wc*R3c + Cx2_wc*R3d) - 2*R7  + R8 - R16a ; % Fe3z
+    dcdt(:,6)  = - 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx2_wc*R5c + Cx2_wc*R5d) + R6 ; % SO4z
     dcdt(:,7)  =  (N_index1_wc * Ra + N_index1_wc * Rb + N_index2_wc * Rc + N_index2_wc * Rd) - R9 ;% NH4z
-    dcdt(:,8)  = 4*R3 + 2*R7 - R8 + R14b - R14a; % Fe2z
+    dcdt(:,8)  = 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx2_wc*R3c + Cx2_wc*R3d) + 2*R7 - R8 + R14b - R14a; % Fe2z
     dcdt(:,9)  =  0;% H2Sz
-    dcdt(:,10) = 0.5*R5 - R6 - R7  - R10a - R10b - R10c - R10d + R14b - R14a - R13 ;% HSz
+    dcdt(:,10) = 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx2_wc*R5c + Cx2_wc*R5d) - R6 - R7  - R10a - R10b - R10c - R10d + R14b - R14a - R13 ;% HSz
     dcdt(:,11) = (P_index1_wc * Ra + P_index1_wc * Rb + P_index2_wc * Rc + P_index2_wc * Rd) - R18a + R18b - R16a - R17a + R16b + R17b - 2*R19 + R_dDOP - (R_dChl_growth + R_dCz_growth)./ Y_cp;% Pz
     dcdt(:,12) = -R18a ;% Al3z
     dcdt(:,13) =  R16a - R16b  ;% PPz

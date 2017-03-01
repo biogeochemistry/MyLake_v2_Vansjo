@@ -1,4 +1,7 @@
-K_values_lake = {
+%% load_params: load parameters for MyLake and Sediment
+function [lake_params, sediment_params] = load_params()
+
+lake_params = {
     % PhysPar
     1, 'dz',                   % 1
     0.0322, 'Kz_K1',           % 2     open water diffusion parameter (-)
@@ -34,7 +37,7 @@ K_values_lake = {
     8000, 'Fmax_L',            % 7     Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
     0.3, 'w_s',                % 8     settling velocity for S (m day-1)
     0.02, 'w_chl',             % 9     settling velocity for Chl a (m day-1)
-    2, 'Y_cp',                 % 10    yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)
+    2, 'Y_cp',              % 10    yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   55C in Chl-a and 112:1 in algae => 55/112 * 112/1 = 55/1
     0.2, 'm_twty',             % 11    loss rate (1/day) at 20 deg C
     1.5, 'g_twty',             % 12    specific growth rate (1/day) at 20 deg C
     2.00E-04, 'k_twty',        % 13    specific Chl a to P transformation rate (1/day) at 20 deg C
@@ -48,13 +51,13 @@ K_values_lake = {
     0.2, 'P_half_2',           % 21    Half saturation growth P level (mg/m3)
     0.01, 'oc_DOC',            % 22    Optical cross-section of DOC (m2/mg DOC)
     0.1, 'qy_DOC',             % 23    Quantum yield (mg DOC degraded/mol quanta)
-    0.1, 'k_BOD',              % 24    Organic decomposition rate (1/d)
-    500, 'k_SOD',              % 25    Sedimentary oxygen demand (mg m-2 d-1)
-    1.047, 'theta_bod',        % 26    Temperature adjustment coefficient for BOD, T ? 10 °C
-    1.13, 'theta_bod_ice',     % 27    Temperature adjustment coefficient for BOD, T < 10 °C
-    1, 'theta_sod',            % 28    Temperature adjustment coefficient for SOD, T ? 10 °C
-    1, 'theta_sod_ice',        % 29    Temperature adjustment coefficient for SOD, T < 10 °C
-    4, 'BOD_temp_switch',      % 30    Threshold for bod or bod_ice °C
+    0.1, 'k_BOD',              % 24    NOT USED: Organic decomposition rate (1/d)
+    500, 'k_SOD',              % 25    NOT USED: Sedimentary oxygen demand (mg m-2 d-1)
+    1.047, 'theta_bod',        % 26    NOT USED: Temperature adjustment coefficient for BOD, T ? 10 °C
+    1.13, 'theta_bod_ice',     % 27    NOT USED: Temperature adjustment coefficient for BOD, T < 10 °C
+    1, 'theta_sod',            % 28    NOT USED: Temperature adjustment coefficient for SOD, T ? 10 °C
+    1, 'theta_sod_ice',        % 29    NOT USED: Temperature adjustment coefficient for SOD, T < 10 °C
+    4, 'BOD_temp_switch',      % 30    NOT USED: Threshold for bod or bod_ice °C
     5.2, 'pH',                 % 31    Lake water pH
     2, 'Mass_Ratio_C_Chl',     % 32    Fixed empirical ratio C:Chl (mass/mass)
     100, 'I_scDIC',            % 33    Scaling factor for inflow concentration of DOC  (-)
@@ -66,9 +69,9 @@ K_values_lake = {
     1, 'wc_factor',            % 39    Scaling factor for rates in WC
     4.8497, 'T_ref_wc'};       % 40    Reference Temperature for rates
 
-K_values_sediment ...
-    = {1, 'k_OM1';  % 1
-    0.1,     'k_OM2';  % 0.01
+sediment_params = {
+    1,     'k_OM1';  % 1
+    0.1,   'k_OM2';  % 0.01
     0.0123,'Km_O2';
     0.01,  'Km_NO3';
     3.92,  'Km_Fe(OH)3';
