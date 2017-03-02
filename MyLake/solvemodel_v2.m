@@ -1721,6 +1721,9 @@ sediment_results.MyLake_params = MyLake_params;
 sediment_results.params = sediment_params;
 sediment_results.SWI_fluxeszt = SWI_fluxes_sediment_zt;
 sediment_results.sediment_integrated_over_depth_fluxes_t = sediment_integrated_over_depth_fluxes_t;
+sediment_results.days = datenum(m_start):datenum(m_stop);
+sediment_results.m_start = m_start;
+sediment_results.m_stop = m_stop;
 
 else
 
@@ -1794,8 +1797,10 @@ MyLake_results.dfloc = dfloc;
 MyLake_results.testi1t = testi1t;
 MyLake_results.testi2t = testi2t;
 MyLake_results.zz = zz;
+MyLake_results.days = datenum(M_start):datenum(M_stop);
 MyLake_results.params = MyLake_params;
-
+MyLake_results.m_start = M_start;
+MyLake_results.m_stop = M_stop;
 
 runtime=toc;
 
