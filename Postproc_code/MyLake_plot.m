@@ -1,6 +1,6 @@
 % Plots TOC, temperature and oxygen MyLake output vs observations
 
-figure(1)
+figure()
 
 subplot(4,1,1)
 % dev1 = (PO4_mod)-PO4_obs;
