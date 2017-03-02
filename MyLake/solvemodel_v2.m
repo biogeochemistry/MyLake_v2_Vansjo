@@ -85,7 +85,7 @@ warning off MATLAB:fzero:UndeterminedSyntax %suppressing a warning message
 global ies80 O2_diffzt debugg sediment_params;
 
 % fast variable passing
-    global k_OM_wc_q10 k_OMb_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc P_index1_wc P_index2_wc N_index1_wc N_index2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2
+    global k_OM_wc_q10 k_OMb_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2
 
 
 tic
@@ -491,10 +491,6 @@ Pz1_wc           = sediment_params('Pz1');
 Cx2_wc           = sediment_params('Cx2');
 Ny2_wc           = sediment_params('Ny2');
 Pz2_wc           = sediment_params('Pz2');
-P_index1_wc      = Pz1_wc/Cx1_wc;
-P_index2_wc      = Pz2_wc/Cx2_wc;
-N_index1_wc      = Ny1_wc/Cx1_wc;
-N_index2_wc      = Ny2_wc/Cx2_wc;
 % ==========================================
 
 
@@ -1296,13 +1292,10 @@ for i = 1:length(tt)
         S_resusp(:)=S_res_epi;   %if no pycnocline and open water, resuspension allowed from top to bottom
     end
 
-    if debugg
-        if any(isnan(O2z)), error('MyLake error::O2zt is NaN'), end
 
     % WC chemistry:
-        if any(isnan(O2z)) | any(isnan(Chlz)) | any(isnan(DOCz)) | any(isnan(NO3z)) | any(isnan(Fe3z)) | any(isnan(SO4z)) | any(isnan(NH4z)) | any(isnan(Fe2z)) | any(isnan(H2Sz)) | any(isnan(HSz)) | any(isnan(Pz)) | any(isnan(Al3z)) | any(isnan(PPz)) | any(isnan(Ca2z)) | any(isnan(CO2z))
-            error('NaN')
-        end
+    if any(isnan(O2z)) | any(isnan(Chlz)) | any(isnan(DOCz)) | any(isnan(NO3z)) | any(isnan(Fe3z)) | any(isnan(SO4z)) | any(isnan(NH4z)) | any(isnan(Fe2z)) | any(isnan(H2Sz)) | any(isnan(HSz)) | any(isnan(Pz)) | any(isnan(Al3z)) | any(isnan(PPz)) | any(isnan(Ca2z)) | any(isnan(CO2z))
+        error('NaN')
     end
 
     if wc_chemistry_module
@@ -1319,8 +1312,8 @@ for i = 1:length(tt)
         k_apa_wc_q10       = k_apa_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
 
         O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
-        Chlz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz * Mass_Ratio_C_Chl / sediment_params('Cx1'), 12011);
-        DOCz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 32219); % TODO: for M [ (CH2O)200(NH3)20(H3PO4) ] =  6443.8016 g/mol / 200 = 32219. Maybe here mistake: because all reactions per mol of P in WC and sediments too. (therefore, do not need to divide by 200).
+        Chlz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762);
+        DOCz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762);
         NO3z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(NO3z, 62004);
         Fe3z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe3z, 106867.0); %Fe(OH)3
         SO4z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(SO4z, 96062);
@@ -1328,21 +1321,21 @@ for i = 1:length(tt)
         Fe2z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe2z, 55845);
         H2Sz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(H2Sz, 34080.9);
         HSz     = convert_mg_per_qubic_m_to_umol_per_qubic_cm(HSz, 33072.9);
-        Pz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Pz, 94971); % PO4
+        Pz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Pz, 30973.762); % PO4
         Al3z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Al3z, 78003.6); % Al(OH)3
-        PPz     = convert_mg_per_qubic_m_to_umol_per_qubic_cm(PPz, 94971); % PO4-s
+        PPz     = convert_mg_per_qubic_m_to_umol_per_qubic_cm(PPz, 30973.762); % PO4-s
         Ca2z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Ca2z, 80156.0); % Ca2+
         CO2z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(CO2z, 44009.5);
-        DOPz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 94971); %DOPz
-        Cz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz * Mass_Ratio_C_Chl / sediment_params('Cx1'), 12011);
+        DOPz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762); %DOPz
+        Cz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
 
         C0 = [O2z,Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz];
 
         C_new = wc_chemical_reactions_module(C0,dt,ts_during_day, wc_int_method);
 
         O2z  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,1), 31998.8);
-        Chlz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,2)*sediment_params('Cx1')/Mass_Ratio_C_Chl, 12011);
-        DOCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,3), 32219); % TODO: for M [ (CH2O)200(NH3)20(H3PO4) ] =  6443.8016 g/mol / 200 = 32219. Maybe here mistake: because all reactions per mol of P in WC and sediments too. (therefore, do not need to divide by 200).
+        Chlz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,2), 30973.762);
+        DOCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,3), 30973.762);
         NO3z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,4), 62004);
         Fe3z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,5), 106867.0); %Fe(OH)3
         SO4z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,6), 96062);
@@ -1350,17 +1343,17 @@ for i = 1:length(tt)
         Fe2z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,8), 55845);
         H2Sz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,9), 34080.9);
         HSz  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,10), 33072.9);
-        Pz   = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,11), 94971); % PO4
+        Pz   = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,11), 30973.762); % PO4
         Al3z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,12), 78003.6);
-        PPz  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,13), 94971);
+        PPz  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,13), 30973.762);
         Ca2z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,14), 80156.0); % Ca2+
         CO2z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,15), 44009.5);
-        DOPz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,16), 94971); %DOPz
-        Cz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,17)*sediment_params('Cx1')/Mass_Ratio_C_Chl, 12011);
+        DOPz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,16), 30973.762); %DOPz
+        Cz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,17), 30973.762);
     end
 
     if debugg
-        if any(isnan(O2z)) | any(isnan(Chlz)) | any(isnan(DOCz)) | any(isnan(NO3z)) | any(isnan(Fe3z)) | any(isnan(SO4z)) | any(isnan(NH4z)) | any(isnan(Fe2z)) | any(isnan(H2Sz)) | any(isnan(HSz)) | any(isnan(Pz)) | any(isnan(Al3z)) | any(isnan(PPz)) | any(isnan(Ca2z)) | any(isnan(CO2z))
+        if any(isnan(C_new))
             error('NaN')
         end
     end
@@ -1369,13 +1362,12 @@ for i = 1:length(tt)
     if matsedlab_sediment_module
         % Making cells of params for using during coupling
         MyLake_concentrations = {...
-            Chlz,               'Chlz';
-            Cz,                 'Cz';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 94971),   'DOPz';
-            % H_netsed_catch,     'H_netsed_catch';
+            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762), 'Chlz';
+            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762),  'Cz';
+            convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762), 'DOCz';
+            convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762), 'DOPz';
             convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8),   'O2z';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 32219),'DOCz'; % TODO: for M [ (CH2O)200(NH3)20(H3PO4) ] =  6443.8016 g/mol
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Pz, 94971),      'Pz';
+            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Pz, 30973.762),      'Pz';
             convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe2z, 55845),    'Fe2z';
             convert_mg_per_qubic_m_to_umol_per_qubic_cm(NO3z, 62004),    'NO3z';
             convert_mg_per_qubic_m_to_umol_per_qubic_cm(NH4z, 18038),    'NH4z';
@@ -1383,7 +1375,7 @@ for i = 1:length(tt)
             convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe3z, 106867.0), 'Fe3z';
             convert_mg_per_qubic_m_to_umol_per_qubic_cm(Ca2z, 80156.0),  'Ca2z';
             convert_mg_per_qubic_m_to_umol_per_qubic_cm(Al3z, 78003.6),  'Al3z';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(PPz, 94971),     'PPz';
+            convert_mg_per_qubic_m_to_umol_per_qubic_cm(PPz, 30973.762),     'PPz';
 
             };
         MyLake_concentrations = containers.Map({MyLake_concentrations{:,2}},{MyLake_concentrations{:,1}});
@@ -1392,6 +1384,7 @@ for i = 1:length(tt)
             SS_C,               'SS_C';
             density_org_H_nc,   'density_org_H_nc';
             w_chl,              'w_chl';
+            w_chl_2,            'w_chl_2';
             w_s,                'w_s';
             Mass_Ratio_C_Chl,   'Mass_Ratio_C_Chl';
             Az(end),            'Az(end)';
@@ -2021,7 +2014,7 @@ function [dcdt] = rates(C, dt)
 % NOTE: the rates are the same as in sediments (per year!! not day) except microbial which are factorized due to lower concertation of bacteria in WC then in sediments. Units are per "year" due to time step is in year units too;
     global debugg
 
-    global k_OM_wc_q10 k_OMb_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc P_index1_wc P_index2_wc N_index1_wc N_index2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2
+    global k_OM_wc_q10 k_OMb_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2
 
     dcdt=zeros(size(C));
     O2z = C(:,1) .* (C(:,1)>0);
@@ -2050,34 +2043,35 @@ function [dcdt] = rates(C, dt)
     m_twty_y = m_twty*365;
     g_twty_y_2 = g_twty_2*365;
     m_twty_y_2 = m_twty_2*365;
-    P_half_molar = P_half/94971;
-    P_half_2_molar = P_half_2/94971;
+    P_half_molar = P_half/30973.762;
+    P_half_2_molar = P_half_2/30973.762;
 
     % DOP: ( we treed this as bio reaction, see rate "Rc")
     R_dDOP = 0; % dop_twty_y .* DOPz .* theta_m.^(Tz-20);  %Mineralisation to P
 
     % Chlz:
     Growth_bioz=g_twty_y*theta_m.^(Tz-20) .* (Pz./(P_half_molar+Pz)) .* (DayFrac./(dz*lambdaz_wtot)) .* diff([-H_sw_z; 0]);
-    Loss_bioz=m_twty*theta_m.^(Tz-20);
+    Loss_bioz=m_twty_y*theta_m.^(Tz-20);
     R_bioz = Growth_bioz-Loss_bioz;
+
 
     % Cz:
     Growth_bioz_2=g_twty_y_2*theta_m.^(Tz-20) .* (Pz./(P_half_2_molar+Pz)) .* (DayFrac./(dz*lambdaz_wtot)) .* diff([-H_sw_z_2; 0]);
     Loss_bioz_2=m_twty_y_2*theta_m.^(Tz-20);
     R_bioz_2 = Growth_bioz_2-Loss_bioz_2;
 
-    exinx = find( (R_bioz.*Chlz*dt + R_bioz_2.*Cz*dt)>(Y_cp*Pz) );
-    if (isempty(exinx)==0)
-        R_bioz_ratio = (R_bioz(exinx).*Chlz(exinx)*dt)./((R_bioz(exinx).*Chlz(exinx)*dt) + (R_bioz_2(exinx).*Cz(exinx)*dt)); %fraction of Growth rate 1 of total growth rate
-        R_bioz(exinx) = R_bioz_ratio.*(Y_cp*Pz(exinx)./(Chlz(exinx)*dt));
-        R_bioz_2(exinx) = (1-R_bioz_ratio).*(Y_cp*Pz(exinx)./(Cz(exinx)*dt));
-    end
+    % exinx = find( (R_bioz.*Chlz*dt + R_bioz_2.*Cz*dt)>(Y_cp*Pz) );
+    % if (isempty(exinx)==0)
+    %     R_bioz_ratio = (R_bioz(exinx).*Chlz(exinx)*dt)./((R_bioz(exinx).*Chlz(exinx)*dt) + (R_bioz_2(exinx).*Cz(exinx)*dt)); %fraction of Growth rate 1 of total growth rate
+    %     R_bioz(exinx) = R_bioz_ratio.*(Y_cp*Pz(exinx)./(Chlz(exinx)*dt));
+    %     R_bioz_2(exinx) = (1-R_bioz_ratio).*(Y_cp*Pz(exinx)./(Cz(exinx)*dt));
+    % end
 
-    R_dChl_growth = Chlz .* R_bioz; %Chl a growth source
-    R_dCz_growth = Cz .* R_bioz_2;
+    R_dChl_growth =  Chlz .* R_bioz; %Chl a growth source
+    R_dCz_growth =  Cz .* R_bioz_2;
 
     %Oxygen production in phytoplankton growth
-    R_dO2_Chl = (R_dChl_growth+R_dCz_growth);
+    R_dO2_Chl = 110*(R_dChl_growth+R_dCz_growth);
 
 
     % New chemistry
@@ -2088,23 +2082,23 @@ function [dcdt] = rates(C, dt)
 
     Sum_H2S = H2Sz + HSz;
 
-    R1a =  k_OM_wc_q10  .* Chlz .* f_O2 * accel_wc;
-    R1b =  k_OM_wc_q10  .* Cz .* f_O2 * accel_wc;
+    R1a =  0; % k_OM_wc_q10  .* Chlz .* f_O2 * accel_wc;
+    R1b =  0; % k_OM_wc_q10  .* Cz .* f_O2 * accel_wc;
     R1c =  k_OMb_wc_q10  .* DOPz .* f_O2;
     R1d =  k_OMb_wc_q10 .* DOCz .* f_O2;
 
-    R2a =  k_OM_wc_q10  .* Chlz .* f_NO3;
-    R2b =  k_OM_wc_q10  .* Cz .* f_NO3;
+    R2a =  0; % k_OM_wc_q10  .* Chlz .* f_NO3;
+    R2b =  0; % k_OM_wc_q10  .* Cz .* f_NO3;
     R2c =  k_OMb_wc_q10  .* DOPz .* f_NO3;
     R2d =  k_OMb_wc_q10 .* DOCz .* f_NO3;
 
-    R3a =  k_OM_wc_q10  .* Chlz .* f_FeOH3;
-    R3b =  k_OM_wc_q10  .* Cz .* f_FeOH3;
+    R3a =  0; % k_OM_wc_q10  .* Chlz .* f_FeOH3;
+    R3b =  0; % k_OM_wc_q10  .* Cz .* f_FeOH3;
     R3c =  k_OMb_wc_q10  .* DOPz .* f_FeOH3;
     R3d =  k_OMb_wc_q10 .* DOCz .* f_FeOH3;
 
-    R5a =  k_OM_wc_q10  .* Chlz .* f_SO4;
-    R5b =  k_OM_wc_q10  .* Cz .* f_SO4;
+    R5a =  0; % k_OM_wc_q10  .* Chlz .* f_SO4;
+    R5b =  0; % k_OM_wc_q10  .* Cz .* f_SO4;
     R5c =  k_OMb_wc_q10 .* DOPz .* f_SO4;
     R5d =  k_OMb_wc_q10 .* DOCz .* f_SO4;
 
@@ -2143,27 +2137,21 @@ function [dcdt] = rates(C, dt)
     R19  = k_apa_wc_q10 .* (Pz - kapa_wc);
     R19  = (R19 >= 0) .* R19;
 
-    if debugg
-        if any(isnan(O2z))| any(isnan(Chlz))| any(isnan(DOCz))| any(isnan(NO3z))| any(isnan(Fe3z))| any(isnan(SO4z))| any(isnan(NH4z))| any(isnan(Fe2z))| any(isnan(H2Sz))| any(isnan(HSz))| any(isnan(Pz))| any(isnan(Al3z))| any(isnan(PPz))| any(isnan(Ca2z))| any(isnan(CO2z))
-            error('NaN')
-        end
-    end
-
-    dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1_wc*R1a + Cx1_wc*R1b + Cx2_wc*R1c + Cx2_wc*R1d) - 3*R12 + 110*R_dO2_Chl; % O2z
+    dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1_wc*R1a + Cx1_wc*R1b + Cx2_wc*R1c + Cx2_wc*R1d) - 3*R12 + R_dO2_Chl; % O2z
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R10d ;% POCz
-    dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx2_wc*R2c + Cx2_wc*R2d) + R9; % NO3z
+    dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx2_wc*R2c + Cx2_wc*R2d) + R9 - Ny1_wc * (R_dChl_growth + R_dCz_growth); % NO3z
     dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx2_wc*R3c + Cx2_wc*R3d) - 2*R7  + R8 - R16a ; % Fe3z
     dcdt(:,6)  = - 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx2_wc*R5c + Cx2_wc*R5d) + R6 ; % SO4z
-    dcdt(:,7)  =  (N_index1_wc * Ra + N_index1_wc * Rb + N_index2_wc * Rc + N_index2_wc * Rd) - R9 ;% NH4z
+    dcdt(:,7)  =  (Ny1_wc * Ra + Ny1_wc * Rb + Ny2_wc * Rc + Ny2_wc * Rd) - R9 ;% NH4z
     dcdt(:,8)  = 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx2_wc*R3c + Cx2_wc*R3d) + 2*R7 - R8 + R14b - R14a; % Fe2z
     dcdt(:,9)  =  0;% H2Sz
     dcdt(:,10) = 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx2_wc*R5c + Cx2_wc*R5d) - R6 - R7  - R10a - R10b - R10c - R10d + R14b - R14a - R13 ;% HSz
-    dcdt(:,11) = (P_index1_wc * Ra + P_index1_wc * Rb + P_index2_wc * Rc + P_index2_wc * Rd) - R18a + R18b - R16a - R17a + R16b + R17b - 2*R19 + R_dDOP - (R_dChl_growth + R_dCz_growth)./ Y_cp;% Pz
+    dcdt(:,11) = (Pz1_wc * Ra + Pz1_wc * Rb + Pz2_wc * Rc + Pz2_wc * Rd) - R18a + R18b - R16a - R17a + R16b + R17b - 2*R19 + R_dDOP - Pz1_wc * (R_dChl_growth + R_dCz_growth);% Pz
     dcdt(:,12) = -R18a ;% Al3z
     dcdt(:,13) =  R16a - R16b  ;% PPz
     dcdt(:,14) = -3*R19 ;% Ca2z
     dcdt(:,15) = 0;% CO2z
     dcdt(:,16) = -Rc - R10c - R_dDOP;% DOPz
-    dcdt(:,17) = -Rb - R10b +R_dCz_growth;% Cz
+    dcdt(:,17) = -Rb - R10b + R_dCz_growth;% Cz
 %end of function
