@@ -5,15 +5,16 @@ function [sediment_bc] = convert_wc_to_sediment(MyLake_concentrations, MyLake_pa
     % for solid - Neumann (flux) BC
     pH = MyLake_params('pH');
     % pH = 6.47;
-    w_s = MyLake_params('w_s') * 100 * 365; %settling velocity for Chl [m d-1] -> [cm year-1]
+    w_s = MyLake_params('w_s') * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
+    w_chl = MyLake_params('w_chl') * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
+    w_chl_2 = MyLake_params('w_chl_2') * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
     fi = sediment_params('fi');
 
 
     sediment_bc = {...
         dissolved_bc(MyLake_concentrations('O2z')),                           'Ox_c';
-        OM1_flux(MyLake_concentrations, MyLake_params, sediment_params),      'OM1_fx';
-        % OM2_flux(MyLake_concentrations, MyLake_params),                       'OM2_fx';
-        solid_bc(MyLake_concentrations('DOPz'), w_s/20, fi) + solid_bc(MyLake_concentrations('DOCz'), w_s/20, fi),                 'OM2_fx'; % NOTE:  We need to introduce DOC:POC ratio 20
+        solid_bc(MyLake_concentrations('Chlz'), w_chl, fi) + solid_bc(MyLake_concentrations('Cz'), w_chl_2, fi), 'OM1_fx';
+        solid_bc(MyLake_concentrations('DOPz'), w_s, fi) + solid_bc(MyLake_concentrations('DOCz'), w_s, fi), 'OM2_fx';
         dissolved_bc(MyLake_concentrations('Pz')),                            'PO4_c';
         dissolved_bc(MyLake_concentrations('NO3z')),                          'NO3_c';
         solid_bc(MyLake_concentrations('Fe3z'), w_s, fi),                     'FeOH3_fx';
@@ -96,38 +97,5 @@ function solid_fx = solid_bc(C, w_s, fi)
     solid_fx = (1 - fi(1)) * w_s  * C(end);
 end
 
-function OM2_fx = OM2_flux(MyLake_concentrations, MyLake_params)
-    % this function convert H_netsed_catch to OM2 fluxes
-    % H_netsed_catch - flux of carbon from catchments (profile) [m day-1, dry]
-    % SS_C - Carbon fraction in H_netsed_catch [~]
-    % density_org_H_nc - Density of organic fraction in H_netsed_catch [g cm-3]
-    % OM2_fx - Sediments flux of OM2 [umol cm-2 yr-1]
-    H_netsed_catch = MyLake_concentrations('H_netsed_catch');
-    SS_C = MyLake_params('SS_C');
-    density_org_H_nc = MyLake_params('density_org_H_nc');
-    M_C = 12*1e-6; % Molar weight of carbon (g umol-1)
-    OM2_fx = H_netsed_catch(end)*100*365*SS_C*density_org_H_nc/M_C; %
-end
-
-function OM1_fx = OM1_flux(MyLake_concentrations, MyLake_params, sediment_params)
-% function convert flux of Chl to OM1 flux in sediment
-% Chl - chlorophyll (group 1) [mg m-3]
-% Cz - chlorophyll (group 2) [mg m-3]
-% w_chl - settling velocity for Chl a (m day-1)
-% Cx1 -
-% fi -
-% M_C - Molar mass of carbon [mg mol-1]
-% Mass_Ratio_C_Chl - Fixed empirical ratio C:Chl (mass/mass)
-
-    Chl = MyLake_concentrations('Chlz');
-    Cz = MyLake_concentrations('Cz');
-    w_chl = MyLake_params('w_chl') * 100 * 365; %settling velocity for Chl [m d-1] -> [cm year-1]
-    Cx1= sediment_params('Cx1');
-    fi = sediment_params('fi');
-    M_C = 12011; % Molar mass of carbon [mg mol-1]
-    Mass_Ratio_C_Chl = MyLake_params('Mass_Ratio_C_Chl');
-
-    OM1_fx =  (1 - fi(1)) * w_chl * (Chl(end)+Cz(end)) * Mass_Ratio_C_Chl / ( M_C * Cx1);
-end
 
 
