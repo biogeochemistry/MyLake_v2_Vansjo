@@ -2,7 +2,7 @@ tic
 [lake_params, sediment_params] = load_params();
 
 run_INCA = 0; % 1- MyLake will run INCA, 0- No run
-use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
+use_INCA = 1; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
 
 no_runs = 1 % 26/7/2016 ... did not find no_run so I added it again
 
@@ -34,10 +34,10 @@ for current_run = 1:no_runs
         run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
         clim_ID = run_ID
         if use_INCA == 1
-            m_start=[1984, 1, 1]; % for scenario runs
-            m_stop=[2013, 12, 31]; % for scenario runs
+            m_start=[1984, 1, 1]; %
+            m_stop=[2012, 12, 31]; %
         else
-            m_start=[2004, 1, 1]; %
+            m_start=[2000, 1, 1]; %
             m_stop=[2010, 12, 31]; %
         end
 
@@ -122,16 +122,18 @@ for current_run = 1:no_runs
     end
 
 
-    try
+    % try
         [TP_obs,TP_mod, TP_date,chl_obs,chl_mod, Chl_date, PO4_obs, PO4_mod, PO4_date, Part_obs, Part_mod, Part_date, MyLake_results, Sediment_results, input_all]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
         big_results{current_run} = {TP_obs,TP_mod, TP_date,chl_obs,chl_mod, Chl_date, PO4_obs, PO4_mod, PO4_date, Part_obs, Part_mod, Part_date, MyLake_results, Sediment_results, input_all}
-    catch ME
-        fprintf('Process crashed: %s\n', num2str(current_run))
-        fprintf('\tID: %s\n', ME.identifier)
-        fprintf('\tMessage: %s\n', ME.message)
-        fprintf('\tStack::')
-        disp(ME.stack(1))
-    end
+    % catch ME
+    %     fprintf('Process crashed: %s\n', num2str(current_run))
+    %     fprintf('\tID: %s\n', ME.identifier)
+    %     fprintf('\tMessage: %s\n', ME.message)
+    %     fprintf('\tStack::\n')
+    %     for k=1:length(ME.stack)
+    %         disp(ME.stack(k))
+    %     end
+    % end
 
 end
 
