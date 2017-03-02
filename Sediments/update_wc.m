@@ -25,11 +25,6 @@ function [ O2z, Pz, Fe2z, NO3z, NH4z ] = update_wc( O2z, Pz, Fe2z, NO3z, NH4z, M
             error('NaN')
         end
     end
-
-    % if O2z(end) < 0
-    %     % disp('warning:Bioirrigation in sediment produce the negative concentration of O2z(end) in WC');
-    %     O2z(end) = 0;
-    % end
 end
 
 %% update_C_due_to_flux: Update concentration of the WC due to flux from/to sediment
