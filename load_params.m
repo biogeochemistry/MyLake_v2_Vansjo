@@ -37,11 +37,11 @@ lake_params = {
     8000, 'Fmax_L',            % 7     Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
     0.3, 'w_s',                % 8     settling velocity for S (m day-1)
     0.02, 'w_chl',             % 9     settling velocity for Chl a (m day-1)
-    2, 'Y_cp',              % 10    yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   55C in Chl-a and 112:1 in algae => 55/112 * 112/1 = 55/1
+    1, 'Y_cp',                 % 10    yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   1/55*112/1 = 1
     0.2, 'm_twty',             % 11    loss rate (1/day) at 20 deg C
     1.5, 'g_twty',             % 12    specific growth rate (1/day) at 20 deg C
-    2.00E-04, 'k_twty',        % 13    specific Chl a to P transformation rate (1/day) at 20 deg C
-    0, 'dop_twty',             % 14    specific DOP to P transformation rate (day-1) at 20 deg C
+    2.00E-04, 'k_twty',        % 13    NOT USED: specific Chl a to P transformation rate (1/day) at 20 deg C
+    0, 'dop_twty',             % 14    NOT USED: specific DOP to P transformation rate (day-1) at 20 deg C
     0.2, 'P_half',             % 15    Half saturation growth P level (mg/m3)
     3.00E-05, 'PAR_sat_2',     % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
     0.015, 'beta_chl_2',       % 17    Optical cross_section of chlorophyll (m2 mg-1)
@@ -59,13 +59,13 @@ lake_params = {
     1, 'theta_sod_ice',        % 29    NOT USED: Temperature adjustment coefficient for SOD, T < 10 °C
     4, 'BOD_temp_switch',      % 30    NOT USED: Threshold for bod or bod_ice °C
     5.2, 'pH',                 % 31    Lake water pH
-    2, 'Mass_Ratio_C_Chl',     % 32    Fixed empirical ratio C:Chl (mass/mass)
+    2, 'Mass_Ratio_C_Chl',     % 32    NOT USED: Fixed empirical ratio C:Chl (mass/mass)
     100, 'I_scDIC',            % 33    Scaling factor for inflow concentration of DOC  (-)
     0.25, 'SS_C',              % 34    Carbon fraction in H_netsed_catch
     1.95, 'density_org_H_nc',  % 35    Density of organic fraction in H_netsed_catch [g cm-3]
     2.65, 'density_inorg_H_nc',% 36    Density of inorganic fraction in H_netsed_catch [g cm-3]
     1, 'I_scO',                % 37    Scaling factor for inflow concentration
-    1.7, 'Q10_wc',             % 38    Q10 for reactions of respiration
+    2, 'Q10_wc',               % 38    Q10 for reactions of respiration
     1, 'wc_factor',            % 39    Scaling factor for rates in WC
     4.8497, 'T_ref_wc'};       % 40    Reference Temperature for rates
 
