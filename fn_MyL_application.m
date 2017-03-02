@@ -279,7 +279,7 @@ if isnumeric(use_INCA)
     
 
     load 'obs/store_obs/TOTP.dat' % these are just C&P of vanem ...
-    temp=(Pzt(zinx,:)+PPzt(zinx,:)+DOPzt(zinx,:)+Chlzt(zinx,:))'; % total P is computed
+    temp=(Pzt(zinx,:)+PPzt(zinx,:)+DOPzt(zinx,:)+Chlzt(zinx,:)+Czt(zinx,:))'; % total P is computed
     TP_mod_all = [tlims mean(temp,2)]; % this is the mean of depth-averaged time series
     TP_obs = TOTP; % retreiving the observations
     [TP_date,loc_obs,loc_sim] = intersect(TP_obs(:,1), TP_mod_all(:,1)); % returns the datum, and the index for both obs and sim
