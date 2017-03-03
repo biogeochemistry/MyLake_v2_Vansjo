@@ -15,10 +15,7 @@
 % New DIC variable 29.12.2010 (incl. inflow, convection, diffusion) by PK
 % New O2 variable 10.2.2011 by PK
 
-function [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,...
-    P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,O2fluxt,CO2_eqt,K0t,O2_eqt,K0_O2t,...
-    CO2_ppmt,dO2Chlt,dO2BODt,testi1t,testi2t,testi3t,...
-    MyLake_results, sediment_results] = ...
+function [MyLake_results, sediment_results] = ...
     solvemodel_v2(M_start,M_stop,Initfile,Initsheet,Inputfile,Inputsheet,Parafile,Parasheet,varargin)
 
 warning off MATLAB:fzero:UndeterminedSyntax %suppressing a warning message
@@ -1721,9 +1718,9 @@ sediment_results.MyLake_params = MyLake_params;
 sediment_results.params = sediment_params;
 sediment_results.SWI_fluxeszt = SWI_fluxes_sediment_zt;
 sediment_results.sediment_integrated_over_depth_fluxes_t = sediment_integrated_over_depth_fluxes_t;
-sediment_results.days = datenum(m_start):datenum(m_stop);
-sediment_results.m_start = m_start;
-sediment_results.m_stop = m_stop;
+sediment_results.days = datenum(M_start):datenum(M_stop);
+sediment_results.m_start = M_start;
+sediment_results.m_stop = M_stop;
 
 else
 
@@ -1799,6 +1796,8 @@ MyLake_results.testi2t = testi2t;
 MyLake_results.zz = zz;
 MyLake_results.days = datenum(M_start):datenum(M_stop);
 MyLake_results.params = MyLake_params;
+MyLake_results.inflow_input = Inflw;
+MyLake_results.weather_input = Wt;
 MyLake_results.m_start = M_start;
 MyLake_results.m_stop = M_stop;
 

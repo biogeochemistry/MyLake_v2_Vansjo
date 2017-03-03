@@ -35,7 +35,7 @@ for current_run = 1:no_runs
         clim_ID = run_ID
         if use_INCA == 1
             m_start=[1984, 1, 1]; %
-            m_stop=[2012, 12, 31]; %
+            m_stop=[2010, 12, 31]; %
         else
             m_start=[2000, 1, 1]; %
             m_stop=[2010, 12, 31]; %
@@ -123,8 +123,8 @@ for current_run = 1:no_runs
 
 
     % try
-        [TP_obs,TP_mod, TP_date,chl_obs,chl_mod, Chl_date, PO4_obs, PO4_mod, PO4_date, Part_obs, Part_mod, Part_date, MyLake_results, Sediment_results, input_all]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
-        big_results{current_run} = {TP_obs,TP_mod, TP_date,chl_obs,chl_mod, Chl_date, PO4_obs, PO4_mod, PO4_date, Part_obs, Part_mod, Part_date, MyLake_results, Sediment_results, input_all}
+        [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
+        big_results{current_run} = {MyLake_results, Sediment_results};
     % catch ME
     %     fprintf('Process crashed: %s\n', num2str(current_run))
     %     fprintf('\tID: %s\n', ME.identifier)
