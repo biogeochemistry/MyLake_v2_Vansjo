@@ -4,8 +4,6 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   global k_OM k_OMb Km_O2 Km_NO3 Km_FeOH3 Km_FeOOH Km_SO4 Km_oxao Km_amao Kin_O2 Kin_NO3  Kin_FeOH3 Kin_FeOOH k_amox k_Feox k_Sdis k_Spre k_FeS2pre k_pdesorb_c k_pdesorb_a k_pdesorb_b k_alum k_rhom   k_tS_Fe Ks_FeS k_Fe_dis k_Fe_pre k_apa  kapa k_oms k_tsox k_FeSpre f_pfe accel Cx1 Ny1 Pz1 Cx2 Ny2 Pz2 F Ny1 Ny2 Pz1 Pz2 alfax fi n
 
 
-  global debugg
-
   Ox_prev = sediment_concentrations('Oxygen');
   OM_prev = sediment_concentrations('OM1');
   OMb_prev = sediment_concentrations('OM2');
@@ -425,11 +423,9 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   H2CO3(1,:) = BC_H2CO3_top;
 
 
-  if debugg
     if any(isnan(BC_O_top)) | any(isnan(F_OM_top)) | any(isnan(F_OMb_top)) | any(isnan(BC_NO3_top)) | any(isnan(F_FeOH3_top)) | any(isnan(BC_SO4_top)) | any(isnan(BC_Fe2_top)) | any(isnan(F_FeOOH_top)) | any(isnan(F_FeS_top)) | any(isnan(BC_S0_top)) | any(isnan(BC_PO4_top)) | any(isnan(F_S8_top)) | any(isnan(F_FeS2_top)) | any(isnan(F_AlOH3_top)) | any(isnan(F_PO4adsa_top)) | any(isnan(F_PO4adsb_top)) | any(isnan(BC_Ca2_top)) | any(isnan(F_Ca3PO42_top)) | any(isnan(F_OMS_top)) | any(isnan(BC_H_top)) | any(isnan(BC_OH_top)) | any(isnan(BC_CO2_top)) | any(isnan(BC_CO3_top)) | any(isnan(BC_HCO3_top)) | any(isnan(BC_NH3_top)) | any(isnan(BC_NH4_top)) | any(isnan(BC_HS_top)) | any(isnan(BC_H2S_top)) | any(isnan(BC_H2CO3_top))
       error('Breaking out of Sediments function: NaN values');
     end
-  end
 
 
   % Stiffness:
@@ -670,36 +666,30 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   end
 
 % Estimate flux
-  Ox_flux = top_sediment_diffusion_flux(Ox(:,end), D_O2, 31998, dx, fi); %  + sum(Ox_dRbio(:,end)) * dx;
-  PO4_flux = top_sediment_diffusion_flux(PO4(:,end),D_PO4, 94971, dx, fi); %  + sum(PO4_dRbio(:,end)) * dx;
-  NO3_flux = top_sediment_diffusion_flux(NO3(:,end),D_NO3, 62004, dx, fi); %  + sum(bioirrigation(NO3(:,i-1), alfax, fi)) * dx;
+  Ox_flux = top_sediment_diffusion_flux(Ox(:,end), D_O2, 31998, dx, fi);
+  PO4_flux = top_sediment_diffusion_flux(PO4(:,end),D_PO4, 30973.762, dx, fi);
+  NO3_flux = top_sediment_diffusion_flux(NO3(:,end),D_NO3, 62004, dx, fi);
   Fe2_flux = top_sediment_diffusion_flux(Fe2(:,end),D_Fe2, 55845, dx, fi);
   NH4_flux = top_sediment_diffusion_flux(NH4(:,end),D_NH4, 18038, dx, fi);
   SO4_flux = top_sediment_diffusion_flux(SO4(:,end),D_SO4, 96062, dx, fi);
 
-  sediment_SWI_fluxes = {...
-    Ox_flux,                   'O2 flux';     %1
-    sediment_bc('OM1_fx'),     'OM1 flux';    %2
-    sediment_bc('OM2_fx'),     'OM2 flux';    %3
-    PO4_flux,                  'PO4 flux';    %4
-    NO3_flux,                  'NO3 flux';    %6
-    sediment_bc('FeOH3_fx'),   'FeOH3 flux';  %6
-    Fe2_flux,                  'Fe2+ flux';   %7
-    NH4_flux,                  'NH4+ flux';   %8
-    sediment_bc('AlOH3_fx'),   'AlOH3 flux';  %9
-    sediment_bc('PO4adsa_fx'), 'PO4adsa flux';%10
-    SO4_flux,                  'SO4 flux';    %11
-  };
+  sediment_SWI_fluxes.Ox = Ox_flux;
+  sediment_SWI_fluxes.OM1 = sediment_bc('OM1_fx');
+  sediment_SWI_fluxes.OM2 = sediment_bc('OM2_fx');
+  sediment_SWI_fluxes.PO4 = PO4_flux;
+  sediment_SWI_fluxes.NO3 = NO3_flux;
+  sediment_SWI_fluxes.FeOH3 = sediment_bc('FeOH3_fx');
+  sediment_SWI_fluxes.Fe2 = Fe2_flux;
+  sediment_SWI_fluxes.NH4 = NH4_flux;
+  sediment_SWI_fluxes.AlOH3 = sediment_bc('AlOH3_fx');
+  sediment_SWI_fluxes.PO4adsa = sediment_bc('PO4adsa_fx');
+  sediment_SWI_fluxes.SO4 = SO4_flux;
 
-
-  % Flux due to bioirrigation:
-  sediment_bioirrigation_fluxes = {...
-    top_sediment_rate_to_flux(bioirrigation(Ox(:,end), alfax, fi),31998,dx,m),         'Oxygen bioirrigation flux';
-    top_sediment_rate_to_flux(bioirrigation(PO4(:,end), alfax, fi),94971,dx,m),        'PO4 bioirrigation flux';
-    top_sediment_rate_to_flux(bioirrigation(Fe2(:,end), alfax, fi),55845,dx,m),        'Fe2+ bioirrigation flux';
-    top_sediment_rate_to_flux(bioirrigation(NO3(:,end), alfax, fi),62004,dx,m),        'NO3- bioirrigation flux';
-    top_sediment_rate_to_flux(bioirrigation(NH4(:,end), alfax, fi),18038,dx,m),        'NH4+ bioirrigation flux';
-  };
+  sediment_bioirrigation_fluxes.Ox =  top_sediment_rate_to_flux(bioirrigation(Ox(:,end), alfax, fi),31998,dx,m);
+  sediment_bioirrigation_fluxes.PO4 =  top_sediment_rate_to_flux(bioirrigation(PO4(:,end), alfax, fi),30973.762,dx,m);
+  sediment_bioirrigation_fluxes.Fe2 =  top_sediment_rate_to_flux(bioirrigation(Fe2(:,end), alfax, fi),55845,dx,m);
+  sediment_bioirrigation_fluxes.NO3 =  top_sediment_rate_to_flux(bioirrigation(NO3(:,end), alfax, fi),62004,dx,m);
+  sediment_bioirrigation_fluxes.NH4 =  top_sediment_rate_to_flux(bioirrigation(NH4(:,end), alfax, fi),18038,dx,m);
 
 
   sediment_concentrations = {...
@@ -757,8 +747,7 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
     0,   'Ox integrated over depth flux to sediments';
   };
     % Debugging purposes
-  if debugg
-    if any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(Ox(:,end), alfax, fi),31998,dx,m),31998,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(PO4(:,end), alfax, fi),94971,dx,m),94971,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(Fe2(:,end), alfax, fi),55845,dx,m),55845,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(NO3(:,end), alfax, fi),62004,dx,m),62004,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(NH4(:,end), alfax, fi),18038,dx,m),18038,dx,m)))
+    if any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(Ox(:,end), alfax, fi),31998,dx,m),31998,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(PO4(:,end), alfax, fi),30973.762,dx,m),30973.762,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(Fe2(:,end), alfax, fi),55845,dx,m),55845,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(NO3(:,end), alfax, fi),62004,dx,m),62004,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(NH4(:,end), alfax, fi),18038,dx,m),18038,dx,m)))
       error('Breaking out of Sediments function: NaN values');
     end
 
@@ -767,7 +756,6 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
     if any(isnan(Ox_flux))| any(isnan(sediment_bc('OM1_fx')))| any(isnan(sediment_bc('OM2_fx')))| any(isnan(PO4_flux))| any(isnan(NO3_flux))| any(isnan(sediment_bc('FeOH3_fx')))| any(isnan(Fe2_flux))| any(isnan(NH4_flux)) | any(isnan(PO4_flux)) | any(isnan(Ox_flux)) | any(isnan(Ox)) | any(isnan(OM)) | any(isnan(OMb)) | any(isnan(NO3)) | any(isnan(FeOH3)) | any(isnan(SO4)) | any(isnan(NH4)) | any(isnan(Fe2)) | any(isnan(FeOOH)) | any(isnan(H2S)) | any(isnan(HS)) | any(isnan(FeS)) | any(isnan(S0)) | any(isnan(PO4)) | any(isnan(S8)) | any(isnan(FeS2)) | any(isnan(AlOH3)) | any(isnan(PO4adsa)) | any(isnan(PO4adsb)) | any(isnan(H)) | any(isnan(Ca2)) | any(isnan(Ca3PO42)) | any(isnan(OMS)) | any(isnan(OH)) | any(isnan(HCO3)) | any(isnan(CO2)) | any(isnan(CO3)) | any(isnan(NH3)) | any(isnan(H2CO3)) | any(isnan(BC_O_top)) | any(isnan(F_OM_top)) | any(isnan(F_OMb_top)) | any(isnan(BC_NO3_top)) | any(isnan(F_FeOH3_top)) | any(isnan(BC_SO4_top)) | any(isnan(BC_Fe2_top)) | any(isnan(F_FeOOH_top)) | any(isnan(F_FeS_top)) | any(isnan(BC_S0_top)) | any(isnan(BC_PO4_top)) | any(isnan(F_S8_top)) | any(isnan(F_FeS2_top)) | any(isnan(F_AlOH3_top)) | any(isnan(F_PO4adsa_top)) | any(isnan(F_PO4adsb_top)) | any(isnan(BC_Ca2_top)) | any(isnan(F_Ca3PO42_top)) | any(isnan(F_OMS_top)) | any(isnan(BC_H_top)) | any(isnan(BC_OH_top)) | any(isnan(BC_CO2_top)) | any(isnan(BC_CO3_top)) | any(isnan(BC_HCO3_top)) | any(isnan(BC_NH3_top)) | any(isnan(BC_NH4_top)) | any(isnan(BC_HS_top)) | any(isnan(BC_H2S_top)) | any(isnan(BC_H2CO3_top))
       error('Breaking out of Sediments function: NaN values');
     end
-  end
 
 
 end
@@ -982,7 +970,6 @@ end
 
 %% rk4: Runge-Kutta 4th order integration
 function [C_new] = rk4(C0,ts, dt)
-    global debugg
     % ts - how many time steps during 1 day
     dt = dt/ts;
     for i = 1:ts
@@ -992,17 +979,16 @@ function [C_new] = rk4(C0,ts, dt)
         k_4 = dt.*sediment_rates(C0+k_3, dt);
         C_new = C0 + (k_1+2.*k_2+2.*k_3+k_4)/6;
         C0 = C_new;
-        if debugg
-            if any(any(isnan(C_new)))
-                error('NaN')
-            end
+
+        if any(any(isnan(C_new)))
+            error('NaN')
         end
     end
 end
 
 %% butcher5: Butcher's Fifth-Order Runge-Kutta
 function [C_new] = butcher5(C0,ts,dt)
-    global debugg
+
     dt = dt/ts;
     for i = 1:ts
         k_1 = dt.*sediment_rates(C0, dt);
@@ -1013,10 +999,9 @@ function [C_new] = butcher5(C0,ts,dt)
         k_6 = dt.*sediment_rates(C0 - 3/7.*k_1 + 2/7.*k_2 + 12/7.*k_3 - 12/7.*k_4 + 8/7.*k_5, dt);
         C_new = C0 + (7.*k_1 + 32.*k_3 + 12.*k_4 + 32.*k_5 + 7.*k_6)/90;
         C0 = C_new;
-        if debugg
-            if any(any(isnan(C_new)))
-                error('NaN')
-            end
+
+        if any(any(isnan(C_new)))
+            error('NaN')
         end
     end
 end
@@ -1035,7 +1020,6 @@ end
 function [dcdt] = sediment_rates(C, dt)
 % parameters for water-column chemistry
 % NOTE: the rates are the same as in sediments except microbial which are factorized due to lower concertation of bacteria in WC then in sediments. Units are per "year" due to time step is in year units too;
-    global debugg
 
     global k_OM k_OMb Km_O2 Km_NO3 Km_FeOH3 Km_FeOOH Km_SO4 Km_oxao Km_amao Kin_O2 Kin_NO3  Kin_FeOH3 Kin_FeOOH k_amox k_Feox k_Sdis k_Spre k_FeS2pre k_pdesorb_c k_pdesorb_a k_pdesorb_b k_alum k_rhom   k_tS_Fe Ks_FeS k_Fe_dis k_Fe_pre k_apa  kapa k_oms k_tsox k_FeSpre f_pfe accel Cx1 Ny1 Pz1 Cx2 Ny2 Pz2 F Ny1 Ny2 Pz1 Pz2 alfax fi
 

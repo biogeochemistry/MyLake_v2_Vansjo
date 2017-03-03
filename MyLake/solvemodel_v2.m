@@ -79,7 +79,7 @@ warning off MATLAB:fzero:UndeterminedSyntax %suppressing a warning message
 %                   : (tt * zz)
 
 % These variables are still global and not transferred by functions
-global ies80 O2_diffzt debugg sediment_params;
+global ies80 O2_diffzt sediment_params;
 
 % fast variable passing
     global k_OM_wc_q10 k_OMb_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2
@@ -103,7 +103,6 @@ wc_int_method = 1;              % WC chemistry module: method: 0 - rk4th, 1 - rk
 photobleaching=0;               %photo bleaching: 0=TSA model, 1=FOKEMA model
 floculation_switch=0;                   % floculation according to Wachenfeldt 2008  %% NEW_DOCOMO
 resuspension_enabled =0;        % Resuspension switch
-debugg = true;                  % debug: checking NaN in variables
 % ==============
 
 dt=1.0; %model time step = 1 day (DO NOT CHANGE!)
@@ -1349,10 +1348,9 @@ for i = 1:length(tt)
         Cz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,17), 30973.762);
     end
 
-    if debugg
-        if any(isnan(C_new))
-            error('NaN')
-        end
+
+    if any(isnan(C_new))
+        error('NaN')
     end
 
     % sediment module
@@ -1403,13 +1401,7 @@ for i = 1:length(tt)
         % Update WC:  [sediment] ----> [WC]
         [O2z, Pz, Fe2z, NO3z, NH4z] = update_wc(O2z, Pz, Fe2z, NO3z, NH4z, MyLake_params, sediment_SWI_fluxes, sediment_bioirrigation_fluxes);
 
-        deltaO2(i) = - sediment_SWI_fluxes{1} * dt * Az(end) / Vz (end)  - sediment_bioirrigation_fluxes{1} * dt * Az(end) / Vz (end) ;
-        deltaPz(i) = - sediment_SWI_fluxes{4} * dt * Az(end) / Vz (end);
 
-
-        % checking the calculations
-        % if deltaO2(i)>0, error('sediment:: deltaO2 > 0'), end
-        % if deltaPz(i)<0, error('sediment:: deltaPz < 0'), end
     end
 
     if matsedlab_sediment_module           % MATSEDLAB sediment module
@@ -1446,10 +1438,22 @@ for i = 1:length(tt)
         NH3_sediment_zt(:,i) = sediment_concentrations('NH3');
         H2CO3_sediment_zt(:,i) = sediment_concentrations('H2CO3');
         pH_sediment_zt(:,i) = -log10(H_sediment_zt(:,i)*10^-3);
-        O2_flux_sediment_zt(i) = sediment_SWI_fluxes{1};
-        OM_flux_sediment_zt(i) = sediment_SWI_fluxes{2};
-        OM2_flux_sediment_zt(i) = sediment_SWI_fluxes{3};
-        PO4_flux_sediment_zt(i) = sediment_SWI_fluxes{4};
+        sediment_SWI_fluxes_zt.Ox(i) = sediment_SWI_fluxes.Ox;
+        sediment_SWI_fluxes_zt.OM1(i) = sediment_SWI_fluxes.OM1;
+        sediment_SWI_fluxes_zt.OM2(i) = sediment_SWI_fluxes.OM2;
+        sediment_SWI_fluxes_zt.PO4(i) = sediment_SWI_fluxes.PO4;
+        sediment_SWI_fluxes_zt.NO3(i) = sediment_SWI_fluxes.NO3;
+        sediment_SWI_fluxes_zt.FeOH3(i) = sediment_SWI_fluxes.FeOH3;
+        sediment_SWI_fluxes_zt.Fe2(i) = sediment_SWI_fluxes.Fe2;
+        sediment_SWI_fluxes_zt.NH4(i) = sediment_SWI_fluxes.NH4;
+        sediment_SWI_fluxes_zt.AlOH3(i) = sediment_SWI_fluxes.AlOH3;
+        sediment_SWI_fluxes_zt.PO4adsa(i) = sediment_SWI_fluxes.PO4adsa;
+        sediment_SWI_fluxes_zt.SO4(i) = sediment_SWI_fluxes.SO4;
+        sediment_bioirrigation_fluxes_zt.Ox(i) = sediment_bioirrigation_fluxes.Ox;
+        sediment_bioirrigation_fluxes_zt.PO4(i) = sediment_bioirrigation_fluxes.PO4;
+        sediment_bioirrigation_fluxes_zt.Fe2(i) = sediment_bioirrigation_fluxes.Fe2;
+        sediment_bioirrigation_fluxes_zt.NO3(i) = sediment_bioirrigation_fluxes.NO3;
+        sediment_bioirrigation_fluxes_zt.NH4(i) = sediment_bioirrigation_fluxes.NH4;
         R1_sediment_zt(:,i) = 'not collected';
         R1_int_sediment_zt(:,i) = 'not collected';
         R2_sediment_zt(:,i) = 'not collected';
@@ -1460,21 +1464,9 @@ for i = 1:length(tt)
         R4_int_sediment_zt(:,i) = 'not collected';
         R5_sediment_zt(:,i) = 'not collected';
         R5_int_sediment_zt(:,i) = 'not collected';
-        O2_sediment_bioirrigation_flux_zt(:,i) = sediment_bioirrigation_fluxes{1};
-        PO4_sediment_bioirrigation_flux_zt(:,i) = sediment_bioirrigation_fluxes{2};
-        NO3_flux_sediment_zt(i) = sediment_SWI_fluxes{5};
-        FeOH3_flux_sediment_zt(i) = sediment_SWI_fluxes{6};
         R6_sediment_zt(:,i) = 'not collected';
         R6_int_sediment_zt(:,i) = 'not collected';
-        Fe2_flux_sediment_zt(:,i) = sediment_SWI_fluxes{7};
-        Fe2_sediment_bioirrigation_flux_zt(:,i) = sediment_bioirrigation_fluxes{3};
-        NO3_sediment_bioirrigation_flux_zt(:,i) = sediment_bioirrigation_fluxes{4};
-        NH4_flux_sediment_zt(:,i) = sediment_SWI_fluxes{8};
-        NH4_sediment_bioirrigation_flux_zt(:,i) = sediment_bioirrigation_fluxes{5};
-        AlOH3_flux_sediment_zt(:,i) = sediment_SWI_fluxes{9};
-        PO4adsa_flux_sediment_zt(:,i) = sediment_SWI_fluxes{10};
         O2_sediment_integrated_over_depth_fluxes_t(:,i)=sediment_integrated_over_depth_fluxes{1};
-        FeOH3_flux_sediment_zt(:,i) = sediment_SWI_fluxes{6};
     end
 
     % Output MyLake matrices
@@ -1652,30 +1644,12 @@ if matsedlab_sediment_module;           % MATSEDLAB sediment module
     R6_int_sediment_zt,     'R6 integrated';
     };
 
-SWI_fluxes_sediment_zt = {
-    OM_flux_sediment_zt,    'OM';
-    OM2_flux_sediment_zt,   'OM2';
-    O2_flux_sediment_zt,    'Oxygen';
-    PO4_flux_sediment_zt,   'PO4';
-    Fe2_flux_sediment_zt,   'Fe2+';
-    NO3_flux_sediment_zt,   'NO3-';
-    NH4_flux_sediment_zt,   'NH4+';
-    AlOH3_flux_sediment_zt, 'Al(OH)3';
-    PO4adsa_flux_sediment_zt, 'PO4adsa';
-    FeOH3_flux_sediment_zt, 'Fe(OH)3'
-    };
+
 
 sediment_integrated_over_depth_fluxes_t = {
     O2_sediment_integrated_over_depth_fluxes_t, 'Oxygen integrated over depth flux';
     };
 
-Bioirrigation_sediment_zt = { O2_sediment_bioirrigation_flux_zt,  'Oxygen';
-    PO4_sediment_bioirrigation_flux_zt, 'PO4';
-    Fe2_sediment_bioirrigation_flux_zt, 'Fe2+';
-    NO3_sediment_bioirrigation_flux_zt, 'NO3-';
-    NH4_sediment_bioirrigation_flux_zt, 'NH4+';
-
-    };
 
 MyLake_params = [ (keys(MyLake_params))', (values(MyLake_params))'];
 sediment_params = [ (keys(sediment_params))', (values(sediment_params))'];
@@ -1713,10 +1687,10 @@ sediment_results.H2CO3zt = H2CO3_sediment_zt;
 sediment_results.pHzt = pH_sediment_zt;
 sediment_results.z = z_sediment;
 sediment_results.R_valueszt = R_values_sediment_zt;
-sediment_results.Bioirrigationzt = Bioirrigation_sediment_zt;
+sediment_results.Bioirrigation_fx_zt = sediment_bioirrigation_fluxes_zt;
 sediment_results.MyLake_params = MyLake_params;
 sediment_results.params = sediment_params;
-sediment_results.SWI_fluxeszt = SWI_fluxes_sediment_zt;
+sediment_results.sediment_SWI_fluxes = sediment_SWI_fluxes_zt;
 sediment_results.sediment_integrated_over_depth_fluxes_t = sediment_integrated_over_depth_fluxes_t;
 sediment_results.days = datenum(M_start):datenum(M_stop);
 sediment_results.m_start = M_start;
@@ -1953,7 +1927,7 @@ function [C_new] = wc_chemical_reactions_module(C0, dt, ts, method)
 
 %% rk4: Runge-Kutta 4th order integration
 function [C_new] = rk4(C0,dt,ts)
-    global debugg
+
     % ts - how many time steps during 1 day
     dt = dt/ts/365;
     for i = 1:ts
@@ -1963,18 +1937,17 @@ function [C_new] = rk4(C0,dt,ts)
         k_4 = dt.*rates(C0+k_3, dt);
         C_new = C0 + (k_1+2.*k_2+2.*k_3+k_4)/6;
         C0 = C_new;
-        if debugg
-            if any(any(isnan(C_new)))
-                error('NaN')
-            end
+
+        if any(any(isnan(C_new)))
+            error('NaN')
         end
+
     end
 %end of function
 
 
 %% butcher5: Butcher's Fifth-Order Runge-Kutta
 function [C_new] = butcher5(C0,dt,ts)
-    global debugg
     dt = dt/ts/365;
     for i = 1:ts
         k_1 = dt.*rates(C0, dt);
@@ -1985,10 +1958,9 @@ function [C_new] = butcher5(C0,dt,ts)
         k_6 = dt.*rates(C0 - 3/7.*k_1 + 2/7.*k_2 + 12/7.*k_3 - 12/7.*k_4 + 8/7.*k_5, dt);
         C_new = C0 + (7.*k_1 + 32.*k_3 + 12.*k_4 + 32.*k_5 + 7.*k_6)/90;
         C0 = C_new;
-        if debugg
-            if any(any(isnan(C_new)))
-                error('NaN')
-            end
+
+        if any(any(isnan(C_new)))
+            error('NaN')
         end
     end
 %end of function
@@ -2011,14 +1983,13 @@ function C = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C,M_C)
 function [dcdt] = rates(C, dt)
 % parameters for water-column chemistry
 % NOTE: the rates are the same as in sediments (per year!! not day) except microbial which are factorized due to lower concertation of bacteria in WC then in sediments. Units are per "year" due to time step is in year units too;
-    global debugg
 
     global k_OM_wc_q10 k_OMb_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2
 
     dcdt=zeros(size(C));
     O2z = C(:,1) .* (C(:,1)>0);
     Chlz = C(:,2) .* (C(:,2)>0);
-    DOCz = C(:,3) .* (C(:,3)>0); % NOTE: POC: DOC 1:20 ratio
+    DOCz = C(:,3) .* (C(:,3)>0); % NOTE: POC: DOC 1:20 ratio. Conversion happens at SWI flux
     NO3z = C(:,4) .* (C(:,4)>0);
     Fe3z = C(:,5) .* (C(:,5)>0);
     SO4z = C(:,6) .* (C(:,6)>0);
@@ -2070,7 +2041,7 @@ function [dcdt] = rates(C, dt)
     R_dCz_growth =  Cz .* R_bioz_2;
 
     %Oxygen production in phytoplankton growth
-    R_dO2_Chl = 110*(R_dChl_growth+R_dCz_growth);
+    R_dO2_Chl = R_dChl_growth+R_dCz_growth;
 
 
     % New chemistry
@@ -2136,7 +2107,7 @@ function [dcdt] = rates(C, dt)
     R19  = k_apa_wc_q10 .* (Pz - kapa_wc);
     R19  = (R19 >= 0) .* R19;
 
-    dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1_wc*R1a + Cx1_wc*R1b + Cx2_wc*R1c + Cx2_wc*R1d) - 3*R12 + R_dO2_Chl; % O2z
+    dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1_wc*R1a + Cx1_wc*R1b + Cx2_wc*R1c + Cx2_wc*R1d) - 3*R12 + Cx1_wc * R_dO2_Chl; % O2z
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R10d ;% POCz
     dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx2_wc*R2c + Cx2_wc*R2d) + R9 - Ny1_wc * (R_dChl_growth + R_dCz_growth); % NO3z
