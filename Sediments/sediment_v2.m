@@ -798,10 +798,10 @@ function [flux] = top_sediment_diffusion_flux(C, D, M_C, dx, fi)
   % D - diffusion coefficient
   % M_C - molar mass in [ mg mol-1]
   % fi - porosity
-  % TODO: No mass balance here.
+  % NOTE: No mass balance here?
 
   dx_m=dx/100; %                    [cm] -> [m]
-  dC = (C(2)- C(1)) * M_C; %       [umol cm-3] -> [mg m-3]
+  dC = (C(3)- C(2)) * M_C; %       [umol cm-3] -> [mg m-3]
   D_m = D / 10^4 / 365; %           [cm2 y-1] -> [m2 d-1]
   flux = - D_m * fi(1) * dC / dx_m; %  [ mg m-2 d-1 ]
 end
