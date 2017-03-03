@@ -1,4 +1,4 @@
-function [TP_obs,TP_mod, TP_date,chl_obs,chl_mod, Chl_date, PO4_obs, PO4_mod, PO4_date, PP_obs, PP_mod, PP_date, MyLake_results, Sediment_results, input_all] = fn_MyL_application(m_start,m_stop, K_sediments, K_lake, use_INCA, run_INCA, run_ID, clim_ID)
+function [MyLake_results, Sediment_results] = fn_MyL_application(m_start,m_stop, K_sediments, K_lake, use_INCA, run_INCA, run_ID, clim_ID)
 global sed_par_file lake_par_file Eevapor
 % This is the main MyLake application configuration file. INCA is a switch
 % It is made to run a after the parameter are set by Set_Prior
@@ -150,17 +150,8 @@ Deposition = 0;
 
 disp('Storefjorden ...')
 
-[In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DICz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
-    Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
-    = modelinputs_v2(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parafile, 'lake', dt);
-
-
-[zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,...
-    P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,O2fluxt,CO2_eqt,K0t,O2_eqt,K0_O2t,...
-    CO2_ppmt,dO2Chlt,dO2BODt,testi1t,testi2t,testi3t,...
-    MyLake_results_basin1, sediment_data_basin1] ...
-    = solvemodel_v2(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake',In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM, ...
-    Ice0,Wt,Inflw,Phys_par,Phys_par_range,Phys_par_names, Bio_par,Bio_par_range,Bio_par_names, Deposition);
+[MyLake_results_basin1, sediment_data_basin1] ...
+    = solvemodel_v2(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake');
 
 %% Old KOJI stuff
 % date_temp = datevec(tt);
@@ -251,88 +242,13 @@ disp('Storefjorden ...')
 %     % delete (vanem_input)
 %     disp('Cleanup ... done.')
 % end
-
-%% returns observed and simulated
-
-%% Load and match obs and sim ... commented for now. Later they need to match sim
-
-tlims=[datenum(m_start):datenum(m_stop)]'; % creating a vector of datums
-zinx=find(zz<4); %depth layer considered first 4m because of sampling device
-
-if ischar(use_INCA) % output for response surfaces run
-    
-    temp=(Pzt(zinx,:)+PPzt(zinx,:)+DOPzt(zinx,:)+Chlzt(zinx,:))'; % total P is computed
-    TP_mod = [tlims mean(temp,2)]; % this is the mean of depth-averaged time series
-    
-    temp=(Chlzt(zinx,:)+Czt(zinx,:))'; % this is the mean of depth-averaged time series
-    chl_mod=[tlims mean(temp,2)];
-    
-    
-    TP_obs = [];
-    chl_obs = [];
-    
-end
-
-% cd ..;cd ..;cd ..;cd ..;
-
-if isnumeric(use_INCA)
-    
-
-    load 'obs/store_obs/TOTP.dat' % these are just C&P of vanem ...
-    temp=(Pzt(zinx,:)+PPzt(zinx,:)+DOPzt(zinx,:)+Chlzt(zinx,:)+Czt(zinx,:))'; % total P is computed
-    TP_mod_all = [tlims mean(temp,2)]; % this is the mean of depth-averaged time series
-    TP_obs = TOTP; % retreiving the observations
-    [TP_date,loc_obs,loc_sim] = intersect(TP_obs(:,1), TP_mod_all(:,1)); % returns the datum, and the index for both obs and sim
-    MatchedData = [TP_date TP_obs(loc_obs,2) TP_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
-    TP_obs = MatchedData (:,2); % fn output
-    TP_mod = MatchedData (:,3); % fn output
-    clear MatchedData
-    
-    % file_path = ['obs' filesep 'vanem_obs' filesep 'Cha.dat']
-    load 'obs/store_obs/Cha.dat' % these are just C&P of vanem ...
-    temp=(Chlzt(zinx,:)+Czt(zinx,:))'; % this is the mean of depth-averaged time series
-    chl_mod_all=[tlims mean(temp,2)];
-    chl_obs = Cha;
-    [Chl_date,loc_obs,loc_sim] = intersect(chl_obs(:,1), chl_mod_all(:,1)); % returns the datum, and the index for both obs and sim
-    MatchedData = [Chl_date chl_obs(loc_obs,2) chl_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
-    chl_obs = MatchedData (:,2); % fn output
-    chl_mod = MatchedData (:,3); % fn output
-    clear MatchedData
-    
-    % file_path = ['obs' filesep 'vanem_obs' filesep 'PO4.dat']
-    load 'obs/store_obs/PO4.dat' % these are just C&P of vanem ...
-    temp=Pzt(zinx,:)'; % this is the mean of depth-averaged time series
-    PO4_mod_all=[tlims mean(temp,2)];
-    PO4_obs = PO4;
-    [PO4_date,loc_obs,loc_sim] = intersect(PO4_obs(:,1), PO4_mod_all(:,1)); % returns the datum, and the index for both obs and sim
-    MatchedData = [PO4_date PO4_obs(loc_obs,2) PO4_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
-    PO4_obs = MatchedData (:,2); % fn output
-    PO4_mod = MatchedData (:,3); % fn output
-    clear MatchedData
-    
-    % file_path = ['obs' filesep 'vanem_obs' filesep 'Part.dat']
-    load 'obs/store_obs/Part.dat' % these are just C&P of vanem ...
-    temp=PPzt(zinx,:)'; % this is the mean of depth-averaged time series
-    PP_mod_all=[tlims mean(temp,2)];
-    PP_obs = Part;
-    [PP_date,loc_obs,loc_sim] = intersect(PP_obs(:,1), PP_mod_all(:,1)); % returns the datum, and the index for both obs and sim
-    MatchedData = [PP_date PP_obs(loc_obs,2) PP_mod_all(loc_sim,2)];% and create subset of data with elements= Time, Observed, Simulated
-    PP_obs = MatchedData (:,2); % fn output
-    PP_mod = MatchedData (:,3); % fn output
-    clear MatchedData
-    
-    temp=Tzt(zinx,:)'; % this is the mean of depth-averaged time series
-    Temp_mod_all=[tlims mean(temp,2)];
-    
-end    
+ 
 
 % MyLake_results = [MyLake_results_basin1, MyLake_results_basin2];
 MyLake_results = [MyLake_results_basin1];
 % Sediment_results = [sediment_data_basin1, sediment_data_basin2];
 Sediment_results = [sediment_data_basin1];
 
-% mod_all =  [TP_mod_all, chl_mod_all(:,2), PO4_mod_all(:,2), PP_mod_all(:,2) Temp_mod_all(:,2)]; % P speciation epilimnion 2m
-input_all = [Wt,Inflw]; % weather and inflows 
 
 %% cleaning
 fclose('all');
