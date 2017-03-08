@@ -7,7 +7,7 @@
 
 function [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
          Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
-            = modelinputs_v12_1b(M_start,M_stop,init_filename,init_sheet,...
+            = modelinputs_v2(M_start,M_stop,init_filename,init_sheet,...
             input_filename,input_sheet,param_filename,param_sheet,dt);
 
 % Inputs:
@@ -203,7 +203,7 @@ for i=1:22 %Interpolate over missing values and dates
 end
 
 %Inflw(:,9) = Inflw(:,8); %DIC
-%Inflw(:,10) = (Inflw(:,8)+1) ./ (Inflw(:,8)+1) .* 8000  ; % O2 Must be defined better
+%Inflw(:,10) = (Inflw(:,8)+1) ./ (Inflw(:,8)+1) .* 8000   % O2 Must be defined better
 
 % Inflw(:,1) Inflow volume (m3 day-1)
 % Inflw(:,2) Inflow temperature (deg C)
