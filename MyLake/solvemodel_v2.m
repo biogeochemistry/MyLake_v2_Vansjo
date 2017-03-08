@@ -1523,17 +1523,17 @@ for i = 1:length(tt)
     Qzt_sed(:,i) = Qz_sed./(60*60*24*dt); %(J m-2 day-1) -> (W m-2)
     lambdazt(:,i) = lambdaz_wtot_avg;
 
-    % surfaceflux(1,i) = surfflux; %Carbon dioxide surface flux
-    % CO2_eqt(1,i) = CO2_eq;       %Carbon dioxide equilibrium concentration
-    % K0t(:,i) = K0;               %Dissolved carbon doxide solubility coefficient
-    % CO2_ppmt(:,i) = CO2_ppm;
+    surfaceflux(1,i) = surfflux; %Carbon dioxide surface flux
+    CO2_eqt(1,i) = CO2_eq;       %Carbon dioxide equilibrium concentration
+    K0t(:,i) = K0;               %Dissolved carbon doxide solubility coefficient
+    CO2_ppmt(:,i) = CO2_ppm;
 
-    % O2fluxt(1,i) = O2flux;       %Oxygen surface flux
-    % O2_eqt(1,i) = O2_eq;         %Oxygen equilibrium concentration
-    % K0_O2t(1,i) = K0_O2;         %Dissolved oxygen solubility coefficient
+    O2fluxt(1,i) = O2flux;       %Oxygen surface flux
+    O2_eqt(1,i) = O2_eq;         %Oxygen equilibrium concentration
+    K0_O2t(1,i) = K0_O2;         %Dissolved oxygen solubility coefficient
     % dO2Chlt(:,i) = dO2_Chl;
     % dO2BODt(:,i) = dO2_BOD;
-    %dO2SODt(:,i) = dO2_SOD;
+    % dO2SODt(:,i) = dO2_SOD;
 
     % testi1t(:,i) = O2_old;
     % testi2t(:,i) = O2_diff; testi3t(:,i) = O2_new;
@@ -1550,20 +1550,20 @@ for i = 1:length(tt)
     % P3zt_sed_sc(:,i,2) = dPP; %(mg m-3 day-1)
     % P3zt_sed_sc(:,i,3) = dChl_res; %(mg m-3 day-1)
 
-    % His(1,i) = Hi;
-    % His(2,i) = (rho_fw/rho_snow)*WEQs;
-    % His(3,i) = Hsi;
-    % His(4,i) = Tice;
-    % His(5,i) = Wt(i,3);
-    % His(6,i) = rho_snow;
-    % His(7,i) = IceIndicator;
-    % His(8,i) = HFrazil; %NEW!!!
+    His(1,i) = Hi;
+    His(2,i) = (rho_fw/rho_snow)*WEQs;
+    His(3,i) = Hsi;
+    His(4,i) = Tice;
+    His(5,i) = Wt(i,3);
+    His(6,i) = rho_snow;
+    His(7,i) = IceIndicator;
+    His(8,i) = HFrazil; %NEW!!!
 
     %Original MixStat matrix in v.1.2.1b
 
-    %MixStat(1,i) = Iflw_S;
-    %MixStat(2,i) = Iflw_TP;
-    %MixStat(3,i) = sum(Sz.*Vz);
+    % MixStat(1,i) = Iflw_S;
+    % MixStat(2,i) = Iflw_TP;
+    % MixStat(3,i) = sum(Sz.*Vz);
     %MixStat(4,i) = Growth_bioz(1);%mean(Growth_bioz(1:4)); %Obs! changed to apply to layers 1-4 only
     %MixStat(5,i) = Loss_bioz(1);%mean(Loss_bioz(1:4)); %Obs! changed to apply to layers 1-4 only
     %%MixStat(6,i) = Iflw;
@@ -1801,9 +1801,9 @@ runtime=toc;
 %Output:
 % Fi    tridiagonal matrix for solving new profile Cz
 
-az = (dt/dz) * [0; Kz] .* (Az ./ Vz);
-bz = (dt/dz) * [Kz; 0] .* ([Az(2:end); 0] ./ Vz);
-Gi = [-bz (1 + az + bz) -az];
+% az = (dt/dz) * [0; Kz] .* (Az ./ Vz);
+% bz = (dt/dz) * [Kz; 0] .* ([Az(2:end); 0] ./ Vz);
+% Gi = [-bz (1 + az + bz) -az];
 
 %=== DIFFUSIVE EQUATION ===
 function [Fi] = tridiag_DIF_v11(Kz,Vz,Az,dz,dt)
