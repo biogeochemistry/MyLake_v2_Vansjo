@@ -31,7 +31,7 @@ function [C] = update_C_due_to_flux(C, flux, MyLake_params)
     dt     = MyLake_params('dt');
 
     dC = flux * dt * Az_end / Vz_end;
-    C(end) = C(end) - dC;
+    C(end) = C(end) + dC;
     C(end) = (C(end) > 0).*C(end);
 end
 
