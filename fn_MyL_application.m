@@ -131,21 +131,6 @@ elseif ischar(use_INCA);
 end
 
 
-%% 24/9/2014 This is MyLake DOCOMO commands ...  disabled for now
-%[In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz, In_TPz_sed,In_Chlz_sed,In_O2z,In_FIM,Ice0,Wt,Inflw,...
-% Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
-%    = modelinputs_v12_1b(m_start,m_stop, initfile, 'duh', inputfile, 'duh', parafile, 'duh', dt);
-%
-%In_DICz = In_DOCz;%dummy DIC;
-%
-%  [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,...
-%        P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,oxygenflux,CO2_eqt,~,O2_eqt,K0_O2t,CO2_ppmt,dO2Chlt,dO2BODt,dO2SODt,testi1t,testi2t,testi3t, sediments_data_basin2] = ...
-%      solvemodel_v12_1b_ut(m_start,m_stop,initfile,'lake', inputfile,'timeseries', parafile,'lake', In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz, In_Chlz,In_DOCz,In_DICz,In_O2z,In_TPz_sed,In_Chlz_sed,In_FIM, ...
-%                        Ice0,Wt,Inflw,Phys_par,Phys_par_range,Phys_par_names, Bio_par,Bio_par_range,Bio_par_names);
-%##################################################################
-
-% note: I removed the DIC/O2 bits here ... take them again from Langtjern
-% app when migrating to Mylake DOCOMO
 Deposition = 0;
 
 disp('Storefjorden ...')
