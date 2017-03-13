@@ -125,4 +125,9 @@ merge_l_b_inputs(MyLake_weather_only,INCA_input,vanem_INCAP_input)
 
 INCA_QC = {INCA_QC_1, INCA_QC_2};
 
+cd ..;
+cd ..;
+cd ..;
+cd ..;
+
 end

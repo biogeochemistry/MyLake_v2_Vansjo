@@ -10,7 +10,7 @@ Pzt_mod = mean((MyLake_results.Pzt(zinx,:))', 2);
 PPzt_mod = mean((MyLake_results.PPzt(zinx,:))', 2);
 
 load 'obs/store_obs/TOTP.dat' % these are just C&P of vanem ...
-load 'obs/store_obs/Cha.dat' % these are just C&P of vanem ...
+load 'obs/store_obs/Cha_aquaM_march_2017.dat' % these are just C&P of vanem ...
 load 'obs/store_obs/PO4.dat' % these are just C&P of vanem ...
 load 'obs/store_obs/Part.dat' % these are just C&P of vanem ...
 
@@ -41,7 +41,7 @@ legend('TP')
 subplot(4,1,2)
 plot(MyLake_results.days, Chl_mod,'Color','k','LineWidth',2)
 hold on
-plot(Cha(:,1), Cha(:,2),'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
+plot(Cha_aquaM_march_2017(:,1), Cha_aquaM_march_2017(:,2),'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
 ax = gca;
 ax.XTick = xData;
 datetick(ax, 'x','mmm-yy','keepticks')
