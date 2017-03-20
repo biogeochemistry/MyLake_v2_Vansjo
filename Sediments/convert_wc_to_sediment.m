@@ -8,7 +8,7 @@ function [sediment_bc] = convert_wc_to_sediment(MyLake_concentrations, MyLake_pa
     w_s = MyLake_params.w_s * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
     w_chl = MyLake_params.w_chl * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
     w_chl_2 = MyLake_params.w_chl_2 * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
-    fi = sediment_params('fi');
+    fi = sediment_params.fi;
 
 
     sediment_bc = {...

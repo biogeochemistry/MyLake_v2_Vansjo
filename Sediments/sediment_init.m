@@ -90,151 +90,124 @@ function [sediment_params] = params(max_depth, temperature)
     D_HS  = 284;
     D_S0  = 100;
     Db    = 5;
-    D_A   = 200;
 
-    w     = data{2}(39);
-    n     = data{2}(40);
-    depth = data{2}(41);
-    F     = data{2}(42);
-    alfa0 = data{2}(43);
+    % Spatial domain:
+    sediment_params.n = data{2}(40);;  % points in spatial grid
+    sediment_params.depth = data{2}(41);  % sediment depth
+    sediment_params.years = 1/365;  % 1 day #35
+    sediment_params.ts = data{2}(50);;  % time step
+    x = linspace(0, sediment_params.depth, sediment_params.n);
+    sediment_params.x = x;      % x-axis
 
-    % OM composition
-    Cx1 = data{2}(44);
-    Ny1 = data{2}(45);
-    Pz1 = data{2}(46);
-    Cx2 = data{2}(47);
-    Ny2 = data{2}(48);
-    Pz2 = data{2}(49);
+    % Scheme properties:
+    % if alpha = betta = 0   then it is fully explicit
+    % if alpha = betta = 1   then it is fully implicit
+    % if alpha = betta = 1/2 then it is Crank-Nicolson
+    % if alpha != betta      then it is additive Runge-Kutta method
+    sediment_params.alpha = 0.5;  % Diffusion shift
+    sediment_params.betta = 0.5;  % Advection shift
+    sediment_params.gama = 1;   % Reaction shift
 
-    ts  = data{2}(50);
+    % Physical properties:
+    sediment_params.w = data{2}(39);      % time-dependent burial rate w = 0.1
+    sediment_params.F = data{2}(42);;      % conversion factor = rhob * (1-fi) / fi ; where fi = porosity and rhob = solid phase density
+    sediment_params.viscosity = viscosity;
+    sediment_params.temperature = temperature;
+    sediment_params.pressure = pressure;
+    sediment_params.salinity = salinity;
 
 
     % Porosity modeling according to Rabouille, C. & Gaillard, J.-F., 1991:
     % NOTE: the experimental function. Checking the result of non-constant profile.
-    x  = linspace(0,depth,n);
-
     fi_in = data{2}(35);
     fi_f  = data{2}(36);
     X_b   = data{2}(37);
     tortuosity = data{2}(38);
-    fi = ( fi_in - fi_f ) * exp( -x' / X_b ) + fi_f;
+    sediment_params.fi = ( fi_in - fi_f ) * exp( -x' / X_b ) + fi_f;;      % porosity
+    sediment_params.tortuosity = tortuosity;  % tortuosity
 
-    alfax = alfa0*exp(-0.25*x);
-    alfax = alfax';
+    % Bio properties:
+    sediment_params.Db = Db;     %'effective diffusion due to bioturbation; Canavan et al D_bio between 0-5; 5 in the '; % #41
+    alfax = data{2}(43)*exp(-0.25*x);
+    sediment_params.alfax = alfax';   % bioirrigation
 
-    sediment_params = {...
-        % Spatial domain:
-        n, 'n'; % points in spatial grid
-        depth, 'depth'; % sediment depth
-        1/365, 'years'; % 1 day #35
-        ts, 'ts'; % time step
-        x,     'x'; % x-axis
+    % effective molecular diffusion
+    sediment_params.D_O2 = D_O2;
+    sediment_params.D_NO3 = D_NO3;
+    sediment_params.D_SO4 = D_SO4;
+    sediment_params.D_NH4 = D_NH4;
+    sediment_params.D_Fe2 = D_Fe2;
+    sediment_params.D_H2S = D_H2S;
+    sediment_params.D_S0 = D_S0;
+    sediment_params.D_PO4 = D_PO4;
+    sediment_params.D_Ca2 = D_Ca2;
+    sediment_params.D_HS = D_HS;
+    sediment_params.D_H = D_H;
+    sediment_params.D_OH = D_OH;
+    sediment_params.D_CO2 = D_CO2;
+    sediment_params.D_CO3 = D_CO3;
+    sediment_params.D_HCO3 = D_HCO3;
+    sediment_params.D_NH3 = D_NH3;
+    sediment_params.D_H2CO3 = D_H2CO3;
 
-        % Scheme properties:
-        % if alpha = betta = 0   then it is fully explicit
-        % if alpha = betta = 1   then it is fully implicit
-        % if alpha = betta = 1/2 then it is Crank-Nicolson
-        % if alpha != betta      then it is additive Runge-Kutta method
-        0.5, 'alpha'; % Diffusion shift
-        0.5, 'betta'; % Advection shift
-        1, 'gama';  % Reaction shift
+    % OM composition
+    sediment_params.Cx1 = data{2}(44);
+    sediment_params.Ny1 = data{2}(45);
+    sediment_params.Pz1 = data{2}(46);
+    sediment_params.Cx2 = data{2}(47);
+    sediment_params.Ny2 = data{2}(48);
+    sediment_params.Pz2 = data{2}(49);
 
-        % Physical properties:
-        w,    'w';  % time-dependent burial rate w = 0.1
-        F,    'F';  % conversion factor = rhob * (1-fi) / fi ; where fi = porosity and rhob = solid phase density
-        viscosity,   'viscosity';
-        temperature, 'temperature';
-        pressure,    'pressure';
-        salinity,    'salinity';
+    % pH module. NOTE: experimental feature
+    % !!!!!!! Recommend to use #3 Phreeqc
+    % Specify pH algorithm:
+    % 0. Disabled
+    % 1. Stumm & Morgan; 1995. Aquatic Chemistry. MATLAB -> very long - don't use it.
+    % 2. Stumm & Morgan; 1995. Aquatic Chemistry. C++ (have some bugs in the code)
+    % 3. Phreeqc  adds 40 sec per year. (works for sure)
+    % 4. Delta function by Markelov (under test)
+    sediment_params.pH_algorithm = 0;
 
-        % Porosity profile  Rabouille, C. & Gaillard, J.-F., 1991.
-        fi,     'fi'; % porosity
-        tortuosity, 'tortuosity'; % tortuosity
-
-        % Bio properties:
-        Db,    'Db'; %'effective diffusion due to bioturbation, Canavan et al D_bio between 0-5, 5 in the top layers'; % #41
-        alfax, 'alfax';  % bioirrigation
-
-        % effective molecular diffusion
-        D_O2,   'D_O2';
-        D_NO3,  'D_NO3';
-        D_SO4,  'D_SO4';
-        D_NH4,  'D_NH4';
-        D_Fe2,  'D_Fe2';
-        D_H2S,  'D_H2S';
-        D_S0,   'D_S0';
-        D_PO4,  'D_PO4';
-        D_Ca2,  'D_Ca2';
-        D_HS,   'D_HS';
-        D_H,    'D_H';
-        D_OH,   'D_OH';
-        D_CO2,  'D_CO2';
-        D_CO3,  'D_CO3';
-        D_HCO3, 'D_HCO3';
-        D_NH3,  'D_NH3';
-        D_H2CO3,'D_H2CO3';
-        D_A,    'D_A'; % new added species here
-
-        % OM composition
-        Cx1, 'Cx1';
-        Ny1, 'Ny1';
-        Pz1, 'Pz1';
-        Cx2, 'Cx2';
-        Ny2, 'Ny2';
-        Pz2, 'Pz2';
-
-        % pH module. NOTE: experimental feature
-        % !!!!!!! Recommend to use #3 Phreeqc
-        % Specify pH algorithm:
-        % 0. Disabled
-        % 1. Stumm & Morgan, 1995. Aquatic Chemistry. MATLAB -> very long - don't use it.
-        % 2. Stumm & Morgan, 1995. Aquatic Chemistry. C++ (have some bugs in the code)
-        % 3. Phreeqc  adds 40 sec per year. (works for sure)
-        % 4. Delta function by Markelov (under test)
-
-        0,    'pH algorithm';
-
-        % chemical constants from file
-        data{2}(1), 'k_OM';
-        data{2}(2), 'k_OMb';
-        data{2}(3), 'Km_O2';
-        data{2}(4), 'Km_NO3';
-        data{2}(5), 'Km_FeOH3';
-        data{2}(6), 'Km_FeOOH';
-        data{2}(7), 'Km_SO4';
-        data{2}(8), 'Km_oxao';
-        data{2}(9), 'Km_amao';
-        data{2}(10), 'Kin_O2';
-        data{2}(11), 'Kin_NO3';
-        data{2}(12), 'Kin_FeOH3';
-        data{2}(13), 'Kin_FeOOH';
-        data{2}(14), 'k_amox';
-        data{2}(15), 'k_Feox';
-        data{2}(16), 'k_Sdis';
-        data{2}(17), 'k_Spre';
-        data{2}(18), 'k_FeS2pre';
-        data{2}(19), 'k_alum';
-        data{2}(20), 'k_pdesorb_a';
-        data{2}(21), 'k_pdesorb_b';
-        data{2}(22), 'k_rhom';
-        data{2}(23), 'k_tS_Fe';
-        data{2}(24), 'Ks_FeS';
-        data{2}(25), 'k_Fe_dis';
-        data{2}(26), 'k_Fe_pre';
-        data{2}(27), 'k_apa';
-        data{2}(28), 'kapa';
-        data{2}(29), 'k_oms';
-        data{2}(30), 'k_tsox';
-        data{2}(31), 'k_FeSpre';
-        data{2}(32), 'accel';
-        data{2}(33), 'f_pfe';
-        data{2}(34), 'k_pdesorb_c'};
-    sediment_params = containers.Map({sediment_params{:,2}},{sediment_params{:,1}});
+    % chemical constants from file
+    sediment_params.k_OM = data{2}(1);
+    sediment_params.k_OMb = data{2}(2);
+    sediment_params.Km_O2 = data{2}(3);
+    sediment_params.Km_NO3 = data{2}(4);
+    sediment_params.Km_FeOH3 = data{2}(5);
+    sediment_params.Km_FeOOH = data{2}(6);
+    sediment_params.Km_SO4 = data{2}(7);
+    sediment_params.Km_oxao = data{2}(8);
+    sediment_params.Km_amao = data{2}(9);
+    sediment_params.Kin_O2 = data{2}(10);
+    sediment_params.Kin_NO3 = data{2}(11);
+    sediment_params.Kin_FeOH3 = data{2}(12);
+    sediment_params.Kin_FeOOH = data{2}(13);
+    sediment_params.k_amox = data{2}(14);
+    sediment_params.k_Feox = data{2}(15);
+    sediment_params.k_Sdis = data{2}(16);
+    sediment_params.k_Spre = data{2}(17);
+    sediment_params.k_FeS2pre = data{2}(18);
+    sediment_params.k_alum = data{2}(19);
+    sediment_params.k_pdesorb_a = data{2}(20);
+    sediment_params.k_pdesorb_b = data{2}(21);
+    sediment_params.k_rhom = data{2}(22);
+    sediment_params.k_tS_Fe = data{2}(23);
+    sediment_params.Ks_FeS = data{2}(24);
+    sediment_params.k_Fe_dis = data{2}(25);
+    sediment_params.k_Fe_pre = data{2}(26);
+    sediment_params.k_apa = data{2}(27);
+    sediment_params.kapa = data{2}(28);
+    sediment_params.k_oms = data{2}(29);
+    sediment_params.k_tsox = data{2}(30);
+    sediment_params.k_FeSpre = data{2}(31);
+    sediment_params.accel = data{2}(32);
+    sediment_params.f_pfe = data{2}(33);
+    sediment_params.k_pdesorb_c = data{2}(34);
 end
 
 function [sediment_concentrations ] = init_concentrations(pH)
     global sediment_params
-    n = sediment_params('n');
+    n = sediment_params.n;
 
     % Init concentrations of sediment species
     sediment_concentrations.Oxygen  = ones(n,1) * 0;
@@ -326,42 +299,42 @@ end
 
 function [sediment_matrix_templates] = templates()
     global sediment_params
-    n  = sediment_params('n');
-    depth = sediment_params('depth');
+    n  = sediment_params.n;
+    depth = sediment_params.depth;
     x = linspace(0,depth,n);
     dx = x(2)-x(1);
-    t = 0:sediment_params('ts'):sediment_params('years');
+    t = 0:sediment_params.ts:sediment_params.years;
     dt    = t(2)-t(1);
-    alpha = sediment_params('alpha'); % Diffusion shift;
-    betta = sediment_params('betta'); % Advection shift;
-    gama  = sediment_params('gama'); % Reaction shift;
-    v = sediment_params('w');
-    fi  = sediment_params('fi');
-    tortuosity = sediment_params('tortuosity');
-    Db    = sediment_params('Db');
+    alpha = sediment_params.alpha; % Diffusion shift;
+    betta = sediment_params.betta; % Advection shift;
+    gama  = sediment_params.gama; % Reaction shift;
+    v = sediment_params.w;
+    fi  = sediment_params.fi;
+    tortuosity = sediment_params.tortuosity;
+    Db    = sediment_params.Db;
 
     % formation of templates:
     % Solid template the same for all solid species due to diffusion and advection coef the same for all.
     [LU_solid,  RK_solid,  LD_solid,  LA_solid,  RD_solid,  RA_solid] = matrices_template_solid(Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
 
     % solute templates:
-    [LU_ox0,  RK_ox0,  LD_ox0,  LA_ox0,  RD_ox0,  RA_ox0]        = matrices_template_solute(sediment_params('D_O2') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_NO30, RK_NO30, LD_NO30, LA_NO30, RD_NO30, RA_NO30]       = matrices_template_solute(sediment_params('D_NO3') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_SO40, RK_SO40, LD_SO40, LA_SO40, RD_SO40, RA_SO40]       = matrices_template_solute(sediment_params('D_SO4') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_NH40, RK_NH40, LD_NH40, LA_NH40, RD_NH40, RA_NH40]       = matrices_template_solute(sediment_params('D_NH4') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_Fe20, RK_Fe20, LD_Fe20, LA_Fe20, RD_Fe20, RA_Fe20]       = matrices_template_solute(sediment_params('D_Fe2') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_H2S0, RK_H2S0, LD_H2S0, LA_H2S0, RD_H2S0, RA_H2S0]       = matrices_template_solute(sediment_params('D_H2S') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_S00, RK_S00, LD_S00, LA_S00, RD_S00, RA_S00]             = matrices_template_solute(sediment_params('D_S0') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_PO40, RK_PO40, LD_PO40, LA_PO40, RD_PO40, RA_PO40]       = matrices_template_solute(sediment_params('D_PO4') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_Ca20, RK_Ca20, LD_Ca20, LA_Ca20, RD_Ca20, RA_Ca20]       = matrices_template_solute(sediment_params('D_Ca2') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_HS0, RK_HS0, LD_HS0, LA_HS0, RD_HS0, RA_HS0]             = matrices_template_solute(sediment_params('D_HS') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_H0, RK_H0, LD_H0, LA_H0, RD_H0, RA_H0]                   = matrices_template_solute(sediment_params('D_H') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_OH0, RK_OH0, LD_OH0, LA_OH0, RD_OH0, RA_OH0]             = matrices_template_solute(sediment_params('D_OH') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_CO20, RK_CO20, LD_CO20, LA_CO20, RD_CO20, RA_CO20]       = matrices_template_solute(sediment_params('D_CO2') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_CO30, RK_CO30, LD_CO30, LA_CO30, RD_CO30, RA_CO30]       = matrices_template_solute(sediment_params('D_CO3') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_HCO30, RK_HCO30, LD_HCO30, LA_HCO30, RD_HCO30, RA_HCO30] = matrices_template_solute(sediment_params('D_HCO3') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_NH30, RK_NH30, LD_NH30, LA_NH30, RD_NH30, RA_NH30]       = matrices_template_solute(sediment_params('D_NH3') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_H2CO30, RK_H2CO30, LD_H2CO30, LA_H2CO30, RD_H2CO30, RA_H2CO30]= matrices_template_solute(sediment_params('D_H2CO3') + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_ox0,  RK_ox0,  LD_ox0,  LA_ox0,  RD_ox0,  RA_ox0]        = matrices_template_solute(sediment_params.D_O2 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_NO30, RK_NO30, LD_NO30, LA_NO30, RD_NO30, RA_NO30]       = matrices_template_solute(sediment_params.D_NO3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_SO40, RK_SO40, LD_SO40, LA_SO40, RD_SO40, RA_SO40]       = matrices_template_solute(sediment_params.D_SO4 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_NH40, RK_NH40, LD_NH40, LA_NH40, RD_NH40, RA_NH40]       = matrices_template_solute(sediment_params.D_NH4 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_Fe20, RK_Fe20, LD_Fe20, LA_Fe20, RD_Fe20, RA_Fe20]       = matrices_template_solute(sediment_params.D_Fe2 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_H2S0, RK_H2S0, LD_H2S0, LA_H2S0, RD_H2S0, RA_H2S0]       = matrices_template_solute(sediment_params.D_H2S + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_S00, RK_S00, LD_S00, LA_S00, RD_S00, RA_S00]             = matrices_template_solute(sediment_params.D_S0 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_PO40, RK_PO40, LD_PO40, LA_PO40, RD_PO40, RA_PO40]       = matrices_template_solute(sediment_params.D_PO4 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_Ca20, RK_Ca20, LD_Ca20, LA_Ca20, RD_Ca20, RA_Ca20]       = matrices_template_solute(sediment_params.D_Ca2 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_HS0, RK_HS0, LD_HS0, LA_HS0, RD_HS0, RA_HS0]             = matrices_template_solute(sediment_params.D_HS + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_H0, RK_H0, LD_H0, LA_H0, RD_H0, RA_H0]                   = matrices_template_solute(sediment_params.D_H + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_OH0, RK_OH0, LD_OH0, LA_OH0, RD_OH0, RA_OH0]             = matrices_template_solute(sediment_params.D_OH + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_CO20, RK_CO20, LD_CO20, LA_CO20, RD_CO20, RA_CO20]       = matrices_template_solute(sediment_params.D_CO2 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_CO30, RK_CO30, LD_CO30, LA_CO30, RD_CO30, RA_CO30]       = matrices_template_solute(sediment_params.D_CO3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_HCO30, RK_HCO30, LD_HCO30, LA_HCO30, RD_HCO30, RA_HCO30] = matrices_template_solute(sediment_params.D_HCO3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_NH30, RK_NH30, LD_NH30, LA_NH30, RD_NH30, RA_NH30]       = matrices_template_solute(sediment_params.D_NH3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_H2CO30, RK_H2CO30, LD_H2CO30, LA_H2CO30, RD_H2CO30, RA_H2CO30]= matrices_template_solute(sediment_params.D_H2CO3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
 
     sediment_matrix_templates = {...
 

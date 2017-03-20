@@ -36,75 +36,75 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
 
 
   % model domain:
-  n  = sediment_params('n'); %points in spatial grid
-  % depth = sediment_params('depth'); %sediment depth
-  years = sediment_params('years'); %1 day
-  ts    = sediment_params('ts'); % time step
+  n  = sediment_params.n; %points in spatial grid
+  % depth = sediment_params.depth; %sediment depth
+  years = sediment_params.years; %1 day
+  ts    = sediment_params.ts; % time step
   % Scheme properties:
-  % alpha = sediment_params('alpha'); % Diffusion shift
-  % betta = sediment_params('betta'); % Advection shift
-  gama  = sediment_params('gama'); % Reaction shift
-  v = sediment_params('w'); % is time-dependent burial rate w = 0.1
-  Db    = sediment_params('Db'); % is effective diffusion due to bioturbation, Canavan et al D_bio between 0-5, 5 in the top layers
-  alfax = sediment_params('alfax');
-  D_O2  = sediment_params('D_O2');
-  D_NO3 = sediment_params('D_NO3');
-  D_SO4 = sediment_params('D_SO4');
-  D_NH4 = sediment_params('D_NH4');
-  D_Fe2 = sediment_params('D_Fe2');
-  D_H2S = sediment_params('D_H2S');
-  D_S0  = sediment_params('D_S0');
-  D_PO4 = sediment_params('D_PO4');
-  D_Ca2 = sediment_params('D_Ca2');
-  D_HS  = sediment_params('D_HS');
-  Cx1   = sediment_params('Cx1');
-  Ny1   = sediment_params('Ny1');
-  Pz1   = sediment_params('Pz1');
-  Cx2   = sediment_params('Cx2');
-  Ny2   = sediment_params('Ny2');
-  Pz2   = sediment_params('Pz2');
-  fi    = sediment_params('fi');
+  % alpha = sediment_params.alpha; % Diffusion shift
+  % betta = sediment_params.betta; % Advection shift
+  gama  = sediment_params.gama; % Reaction shift
+  v = sediment_params.w; % is time-dependent burial rate w = 0.1
+  Db    = sediment_params.Db; % is effective diffusion due to bioturbation, Canavan et al D_bio between 0-5, 5 in the top layers
+  alfax = sediment_params.alfax;
+  D_O2  = sediment_params.D_O2;
+  D_NO3 = sediment_params.D_NO3;
+  D_SO4 = sediment_params.D_SO4;
+  D_NH4 = sediment_params.D_NH4;
+  D_Fe2 = sediment_params.D_Fe2;
+  D_H2S = sediment_params.D_H2S;
+  D_S0  = sediment_params.D_S0;
+  D_PO4 = sediment_params.D_PO4;
+  D_Ca2 = sediment_params.D_Ca2;
+  D_HS  = sediment_params.D_HS;
+  Cx1   = sediment_params.Cx1;
+  Ny1   = sediment_params.Ny1;
+  Pz1   = sediment_params.Pz1;
+  Cx2   = sediment_params.Cx2;
+  Ny2   = sediment_params.Ny2;
+  Pz2   = sediment_params.Pz2;
+  fi    = sediment_params.fi;
   % TODO:we need to reestimate F due to non-constant porosity profile. For this we need rhob = solid phase density
-  F     = sediment_params('F');  %conversion factor = rhob * (1-fi) / fi ; where fi = porosity and rhob = solid phase density
+  F     = sediment_params.F;  %conversion factor = rhob * (1-fi) / fi ; where fi = porosity and rhob = solid phase density
 
 
 
 
-  k_OM =  sediment_params('k_OM');
-  k_OMb = sediment_params('k_OMb');
-  Km_O2 = sediment_params('Km_O2');
-  Km_NO3 = sediment_params('Km_NO3');
-  Km_FeOH3 = sediment_params('Km_FeOH3');
-  Km_FeOOH = sediment_params('Km_FeOOH');
-  Km_SO4 = sediment_params('Km_SO4');
-  Km_oxao = sediment_params('Km_oxao');
-  Km_amao = sediment_params('Km_amao');
-  Kin_O2 = sediment_params('Kin_O2');
-  Kin_NO3  = sediment_params('Kin_NO3');
-  Kin_FeOH3 = sediment_params('Kin_FeOH3');
-  Kin_FeOOH = sediment_params('Kin_FeOOH');
-  k_amox = sediment_params('k_amox');
-  k_Feox = sediment_params('k_Feox');
-  k_Sdis = sediment_params('k_Sdis');
-  k_Spre = sediment_params('k_Spre');
-  k_FeS2pre = sediment_params('k_FeS2pre');
-  k_pdesorb_c = sediment_params('k_pdesorb_c');
-  k_pdesorb_a = sediment_params('k_pdesorb_a');
-  k_pdesorb_b = sediment_params('k_pdesorb_b');
-  % k_alum = sediment_params('k_alum');
-  k_rhom   = sediment_params('k_rhom');
-  k_tS_Fe = sediment_params('k_tS_Fe');
-  Ks_FeS = sediment_params('Ks_FeS');
-  k_Fe_dis = sediment_params('k_Fe_dis');
-  k_Fe_pre = sediment_params('k_Fe_pre');
-  k_apa  = sediment_params('k_apa');
-  kapa = sediment_params('kapa');
-  k_oms = sediment_params('k_oms');
-  k_tsox = sediment_params('k_tsox');
-  k_FeSpre = sediment_params('k_FeSpre');
-  f_pfe = sediment_params('f_pfe');
-  accel = sediment_params('accel');
-  x  = sediment_params('x');
+  k_OM =  sediment_params.k_OM;
+  k_OMb = sediment_params.k_OMb;
+  Km_O2 = sediment_params.Km_O2;
+  Km_NO3 = sediment_params.Km_NO3;
+  Km_FeOH3 = sediment_params.Km_FeOH3;
+  Km_FeOOH = sediment_params.Km_FeOOH;
+  Km_SO4 = sediment_params.Km_SO4;
+  Km_oxao = sediment_params.Km_oxao;
+  Km_amao = sediment_params.Km_amao;
+  Kin_O2 = sediment_params.Kin_O2;
+  Kin_NO3  = sediment_params.Kin_NO3;
+  Kin_FeOH3 = sediment_params.Kin_FeOH3;
+  Kin_FeOOH = sediment_params.Kin_FeOOH;
+  k_amox = sediment_params.k_amox;
+  k_Feox = sediment_params.k_Feox;
+  k_Sdis = sediment_params.k_Sdis;
+  k_Spre = sediment_params.k_Spre;
+  k_FeS2pre = sediment_params.k_FeS2pre;
+  k_pdesorb_c = sediment_params.k_pdesorb_c;
+  k_pdesorb_a = sediment_params.k_pdesorb_a;
+  k_pdesorb_b = sediment_params.k_pdesorb_b;
+  % k_alum = sediment_params.k_alum;
+  k_rhom   = sediment_params.k_rhom;
+  k_tS_Fe = sediment_params.k_tS_Fe;
+  Ks_FeS = sediment_params.Ks_FeS;
+  k_Fe_dis = sediment_params.k_Fe_dis;
+  k_Fe_pre = sediment_params.k_Fe_pre;
+  k_apa  = sediment_params.k_apa;
+  kapa = sediment_params.kapa;
+  k_oms = sediment_params.k_oms;
+  k_tsox = sediment_params.k_tsox;
+  k_FeSpre = sediment_params.k_FeSpre;
+  f_pfe = sediment_params.f_pfe;
+  accel = sediment_params.accel;
+  x  = sediment_params.x;
 
   dx = x(2)-x(1);
   xz = x'/100;
@@ -659,8 +659,8 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
 
 
     % pH Module
-    if sediment_params('pH algorithm') ~= 0
-      [H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i)] = pH_module(sediment_params('pH algorithm'), H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i), Fe2(:,i), Ca2(:,i), NO3(:,i), SO4(:,i), PO4(:,i), FeS(:,i), FeS2(:,i), FeOH3(:,i), FeOOH(:,i), Ca3PO42(:,i), PO4adsa(:,i), PO4adsb(:,i));
+    if sediment_params.pH_algorithm ~= 0
+      [H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i)] = pH_module(sediment_params.pH_algorithm, H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i), Fe2(:,i), Ca2(:,i), NO3(:,i), SO4(:,i), PO4(:,i), FeS(:,i), FeS2(:,i), FeOH3(:,i), FeOOH(:,i), Ca3PO42(:,i), PO4adsa(:,i), PO4adsb(:,i));
     end
 
   end
