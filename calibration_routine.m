@@ -6,7 +6,9 @@ x0 = [2500; 8000; 0.02; 0.2; 1.5; 0.2; 0.02;  0.2; 1.5; 0.2; 2];
 lb = x0*0.5;
 ub = x0*1.5;
 
-options = gaoptimset('Display','iter','UseParallel', true)
+fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread}
+
+options = gaoptimset('Display','iter','UseParallel', true, 'TolFun', 1e-2, 'PlotFcns', fcns)
 x = ga(@opt_fun,11,[],[],[],[],lb,ub, @nonlcon, options)
 
 %% opt_fun: function which we are going to minimize
@@ -34,7 +36,7 @@ lake_params{68-7} = x(11);  % 38    Q10 for reactions of respiration
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
 clim_ID = run_ID
-m_start=[2002, 1, 1]; %
+m_start=[2000, 1, 1]; %
 m_stop=[2011, 12, 31]; %
 
 [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
@@ -45,11 +47,11 @@ Chl_mod = mean((MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:))', 2);
 Pzt_mod = mean((MyLake_results.Pzt(zinx,:))', 2);
 PPzt_mod = mean((MyLake_results.PPzt(zinx,:))', 2);
 
-load 'obs/store_obs/TOTP.dat' % these are just C&P of vanem ...
-% load 'obs/store_obs/Cha.dat' % these are just C&P of vanem ...
-load 'obs/store_obs/Cha_aquaM_march_2017.dat' % these are just C&P of vanem ...
-load 'obs/store_obs/PO4.dat' % these are just C&P of vanem ...
-load 'obs/store_obs/Part.dat' % these are just C&P of vanem ...
+load 'obs/store_obs/TOTP.dat' % measured
+% load 'obs/store_obs/Cha.dat' % measured
+load 'obs/store_obs/Cha_aquaM_march_2017.dat' % measured
+load 'obs/store_obs/PO4.dat' % measured
+load 'obs/store_obs/Part.dat' % measured
 
 
 [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, TOTP(:,1)));
@@ -68,6 +70,7 @@ c_PO4 = RMSE(Pzt_mod(loc_sim, 1), PO4(loc_obs, 2));
 c_PP = RMSE(PPzt_mod(loc_sim, 1), Part(loc_obs, 2));
 
 
+x
 res = sum([c_TOTP, c_Chl, c_PO4, c_PP])
 
 

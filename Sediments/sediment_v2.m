@@ -823,7 +823,8 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
   % 0. No pH module
   % 1. Stumm, W. & Morgan, J., 1995. Aquatic Chemistry. implemented in MATLAB
   % 2. Stumm, W. & Morgan, J., 1995. Aquatic Chemistry. implemented in C++
-  % 3. Delta function (under construction)
+  % 3. Phreeqc
+  % 4. Delta function (under construction)
 
   % NOTE: First point is boundary condition therefore start FOR loop from 2:end
 
@@ -866,8 +867,26 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
 
     elseif algorithm == 3 %
         in =[H HCO3 CO2 CO3 NH3 NH4 HS H2S OH H2CO3 Fe2 Ca2 NO3 SO4 PO4 FeS FeS2 FeOH3 FeOOH Ca3PO42 PO4adsa PO4adsb];
-        [pH_est] = pH_phreeqc(64,in);
-        H = 10.^(-pH_est')*10^3;
+        [pH_est] = pH_phreeqc(size(H,1),in);
+
+        Kc1=5.01*10^(-7); Kc2=4.78*10^(-11); Knh=5.62*10^(-10); Khs=1.3*10^(-7); Kw=10^(-14); Kc0 = 1.7*10^(-3);
+        H = 10.^(-pH_est');
+        Ct = H2CO3 + HCO3 + CO3;
+        Nt = NH3 + NH4;
+        St = HS + H2S;
+        % OH = Kw./H;
+        % H2CO3 = (1 + Kc1./H + Kc1*Kc2./H.^2).^-1 .* Ct;
+        % CO2 = H2CO3./Kc0; % CO2(aq)
+        % HCO3 = (H./Kc1 + 1 + Kc2./H).^-1 .* Ct;
+        % CO3 = (H.^2./Kc1./Kc2 + H./Kc2 + 1).^-1 .* Ct;
+        NH4 = (H./ (Knh + H)) .* Nt;
+        NH3 = Nt - NH4;
+        H2S = (H./ (Khs + H)) .* St;
+        HS = St - H2S;
+        H = H*1e3;
+        % OH = OH*1e3;
+
+
 
     elseif algorithm == 4 % Delta function
       options = optimoptions('fsolve','Algorithm','levenberg-marquardt','Display','off','TolFun',1e-7, 'TolX',1e-7); % Option to display output

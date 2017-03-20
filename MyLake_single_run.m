@@ -6,27 +6,25 @@ use_INCA = 1; % 1- MyLake will take written INCA input, either written just now 
 
 no_runs = 1 % 26/7/2016 ... did not find no_run so I added it again
 
-% for calibratoin against real data, set all inca to 0 and no_runs to 1.
-% then, disable the "big_result" array down.
-
 big_results = cell(1,no_runs);  % collects the results
 big_inputs = cell(1,no_runs);   % collects the inputs
 
-% Scenario = {...
-% 'NO_Vansjo_Hist_',...
-% 'NO_Vansjo_Base_'...
-% 'NO_Vansjo_Hist_M2_'...
-% 'NO_Vansjo_Hist_M3_'...
-% 'NO_Vansjo_G4_',...
-% 'NO_Vansjo_I4_',...
-% 'NO_Vansjo_G8_',...
-% 'NO_Vansjo_I8_',...
-% 'NO_Vansjo_G8Tech_',...
-% 'NO_Vansjo_G4Cons_',...
-% 'NO_Vansjo_G8Frag_',...
-% 'NO_Vansjo_I8Tech_',...
-% 'NO_Vansjo_I4Cons_',...
-% 'NO_Vansjo_I8Frag_',};
+
+% lake_params{36-7} =2.5196*1e3; %  2500    Half saturation parameter for Langmuir isotherm
+% lake_params{37-7} =7.3827*1e3; %   8000    Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
+% lake_params{39-7} =0.00002*1e3; %   0.02    settling velocity for Chl1 a (m day-1)
+% lake_params{41-7} =0.0001*1e3; %   0.2    loss rate (1/day) at 20 deg C
+% lake_params{42-7} =0.0020*1e3; %   1.5    specific growth rate (1/day) at 20 deg C
+% lake_params{45-7} =0.0002*1e3; %   0.2    Half saturation growth P level (mg/m3)
+% lake_params{48-7} =0.00002*1e3; %   0.02    Settling velocity for Chl2 a (m day-1)
+% lake_params{49-7} =0.0002*1e3;  %    0.2    Loss rate (1/day) at 20 deg C
+% lake_params{50-7} =0.0008*1e3;  %   1.5    Specific growth rate (1/day) at 20 deg C
+% lake_params{51-7} =0.0003*1e3;  %   0.2    Half saturation growth P level (mg/m3)
+% lake_params{68-7} =0.0023*1e3;  %   2];    Q10 for reactions of respiration
+
+
+
+
 
 % parfor
 for current_run = 1:no_runs
@@ -34,10 +32,10 @@ for current_run = 1:no_runs
         run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
         clim_ID = run_ID
         if use_INCA == 1
-            m_start=[2003, 1, 1]; %
+            m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         else
-            m_start=[2003, 1, 1]; %
+            m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         end
 

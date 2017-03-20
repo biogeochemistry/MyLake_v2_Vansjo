@@ -23,7 +23,7 @@ xData = linspace(startDate,endDate,15);
 figure()
 
 
-subplot(4,1,1)
+subplot(5,1,1)
 % dev1 = (PO4_mod)-PO4_obs;
 plot(MyLake_results.days, TP_mod,'Color','k','LineWidth',2)
 hold on
@@ -38,7 +38,7 @@ ylabel('mg P / m^3')
 legend('TP')
 
 
-subplot(4,1,2)
+subplot(5,1,2)
 plot(MyLake_results.days, Chl_mod,'Color','k','LineWidth',2)
 hold on
 plot(Cha_aquaM_march_2017(:,1), Cha_aquaM_march_2017(:,2),'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
@@ -49,7 +49,7 @@ set(gca,'fontsize',14)
 ylabel('mg P / m^3')
 legend('Chl')
 
-subplot(4,1,3)
+subplot(5,1,3)
 plot(MyLake_results.days, Pzt_mod,'Color','k','LineWidth',2)
 hold on
 plot(PO4(:,1), PO4(:,2),'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
@@ -61,7 +61,7 @@ ylabel('mg P / m^3')
 legend('PO4')
 
 
-subplot(4,1,4)
+subplot(5,1,4)
 plot(MyLake_results.days, PPzt_mod,'Color','k','LineWidth',2)
 hold on
 plot(Part(:,1), Part(:,2),'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
@@ -72,3 +72,13 @@ set(gca,'fontsize',14)
 ylim([0,40])
 ylabel('mg P / kg')
 legend('Part')
+
+subplot(5,1,5)
+Var = MyLake_results.Szt;
+plot(MyLake_results.days, mean((Var(zinx,:))', 2),'Color','k','LineWidth',2)
+ax = gca;
+ax.XTick = xData;
+datetick(ax, 'x','mmm-yy','keepticks')
+set(gca,'fontsize',14)
+ylabel('mg / m^3')
+legend('Any variable')

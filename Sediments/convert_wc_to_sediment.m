@@ -40,40 +40,9 @@ function [sediment_bc] = convert_wc_to_sediment(MyLake_concentrations, MyLake_pa
         dissolved_bc(MyLake_concentrations('NH4z')),                           'NH4_c';
         1.01E-10,         'HS_c';
         1.06E-10,         'H2S_c';
-        1,      'H2CO3_c';
+        1,                'H2CO3_c';
     };
 
-    % sediment_bc = {...
-    %         0  'Ox_c';
-    %         0, 'OM1_fx';
-    %         0, 'OM2_fx';
-    %         0, 'PO4_c';
-    %         0, 'NO3_c';
-    %         0, 'FeOH3_fx';
-    %         0, 'SO4_c';
-    %         0, 'Fe2_c';
-    %         0, 'FeOOH_fx'; % 0; %from Canavan et al AML
-    %         0, 'FeS_fx'; % 0; % Flux for solid species
-    %         0, 'S0_c'; % 0 ; % Exact concentration for solute species
-    %         0, 'S8_fx'; % 0; %from Canavan et al AML
-    %         0, 'FeS2_fx'; % 0; % Flux for solid species
-    %         0, 'AlOH3_fx';
-    %         0, 'PO4adsa_fx';
-    %         0, 'PO4adsb_fx'; % 0; % Flux for solid species
-    %         0, 'Ca2_c';
-    %         0, 'Ca3PO42_fx'; % 0; % Flux for solid species
-    %         0, 'OMS_fx'; % 0; % Flux for solid species
-    %         0, 'H_c';
-    %         0, 'OH_c';
-    %         0, 'CO2_c';
-    %         0, 'CO3_c';
-    %         0, 'HCO3_c';
-    %         0, 'NH3_c';
-    %         0, 'NH4_c';
-    %         0, 'HS_c';
-    %         0, 'H2S_c';
-    %         0, 'H2CO3_c';
-    % };
     sediment_bc = containers.Map({sediment_bc{:,2}},{sediment_bc{:,1}});
 
 if any(isnan(dissolved_bc(MyLake_concentrations('O2z')))) | any(isnan(dissolved_bc(MyLake_concentrations('Pz')))) | any(isnan(dissolved_bc(MyLake_concentrations('NO3z')))) | any(isnan(dissolved_bc(MyLake_concentrations('SO4z')))) | any(isnan(dissolved_bc(MyLake_concentrations('Fe2z')))) | any(isnan(dissolved_bc(MyLake_concentrations('Ca2z')))) | any(isnan(dissolved_bc(MyLake_concentrations('NH4z'))))

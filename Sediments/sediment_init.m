@@ -187,14 +187,15 @@ function [sediment_params] = params(max_depth, temperature)
         Pz2, 'Pz2';
 
         % pH module. NOTE: experimental feature
+        % !!!!!!! Recommend to use #3 Phreeqc
         % Specify pH algorithm:
         % 0. Disabled
-        % 1. Stumm & Morgan, 1995. Aquatic Chemistry. MATLAB
-        % 2. Stumm & Morgan, 1995. Aquatic Chemistry. C++
-        % 3. Phreeqc
+        % 1. Stumm & Morgan, 1995. Aquatic Chemistry. MATLAB -> very long - don't use it.
+        % 2. Stumm & Morgan, 1995. Aquatic Chemistry. C++ (have some bugs in the code)
+        % 3. Phreeqc  adds 40 sec per year. (works for sure)
         % 4. Delta function by Markelov (under test)
 
-        0,    'pH algorithm';
+        3,    'pH algorithm';
 
         % chemical constants from file
         data{2}(1), 'k_OM';

@@ -83,7 +83,7 @@ Inflowdiatom = zero_input;
 
 INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO InflowNO3 InflowNH4 InflowSO4 InflowFe2 InflowCa2 InflowpH InflowCH4 InflowFe3 InflowAl3 InflowSiO4 InflowSiO2 Inflowdiatom];
 
-save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/store_INCAP_input', 'MyLake_weather_only', 'INCA_input')
+% save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/store_INCAP_input', 'MyLake_weather_only', 'INCA_input')
 
 INCA_QC_1 = INCA_input;
 
@@ -116,7 +116,7 @@ Inflowdiatom = zero_input;
 
 
 INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO InflowNO3 InflowNH4 InflowSO4 InflowFe2 InflowCa2 InflowpH InflowCH4 InflowFe3 InflowAl3 InflowSiO4 InflowSiO2 Inflowdiatom];
-save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/vanem_INCAP_input', 'MyLake_weather_only', 'INCA_input')
+% save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/vanem_INCAP_input', 'MyLake_weather_only', 'INCA_input')
 
 INCA_QC_2 = INCA_input;
 
