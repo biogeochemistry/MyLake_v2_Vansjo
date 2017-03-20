@@ -1,5 +1,7 @@
 function x = calibration_routine()
 tic
+format shortEng
+format compact
 % parpool
 % gaoptions = optimoptions('ga','UseParallel',true);
 x0 = [2500; 8000; 0.02; 0.2; 1.5; 0.2; 0.02;  0.2; 1.5; 0.2; 2];
@@ -8,7 +10,12 @@ ub = x0*1.5;
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread}
 
-options = gaoptimset('Display','iter','UseParallel', true, 'TolFun', 1e-2, 'PlotFcns', fcns)
+population_size = 72;  % Populations size for each generation of the genetic algorithm
+max_generations = 7;  % How many generations to run the genetic algorithm for
+parallelize     = true; % 15 generation takes 12 hours on 24 cores
+
+options = optimoptions('ga', 'Display','iter', 'TolFun', 1e-2, 'PlotFcns', fcns, 'MaxGenerations', max_generations, 'PopulationSize', population_size, 'UseParallel', parallelize)
+
 x = ga(@opt_fun,11,[],[],[],[],lb,ub, @nonlcon, options)
 
 %% opt_fun: function which we are going to minimize
