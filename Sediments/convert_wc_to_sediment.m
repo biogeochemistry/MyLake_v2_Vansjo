@@ -10,40 +10,35 @@ function [sediment_bc] = convert_wc_to_sediment(MyLake_concentrations, MyLake_pa
     w_chl_2 = MyLake_params.w_chl_2 * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
     fi = sediment_params.fi;
 
-
-    sediment_bc = {...
-        dissolved_bc(MyLake_concentrations.O2z),                           'Ox_c';
-        solid_bc(MyLake_concentrations.Chlz, w_chl, fi) + solid_bc(MyLake_concentrations.Cz, w_chl_2, fi), 'OM1_fx';
-        solid_bc(MyLake_concentrations.DOPz, w_s, fi) + solid_bc(MyLake_concentrations.DOCz, w_s, fi), 'OM2_fx';
-        dissolved_bc(MyLake_concentrations.Pz),                            'PO4_c';
-        dissolved_bc(MyLake_concentrations.NO3z),                          'NO3_c';
-        solid_bc(MyLake_concentrations.Fe3z, w_s, fi),                     'FeOH3_fx';
-        dissolved_bc(MyLake_concentrations.SO4z),                          'SO4_c';
-        dissolved_bc(MyLake_concentrations.Fe2z),                          'Fe2_c';
-        0,                'FeOOH_fx'; % 0; %from Canavan et al AML
-        0,                'FeS_fx'; % 0; % Flux for solid species
-        0,                'S0_c'; % 0 ; % Exact concentration for solute species
-        0,                'S8_fx'; % 0; %from Canavan et al AML
-        0,                'FeS2_fx'; % 0; % Flux for solid species
-        solid_bc(MyLake_concentrations.Al3z, w_s, fi),                     'AlOH3_fx';
-        solid_bc(MyLake_concentrations.PPz, w_s, fi),                      'PO4adsa_fx';
-        0,                'PO4adsb_fx'; % 0; % Flux for solid species
-        dissolved_bc(MyLake_concentrations.Ca2z),                          'Ca2_c';
-        0,                'Ca3PO42_fx'; % 0; % Flux for solid species
-        0,                'OMS_fx'; % 0; % Flux for solid species
-        10^-pH*10^3,      'H_c';
-        0.00007354365,    'OH_c';
-        9.960074871,      'CO2_c';
-        2.19E-05,         'CO3_c';
-        0.62387047,       'HCO3_c';
-        3.68E-09,         'NH3_c';
-        dissolved_bc(MyLake_concentrations.NH4z),                           'NH4_c';
-        1.01E-10,         'HS_c';
-        1.06E-10,         'H2S_c';
-        1,                'H2CO3_c';
-    };
-
-    sediment_bc = containers.Map({sediment_bc{:,2}},{sediment_bc{:,1}});
+    sediment_bc.Ox_c = dissolved_bc(MyLake_concentrations.O2z);
+    sediment_bc.OM1_fx = solid_bc(MyLake_concentrations.Chlz, w_chl, fi) + solid_bc(MyLake_concentrations.Cz, w_chl_2, fi);
+    sediment_bc.OM2_fx = solid_bc(MyLake_concentrations.DOPz, w_s, fi) + solid_bc(MyLake_concentrations.DOCz, w_s, fi);
+    sediment_bc.PO4_c = dissolved_bc(MyLake_concentrations.Pz);
+    sediment_bc.NO3_c = dissolved_bc(MyLake_concentrations.NO3z);
+    sediment_bc.FeOH3_fx = solid_bc(MyLake_concentrations.Fe3z, w_s, fi);
+    sediment_bc.SO4_c = dissolved_bc(MyLake_concentrations.SO4z);
+    sediment_bc.Fe2_c = dissolved_bc(MyLake_concentrations.Fe2z);
+    sediment_bc.FeOOH_fx = 0;
+    sediment_bc.FeS_fx = 0;
+    sediment_bc.S0_c = 0;
+    sediment_bc.S8_fx = 0;
+    sediment_bc.FeS2_fx = 0;
+    sediment_bc.AlOH3_fx = solid_bc(MyLake_concentrations.Al3z, w_s, fi);
+    sediment_bc.PO4adsa_fx = solid_bc(MyLake_concentrations.PPz, w_s, fi);
+    sediment_bc.PO4adsb_fx = 0;
+    sediment_bc.Ca2_c = dissolved_bc(MyLake_concentrations.Ca2z);
+    sediment_bc.Ca3PO42_fx = 0;
+    sediment_bc.OMS_fx = 0;
+    sediment_bc.H_c = 10^-pH*10^3;
+    sediment_bc.OH_c = 0.00007354365;
+    sediment_bc.CO2_c = 9.960074871;
+    sediment_bc.CO3_c = 2.19E-05;
+    sediment_bc.HCO3_c = 0.62387047;
+    sediment_bc.NH3_c = 3.68E-09;
+    sediment_bc.NH4_c = dissolved_bc(MyLake_concentrations.NH4z);
+    sediment_bc.HS_c = 1.01E-10;
+    sediment_bc.H2S_c = 1.06E-10;
+    sediment_bc.H2CO3_c = 1.06E-15;
 
 if any(isnan(dissolved_bc(MyLake_concentrations.O2z))) | any(isnan(dissolved_bc(MyLake_concentrations.Pz))) | any(isnan(dissolved_bc(MyLake_concentrations.NO3z))) | any(isnan(dissolved_bc(MyLake_concentrations.SO4z))) | any(isnan(dissolved_bc(MyLake_concentrations.Fe2z))) | any(isnan(dissolved_bc(MyLake_concentrations.Ca2z))) | any(isnan(dissolved_bc(MyLake_concentrations.NH4z)))
     error('stop')

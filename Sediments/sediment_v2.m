@@ -189,127 +189,127 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   % =======================================================================================================
 
   % for Oxygen:
-  BC_O_top = ones(1,m) * sediment_bc('Ox_c'); % Exact concentration for solute species
+  BC_O_top = ones(1,m) * sediment_bc.Ox_c; % Exact concentration for solute species
   BC_O = zeros(n-1,m);
   BC_O(1,:) = BC_O_top;
 
   % for Organic matter A:
   % Flux of OM1 from Lake
-  F_OM_top = ones(1,m) .* sediment_bc('OM1_fx'); % Flux on the top for solid species
+  F_OM_top = ones(1,m) .* sediment_bc.OM1_fx; % Flux on the top for solid species
 
   % for Organic matter B:
   % Flux of OM2 from Lake
-  F_OMb_top = ones(1,m) .* sediment_bc('OM2_fx'); % Flux on the top for solid species
+  F_OMb_top = ones(1,m) .* sediment_bc.OM2_fx; % Flux on the top for solid species
 
   % For NO3
-  BC_NO3_top = ones(1,m) * sediment_bc('NO3_c'); %0 % Exact concentration for solute species
+  BC_NO3_top = ones(1,m) * sediment_bc.NO3_c; %0 % Exact concentration for solute species
   BC_NO3 = zeros(n-1,m);
   BC_NO3(1,:) = BC_NO3_top;
 
   % for Fe(OH)3
-  F_FeOH3_top = ones(1,m) .* sediment_bc('FeOH3_fx'); % 14.7; %from Canavan et al AML
+  F_FeOH3_top = ones(1,m) .* sediment_bc.FeOH3_fx; % 14.7; %from Canavan et al AML
 
   % For SO4
-  BC_SO4_top = ones(1,m) * sediment_bc('SO4_c'); % 0.638; % Exact concentration for solute species
+  BC_SO4_top = ones(1,m) * sediment_bc.SO4_c; % 0.638; % Exact concentration for solute species
   BC_SO4 = zeros(n-1,m);
   BC_SO4(1,:) = BC_SO4_top;
 
 
   % For Fe2
-  BC_Fe2_top = ones(1,m) * sediment_bc('Fe2_c'); %  0; % Exact concentration for solute species
+  BC_Fe2_top = ones(1,m) * sediment_bc.Fe2_c; %  0; % Exact concentration for solute species
   BC_Fe2 = zeros(n-1,m);
   BC_Fe2(1,:) = BC_Fe2_top;
 
   % for FeOOH
-  F_FeOOH_top = ones(1,m) .* sediment_bc('FeOOH_fx'); % 0; %from Canavan et al AML
+  F_FeOOH_top = ones(1,m) .* sediment_bc.FeOOH_fx; % 0; %from Canavan et al AML
 
 
   % for FeS
-  F_FeS_top = ones(1,m) .* sediment_bc('FeS_fx'); % 0; % Flux for solid species
+  F_FeS_top = ones(1,m) .* sediment_bc.FeS_fx; % 0; % Flux for solid species
 
   % For S(0)
-  BC_S0_top = ones(1,m) * sediment_bc('S0_c'); % 0 ; % Exact concentration for solute species
+  BC_S0_top = ones(1,m) * sediment_bc.S0_c; % 0 ; % Exact concentration for solute species
   BC_S0 = zeros(n-1,m);
   BC_S0(1,:) = BC_S0_top;
 
   % For PO4
-  BC_PO4_top = ones(1,m) * sediment_bc('PO4_c'); % Exact concentration for solute species
+  BC_PO4_top = ones(1,m) * sediment_bc.PO4_c; % Exact concentration for solute species
   BC_PO4 = zeros(n-1,m);
   BC_PO4(1,:) = BC_PO4_top;
 
   % for S8
-  F_S8_top = ones(1,m) .* sediment_bc('S8_fx'); % 0; %from Canavan et al AML
+  F_S8_top = ones(1,m) .* sediment_bc.S8_fx; % 0; %from Canavan et al AML
 
   % for FeS2
-  F_FeS2_top = ones(1,m) .* sediment_bc('FeS2_fx'); % 0; % Flux for solid species
+  F_FeS2_top = ones(1,m) .* sediment_bc.FeS2_fx; % 0; % Flux for solid species
 
   % for AlOH3
-  F_AlOH3_top = ones(1,m) .* sediment_bc('AlOH3_fx'); % 0 % Flux for solid species
+  F_AlOH3_top = ones(1,m) .* sediment_bc.AlOH3_fx; % 0 % Flux for solid species
 
   % for PO4adsa
-  F_PO4adsa_top = ones(1,m) .* sediment_bc('PO4adsa_fx'); % 0; % Flux for solid species
+  F_PO4adsa_top = ones(1,m) .* sediment_bc.PO4adsa_fx; % 0; % Flux for solid species
 
   % for PO4adsb
-  F_PO4adsb_top = ones(1,m) .* sediment_bc('PO4adsb_fx'); % 0; % Flux for solid species
+  F_PO4adsb_top = ones(1,m) .* sediment_bc.PO4adsb_fx; % 0; % Flux for solid species
 
   % For Ca2
-  BC_Ca2_top = ones(1,m) * sediment_bc('Ca2_c'); % 0.04; % Exact concentration for solute species
+  BC_Ca2_top = ones(1,m) * sediment_bc.Ca2_c; % 0.04; % Exact concentration for solute species
   BC_Ca2 = zeros(n-1,m);
   BC_Ca2(1,:) = BC_Ca2_top;
 
   % for Ca3PO42
-  F_Ca3PO42_top = ones(1,m) .* sediment_bc('Ca3PO42_fx'); % 0; % Flux for solid species
+  F_Ca3PO42_top = ones(1,m) .* sediment_bc.Ca3PO42_fx; % 0; % Flux for solid species
 
   % for OMS
-  F_OMS_top = ones(1,m)  .* sediment_bc('OMS_fx'); % 0; % Flux for solid species
+  F_OMS_top = ones(1,m)  .* sediment_bc.OMS_fx; % 0; % Flux for solid species
 
   % For H
-  BC_H_top = ones(1,m) * sediment_bc('H_c'); % pH = 6.47 Exact concentration for solute species
+  BC_H_top = ones(1,m) * sediment_bc.H_c; % pH = 6.47 Exact concentration for solute species
   BC_H = zeros(n-1,m);
   BC_H(1,:) = BC_H_top;
 
   % For OH
-  BC_OH_top = ones(1,m) * sediment_bc('OH_c'); % Exact concentration for solute species
+  BC_OH_top = ones(1,m) * sediment_bc.OH_c; % Exact concentration for solute species
   BC_OH = zeros(n-1,m);
   BC_OH(1,:) = BC_OH_top;
 
   % For CO2
-  BC_CO2_top = ones(1,m) * sediment_bc('CO2_c'); % Exact concentration for solute species
+  BC_CO2_top = ones(1,m) * sediment_bc.CO2_c; % Exact concentration for solute species
   BC_CO2 = zeros(n-1,m);
   BC_CO2(1,:) = BC_CO2_top;
 
   % For CO3
-  BC_CO3_top = ones(1,m) * sediment_bc('CO3_c'); % Exact concentration for solute species
+  BC_CO3_top = ones(1,m) * sediment_bc.CO3_c; % Exact concentration for solute species
   BC_CO3 = zeros(n-1,m);
   BC_CO3(1,:) = BC_CO3_top;
 
   % For HCO3
-  BC_HCO3_top = ones(1,m) * sediment_bc('HCO3_c'); % Exact concentration for solute species
+  BC_HCO3_top = ones(1,m) * sediment_bc.HCO3_c; % Exact concentration for solute species
   BC_HCO3 = zeros(n-1,m);
   BC_HCO3(1,:) = BC_HCO3_top;
 
   % For NH3
-  BC_NH3_top = ones(1,m) * sediment_bc('NH3_c'); % Exact concentration for solute species
+  BC_NH3_top = ones(1,m) * sediment_bc.NH3_c; % Exact concentration for solute species
   BC_NH3 = zeros(n-1,m);
   BC_NH3(1,:) = BC_NH3_top;
 
   % For NH4
-  BC_NH4_top = ones(1,m) * sediment_bc('NH4_c'); % Exact concentration for solute species
+  BC_NH4_top = ones(1,m) * sediment_bc.NH4_c; % Exact concentration for solute species
   BC_NH4 = zeros(n-1,m);
   BC_NH4(1,:) = BC_NH4_top;
 
   % For S(-I)
-  BC_HS_top = ones(1,m) * sediment_bc('HS_c'); % Exact concentration for solute species
+  BC_HS_top = ones(1,m) * sediment_bc.HS_c; % Exact concentration for solute species
   BC_HS = zeros(n-1,m);
   BC_HS(1,:) = BC_HS_top;
 
   % For S(-II)
-  BC_H2S_top = ones(1,m) * sediment_bc('H2S_c'); % Exact concentration for solute species
+  BC_H2S_top = ones(1,m) * sediment_bc.H2S_c; % Exact concentration for solute species
   BC_H2S = zeros(n-1,m);
   BC_H2S(1,:) = BC_H2S_top;
 
   % For H2CO3
-  BC_H2CO3_top = ones(1,m) * sediment_bc('H2CO3_c'); % Exact concentration for solute species
+  BC_H2CO3_top = ones(1,m) * sediment_bc.H2CO3_c; % Exact concentration for solute species
   BC_H2CO3 = zeros(n-1,m);
   BC_H2CO3(1,:) = BC_H2CO3_top;
 
@@ -674,15 +674,15 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   SO4_flux = top_sediment_diffusion_flux(SO4(:,end),D_SO4, 96062, dx, fi);
 
   sediment_SWI_fluxes.Ox = Ox_flux;
-  sediment_SWI_fluxes.OM1 = sediment_bc('OM1_fx');
-  sediment_SWI_fluxes.OM2 = sediment_bc('OM2_fx');
+  sediment_SWI_fluxes.OM1 = sediment_bc.OM1_fx;
+  sediment_SWI_fluxes.OM2 = sediment_bc.OM2_fx;
   sediment_SWI_fluxes.PO4 = PO4_flux;
   sediment_SWI_fluxes.NO3 = NO3_flux;
-  sediment_SWI_fluxes.FeOH3 = sediment_bc('FeOH3_fx');
+  sediment_SWI_fluxes.FeOH3 = sediment_bc.FeOH3_fx;
   sediment_SWI_fluxes.Fe2 = Fe2_flux;
   sediment_SWI_fluxes.NH4 = NH4_flux;
-  sediment_SWI_fluxes.AlOH3 = sediment_bc('AlOH3_fx');
-  sediment_SWI_fluxes.PO4adsa = sediment_bc('PO4adsa_fx');
+  sediment_SWI_fluxes.AlOH3 = sediment_bc.AlOH3_fx;
+  sediment_SWI_fluxes.PO4adsa = sediment_bc.PO4adsa_fx;
   sediment_SWI_fluxes.SO4 = SO4_flux;
 
   sediment_bioirrigation_fluxes.Ox =  top_sediment_rate_to_flux(bioirrigation(Ox(:,end), alfax, fi),31998,dx,m);
@@ -750,7 +750,7 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
 
 
 
-    if any(isnan(Ox_flux))| any(isnan(sediment_bc('OM1_fx')))| any(isnan(sediment_bc('OM2_fx')))| any(isnan(PO4_flux))| any(isnan(NO3_flux))| any(isnan(sediment_bc('FeOH3_fx')))| any(isnan(Fe2_flux))| any(isnan(NH4_flux)) | any(isnan(PO4_flux)) | any(isnan(Ox_flux)) | any(isnan(Ox)) | any(isnan(OM)) | any(isnan(OMb)) | any(isnan(NO3)) | any(isnan(FeOH3)) | any(isnan(SO4)) | any(isnan(NH4)) | any(isnan(Fe2)) | any(isnan(FeOOH)) | any(isnan(H2S)) | any(isnan(HS)) | any(isnan(FeS)) | any(isnan(S0)) | any(isnan(PO4)) | any(isnan(S8)) | any(isnan(FeS2)) | any(isnan(AlOH3)) | any(isnan(PO4adsa)) | any(isnan(PO4adsb)) | any(isnan(H)) | any(isnan(Ca2)) | any(isnan(Ca3PO42)) | any(isnan(OMS)) | any(isnan(OH)) | any(isnan(HCO3)) | any(isnan(CO2)) | any(isnan(CO3)) | any(isnan(NH3)) | any(isnan(H2CO3)) | any(isnan(BC_O_top)) | any(isnan(F_OM_top)) | any(isnan(F_OMb_top)) | any(isnan(BC_NO3_top)) | any(isnan(F_FeOH3_top)) | any(isnan(BC_SO4_top)) | any(isnan(BC_Fe2_top)) | any(isnan(F_FeOOH_top)) | any(isnan(F_FeS_top)) | any(isnan(BC_S0_top)) | any(isnan(BC_PO4_top)) | any(isnan(F_S8_top)) | any(isnan(F_FeS2_top)) | any(isnan(F_AlOH3_top)) | any(isnan(F_PO4adsa_top)) | any(isnan(F_PO4adsb_top)) | any(isnan(BC_Ca2_top)) | any(isnan(F_Ca3PO42_top)) | any(isnan(F_OMS_top)) | any(isnan(BC_H_top)) | any(isnan(BC_OH_top)) | any(isnan(BC_CO2_top)) | any(isnan(BC_CO3_top)) | any(isnan(BC_HCO3_top)) | any(isnan(BC_NH3_top)) | any(isnan(BC_NH4_top)) | any(isnan(BC_HS_top)) | any(isnan(BC_H2S_top)) | any(isnan(BC_H2CO3_top))
+    if any(isnan(Ox_flux))| any(isnan(sediment_bc.OM1_fx))| any(isnan(sediment_bc.OM2_fx))| any(isnan(PO4_flux))| any(isnan(NO3_flux))| any(isnan(sediment_bc.FeOH3_fx))| any(isnan(Fe2_flux))| any(isnan(NH4_flux)) | any(isnan(PO4_flux)) | any(isnan(Ox_flux)) | any(isnan(Ox)) | any(isnan(OM)) | any(isnan(OMb)) | any(isnan(NO3)) | any(isnan(FeOH3)) | any(isnan(SO4)) | any(isnan(NH4)) | any(isnan(Fe2)) | any(isnan(FeOOH)) | any(isnan(H2S)) | any(isnan(HS)) | any(isnan(FeS)) | any(isnan(S0)) | any(isnan(PO4)) | any(isnan(S8)) | any(isnan(FeS2)) | any(isnan(AlOH3)) | any(isnan(PO4adsa)) | any(isnan(PO4adsb)) | any(isnan(H)) | any(isnan(Ca2)) | any(isnan(Ca3PO42)) | any(isnan(OMS)) | any(isnan(OH)) | any(isnan(HCO3)) | any(isnan(CO2)) | any(isnan(CO3)) | any(isnan(NH3)) | any(isnan(H2CO3)) | any(isnan(BC_O_top)) | any(isnan(F_OM_top)) | any(isnan(F_OMb_top)) | any(isnan(BC_NO3_top)) | any(isnan(F_FeOH3_top)) | any(isnan(BC_SO4_top)) | any(isnan(BC_Fe2_top)) | any(isnan(F_FeOOH_top)) | any(isnan(F_FeS_top)) | any(isnan(BC_S0_top)) | any(isnan(BC_PO4_top)) | any(isnan(F_S8_top)) | any(isnan(F_FeS2_top)) | any(isnan(F_AlOH3_top)) | any(isnan(F_PO4adsa_top)) | any(isnan(F_PO4adsb_top)) | any(isnan(BC_Ca2_top)) | any(isnan(F_Ca3PO42_top)) | any(isnan(F_OMS_top)) | any(isnan(BC_H_top)) | any(isnan(BC_OH_top)) | any(isnan(BC_CO2_top)) | any(isnan(BC_CO3_top)) | any(isnan(BC_HCO3_top)) | any(isnan(BC_NH3_top)) | any(isnan(BC_NH4_top)) | any(isnan(BC_HS_top)) | any(isnan(BC_H2S_top)) | any(isnan(BC_H2CO3_top))
       error('Breaking out of Sediments function: NaN values');
     end
 
@@ -868,21 +868,21 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
 
         Kc1=5.01*10^(-7); Kc2=4.78*10^(-11); Knh=5.62*10^(-10); Khs=1.3*10^(-7); Kw=10^(-14); Kc0 = 1.7*10^(-3);
         H = 10.^(-pH_est');
-        DICz = H2CO3 + HCO3 + CO3;
+        Ct = H2CO3 + HCO3 + CO3;
         Nt = NH3 + NH4;
         St = HS + H2S;
-        % [CO2aq, CO2frac] = carbonequilibrium(DICz,Tz,pH_est')
-        % OH = Kw./H;
-        % H2CO3 = (1 + Kc1./H + Kc1*Kc2./H.^2).^-1 .* Ct;
-        % CO2 = H2CO3./Kc0; % CO2(aq)
-        % HCO3 = (H./Kc1 + 1 + Kc2./H).^-1 .* Ct;
-        % CO3 = (H.^2./Kc1./Kc2 + H./Kc2 + 1).^-1 .* Ct;
+        % [CO2aq, CO2frac] = carbonequilibrium(Ct,Tz,pH_est')
+        OH = Kw./H;
+        H2CO3 = (1 + Kc1./H + Kc1*Kc2./H.^2).^-1 .* Ct;
+        CO2 = H2CO3./Kc0; % CO2(aq)
+        HCO3 = (H./Kc1 + 1 + Kc2./H).^-1 .* Ct;
+        CO3 = (H.^2./Kc1./Kc2 + H./Kc2 + 1).^-1 .* Ct;
         NH4 = (H./ (Knh + H)) .* Nt;
         NH3 = Nt - NH4;
         H2S = (H./ (Khs + H)) .* St;
         HS = St - H2S;
         H = H*1e3;
-        % OH = OH*1e3;
+        OH = OH*1e3;
 
 
 
