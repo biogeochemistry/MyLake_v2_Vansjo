@@ -26,9 +26,9 @@ end
 
 %% update_C_due_to_flux: Update concentration of the WC due to flux from/to sediment
 function [C] = update_C_due_to_flux(C, flux, MyLake_params)
-    Az_end = MyLake_params('Az(end)');
-    Vz_end = MyLake_params('Vz(end)');
-    dt     = MyLake_params('dt');
+    Az_end = MyLake_params.Az(end);
+    Vz_end = MyLake_params.Vz(end);
+    dt     = MyLake_params.dt;
 
     dC = flux * dt * Az_end / Vz_end;
     C(end) = C(end) + dC;

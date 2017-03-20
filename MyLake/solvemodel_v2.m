@@ -1314,7 +1314,7 @@ for i = 1:length(tt)
         Cz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
         Sz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
 
-        C0 = [O2z,Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, Sz];
+        C0 = [O2z, Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, Sz];
 
         C_new = wc_chemical_reactions_module(C0,dt,ts_during_day, wc_int_method);
 
@@ -1346,41 +1346,38 @@ for i = 1:length(tt)
     % sediment module
     if matsedlab_sediment_module
         % Making cells of params for using during coupling
-        MyLake_concentrations = {...
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762), 'Chlz';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762),  'Cz';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762),  'Sz';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762), 'DOCz';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762), 'DOPz';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8),   'O2z';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Pz, 30973.762),      'Pz';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe2z, 55845),    'Fe2z';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(NO3z, 62004),    'NO3z';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(NH4z, 18038),    'NH4z';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(SO4z, 96062),    'SO4z';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe3z, 106867.0), 'Fe3z';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Ca2z, 80156.0),  'Ca2z';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(Al3z, 78003.6),  'Al3z';
-            convert_mg_per_qubic_m_to_umol_per_qubic_cm(PPz, 30973.762),     'PPz';
 
-            };
-        MyLake_concentrations = containers.Map({MyLake_concentrations{:,2}},{MyLake_concentrations{:,1}});
+            MyLake_concentrations.Chlz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762);
+            MyLake_concentrations.Cz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
+            MyLake_concentrations.Sz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
+            MyLake_concentrations.DOCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762);
+            MyLake_concentrations.DOPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762);
+            MyLake_concentrations.O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
+            MyLake_concentrations.Pz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Pz, 30973.762);
+            MyLake_concentrations.Fe2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe2z, 55845);
+            MyLake_concentrations.NO3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(NO3z, 62004);
+            MyLake_concentrations.NH4z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(NH4z, 18038);
+            MyLake_concentrations.SO4z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(SO4z, 96062);
+            MyLake_concentrations.Fe3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe3z, 106867.0);
+            MyLake_concentrations.Ca2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Ca2z, 80156.0);
+            MyLake_concentrations.Al3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Al3z, 78003.6);
+            MyLake_concentrations.PPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(PPz, 30973.762);
 
-        MyLake_params = {...
-            SS_C,               'SS_C';
-            density_org_H_nc,   'density_org_H_nc';
-            w_chl,              'w_chl';
-            w_chl_2,            'w_chl_2';
-            w_s,                'w_s';
-            Mass_Ratio_C_Chl,   'Mass_Ratio_C_Chl';
-            Az(end),            'Az(end)';
-            Vz(end),            'Vz(end)';
-            dt,                 'dt';
-            pH,                 'pH';
-            M_start,            'M_start';
-            M_stop,             'M_stop';
-            };
-        MyLake_params = containers.Map({MyLake_params{:,2}},{MyLake_params{:,1}});
+
+            MyLake_params.SS_C = SS_C;
+            MyLake_params.density_org_H_nc = density_org_H_nc;
+            MyLake_params.w_chl = w_chl;
+            MyLake_params.w_chl_2 = w_chl_2;
+            MyLake_params.w_s = w_s;
+            MyLake_params.Mass_Ratio_C_Chl = Mass_Ratio_C_Chl;
+            MyLake_params.Az = Az;
+            MyLake_params.Vz = Vz;
+            MyLake_params.In_Tz = In_Tz;
+            MyLake_params.dt = dt;
+            MyLake_params.pH = pH;
+            MyLake_params.M_start = M_start;
+            MyLake_params.M_stop = M_stop;
+
 
         % Preparing units and estimate flux from [WC] ----> [Sediments]
         sediment_bc = convert_wc_to_sediment(MyLake_concentrations, MyLake_params, sediment_params);
@@ -1641,9 +1638,6 @@ sediment_integrated_over_depth_fluxes_t = {
     O2_sediment_integrated_over_depth_fluxes_t, 'Oxygen integrated over depth flux';
     };
 
-
-MyLake_params = [ (keys(MyLake_params))', (values(MyLake_params))'];
-sediment_params = [ (keys(sediment_params))', (values(sediment_params))'];
 
 sediment_results.O2zt = O2_sediment_zt;
 sediment_results.FeOH3zt = FeOH3_sediment_zt;

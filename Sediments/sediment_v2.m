@@ -478,175 +478,175 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
     % =======================================================================================================
     % Updating matrices and Solving eq-s
     % =======================================================================================================
-    if species_sediment('Oxygen')
+    if species_sediment.Oxygen
       [LU_ox, RK_ox, BC_Ox_matrix] = update_matrices_solute( LU_ox0, RK_ox0, BC_Ox_matrix, ...
       BC_O(1,i-1), BC_O(1,i),0, gama, RA_ox0, RD_ox0, LA_ox0, LD_ox0, fi, dt);
       Ox(2:end,i)  = solving_eq(LU_ox,RK_ox,0,BC_Ox_matrix, Ox(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('OM1')
+    if species_sediment.OM1
       [LU_om, RK_om, BC_OM_matrix] = update_matrices_solid( LU_om0, RK_om0, BC_OM_matrix, ...
       0, gama, RA_om0, RD_om0, LA_om0, LD_om0, dt, dx, Db, fi, F_OM_top(i)/F, v);
       OM(:,i)      = solving_eq(LU_om,RK_om,(1-fi).*0,BC_OM_matrix, OM(:,i-1), fi);
     end
 
-    if species_sediment('OM2')
+    if species_sediment.OM2
       [LU_omb, RK_omb, BC_OMb_matrix] = update_matrices_solid( LU_omb0, RK_omb0, BC_OMb_matrix, ...
       0, gama, RA_omb0, RD_omb0, LA_omb0, LD_omb0, dt, dx, Db, fi, F_OMb_top(i)/F, v);
       OMb(:,i)     = solving_eq(LU_omb,RK_omb,(1-fi).*0,BC_OMb_matrix, OMb(:,i-1), fi);
     end
 
-    if species_sediment('NO3')
+    if species_sediment.NO3
       [LU_NO3, RK_NO3, BC_NO3_matrix] = update_matrices_solute( LU_NO30, RK_NO30, BC_NO3_matrix, ...
       BC_NO3(1,i-1), BC_NO3(1,i),0, gama, RA_NO30, RD_NO30, LA_NO30, LD_NO30, fi, dt);
       NO3(2:end,i) = solving_eq(LU_NO3,RK_NO3,0,BC_NO3_matrix, NO3(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('FeOH3')
+    if species_sediment.FeOH3
       [LU_FeOH3, RK_FeOH3, BC_FeOH3_matrix] = update_matrices_solid( LU_FeOH30, RK_FeOH30, BC_FeOH3_matrix, ...
       0, gama, RA_FeOH30, RD_FeOH30, LA_FeOH30, LD_FeOH30, dt, dx, Db, fi, F_FeOH3_top(i)/F, v);
       FeOH3(:,i)   = solving_eq(LU_FeOH3,RK_FeOH3,(1-fi).*0,BC_FeOH3_matrix, FeOH3(:,i-1), fi);
     end
 
-    if species_sediment('SO4')
+    if species_sediment.SO4
       [LU_SO4, RK_SO4, BC_SO4_matrix] = update_matrices_solute( LU_SO40, RK_SO40, BC_SO4_matrix, ...
       BC_SO4(1,i-1), BC_SO4(1,i),0, gama, RA_SO40, RD_SO40, LA_SO40, LD_SO40, fi, dt);
       SO4(2:end,i) = solving_eq(LU_SO4,RK_SO4,0,BC_SO4_matrix, SO4(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('NH4')
+    if species_sediment.NH4
       [LU_NH4, RK_NH4, BC_NH4_matrix] = update_matrices_solute( LU_NH40, RK_NH40, BC_NH4_matrix, ...
       BC_NH4(1,i-1), BC_NH4(1,i),0, gama, RA_NH40, RD_NH40, LA_NH40, LD_NH40, fi, dt);
       NH4(2:end,i) = solving_eq(LU_NH4,RK_NH4,0,BC_NH4_matrix, NH4(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('Fe2')
+    if species_sediment.Fe2
       [LU_Fe2, RK_Fe2, BC_Fe2_matrix] = update_matrices_solute( LU_Fe20, RK_Fe20, BC_Fe2_matrix, ...
       BC_Fe2(1,i-1), BC_Fe2(1,i),0, gama, RA_Fe20, RD_Fe20, LA_Fe20, LD_Fe20, fi, dt);
       Fe2(2:end,i) = solving_eq(LU_Fe2,RK_Fe2,0,BC_Fe2_matrix, Fe2(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('FeOOH')
+    if species_sediment.FeOOH
       [LU_FeOOH, RK_FeOOH, BC_FeOOH_matrix] = update_matrices_solid( LU_FeOOH0, RK_FeOOH0, BC_FeOOH_matrix, ...
       0, gama, RA_FeOOH0, RD_FeOOH0, LA_FeOOH0, LD_FeOOH0, dt, dx, Db, fi, F_FeOOH_top(i)/F, v);
       FeOOH(:,i)   = solving_eq(LU_FeOOH,RK_FeOOH,(1-fi).*0,BC_FeOOH_matrix, FeOOH(:,i-1), fi);
     end
 
-    if species_sediment('H2S')
+    if species_sediment.H2S
       [LU_H2S, RK_H2S, BC_H2S_matrix] = update_matrices_solute( LU_H2S0, RK_H2S0, BC_H2S_matrix, ...
       BC_H2S(1,i-1), BC_H2S(1,i),0, gama, RA_H2S0, RD_H2S0, LA_H2S0, LD_H2S0, fi, dt);
       H2S(2:end,i) = solving_eq(LU_H2S, RK_H2S, 0, BC_H2S_matrix,  H2S(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('HS')
+    if species_sediment.HS
       [LU_HS, RK_HS, BC_HS_matrix] = update_matrices_solute( LU_HS0, RK_HS0, BC_HS_matrix, ...
       BC_HS(1,i-1), BC_HS(1,i),0, gama, RA_HS0, RD_HS0, LA_HS0, LD_HS0, fi, dt);
       HS(2:end,i)  = solving_eq(LU_HS, RK_HS, 0, BC_HS_matrix,  HS(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('FeS')
+    if species_sediment.FeS
       [LU_FeS, RK_FeS, BC_FeS_matrix] = update_matrices_solid( LU_FeS0, RK_FeS0, BC_FeS_matrix, ...
       0, gama, RA_FeS0, RD_FeS0, LA_FeS0, LD_FeS0, dt, dx, Db, fi, F_FeS_top(i)/F, v);
       FeS(:,i)     = solving_eq(LU_FeS,RK_FeS,(1-fi).*0,BC_FeS_matrix, FeS(:,i-1), fi);
     end
 
-    if species_sediment('S0')
+    if species_sediment.S0
       [LU_S0, RK_S0, BC_S0_matrix] = update_matrices_solute( LU_S00, RK_S00, BC_S0_matrix, ...
       BC_S0(1,i-1), BC_S0(1,i),0, gama, RA_S00, RD_S00, LA_S00, LD_S00, fi, dt);
       S0(2:end,i)  = solving_eq(LU_S0, RK_S0, 0, BC_S0_matrix,  S0(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('PO4')
+    if species_sediment.PO4
       [LU_PO4, RK_PO4, BC_PO4_matrix] = update_matrices_solute( LU_PO40, RK_PO40, BC_PO4_matrix, ...
       BC_PO4(1,i-1), BC_PO4(1,i),0, gama, RA_PO40, RD_PO40, LA_PO40, LD_PO40, fi, dt);
       PO4(2:end,i) = solving_eq(LU_PO4, RK_PO4, 0, BC_PO4_matrix,  PO4(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('S8')
+    if species_sediment.S8
       [LU_S8, RK_S8, BC_S8_matrix] = update_matrices_solid( LU_S80, RK_S80, BC_S8_matrix, ...
       0, gama, RA_S80, RD_S80, LA_S80, LD_S80, dt, dx, Db, fi, F_S8_top(i)/F, v);
       S8(:,i)      = solving_eq(LU_S8,RK_S8,(1-fi).*0,BC_S8_matrix, S8(:,i-1), fi);
     end
 
-    if species_sediment('FeS2')
+    if species_sediment.FeS2
       [LU_FeS2, RK_FeS2, BC_FeS2_matrix] = update_matrices_solid( LU_FeS20, RK_FeS20, BC_FeS2_matrix, ...
       0, gama, RA_FeS20, RD_FeS20, LA_FeS20, LD_FeS20, dt, dx, Db, fi, F_FeS2_top(i)/F, v);
       FeS2(:,i)    = solving_eq(LU_FeS2,RK_FeS2,(1-fi).*0,BC_FeS2_matrix, FeS2(:,i-1), fi);
     end
 
-    if species_sediment('AlOH3')
+    if species_sediment.AlOH3
       [LU_AlOH3, RK_alum, BC_AlOH3_matrix] = update_matrices_solid( LU_AlOH30, RK_alum0, BC_AlOH3_matrix, ...
       0, gama, RA_AlOH30, RD_AlOH30, LA_AlOH30, LD_AlOH30, dt, dx, Db, fi, F_AlOH3_top(i)/F, v);
       AlOH3(:,i)   = solving_eq(LU_AlOH3,RK_alum,(1-fi).*0,BC_AlOH3_matrix, AlOH3(:,i-1), fi);
     end
 
-    if species_sediment('PO4adsa')
+    if species_sediment.PO4adsa
       [LU_PO4adsa, RK_PO4adsa, BC_PO4adsa_matrix] = update_matrices_solid( LU_PO4adsa0, RK_PO4adsa0, BC_PO4adsa_matrix, ...
       0, gama, RA_PO4adsa0, RD_PO4adsa0, LA_PO4adsa0, LD_PO4adsa0, dt, dx, Db, fi, F_PO4adsa_top(i)/F, v);
       PO4adsa(:,i) = solving_eq(LU_PO4adsa,RK_PO4adsa,(1-fi).*0,BC_PO4adsa_matrix, PO4adsa(:,i-1), fi);
     end
 
-    if species_sediment('PO4adsb')
+    if species_sediment.PO4adsb
       [LU_PO4adsb, RK_PO4adsb, BC_PO4adsb_matrix] = update_matrices_solid( LU_PO4adsb0, RK_PO4adsb0, BC_PO4adsb_matrix, ...
       0, gama, RA_PO4adsb0, RD_PO4adsb0, LA_PO4adsb0, LD_PO4adsb0, dt, dx, Db, fi, F_PO4adsb_top(i)/F, v);
       PO4adsb(:,i) = solving_eq(LU_PO4adsb,RK_PO4adsb,(1-fi).*0,BC_PO4adsb_matrix, PO4adsb(:,i-1), fi);
     end
 
-    if species_sediment('Ca2')
+    if species_sediment.Ca2
       [LU_Ca2, RK_Ca2, BC_Ca2_matrix] = update_matrices_solute( LU_Ca20, RK_Ca20, BC_Ca2_matrix, ...
       BC_Ca2(1,i-1), BC_Ca2(1,i),0, gama, RA_Ca20, RD_Ca20, LA_Ca20, LD_Ca20, fi, dt);
       Ca2(2:end,i) = solving_eq(LU_Ca2,RK_Ca2,0,BC_Ca2_matrix, Ca2(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('Ca3PO42')
+    if species_sediment.Ca3PO42
       [LU_Ca3PO42, RK_Ca3PO42, BC_Ca3PO42_matrix] = update_matrices_solid( LU_Ca3PO420, RK_Ca3PO420, BC_Ca3PO42_matrix, ...
       0, gama, RA_Ca3PO420, RD_Ca3PO420, LA_Ca3PO420, LD_Ca3PO420, dt, dx, Db, fi, F_Ca3PO42_top(i)/F, v);
       Ca3PO42(:,i) = solving_eq(LU_Ca3PO42,RK_Ca3PO42,(1-fi).*0,BC_Ca3PO42_matrix, Ca3PO42(:,i-1), fi);
     end
 
-    if species_sediment('OMS')
+    if species_sediment.OMS
       [LU_OMS, Rk_OMS, BC_OMS_matrix] = update_matrices_solid( LU_OMS0, Rk_OMS0, BC_OMS_matrix, ...
       0, gama, RA_OMS0, RD_OMS0, LA_OMS0, LD_OMS0, dt, dx, Db, fi, F_OMS_top(i)/F, v);
       OMS(:,i)     = solving_eq(LU_OMS,Rk_OMS,(1-fi).*0,BC_OMS_matrix, OMS(:,i-1), fi);
     end
 
-    if species_sediment('H')
+    if species_sediment.H
       [LU_H, RK_H, BC_H_matrix] = update_matrices_solute( LU_H0, RK_H0, BC_H_matrix, ...
       BC_H(1,i-1), BC_H(1,i),0, gama, RA_H0, RD_H0, LA_H0, LD_H0, fi, dt);
       H(2:end,i) = solving_eq(LU_H,RK_H,0,BC_H_matrix, H(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('OH')
+    if species_sediment.OH
       [LU_OH, RK_OH, BC_OH_matrix] = update_matrices_solute( LU_OH0, RK_OH0, BC_OH_matrix, ...
       BC_OH(1,i-1), BC_OH(1,i),0, gama, RA_OH0, RD_OH0, LA_OH0, LD_OH0, fi, dt);
       OH(2:end,i) = solving_eq(LU_OH,RK_OH,0,BC_OH_matrix, OH(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('CO2')
+    if species_sediment.CO2
       [LU_CO2, RK_CO2, BC_CO2_matrix] = update_matrices_solute( LU_CO20, RK_CO20, BC_CO2_matrix, ...
       BC_CO2(1,i-1), BC_CO2(1,i),0, gama, RA_CO20, RD_CO20, LA_CO20, LD_CO20, fi, dt);
       CO2(2:end,i) = solving_eq(LU_CO2,RK_CO2,0,BC_CO2_matrix, CO2(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('CO3')
+    if species_sediment.CO3
       [LU_CO3, RK_CO3, BC_CO3_matrix] = update_matrices_solute( LU_CO30, RK_CO30, BC_CO3_matrix, ...
       BC_CO3(1,i-1), BC_CO3(1,i),0, gama, RA_CO30, RD_CO30, LA_CO30, LD_CO30, fi, dt);
       CO3(2:end,i) = solving_eq(LU_CO3,RK_CO3,0,BC_CO3_matrix, CO3(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('HCO3')
+    if species_sediment.HCO3
       [LU_HCO3, RK_HCO3, BC_HCO3_matrix] = update_matrices_solute( LU_HCO30, RK_HCO30, BC_HCO3_matrix, ...
       BC_HCO3(1,i-1), BC_HCO3(1,i),0, gama, RA_HCO30, RD_HCO30, LA_HCO30, LD_HCO30, fi, dt);
       HCO3(2:end,i) = solving_eq(LU_HCO3,RK_HCO3,0,BC_HCO3_matrix, HCO3(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('NH3')
+    if species_sediment.NH3
       [LU_NH3, RK_NH3, BC_NH3_matrix] = update_matrices_solute( LU_NH30, RK_NH30, BC_NH3_matrix, ...
       BC_NH3(1,i-1), BC_NH3(1,i),0, gama, RA_NH30, RD_NH30, LA_NH30, LD_NH30, fi, dt);
       NH3(2:end,i) = solving_eq(LU_NH3,RK_NH3,0,BC_NH3_matrix, NH3(2:end,i-1), fi(2:end));
     end
 
-    if species_sediment('H2CO3')
+    if species_sediment.H2CO3
       [LU_H2CO3, RK_H2CO3, BC_H2CO3_matrix] = update_matrices_solute( LU_H2CO30, RK_H2CO30, BC_H2CO3_matrix, ...
       BC_H2CO3(1,i-1), BC_H2CO3(1,i),0, gama, RA_H2CO30, RD_H2CO30, LA_H2CO30, LD_H2CO30, fi, dt);
       H2CO3(2:end,i) = solving_eq(LU_H2CO3,RK_H2CO3,0,BC_H2CO3_matrix, H2CO3(2:end,i-1), fi(2:end));
@@ -871,9 +871,10 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
 
         Kc1=5.01*10^(-7); Kc2=4.78*10^(-11); Knh=5.62*10^(-10); Khs=1.3*10^(-7); Kw=10^(-14); Kc0 = 1.7*10^(-3);
         H = 10.^(-pH_est');
-        Ct = H2CO3 + HCO3 + CO3;
+        DICz = H2CO3 + HCO3 + CO3;
         Nt = NH3 + NH4;
         St = HS + H2S;
+        % [CO2aq, CO2frac] = carbonequilibrium(DICz,Tz,pH_est')
         % OH = Kw./H;
         % H2CO3 = (1 + Kc1./H + Kc1*Kc2./H.^2).^-1 .* Ct;
         % CO2 = H2CO3./Kc0; % CO2(aq)

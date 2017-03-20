@@ -32,8 +32,8 @@ for current_run = 1:no_runs
         run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
         clim_ID = run_ID
         if use_INCA == 1
-            m_start=[2000, 1, 1]; %
-            m_stop=[2012, 12, 31]; %
+            m_start=[2005, 1, 1]; %
+            m_stop=[2005, 12, 31]; %
         else
             m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %

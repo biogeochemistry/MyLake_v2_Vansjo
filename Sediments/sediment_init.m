@@ -17,38 +17,35 @@ end
 
 function [species_sediment] = species()
   % which species to simulate 1 = true , 0 = false
-  species_sediment = {
-      true, 'Oxygen';
-      true, 'OM1';
-      true, 'OM2';
-      true, 'NO3';
-      true, 'FeOH3';
-      true, 'SO4';
-      true, 'NH4';
-      true, 'Fe2';
-      true, 'FeOOH';
-      true, 'H2S';
-      true, 'HS';
-      true, 'FeS';
-      true, 'S0';
-      true, 'PO4';
-      true, 'S8';
-      true, 'FeS2';
-      true, 'AlOH3';
-      true, 'PO4adsa';
-      true, 'PO4adsb';
-      true, 'Ca2';
-      true, 'Ca3PO42';
-      true, 'OMS';
-      true, 'H';
-      true, 'OH';
-      true, 'CO2';
-      true, 'CO3';
-      true, 'HCO3';
-      true, 'NH3';
-      true, 'H2CO3';
-  };
-  species_sediment = containers.Map({species_sediment{:,2}},{species_sediment{:,1}});
+    species_sediment.Oxygen = true;
+    species_sediment.OM1 = true;
+    species_sediment.OM2 = true;
+    species_sediment.NO3 = true;
+    species_sediment.FeOH3 = true;
+    species_sediment.SO4 = true;
+    species_sediment.NH4 = true;
+    species_sediment.Fe2 = true;
+    species_sediment.FeOOH = true;
+    species_sediment.H2S = true;
+    species_sediment.HS = true;
+    species_sediment.FeS = true;
+    species_sediment.S0 = true;
+    species_sediment.PO4 = true;
+    species_sediment.S8 = true;
+    species_sediment.FeS2 = true;
+    species_sediment.AlOH3 = true;
+    species_sediment.PO4adsa = true;
+    species_sediment.PO4adsb = true;
+    species_sediment.Ca2 = true;
+    species_sediment.Ca3PO42 = true;
+    species_sediment.OMS = true;
+    species_sediment.H = true;
+    species_sediment.OH = true;
+    species_sediment.CO2 = true;
+    species_sediment.CO3 = true;
+    species_sediment.HCO3 = true;
+    species_sediment.NH3 = true;
+    species_sediment.H2CO3 = true;
 end
 
 function [sediment_params] = params(max_depth, temperature)
@@ -195,7 +192,7 @@ function [sediment_params] = params(max_depth, temperature)
         % 3. Phreeqc  adds 40 sec per year. (works for sure)
         % 4. Delta function by Markelov (under test)
 
-        3,    'pH algorithm';
+        0,    'pH algorithm';
 
         % chemical constants from file
         data{2}(1), 'k_OM';
