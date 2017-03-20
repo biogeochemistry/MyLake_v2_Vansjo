@@ -660,7 +660,7 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
 
     % pH Module
     if sediment_params.pH_algorithm ~= 0
-      [H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i)] = pH_module(sediment_params.pH_algorithm, H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i), Fe2(:,i), Ca2(:,i), NO3(:,i), SO4(:,i), PO4(:,i), FeS(:,i), FeS2(:,i), FeOH3(:,i), FeOOH(:,i), Ca3PO42(:,i), PO4adsa(:,i), PO4adsb(:,i));
+      [H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i)] = pH_module(sediment_params.pH_algorithm, H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i), Fe2(:,i), Ca2(:,i), NO3(:,i), SO4(:,i), PO4(:,i), FeS(:,i), FeS2(:,i), FeOH3(:,i), FeOOH(:,i), Ca3PO42(:,i), PO4adsa(:,i), PO4adsb(:,i), sediment_bc.T);
     end
 
   end
@@ -815,7 +815,7 @@ function bioR = bioirrigation(C, alfax, fi)
 end
 
 
-function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm, H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S, Fe2, Ca2, NO3, SO4, PO4, FeS, FeS2, FeOH3, FeOOH, Ca3PO42, PO4adsa, PO4adsb)
+function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm, H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S, Fe2, Ca2, NO3, SO4, PO4, FeS, FeS2, FeOH3, FeOOH, Ca3PO42, PO4adsa, PO4adsb, Temperature)
   %% pH_module: pH equilibrium function
   % 0. No pH module
   % 1. Stumm, W. & Morgan, J., 1995. Aquatic Chemistry. implemented in MATLAB
@@ -871,12 +871,29 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
         Ct = H2CO3 + HCO3 + CO3;
         Nt = NH3 + NH4;
         St = HS + H2S;
-        % [CO2aq, CO2frac] = carbonequilibrium(Ct,Tz,pH_est')
         OH = Kw./H;
-        H2CO3 = (1 + Kc1./H + Kc1*Kc2./H.^2).^-1 .* Ct;
-        CO2 = H2CO3./Kc0; % CO2(aq)
-        HCO3 = (H./Kc1 + 1 + Kc2./H).^-1 .* Ct;
-        CO3 = (H.^2./Kc1./Kc2 + H./Kc2 + 1).^-1 .* Ct;
+
+        % TODO: Carbonate equilibrium doesn't work now. You can  estimate fractions based on pH after model run
+        % Tz = Temperature + 273.15;
+        % K0 = -60.2409+93.4517.*(100./Tz)+23.3585*log(Tz/100); %~mol/(kg*atm)
+        % K0 = exp(K0); %CO2; mol/(kg*atm)
+        % K1 = 290.9097-14554.21./Tz-45.0575*log(Tz); %~mol/kg
+        % K1 = exp(K1); %HCO3; mol/kg
+        % K2 = 207.6548-11843.79./Tz-33.6485*log(Tz); %~mol/kg
+        % K2 = exp(K2); %CO3; mol/kg
+        % Kw = 148.9802-13847.26./Tz-23.6521*log(Tz); %~mol/kg
+        % Kw = exp(Kw); %H2O; (mol/kg)^2
+        % CO2mfrac = H.*H./((H.*H+H.*K1+K1.*K2)); %mol CO2 / mol DIC
+        % HCO3mfrac = H.*K1./((H.*H+H.*K1+K1.*K2)); %-mol HCO3 / mol DIC
+        % CO3mfrac = K1.*K2./((H.*H+H.*K1+K1.*K2)); %-mol CO3 / mol DIC
+        % H2CO3 = CO2mfrac .* Ct;
+        % HCO3 = HCO3mfrac .* Ct;
+        % CO3 = CO3mfrac .* Ct;
+        % H2CO3 = (1 + Kc1./H + Kc1*Kc2./H.^2).^-1 .* Ct;
+        % CO2 = H2CO3./Kc0; % CO2(aq)
+        % HCO3 = (H./Kc1 + 1 + Kc2./H).^-1 .* Ct;
+        % CO3 = (H.^2./Kc1./Kc2 + H./Kc2 + 1).^-1 .* Ct;
+
         NH4 = (H./ (Knh + H)) .* Nt;
         NH3 = Nt - NH4;
         H2S = (H./ (Khs + H)) .* St;

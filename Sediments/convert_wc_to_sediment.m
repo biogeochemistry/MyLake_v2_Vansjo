@@ -31,7 +31,7 @@ function [sediment_bc] = convert_wc_to_sediment(MyLake_concentrations, MyLake_pa
     sediment_bc.OMS_fx = 0;
     sediment_bc.H_c = 10^-pH*10^3;
     sediment_bc.OH_c = 0.00007354365;
-    sediment_bc.CO2_c = 9.960074871;
+    sediment_bc.CO2_c = 0;
     sediment_bc.CO3_c = 2.19E-05;
     sediment_bc.HCO3_c = 0.62387047;
     sediment_bc.NH3_c = 3.68E-09;
@@ -39,6 +39,7 @@ function [sediment_bc] = convert_wc_to_sediment(MyLake_concentrations, MyLake_pa
     sediment_bc.HS_c = 1.01E-10;
     sediment_bc.H2S_c = 1.06E-10;
     sediment_bc.H2CO3_c = 1.06E-15;
+    sediment_bc.T = MyLake_params.Tz(end);
 
 if any(isnan(dissolved_bc(MyLake_concentrations.O2z))) | any(isnan(dissolved_bc(MyLake_concentrations.Pz))) | any(isnan(dissolved_bc(MyLake_concentrations.NO3z))) | any(isnan(dissolved_bc(MyLake_concentrations.SO4z))) | any(isnan(dissolved_bc(MyLake_concentrations.Fe2z))) | any(isnan(dissolved_bc(MyLake_concentrations.Ca2z))) | any(isnan(dissolved_bc(MyLake_concentrations.NH4z)))
     error('stop')

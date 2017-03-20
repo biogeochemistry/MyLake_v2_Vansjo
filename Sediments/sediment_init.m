@@ -164,7 +164,7 @@ function [sediment_params] = params(max_depth, temperature)
     % 0. Disabled
     % 1. Stumm & Morgan; 1995. Aquatic Chemistry. MATLAB -> very long - don't use it.
     % 2. Stumm & Morgan; 1995. Aquatic Chemistry. C++ (have some bugs in the code)
-    % 3. Phreeqc  adds 40 sec per year. (works for sure)
+    % 3. Phreeqc  adds ~20 sec per year. (tested)
     % 4. Delta function by Markelov (under test)
     sediment_params.pH_algorithm = 0;
 
