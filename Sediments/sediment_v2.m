@@ -4,35 +4,35 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   global k_OM k_OMb Km_O2 Km_NO3 Km_FeOH3 Km_FeOOH Km_SO4 Km_oxao Km_amao Kin_O2 Kin_NO3  Kin_FeOH3 Kin_FeOOH k_amox k_Feox k_Sdis k_Spre k_FeS2pre k_pdesorb_c k_pdesorb_a k_pdesorb_b k_alum k_rhom   k_tS_Fe Ks_FeS k_Fe_dis k_Fe_pre k_apa  kapa k_oms k_tsox k_FeSpre f_pfe accel Cx1 Ny1 Pz1 Cx2 Ny2 Pz2 F Ny1 Ny2 Pz1 Pz2 alfax fi n
 
 
-  Ox_prev = sediment_concentrations('Oxygen');
-  OM_prev = sediment_concentrations('OM1');
-  OMb_prev = sediment_concentrations('OM2');
-  NO3_prev = sediment_concentrations('NO3');
-  FeOH3_prev = sediment_concentrations('FeOH3');
-  SO4_prev = sediment_concentrations('SO4');
-  NH4_prev = sediment_concentrations('NH4');
-  Fe2_prev = sediment_concentrations('Fe2');
-  FeOOH_prev = sediment_concentrations('FeOOH');
-  H2S_prev = sediment_concentrations('H2S');
-  HS_prev  = sediment_concentrations('HS');
-  FeS_prev = sediment_concentrations('FeS');
-  S0_prev  = sediment_concentrations('S0');
-  PO4_prev = sediment_concentrations('PO4');
-  S8_prev = sediment_concentrations('S8');
-  FeS2_prev = sediment_concentrations('FeS2');
-  AlOH3_prev = sediment_concentrations('AlOH3');
-  PO4adsa_prev = sediment_concentrations('PO4adsa');
-  PO4adsb_prev = sediment_concentrations('PO4adsb');
-  Ca2_prev = sediment_concentrations('Ca2');
-  Ca3PO42_prev = sediment_concentrations('Ca3PO42');
-  OMS_prev = sediment_concentrations('OMS');
-  OH_prev = sediment_concentrations('OH');
-  CO2_prev = sediment_concentrations('CO2');
-  CO3_prev = sediment_concentrations('CO3');
-  HCO3_prev = sediment_concentrations('HCO3');
-  NH3_prev = sediment_concentrations('NH3');
-  H_prev = sediment_concentrations('H');
-  H2CO3_prev = sediment_concentrations('H2CO3');
+  Ox_prev = sediment_concentrations.Oxygen;
+  OM_prev = sediment_concentrations.OM1;
+  OMb_prev = sediment_concentrations.OM2;
+  NO3_prev = sediment_concentrations.NO3;
+  FeOH3_prev = sediment_concentrations.FeOH3;
+  SO4_prev = sediment_concentrations.SO4;
+  NH4_prev = sediment_concentrations.NH4;
+  Fe2_prev = sediment_concentrations.Fe2;
+  FeOOH_prev = sediment_concentrations.FeOOH;
+  H2S_prev = sediment_concentrations.H2S;
+  HS_prev  = sediment_concentrations.HS;
+  FeS_prev = sediment_concentrations.FeS;
+  S0_prev  = sediment_concentrations.S0;
+  PO4_prev = sediment_concentrations.PO4;
+  S8_prev = sediment_concentrations.S8;
+  FeS2_prev = sediment_concentrations.FeS2;
+  AlOH3_prev = sediment_concentrations.AlOH3;
+  PO4adsa_prev = sediment_concentrations.PO4adsa;
+  PO4adsb_prev = sediment_concentrations.PO4adsb;
+  Ca2_prev = sediment_concentrations.Ca2;
+  Ca3PO42_prev = sediment_concentrations.Ca3PO42;
+  OMS_prev = sediment_concentrations.OMS;
+  OH_prev = sediment_concentrations.OH;
+  CO2_prev = sediment_concentrations.CO2;
+  CO3_prev = sediment_concentrations.CO3;
+  HCO3_prev = sediment_concentrations.HCO3;
+  NH3_prev = sediment_concentrations.NH3;
+  H_prev = sediment_concentrations.H;
+  H2CO3_prev = sediment_concentrations.H2CO3;
 
 
   % model domain:
@@ -692,38 +692,35 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   sediment_bioirrigation_fluxes.NH4 =  top_sediment_rate_to_flux(bioirrigation(NH4(:,end), alfax, fi),18038,dx,m);
 
 
-  sediment_concentrations = {...
-    Ox(:,end),      'Oxygen';
-    OM(:,end),      'OM1';
-    OMb(:,end),     'OM2';
-    NO3(:,end),     'NO3';
-    FeOH3(:,end),   'FeOH3';
-    SO4(:,end),     'SO4';
-    NH4(:,end),     'NH4';
-    Fe2(:,end),     'Fe2';
-    FeOOH(:,end),   'FeOOH';
-    H2S(:,end),     'H2S';
-    HS(:,end),      'HS';
-    FeS(:,end),     'FeS';
-    S0(:,end),      'S0';
-    PO4(:,end),     'PO4';
-    S8(:,end),      'S8';
-    FeS2(:,end),    'FeS2';
-    AlOH3(:,end),   'AlOH3';
-    PO4adsa(:,end), 'PO4adsa';
-    PO4adsb(:,end), 'PO4adsb';
-    Ca2(:,end),     'Ca2';
-    Ca3PO42(:,end), 'Ca3PO42';
-    OMS(:,end),     'OMS';
-    H(:,end),       'H';
-    OH(:,end),      'OH';
-    CO2(:,end),     'CO2';
-    CO3(:,end),     'CO3';
-    HCO3(:,end),    'HCO3';
-    NH3(:,end),     'NH3';
-    H2CO3(:,end),   'H2CO3';
-    };
-    sediment_concentrations = containers.Map({sediment_concentrations{:,2}},{sediment_concentrations{:,1}});
+    sediment_concentrations.Oxygen = Ox(:,end);
+    sediment_concentrations.OM1 = OM(:,end);
+    sediment_concentrations.OM2 = OMb(:,end);
+    sediment_concentrations.NO3 = NO3(:,end);
+    sediment_concentrations.FeOH3 = FeOH3(:,end);
+    sediment_concentrations.SO4 = SO4(:,end);
+    sediment_concentrations.NH4 = NH4(:,end);
+    sediment_concentrations.Fe2 = Fe2(:,end);
+    sediment_concentrations.FeOOH = FeOOH(:,end);
+    sediment_concentrations.H2S = H2S(:,end);
+    sediment_concentrations.HS = HS(:,end);
+    sediment_concentrations.FeS = FeS(:,end);
+    sediment_concentrations.S0 = S0(:,end);
+    sediment_concentrations.PO4 = PO4(:,end);
+    sediment_concentrations.S8 = S8(:,end);
+    sediment_concentrations.FeS2 = FeS2(:,end);
+    sediment_concentrations.AlOH3 = AlOH3(:,end);
+    sediment_concentrations.PO4adsa = PO4adsa(:,end);
+    sediment_concentrations.PO4adsb = PO4adsb(:,end);
+    sediment_concentrations.Ca2 = Ca2(:,end);
+    sediment_concentrations.Ca3PO42 = Ca3PO42(:,end);
+    sediment_concentrations.OMS = OMS(:,end);
+    sediment_concentrations.H = H(:,end);
+    sediment_concentrations.OH = OH(:,end);
+    sediment_concentrations.CO2 = CO2(:,end);
+    sediment_concentrations.CO3 = CO3(:,end);
+    sediment_concentrations.HCO3 = HCO3(:,end);
+    sediment_concentrations.NH3 = NH3(:,end);
+    sediment_concentrations.H2CO3 = H2CO3(:,end);
 
   R_values = {
     % daily_average(R1_graphs, m) ,              'R1';
