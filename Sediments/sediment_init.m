@@ -46,6 +46,8 @@ function [species_sediment] = species()
     species_sediment.HCO3 = true;
     species_sediment.NH3 = true;
     species_sediment.H2CO3 = true;
+    species_sediment.DOM1 = true;
+    species_sediment.DOM2 = true;
 end
 
 function [sediment_params] = params(max_depth, temperature)
@@ -89,6 +91,8 @@ function [sediment_params] = params(max_depth, temperature)
     D_H2S = 284;
     D_HS  = 284;
     D_S0  = 100;
+    D_DOM1  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
+    D_DOM2  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
     Db    = 5;
 
     % Spatial domain:
@@ -149,6 +153,8 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.D_HCO3 = D_HCO3;
     sediment_params.D_NH3 = D_NH3;
     sediment_params.D_H2CO3 = D_H2CO3;
+    sediment_params.D_DOM1 = D_DOM1;
+    sediment_params.D_DOM2 = D_DOM2;
 
     % OM composition
     sediment_params.Cx1 = data{2}(44);
@@ -239,6 +245,8 @@ function [sediment_concentrations ] = init_concentrations(pH)
     sediment_concentrations.HCO3    = ones(n,1) * 0;
     sediment_concentrations.NH3     = ones(n,1) * 0;
     sediment_concentrations.H2CO3   = ones(n,1) * 0;
+    sediment_concentrations.DOM1   = ones(n,1) * 0;
+    sediment_concentrations.DOM2   = ones(n,1) * 0;
 end
 
 function [D] = einstein_diffusion(D_ref, abs_temp, viscosity)
@@ -335,6 +343,8 @@ function [sediment_matrix_templates] = templates()
     [LU_HCO30, RK_HCO30, LD_HCO30, LA_HCO30, RD_HCO30, RA_HCO30] = matrices_template_solute(sediment_params.D_HCO3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
     [LU_NH30, RK_NH30, LD_NH30, LA_NH30, RD_NH30, RA_NH30]       = matrices_template_solute(sediment_params.D_NH3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
     [LU_H2CO30, RK_H2CO30, LD_H2CO30, LA_H2CO30, RD_H2CO30, RA_H2CO30]= matrices_template_solute(sediment_params.D_H2CO3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_DOM10, RK_DOM10, LD_DOM10, LA_DOM10, RD_DOM10, RA_DOM10]= matrices_template_solute(sediment_params.D_DOM1 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [LU_DOM20, RK_DOM20, LD_DOM20, LA_DOM20, RD_DOM20, RA_DOM20]= matrices_template_solute(sediment_params.D_DOM2 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
 
     sediment_matrix_templates = {...
 
@@ -356,6 +366,8 @@ function [sediment_matrix_templates] = templates()
         LU_HCO30, RK_HCO30, LD_HCO30, LA_HCO30, RD_HCO30, RA_HCO30, 'HCO3'; % 16
         LU_NH30, RK_NH30, LD_NH30, LA_NH30, RD_NH30, RA_NH30, 'NH3'; % 17
         LU_H2CO30, RK_H2CO30, LD_H2CO30, LA_H2CO30, RD_H2CO30, RA_H2CO30, 'H2CO3'; %18
+        LU_DOM10, RK_DOM10, LD_DOM10, LA_DOM10, RD_DOM10, RA_DOM10, 'DOM1'; %19
+        LU_DOM20, RK_DOM20, LD_DOM20, LA_DOM20, RD_DOM20, RA_DOM20, 'DOM2'; %20
     };
 
 end
