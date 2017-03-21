@@ -12,7 +12,7 @@ function [sediment_bc] = convert_wc_to_sediment(MyLake_concentrations, MyLake_pa
 
     sediment_bc.Ox_c = dissolved_bc(MyLake_concentrations.O2z);
     sediment_bc.OM1_fx = solid_bc(MyLake_concentrations.Chlz, w_chl, fi) + solid_bc(MyLake_concentrations.Cz, w_chl_2, fi);
-    sediment_bc.OM2_fx = solid_bc(MyLake_concentrations.DOPz, w_s, fi) + solid_bc(MyLake_concentrations.DOCz, w_s, fi);
+    sediment_bc.OM2_fx = 0;
     sediment_bc.PO4_c = dissolved_bc(MyLake_concentrations.Pz);
     sediment_bc.NO3_c = dissolved_bc(MyLake_concentrations.NO3z);
     sediment_bc.FeOH3_fx = solid_bc(MyLake_concentrations.Fe3z, w_s, fi);
@@ -39,6 +39,8 @@ function [sediment_bc] = convert_wc_to_sediment(MyLake_concentrations, MyLake_pa
     sediment_bc.HS_c = 1.01E-10;
     sediment_bc.H2S_c = 1.06E-10;
     sediment_bc.H2CO3_c = 1.06E-15;
+    sediment_bc.DOM1_c = dissolved_bc(MyLake_concentrations.DOPz);
+    sediment_bc.DOM2_c = dissolved_bc(MyLake_concentrations.DOCz);
     sediment_bc.T = MyLake_params.Tz(end);
 
 if any(isnan(dissolved_bc(MyLake_concentrations.O2z))) | any(isnan(dissolved_bc(MyLake_concentrations.Pz))) | any(isnan(dissolved_bc(MyLake_concentrations.NO3z))) | any(isnan(dissolved_bc(MyLake_concentrations.SO4z))) | any(isnan(dissolved_bc(MyLake_concentrations.Fe2z))) | any(isnan(dissolved_bc(MyLake_concentrations.Ca2z))) | any(isnan(dissolved_bc(MyLake_concentrations.NH4z)))

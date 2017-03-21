@@ -1,5 +1,13 @@
-function [ O2z, Pz, Fe2z, NO3z, NH4z ] = update_wc( O2z, Pz, Fe2z, NO3z, NH4z, MyLake_params, sediment_SWI_fluxes, sediment_bioirrigation_fluxes )
+function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_params, sediment_SWI_fluxes, sediment_bioirrigation_fluxes )
     %UPDATE_WC Summary of this function goes here
+
+    O2z = MyLakeOldConcentrations.O2z;
+    Pz = MyLakeOldConcentrations.Pz;
+    Fe2z = MyLakeOldConcentrations.Fe2z;
+    NO3z = MyLakeOldConcentrations.NO3z;
+    NH4z = MyLakeOldConcentrations.NH4z;
+    DOCz = MyLakeOldConcentrations.DOCz;
+    DOPz = MyLakeOldConcentrations.DOPz;
 
     % Diffusion Fluxes:
     O2z = update_C_due_to_flux(O2z, sediment_SWI_fluxes.Ox, MyLake_params);
@@ -7,6 +15,8 @@ function [ O2z, Pz, Fe2z, NO3z, NH4z ] = update_wc( O2z, Pz, Fe2z, NO3z, NH4z, M
     Fe2z = update_C_due_to_flux(Fe2z, sediment_SWI_fluxes.Fe2, MyLake_params);
     NO3z = update_C_due_to_flux(NO3z, sediment_SWI_fluxes.NO3, MyLake_params);
     NH4z = update_C_due_to_flux(NH4z, sediment_SWI_fluxes.NH4, MyLake_params);
+    DOPz = update_C_due_to_flux(DOPz, sediment_SWI_fluxes.DOM1, MyLake_params);
+    DOCz = update_C_due_to_flux(DOCz, sediment_SWI_fluxes.DOM2, MyLake_params);
 
     % % Boudreau, B.P., 1999. Metals and models : Diagenetic modelling in freshwater lacustrine sediments *. , pp.227–251.
 
@@ -16,8 +26,16 @@ function [ O2z, Pz, Fe2z, NO3z, NH4z ] = update_wc( O2z, Pz, Fe2z, NO3z, NH4z, M
     Fe2z = update_C_due_to_flux(Fe2z, sediment_bioirrigation_fluxes.Fe2, MyLake_params);
     NO3z = update_C_due_to_flux(NO3z, sediment_bioirrigation_fluxes.NO3, MyLake_params);
     NH4z = update_C_due_to_flux(NH4z, sediment_bioirrigation_fluxes.NH4, MyLake_params);
+    DOPz = update_C_due_to_flux(DOPz, sediment_bioirrigation_fluxes.DOM1, MyLake_params);
+    DOCz = update_C_due_to_flux(DOCz, sediment_bioirrigation_fluxes.DOM2, MyLake_params);
 
-
+    MyLakeNewConcentrations.O2z = O2z;
+    MyLakeNewConcentrations.Pz = Pz;
+    MyLakeNewConcentrations.Fe2z = Fe2z;
+    MyLakeNewConcentrations.NO3z = NO3z;
+    MyLakeNewConcentrations.NH4z = NH4z;
+    MyLakeNewConcentrations.DOPz = DOPz;
+    MyLakeNewConcentrations.DOCz = DOCz;
 
     if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
         error('NaN')
