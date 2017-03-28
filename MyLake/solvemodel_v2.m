@@ -82,7 +82,7 @@ warning off MATLAB:fzero:UndeterminedSyntax %suppressing a warning message
 global ies80
 
 % fast variable passing
-    global k_OM_wc_q10 k_OMb_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch
+    global k_OM_wc_q10 k_OMb_wc_q10 k_DOM1_wc k_DOM2_wc Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch
 
 
 tic
@@ -101,7 +101,7 @@ ts_during_day = 25;             % WC chemistry module: time steps during the day
 wc_int_method = 1;              % WC chemistry module: method: 0 - rk4th, 1 - rk5th;
 %fokema
 photobleaching=0;               %photo bleaching: 0=TSA model, 1=FOKEMA model
-floculation_switch=0;           % floculation according to Wachenfeldt 2008  %% NEW_DOCOMO
+floculation_switch=1;           % floculation according to Wachenfeldt 2008  %% NEW_DOCOMO
 resuspension_enabled=0;         % Resuspension switch
 % ==============
 
@@ -109,12 +109,12 @@ dt=1.0; %model time step = 1 day (DO NOT CHANGE!)
 
 if (nargin>8) %if optional command line parameter input is used
     disp('Bypassing input files...Running with input data & parameters given on command line');
-    [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,...
+    [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_POCz,In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,...
         Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names, Deposition]...
         = deal(varargin{:});
 else
     %Read input data
-    [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
+    [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_POCz,In_FIM,Ice0,Wt,Inflw,...
          Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names]...
         = modelinputs_v2(M_start,M_stop,Initfile,Initsheet,Inputfile,Inputsheet,Parafile,Parasheet,dt);
 end
@@ -289,6 +289,7 @@ Al3zt  = zeros(Nz,length(tt));
 SiO4zt  = zeros(Nz,length(tt));
 SiO2zt  = zeros(Nz,length(tt));
 diatomzt  = zeros(Nz,length(tt));
+POCzt  = zeros(Nz,length(tt));
 
 O2_diffzt = zeros(Nz,length(tt));
 O2_sat_relt = zeros(Nz,length(tt));
@@ -359,6 +360,7 @@ Al30 = interp1(In_Z,In_Al3z,zz+dz/2);
 SiO40 = interp1(In_Z,In_SiO4z,zz+dz/2);
 SiO20 = interp1(In_Z,In_SiO2z,zz+dz/2);
 diatom0 = interp1(In_Z,In_diatomz,zz+dz/2);
+POC0 = interp1(In_Z,In_POCz,zz+dz/2);
 
 
 
@@ -404,6 +406,7 @@ Al3z = Al30;
 SiO4z = SiO40;
 SiO2z = SiO20;
 diatomz = diatom0;
+POCz = POC0;
 
 
 
@@ -451,6 +454,8 @@ DoM=[]; %initialize
 % ============ water-column module ============
 k_OM_wc          = sediment_params.k_OM  * wc_factor;
 k_OMb_wc         = sediment_params.k_OMb * wc_factor;
+k_DOM1_wc        = sediment_params.k_OMb * wc_factor;
+k_DOM2_wc        = sediment_params.k_OMb * wc_factor;
 Km_O2_wc         = sediment_params.Km_O2;
 Km_NO3_wc        = sediment_params.Km_NO3;
 Km_FeOH3_wc      = sediment_params.Km_FeOH3;
@@ -583,7 +588,7 @@ for i = 1:length(tt)
     % Convective mixing adjustment (mix successive layers until stable density profile)
     % and
     % Spring/autumn turnover (don't allow temperature jumps over temperature of maximum density)
-    [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz] = convection_v2(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
+    [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,POCz] = convection_v2(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,POCz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
     Tprof_prev=Tz; %NEW!!! Update Tprof_prev
 
     if(IceIndicator==0)
@@ -611,7 +616,7 @@ for i = 1:length(tt)
         % Convective mixing adjustment (mix successive layers until stable density profile)
         % and
         % Spring/autumn turnover (don't allow temperature jumps over temperature of maximum density)
-        [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz] = convection_v2(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
+        [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,POCz] = convection_v2(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,POCz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,1);
 
         Qlw = DayFracHeating*Qlw + (1-DayFracHeating)*Qlw_2; %total amounts, only for output purposes
         Qsl = DayFracHeating*Qsl + (1-DayFracHeating)*Qsl_2; %total amounts, only for output purposes
@@ -638,7 +643,7 @@ for i = 1:length(tt)
 
     % Convective mixing adjustment (mix successive layers until stable density profile)
     % (don't allow temperature jumps over temperature of maximum density, no summer/autumn turnover here!)
-    [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz] = convection_v2(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,0);
+    [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,POCz] = convection_v2(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,POCz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,0);
 
     %% Deposition
     if deposition_switch == 1
@@ -823,6 +828,7 @@ for i = 1:length(tt)
         Iflw_SiO4 = I_scSiO4 * Inflw(i,20);
         Iflw_SiO2 = I_scSiO2 * Inflw(i,21);
         Iflw_diatom = I_scdiatom * Inflw(i,22);
+        Iflw_POC = Inflw(i,23);
 
         %Added suspended solids correction: minimum allowed P bioavailability factor is 0.1
         if any((1-(Iflw_DOP+(Iflw_Chl+Iflw_C)./Y_cp)./Iflw_TP-(Iflw_S*Fstable)./Iflw_TP)<0.1); % NEW!!!!
@@ -884,6 +890,7 @@ for i = 1:length(tt)
             SiO4z=IOflow_v11(dz, zz, Vz, SiO4z, lvlD, Iflw, Iflw_SiO4); %SiO4
             SiO2z=IOflow_v11(dz, zz, Vz, Al3z, lvlD, Iflw, Iflw_SiO2); %SiO2
             diatomz=IOflow_v11(dz, zz, Vz, SiO4z, lvlD, Iflw, Iflw_diatom); %diatom
+            POCz=IOflow_v11(dz, zz, Vz, SiO4z, lvlD, Iflw, Iflw_POC); %diatom
         else
             lvlD=NaN;
         end %if(Iflw>0)
@@ -916,7 +923,7 @@ for i = 1:length(tt)
 
     % Convective mixing adjustment (mix successive layers until stable density profile,  no summer/autumn turnover here!)
 
-    [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz] = convection_v2(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,0);
+    [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,POCz] = convection_v2(Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,POCz,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,0);
 
     if (IceIndicator==0)
 
@@ -1009,6 +1016,9 @@ for i = 1:length(tt)
 
                     diatommix=sum( Vz(1:zb+1).*diatomz(1:zb+1) ) / sum(Vz(1:zb+1));
                     diatomz(1:zb+1)=diatommix;
+
+                    POCmix=sum( Vz(1:zb+1).*POCz(1:zb+1) ) / sum(Vz(1:zb+1));
+                    POCz(1:zb+1)=POCmix;
 
                     rho = polyval(ies80,max(0,Tz(:))) + min(Tz(:),0);
                     TKE=TKE-POE;
@@ -1108,6 +1118,10 @@ for i = 1:length(tt)
                     diatommix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*diatomz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
                     diatomz(1:zb)=diatommix;
                     diatomz(zb+1)=KP_ratio*diatommix + (1-KP_ratio)*diatomz(zb+1);
+
+                    POCmix=sum( [Vz(1:zb); KP_ratio*Vz(zb+1)].*POCz(1:zb+1) ) / sum([Vz(1:zb); KP_ratio*Vz(zb+1)]);
+                    POCz(1:zb)=POCmix;
+                    POCz(zb+1)=KP_ratio*POCmix + (1-KP_ratio)*POCz(zb+1);
 
                     rho = polyval(ies80,max(0,Tz(:))) + min(Tz(:),0);
                     TKE=0;
@@ -1313,8 +1327,9 @@ for i = 1:length(tt)
         DOPz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762); %DOPz
         Cz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
         Sz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
+        POCz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz,  30973.762);
 
-        C0 = [O2z, Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, Sz];
+        C0 = [O2z, Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, Sz, POCz];
 
         C_new = wc_chemical_reactions_module(C0,dt,ts_during_day, wc_int_method);
 
@@ -1336,6 +1351,7 @@ for i = 1:length(tt)
         DOPz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,16), 30973.762); %DOPz
         Cz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,17), 30973.762);
         Sz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,18), 30973.762);
+        POCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,19), 30973.762);
     end
 
 
@@ -1349,7 +1365,7 @@ for i = 1:length(tt)
 
             MyLake_concentrations.Chlz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762);
             MyLake_concentrations.Cz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
-            MyLake_concentrations.Sz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
+            MyLake_concentrations.POCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz, 30973.762);
             MyLake_concentrations.DOCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762);
             MyLake_concentrations.DOPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762);
             MyLake_concentrations.O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
@@ -1362,6 +1378,7 @@ for i = 1:length(tt)
             MyLake_concentrations.Ca2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Ca2z, 80156.0);
             MyLake_concentrations.Al3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Al3z, 78003.6);
             MyLake_concentrations.PPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(PPz, 30973.762);
+            MyLake_concentrations.Sz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
 
 
             MyLake_params.SS_C = SS_C;
@@ -1506,6 +1523,7 @@ for i = 1:length(tt)
     SiO4zt(:,i) = SiO4z;
     SiO2zt(:,i) = SiO2z;
     diatomzt(:,i) = diatomz;
+    POCzt(:,i) = POCz;
 
     % O2diffzt(:,i) = O2_diff;
     CO2zt(:,i) = CO2z;
@@ -1743,6 +1761,7 @@ MyLake_results.Al3zt = Al3zt;
 MyLake_results.SiO4zt = SiO4zt;
 MyLake_results.SiO2zt = SiO2zt;
 MyLake_results.diatomzt = diatomzt;
+MyLake_results.POCzt = POCzt;
 MyLake_results.O2_diffzt = O2_diffzt;
 MyLake_results.O2_sat_relt = O2_sat_relt;
 MyLake_results.O2_sat_abst = O2_sat_abst;
@@ -1992,7 +2011,7 @@ function [dcdt] = rates(C, dt)
 % parameters for water-column chemistry
 % NOTE: the rates are the same as in sediments (per year!! not day) except microbial which are factorized due to lower concertation of bacteria in WC then in sediments. Units are per "year" due to time step is in year units too;
 
-    global k_OM_wc_q10 k_OMb_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch
+    global k_OM_wc_q10 k_OMb_wc_q10 k_DOM1_wc k_DOM2_wc Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch
 
     dcdt=zeros(size(C));
     O2z = C(:,1) .* (C(:,1)>0);
@@ -2039,7 +2058,7 @@ function [dcdt] = rates(C, dt)
 
     %flocculation
     if (floculation_switch==1) %Fokema
-        dfloc = 0.030 .* DOCz ./ 1000;  % NOTE: Why 1000 here?
+        dfloc = 0.030 .* DOCz;  % NOTE: Why 1000 here?
     else
         dfloc = 0;
     end
@@ -2117,7 +2136,7 @@ function [dcdt] = rates(C, dt)
 
     dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1_wc*R1a + Cx1_wc*R1b + Cx2_wc*R1c + Cx2_wc*R1d) - 3*R12 + Cx1_wc * R_dO2_Chl; % O2z
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
-    dcdt(:,3)  = -Rd - R10d - dfloc;% POCz
+    dcdt(:,3)  = -Rd - R10d - dfloc;% DOCz
     dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx2_wc*R2c + Cx2_wc*R2d) + R9 - Ny1_wc * (R_dChl_growth + R_dCz_growth); % NO3z
     dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx2_wc*R3c + Cx2_wc*R3d) - 2*R7  + R8 - R16a ; % Fe3z
     dcdt(:,6)  = - 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx2_wc*R5c + Cx2_wc*R5d) + R6 ; % SO4z
@@ -2132,4 +2151,6 @@ function [dcdt] = rates(C, dt)
     dcdt(:,15) = 0;% CO2z
     dcdt(:,16) = -Rc - R10c - R_dDOP;% DOPz
     dcdt(:,17) = -Rb - R10b + R_dCz_growth;% Cz
+    dcdt(:,18) = 0; % sZ
+    dcdt(:,19) = dfloc;% POCz
 %end of function

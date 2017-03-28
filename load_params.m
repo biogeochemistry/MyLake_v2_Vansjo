@@ -72,6 +72,8 @@ lake_params = {
 sediment_params = {
     1,     'k_OM1';  % 1
     0.1,   'k_OM2';  % 0.01
+    100,   'k_DOM1';  % 0.01
+    10,    'k_DOM2';  % 0.01
     0.0123,'Km_O2';
     0.01,  'Km_NO3';
     3.92,  'Km_Fe(OH)3';

@@ -78,10 +78,11 @@ InflowAl3 = zero_input;
 InflowSiO4 = zero_input;
 InflowSiO2 = zero_input;
 Inflowdiatom = zero_input;
+InflowPOC = zero_input;
 
 
 
-INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO InflowNO3 InflowNH4 InflowSO4 InflowFe2 InflowCa2 InflowpH InflowCH4 InflowFe3 InflowAl3 InflowSiO4 InflowSiO2 Inflowdiatom];
+INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO InflowNO3 InflowNH4 InflowSO4 InflowFe2 InflowCa2 InflowpH InflowCH4 InflowFe3 InflowAl3 InflowSiO4 InflowSiO2 Inflowdiatom InflowPOC];
 
 % save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/store_INCAP_input', 'MyLake_weather_only', 'INCA_input')
 
@@ -113,9 +114,10 @@ InflowAl3 = zero_input;
 InflowSiO4 = zero_input;
 InflowSiO2 = zero_input;
 Inflowdiatom = zero_input;
+InflowPOC = zero_input;
 
 
-INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO InflowNO3 InflowNH4 InflowSO4 InflowFe2 InflowCa2 InflowpH InflowCH4 InflowFe3 InflowAl3 InflowSiO4 InflowSiO2 Inflowdiatom];
+INCA_input = [inflow inflowTemp inflowC inflowS inflowTP inflowDOP inflowChl inflowDOC inflowDIC inflowO InflowNO3 InflowNH4 InflowSO4 InflowFe2 InflowCa2 InflowpH InflowCH4 InflowFe3 InflowAl3 InflowSiO4 InflowSiO2 Inflowdiatom InflowPOC];
 % save('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/IO/vanem_INCAP_input', 'MyLake_weather_only', 'INCA_input')
 
 INCA_QC_2 = INCA_input;

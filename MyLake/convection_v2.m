@@ -8,8 +8,8 @@
 % Last modified by TSA, 17.07.07
 % Modified by PK 30.12.2010 (DIC) & 14.02.2011 (O2)
 
-function [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz] = ...
-    convection_v12_1a(Tz_in,Cz_in,Sz_in,Pz_in,Chlz_in,PPz_in,DOPz_in,DOCz_in,DICz_in,O2z_in,NO3z_in,NH4z_in,SO4z_in,HSz_in,H2Sz_in,Fe2z_in,Ca2z_in,pHz_in,CH4z_in,Fe3z_in,Al3z_in,SiO4z_in,SiO2z_in,diatomz_in,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,springautumn);
+function [Tz,Cz,Sz,Pz,Chlz,PPz,DOPz,DOCz,DICz,O2z,NO3z,NH4z,SO4z,HSz,H2Sz,Fe2z,Ca2z,pHz,CH4z,Fe3z,Al3z,SiO4z,SiO2z,diatomz,POCz] = ...
+    convection_v12_1a(Tz_in,Cz_in,Sz_in,Pz_in,Chlz_in,PPz_in,DOPz_in,DOCz_in,DICz_in,O2z_in,NO3z_in,NH4z_in,SO4z_in,HSz_in,H2Sz_in,Fe2z_in,Ca2z_in,pHz_in,CH4z_in,Fe3z_in,Al3z_in,SiO4z_in,SiO2z_in,diatomz_in,POCz_in,Tprof_prev,Vz,Cw,f_par,lambdaz_wtot_avg,zz,swa_b0,tracer_switch,springautumn);
 
 % Inputs (with extension "_in") and Outputs:
 %       Tz   : Temperature profile
@@ -70,55 +70,58 @@ while any(d_rho < 0),
 
         DOCmix = sum(DOCz_in(j) .* Vz(j)) / sum(Vz(j));
         DOCz_in(j) = DOCmix * ones(size(DOCz_in(j)));
-        
+
         DICmix = sum(DICz_in(j) .* Vz(j)) / sum(Vz(j));
         DICz_in(j) = DICmix * ones(size(DICz_in(j)));
-        
+
         O2mix = sum(O2z_in(j) .* Vz(j)) / sum(Vz(j));
         O2z_in(j) = O2mix * ones(size(O2z_in(j)));
-        
+
         NO3mix = sum(NO3z_in(j) .* Vz(j)) / sum(Vz(j));
         NO3z_in(j) = NO3mix * ones(size(NO3z_in(j)));
-        
+
         NH4mix = sum(NH4z_in(j) .* Vz(j)) / sum(Vz(j));
         NH4z_in(j) = NH4mix * ones(size(NH4z_in(j)));
-        
+
         SO4mix = sum(SO4z_in(j) .* Vz(j)) / sum(Vz(j));
         SO4z_in(j) = SO4mix * ones(size(SO4z_in(j)));
-        
+
         HSmix = sum(HSz_in(j) .* Vz(j)) / sum(Vz(j));
         HSz_in(j) = HSmix * ones(size(HSz_in(j)));
-        
+
         H2Smix = sum(H2Sz_in(j) .* Vz(j)) / sum(Vz(j));
         H2Sz_in(j) = H2Smix * ones(size(H2Sz_in(j)));
-        
+
         Fe2mix = sum(Fe2z_in(j) .* Vz(j)) / sum(Vz(j));
         Fe2z_in(j) = Fe2mix * ones(size(Fe2z_in(j)));
-        
+
         Ca2mix = sum(Ca2z_in(j) .* Vz(j)) / sum(Vz(j));
         Ca2z_in(j) = Ca2mix * ones(size(Ca2z_in(j)));
-        
+
         pHmix = sum(pHz_in(j) .* Vz(j)) / sum(Vz(j));
         pHz_in(j) = pHmix * ones(size(pHz_in(j)));
-        
+
         CH4mix = sum(CH4z_in(j) .* Vz(j)) / sum(Vz(j));
         CH4z_in(j) = CH4mix * ones(size(CH4z_in(j)));
-        
+
         Fe3mix = sum(Fe3z_in(j) .* Vz(j)) / sum(Vz(j));
         Fe3z_in(j) = Fe3mix * ones(size(Fe3z_in(j)));
-        
+
         Al3mix = sum(Al3z_in(j) .* Vz(j)) / sum(Vz(j));
         Al3z_in(j) = Al3mix * ones(size(Al3z_in(j)));
-        
+
         SiO4mix = sum(SiO4z_in(j) .* Vz(j)) / sum(Vz(j));
         SiO4z_in(j) = SiO4mix * ones(size(SiO4z_in(j)));
-        
+
         SiO2mix = sum(SiO2z_in(j) .* Vz(j)) / sum(Vz(j));
         SiO2z_in(j) = SiO2mix * ones(size(SiO2z_in(j)));
-        
+
         diatommix = sum(diatomz_in(j) .* Vz(j)) / sum(Vz(j));
         diatomz_in(j) = diatommix * ones(size(diatomz_in(j)));
-        
+
+        POCmix = sum(POCz_in(j) .* Vz(j)) / sum(Vz(j));
+        POCz_in(j) = POCmix * ones(size(POCz_in(j)));
+
     end
 
     rho = polyval(ies80,max(0,Tz_in(:))) + min(Tz_in(:),0);
@@ -176,3 +179,4 @@ Al3z=Al3z_in;
 SiO4z=SiO4z_in;
 SiO2z=SiO2z_in;
 diatomz=diatomz_in;
+POCz=POCz_in;

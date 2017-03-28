@@ -5,7 +5,7 @@ global sed_par_file lake_par_file Eevapor
 
 Eevapor=0;    disp('init ...');
 
-calibration_k_values = [(1:50)',cell2mat(K_sediments(:,1)) ]; % writing sediments parameters file
+calibration_k_values = [(1:52)',cell2mat(K_sediments(:,1)) ]; % writing sediments parameters file
 
 %% generates unique files
 
@@ -103,7 +103,7 @@ dt = 1.0;
 % (1) Reading exisitng INCA outputs to prepare MyLake input
 % (0) You are running only MyLake, inputs alrady exist in the IO folder
 if use_INCA == 1;
-   [store_INCAP_input,vanem_INCAP_input, INCA_QC]=fn_INCA_MyL(run_INCA, run_ID, clim_ID, m_start, m_stop);
+   [store_INCAP_input, vanem_INCAP_input, INCA_QC]=fn_INCA_MyL(run_INCA, run_ID, clim_ID, m_start, m_stop);
 else
     INCA_QC = 0;
 end

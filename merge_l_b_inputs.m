@@ -66,6 +66,7 @@ nylake(:,29)=fac.*(data1.InflowQ.*data1.Al3 + data2.InflowQ.*data2.Al3);
 nylake(:,30)=fac.*(data1.InflowQ.*data1.SiO4 + data2.InflowQ.*data2.SiO4);
 nylake(:,31)=fac.*(data1.InflowQ.*data1.SiO2 + data2.InflowQ.*data2.SiO2);
 nylake(:,32)=fac.*(data1.InflowQ.*data1.diatom + data2.InflowQ.*data2.diatom);
+nylake(:,33)=fac.*(data1.InflowQ.*data1.POC + data2.InflowQ.*data2.POC);
 
 
 clear fid; 
