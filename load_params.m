@@ -3,7 +3,7 @@ function [lake_params, sediment_params] = load_params()
 
 lake_params = {
     % PhysPar
-    1, 'dz',                   % 1
+    0.5, 'dz',                 % 1
     0.0322, 'Kz_K1',           % 2     open water diffusion parameter (-)
     0.000898, 'Kz_K1_ice',     % 3     under ice diffusion parameter (-)
     2.21E-06, 'Kz_N0',         % 4     min. stability frequency (s-2)
