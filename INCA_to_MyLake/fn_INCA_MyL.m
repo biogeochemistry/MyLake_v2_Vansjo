@@ -68,17 +68,17 @@ inflowDIC = zero_input; %dummy
 inflowO = zero_input; %dummy
 InflowNO3 = zero_input;
 InflowNH4 = zero_input;
-InflowSO4 = zero_input;
+InflowSO4 = zero_input + 100;
 InflowFe2 = zero_input;
 InflowCa2 = zero_input;
 InflowpH = zero_input;
 InflowCH4 = zero_input;
-InflowFe3 = zero_input;
-InflowAl3 = zero_input;
+InflowFe3 = zero_input + 100;
+InflowAl3 = zero_input + 100;
 InflowSiO4 = zero_input;
 InflowSiO2 = zero_input;
 Inflowdiatom = zero_input;
-InflowPOC = zero_input;
+InflowPOC = zero_input + 100;
 
 
 
