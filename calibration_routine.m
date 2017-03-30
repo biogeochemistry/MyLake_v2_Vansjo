@@ -78,7 +78,7 @@ c_PO4 = RMSE(Pzt_mod(loc_sim, 1), PO4(loc_obs, 2));
 c_PP = RMSE(PPzt_mod(loc_sim, 1), Part(loc_obs, 2));
 
 
-x
+x'
 res = sum([c_TOTP, c_Chl, c_PO4, c_PP])
 
 
