@@ -86,7 +86,7 @@ global ies80
 
 
 tic
-disp(['Running MyLake-DOCOMO from ' datestr(datenum(M_start)) ' to ' datestr(datenum(M_stop)) ' ...']);
+disp(['Running MyLake-Sediment from ' datestr(datenum(M_start)) ' to ' datestr(datenum(M_stop)) ' ...']);
 
 % ===Switches===
 snow_compaction_switch=1;       %snow compaction: 0=no, 1=yes
@@ -1735,33 +1735,33 @@ int_R_O2dz = integrate_over_depth(d_O2zt, dz);
 MyLake_results.Qst = Qst;
 MyLake_results.Kzt = Kzt;
 MyLake_results.Tzt = Tzt;
-MyLake_results.Czt = Czt;
-MyLake_results.Szt = Szt;
 MyLake_results.Pzt = Pzt;
-MyLake_results.Chlzt = Chlzt;
 MyLake_results.PPzt = PPzt;
+MyLake_results.Czt = Czt;
+MyLake_results.Chlzt = Chlzt;
+MyLake_results.POCzt = POCzt;
 MyLake_results.DOPzt = DOPzt;
 MyLake_results.DOCzt = DOCzt;
 MyLake_results.DICzt = DICzt;
 MyLake_results.CO2zt = CO2zt;
 MyLake_results.O2zt = O2zt;
-MyLake_results.d_O2zt = d_O2zt;
-MyLake_results.int_R_O2dz = int_R_O2dz;
 MyLake_results.NO3zt = NO3zt;
 MyLake_results.NH4zt = NH4zt;
+MyLake_results.Fe3zt = Fe3zt;
+MyLake_results.Fe2zt = Fe2zt;
 MyLake_results.SO4zt = SO4zt;
 MyLake_results.HSzt = HSzt;
 MyLake_results.H2Szt = H2Szt;
-MyLake_results.Fe2zt = Fe2zt;
+MyLake_results.CH4zt = CH4zt;
 MyLake_results.Ca2zt = Ca2zt;
 MyLake_results.pHzt = pHzt;
-MyLake_results.CH4zt = CH4zt;
-MyLake_results.Fe3zt = Fe3zt;
+MyLake_results.Szt = Szt;
 MyLake_results.Al3zt = Al3zt;
 MyLake_results.SiO4zt = SiO4zt;
 MyLake_results.SiO2zt = SiO2zt;
 MyLake_results.diatomzt = diatomzt;
-MyLake_results.POCzt = POCzt;
+MyLake_results.d_O2zt = d_O2zt;
+MyLake_results.int_R_O2dz = int_R_O2dz;
 MyLake_results.O2_diffzt = O2_diffzt;
 MyLake_results.O2_sat_relt = O2_sat_relt;
 MyLake_results.O2_sat_abst = O2_sat_abst;
@@ -2127,11 +2127,11 @@ function [dcdt] = rates(C, dt)
     R14b = 0; % NOTE: no FeS
     R16a = k_pdesorb_a_wc_q10 .* Fe3z .* Pz;
     R16b = f_pfe_wc .* (4 * R3 + 2 * R7);
-    R17a = 0; % NOTE: no FeOOH => 0
-    R17b = 0; % NOTE: no FeOOH => 0
-    R18a = k_pdesorb_c_wc_q10 .* Pz .* Al3z;
+    R17a = 0; % No FeOOH in WC
+    R17b = 0; % No FeOOH in WC
+    R18a = k_pdesorb_c_wc_q10 .* Pz .* Al3z; % NOTE: No separate pool for sorbed P on aluminum in WC
     R18b = 0; % NOTE: the rate is unknown
-    R19  = k_apa_wc_q10 .* (Pz - kapa_wc);
+    R19  = k_apa_wc_q10 .* (Pz - kapa_wc); % NOTE: no Ca3PO42 pool in WC
     R19  = (R19 >= 0) .* R19;
 
     dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1_wc*R1a + Cx1_wc*R1b + Cx2_wc*R1c + Cx2_wc*R1d) - 3*R12 + Cx1_wc * R_dO2_Chl; % O2z
@@ -2146,7 +2146,7 @@ function [dcdt] = rates(C, dt)
     dcdt(:,10) = 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx2_wc*R5c + Cx2_wc*R5d) - R6 - R7  - R10a - R10b - R10c - R10d + R14b - R14a - R13 ;% HSz
     dcdt(:,11) = (Pz1_wc * Ra + Pz1_wc * Rb + Pz2_wc * Rc + Pz2_wc * Rd) - R18a + R18b - R16a - R17a + R16b + R17b - 2*R19 + R_dDOP - Pz1_wc * (R_dChl_growth + R_dCz_growth);% Pz
     dcdt(:,12) = -R18a ;% Al3z
-    dcdt(:,13) =  R16a - R16b  ;% PPz
+    dcdt(:,13) = R16a - R16b  ;% PPz
     dcdt(:,14) = -3*R19 ;% Ca2z
     dcdt(:,15) = 0;% CO2z
     dcdt(:,16) = -Rc - R10c - R_dDOP;% DOPz

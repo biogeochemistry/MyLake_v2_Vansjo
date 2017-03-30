@@ -214,41 +214,82 @@ function [sediment_params] = params(max_depth, temperature)
 end
 
 function [sediment_concentrations ] = init_concentrations(pH)
+    %% Init concentrations of sediment species
     global sediment_params
-    n = sediment_params.n;
 
-    % Init concentrations of sediment species
-    sediment_concentrations.Oxygen  = ones(n,1) * 0;
-    sediment_concentrations.OM1     = ones(n,1) * 0;
-    sediment_concentrations.OM2     = ones(n,1) * 0;
-    sediment_concentrations.NO3     = ones(n,1) * 0;
-    sediment_concentrations.FeOH3   = ones(n,1) * 0;
-    sediment_concentrations.SO4     = ones(n,1) * 0;
-    sediment_concentrations.NH4     = ones(n,1) * 0;
-    sediment_concentrations.Fe2     = ones(n,1) * 0;
-    sediment_concentrations.FeOOH   = ones(n,1) * 0;
-    sediment_concentrations.H2S     = ones(n,1) * 0;
-    sediment_concentrations.HS      = ones(n,1) * 0;
-    sediment_concentrations.FeS     = ones(n,1) * 0;
-    sediment_concentrations.S0      = ones(n,1) * 0;
-    sediment_concentrations.PO4     = ones(n,1) * 0;
-    sediment_concentrations.S8      = ones(n,1) * 0;
-    sediment_concentrations.FeS2    = ones(n,1) * 0;
-    sediment_concentrations.AlOH3   = ones(n,1) * 0;
-    sediment_concentrations.PO4adsa = ones(n,1) * 0;
-    sediment_concentrations.PO4adsb = ones(n,1) * 0;
-    sediment_concentrations.Ca2     = ones(n,1) * 0;
-    sediment_concentrations.Ca3PO42 = ones(n,1) * 0;
-    sediment_concentrations.OMS     = ones(n,1) * 0;
-    sediment_concentrations.H       = ones(n,1) * 10^-pH*10^3;
-    sediment_concentrations.OH      = ones(n,1) * 0;
-    sediment_concentrations.CO2     = ones(n,1) * 0;
-    sediment_concentrations.CO3     = ones(n,1) * 0;
-    sediment_concentrations.HCO3    = ones(n,1) * 0;
-    sediment_concentrations.NH3     = ones(n,1) * 0;
-    sediment_concentrations.H2CO3   = ones(n,1) * 0;
-    sediment_concentrations.DOM1   = ones(n,1) * 0;
-    sediment_concentrations.DOM2   = ones(n,1) * 0;
+    z_max = sediment_params.depth;
+    n = sediment_params.n;
+    dz  = z_max/(n-1);
+    read_file = true;
+    if read_file == true
+        Init = dlmread('IO/sediment_initial_concentrations.txt', '\t', 1, 0);
+        zz = [0:dz:z_max]'; %solution depth domain
+        in_z = Init(1:end, 1);
+        sediment_concentrations.OM1 = interp1(in_z, Init(1:end, 2), zz);
+        sediment_concentrations.OM2 = interp1(in_z, Init(1:end, 3), zz);
+        sediment_concentrations.DOM1 = interp1(in_z, Init(1:end, 4), zz);
+        sediment_concentrations.DOM2 = interp1(in_z, Init(1:end, 5), zz);
+        sediment_concentrations.Oxygen = interp1(in_z, Init(1:end, 6), zz);
+        sediment_concentrations.NO3 = interp1(in_z, Init(1:end, 7), zz);
+        sediment_concentrations.NH4 = interp1(in_z, Init(1:end, 8), zz);
+        sediment_concentrations.NH3 = interp1(in_z, Init(1:end, 9), zz);
+        sediment_concentrations.FeOH3 = interp1(in_z, Init(1:end, 10), zz);
+        sediment_concentrations.FeOOH = interp1(in_z, Init(1:end, 11), zz);
+        sediment_concentrations.Fe2 = interp1(in_z, Init(1:end, 12), zz);
+        sediment_concentrations.SO4 = interp1(in_z, Init(1:end, 13), zz);
+        sediment_concentrations.H2S = interp1(in_z, Init(1:end, 14), zz);
+        sediment_concentrations.HS = interp1(in_z, Init(1:end, 15), zz);
+        sediment_concentrations.PO4 = interp1(in_z, Init(1:end, 16), zz);
+        sediment_concentrations.PO4adsa = interp1(in_z, Init(1:end, 17), zz);
+        sediment_concentrations.PO4adsb = interp1(in_z, Init(1:end, 18), zz);
+        sediment_concentrations.S0 = interp1(in_z, Init(1:end, 19), zz);
+        sediment_concentrations.S8 = interp1(in_z, Init(1:end, 20), zz);
+        sediment_concentrations.FeS = interp1(in_z, Init(1:end, 21), zz);
+        sediment_concentrations.FeS2 = interp1(in_z, Init(1:end, 22), zz);
+        sediment_concentrations.AlOH3 = interp1(in_z, Init(1:end, 23), zz);
+        sediment_concentrations.Ca2 = interp1(in_z, Init(1:end, 24), zz);
+        sediment_concentrations.Ca3PO42 = interp1(in_z, Init(1:end, 25), zz);
+        sediment_concentrations.OMS = interp1(in_z, Init(1:end, 26), zz);
+        sediment_concentrations.H = interp1(in_z, Init(1:end, 27), zz);
+        sediment_concentrations.OH = interp1(in_z, Init(1:end, 28), zz);
+        sediment_concentrations.CO2 = interp1(in_z, Init(1:end, 29), zz);
+        sediment_concentrations.CO3 = interp1(in_z, Init(1:end, 30), zz);
+        sediment_concentrations.HCO3 = interp1(in_z, Init(1:end, 31), zz);
+        sediment_concentrations.H2CO3 = interp1(in_z, Init(1:end, 32), zz);
+    else
+        sediment_concentrations.OM1     = ones(n,1) * 0;
+        sediment_concentrations.OM2     = ones(n,1) * 0;
+        sediment_concentrations.DOM1    = ones(n,1) * 0;
+        sediment_concentrations.DOM2    = ones(n,1) * 0;
+        sediment_concentrations.Oxygen  = ones(n,1) * 0;
+        sediment_concentrations.NO3     = ones(n,1) * 0;
+        sediment_concentrations.NH4     = ones(n,1) * 0;
+        sediment_concentrations.NH3     = ones(n,1) * 0;
+        sediment_concentrations.FeOH3   = ones(n,1) * 0;
+        sediment_concentrations.FeOOH   = ones(n,1) * 0;
+        sediment_concentrations.Fe2     = ones(n,1) * 0;
+        sediment_concentrations.SO4     = ones(n,1) * 0;
+        sediment_concentrations.H2S     = ones(n,1) * 0;
+        sediment_concentrations.HS      = ones(n,1) * 0;
+        sediment_concentrations.PO4     = ones(n,1) * 0;
+        sediment_concentrations.PO4adsa = ones(n,1) * 0;
+        sediment_concentrations.PO4adsb = ones(n,1) * 0;
+        sediment_concentrations.S0      = ones(n,1) * 0;
+        sediment_concentrations.S8      = ones(n,1) * 0;
+        sediment_concentrations.FeS     = ones(n,1) * 0;
+        sediment_concentrations.FeS2    = ones(n,1) * 0;
+        sediment_concentrations.AlOH3   = ones(n,1) * 0;
+        sediment_concentrations.Ca2     = ones(n,1) * 0;
+        sediment_concentrations.Ca3PO42 = ones(n,1) * 0;
+        sediment_concentrations.OMS     = ones(n,1) * 0;
+        sediment_concentrations.H       = ones(n,1) * 10^-pH*10^3;
+        sediment_concentrations.OH      = ones(n,1) * 0;
+        sediment_concentrations.CO2     = ones(n,1) * 0;
+        sediment_concentrations.CO3     = ones(n,1) * 0;
+        sediment_concentrations.HCO3    = ones(n,1) * 0;
+        sediment_concentrations.H2CO3   = ones(n,1) * 0;
+
+    end
 end
 
 function [D] = einstein_diffusion(D_ref, abs_temp, viscosity)

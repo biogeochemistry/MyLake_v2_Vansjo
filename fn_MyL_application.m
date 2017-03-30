@@ -120,7 +120,7 @@ initfile='IO/store_init.txt';
 
 
 if use_INCA == 0
-    inputfile='IO/store_INCAP_input_baseline.txt';
+    inputfile='IO/store_INCAP_input_baseline_mod.txt';
     disp('Using existing input')
 elseif use_INCA == 1
     inputfile = store_INCAP_input; % setting use_INCA to 2 will look for store_INCAP_input
@@ -188,7 +188,7 @@ disp('Storefjorden ...')
 % if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis. 
     
 %     if use_INCA == 0
-%         land_to_vanem = 'IO/vanem_INCAP_input_baseline.txt'
+%         land_to_vanem = 'IO/vanem_INCAP_input_baseline_mod.txt'
 %     else
 %         land_to_vanem = vanem_INCAP_input;  % created above by calling fn_INCA_MyL.m
 %     end

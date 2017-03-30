@@ -74,20 +74,20 @@ sediment_params = {
     0.1,   'k_OM2';  % 0.01
     100,   'k_DOM1';  % 0.01
     10,    'k_DOM2';  % 0.01
-    0.0123,'Km_O2';
-    0.01,  'Km_NO3';
-    3.92,  'Km_Fe(OH)3';
-    2415,  'Km_FeOOH';
-    0.0293,'Km_SO4';
+    0.008, 'Km_O2';     % Canavan, R. W (2006)
+    0.01,  'Km_NO3';    % Canavan, R. W (2006)
+    0.2,   'Km_Fe(OH)3';  % Canavan, R. W (2006)
+    0.2,   'Km_FeOOH';
+    0.1,   'Km_SO4';   % Canavan, R. W (2006
     0.001, 'Km_oxao';
     0.1,   'Km_amao';
-    0.3292,'Kin_O2';
-    0.1,   'Kin_NO3';
-    0.1,   'Kin_FeOH3';
-    0.1,   'Kin_FeOOH';
+    0.008, 'Kin_O2';     % the same as Km
+    0.01,  'Kin_NO3';    % the same as Km
+    0.2,   'Kin_FeOH3';  % the same as Km
+    0.2,   'Kin_FeOOH';  % the same as Km
     2000,  'k_amox';
-    % 8.7e4, 'k_Feox';
-    8.7e1, 'k_Feox'; % Original is too fast for our time steps. This term cause instability in R8 and mass balance for Fe fails
+    5000,  'k_Feox';     % Canavan, R. W (2006)
+    % 8.7e1, 'k_Feox'; % Original is too fast for our time steps. This term cause instability in R8 and mass balance for Fe fails
     0.1,   'k_Sdis';
     2500,  'k_Spre';
     3.17,  'k_FeS2pre';
@@ -96,14 +96,14 @@ sediment_params = {
     1.35,  'k_pdesorb_b';
     6500,  'k_rhom';
     0.1,   'k_tS_Fe';
-    2510,  'Ks_FeS';
-    0.001, 'k_Fe_dis';
-    21.3,  'k_Fe_pre';
+    9600,  'Ks_FeS';    % Canavan, R. W (2006)
+    0.001, 'k_Fe_dis';  % Canavan, R. W (2006)
+    1.5e-3,'k_Fe_pre';  % Canavan, R. W (2006)
     0.37,  'k_apa';
     3e-6,  'kapa';
     0.3134,'k_oms';
-    1000,  'k_tsox';
-    0.001, 'k_FeSpre';
+    1000,  'k_tsox';   % Canavan, R. W (2006)
+    3.3e-3,'k_FeSpre'; % Canavan, R. W (2006)
     30,    'accel';
 
     1e-6,   'f_pfe';
@@ -116,8 +116,8 @@ sediment_params = {
     1,      'tortuosity';
 
     0.1,    'w';
-    128,    'n';
-    10,     'depth';
+    256,    'n';
+    30,     'depth';
     0.26,   'F';
     14.4,   'alfa0';
 

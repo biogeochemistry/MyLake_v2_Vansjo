@@ -8,6 +8,7 @@ TP_mod = mean((MyLake_results.Pzt(zinx,:)+MyLake_results.PPzt(zinx,:)+MyLake_res
 Chl_mod = mean((MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:))', 2);
 Pzt_mod = mean((MyLake_results.Pzt(zinx,:))', 2);
 PPzt_mod = mean((MyLake_results.PPzt(zinx,:))', 2);
+POCzt_mod = mean((MyLake_results.POCzt(zinx,:))', 2);
 
 load 'obs/store_obs/TOTP.dat' % these are just C&P of vanem ...
 load 'obs/store_obs/Cha_aquaM_march_2017.dat' % these are just C&P of vanem ...
@@ -62,7 +63,7 @@ legend('PO4')
 
 
 subplot(5,1,4)
-plot(MyLake_results.days, PPzt_mod,'Color','k','LineWidth',2)
+plot(MyLake_results.days, PPzt_mod+POCzt_mod,'Color','k','LineWidth',2)
 hold on
 plot(Part(:,1), Part(:,2),'Color','b','marker','diamond','MarkerSize',4,'LineStyle','none')
 ax = gca;
@@ -70,7 +71,7 @@ ax.XTick = xData;
 datetick(ax, 'x','mmm-yy','keepticks')
 set(gca,'fontsize',14)
 ylim([0,40])
-ylabel('mg P / kg')
+ylabel('mg P / m^3')
 legend('Part')
 
 subplot(5,1,5)

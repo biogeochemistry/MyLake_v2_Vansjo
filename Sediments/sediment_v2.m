@@ -1138,7 +1138,7 @@ function [dcdt] = sediment_rates(C, dt)
     f_FeOOH = FeOOH ./  (Km_FeOOH + FeOOH) .* Kin_FeOH3 ./ (Kin_FeOH3 + FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3) .* Kin_O2 ./ (Kin_O2 + Ox);
     f_SO4   = SO4 ./ (Km_SO4 + SO4 ) .* Kin_FeOOH ./ (Kin_FeOOH + FeOOH) .* Kin_FeOH3 ./ (Kin_FeOH3 + FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3) .* Kin_O2 ./ (Kin_O2 + Ox);
     Sum_H2S = H2S + HS;;
-    Sat_FeS = Fe2 .* Sum_H2S ./ (H.^2 .* Ks_FeS);
+    Sat_FeS = Fe2*1e-3 .* Sum_H2S*1e-3 ./ ((H*1e-3).^2 .* Ks_FeS);
 
 
     R1a = k_OM.*OM .* f_O2 * accel;
@@ -1195,8 +1195,8 @@ function [dcdt] = sediment_rates(C, dt)
     R11 = k_FeSpre .* FeS .* S0;
     R12 = k_rhom * Ox .* FeS;
     R13 = k_FeS2pre .* FeS .* Sum_H2S;
-    R14a = k_Fe_pre .* ( Sat_FeS - 1);
-    R14b  =  k_Fe_dis .* FeS .* ( 1 - Sat_FeS);
+    R14a = k_Fe_pre .* (Sat_FeS - 1);
+    R14b  =  k_Fe_dis .* FeS .* (1 - Sat_FeS);
     R14a = (R14a >= 0) .* R14a; % can only be non negative
     R14b  = (R14b >= 0) .* R14b; % can only be non negative
     R15a = k_Spre * S0;
@@ -1206,6 +1206,7 @@ function [dcdt] = sediment_rates(C, dt)
     R17a = k_pdesorb_b * FeOOH .* PO4;
     R17b = f_pfe .* (4 * R4);
     R18a = k_pdesorb_c .* PO4 .* AlOH3;
+    R18b = 0;
     R19 = k_apa * (PO4 - kapa);
     R19 = (R19 >= 0) .* R19; % can only be non negative
 

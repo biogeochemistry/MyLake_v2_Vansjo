@@ -68,17 +68,17 @@ inflowDIC = zero_input; %dummy
 inflowO = zero_input; %dummy
 InflowNO3 = zero_input;
 InflowNH4 = zero_input;
-InflowSO4 = zero_input + 100;
+InflowSO4 = zero_input;
 InflowFe2 = zero_input;
 InflowCa2 = zero_input;
 InflowpH = zero_input;
 InflowCH4 = zero_input;
-InflowFe3 = zero_input + 100;
-InflowAl3 = zero_input + 100;
+InflowFe3 = New_Reach{1,2}.*liter_to_cube * 0.03;
+InflowAl3 = New_Reach{1,2}.*liter_to_cube * 0.06;
 InflowSiO4 = zero_input;
 InflowSiO2 = zero_input;
 Inflowdiatom = zero_input;
-InflowPOC = zero_input + 100;
+InflowPOC = New_Reach{1,2}.*liter_to_cube * 0.042 / 200; % 200 is C/P ratio because POC is measured in P content.
 
 
 
