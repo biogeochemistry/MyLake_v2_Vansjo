@@ -116,7 +116,7 @@ end
 %# ############ This is Vansjø Storefj ##############
 
 parafile=lake_par_file;
-initfile='IO/store_init.txt';
+initfile='IO/mylake_initial_concentrations.txt';
 
 
 if use_INCA == 0
