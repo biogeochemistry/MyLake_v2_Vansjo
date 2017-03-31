@@ -870,8 +870,8 @@ for i = 1:length(tt)
 
 
             %== P-partitioning in water==
-            [Pz, trash]=Ppart(Sz./rho_sed,TIPz,Psat_L,Fmax_L,rho_sed,Fstable);
-            PPz=TIPz-Pz;
+            % [Pz, trash]=Ppart(Sz./rho_sed,TIPz,Psat_L,Fmax_L,rho_sed,Fstable);
+            % PPz=TIPz-Pz;
 
             Cz=IOflow_v11(dz, zz, Vz, Cz, lvlD, Iflw, Iflw_C); %Chlorophyll (group 2)
             Chlz=IOflow_v11(dz, zz, Vz, Chlz, lvlD, Iflw, Iflw_Chl); %Chlorophyll (group 1)
@@ -1228,8 +1228,8 @@ for i = 1:length(tt)
 
     %== P-partitioning in water==
     TIPz=Pz + PPz; % Total inorg. phosphorus (excl. Chla and DOP) in the water column (mg m-3)
-    [Pz, trash]=Ppart(Sz./rho_sed,TIPz,Psat_L,Fmax_L,rho_sed,Fstable);
-    PPz=TIPz-Pz;
+    % [Pz, trash]=Ppart(Sz./rho_sed,TIPz,Psat_L,Fmax_L,rho_sed,Fstable);
+    % PPz=TIPz-Pz;
 
     %DIC-partitioning in water
 
@@ -2138,7 +2138,7 @@ function [dcdt] = rates(C, dt)
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R10d - dfloc;% DOCz
     dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx2_wc*R2c + Cx2_wc*R2d) + R9 - Ny1_wc * (R_dChl_growth + R_dCz_growth); % NO3z
-    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx2_wc*R3c + Cx2_wc*R3d) - 2*R7  + R8 - R16a ; % Fe3z
+    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx2_wc*R3c + Cx2_wc*R3d) - 2*R7  + R8 ; % Fe3z
     dcdt(:,6)  = - 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx2_wc*R5c + Cx2_wc*R5d) + R6 ; % SO4z
     dcdt(:,7)  =  (Ny1_wc * Ra + Ny1_wc * Rb + Ny2_wc * Rc + Ny2_wc * Rd) - R9 ;% NH4z
     dcdt(:,8)  = 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx2_wc*R3c + Cx2_wc*R3d) + 2*R7 - R8 + R14b - R14a; % Fe2z
