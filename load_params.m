@@ -33,10 +33,10 @@ lake_params = {
     3.30E-07, 'S_res_epi',     % 3     Particle resuspension mass transfer coefficient, epilimnion (m day-1, dry)
     3.30E-08, 'S_res_hypo',    % 4     Particle resuspension mass transfer coefficient, hypolimnion (m day-1, dry)
     0.03, 'H_sed',             % 5     height of active sediment layer (m, wet mass)
-    15, 'Psat_L',              % 6     Half saturation parameter for Langmuir isotherm
-    30, 'Fmax_L',              % 7     Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
-    0.1, 'w_s',                % 8     settling velocity for S (m day-1)
-    0.02, 'w_chl',             % 9     settling velocity for Chl a (m day-1)
+    15, 'Psat_L',              % 6     NOT USED: Half saturation parameter for Langmuir isotherm
+    30, 'Fmax_L',              % 7     NOT USED: Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
+    0.05, 'w_s',               % 8     settling velocity for S (m day-1)
+    0.01, 'w_chl',             % 9     settling velocity for Chl a (m day-1)
     1, 'Y_cp',                 % 10    yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   1/55*112/1 = 1
     0.2, 'm_twty',             % 11    loss rate (1/day) at 20 deg C
     1.5, 'g_twty',             % 12    specific growth rate (1/day) at 20 deg C
@@ -45,7 +45,7 @@ lake_params = {
     0.2, 'P_half',             % 15    Half saturation growth P level (mg/m3)
     3.00E-05, 'PAR_sat_2',     % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
     0.015, 'beta_chl_2',       % 17    Optical cross_section of chlorophyll (m2 mg-1)
-    0.02, 'w_chl_2',           % 18    Settling velocity for Chl a (m day-1)
+    0.01, 'w_chl_2',           % 18    Settling velocity for Chl a (m day-1)
     0.2, 'm_twty_2',           % 19    Loss rate (1/day) at 20 deg C
     1.5, 'g_twty_2',           % 20    Specific growth rate (1/day) at 20 deg C
     0.2, 'P_half_2',           % 21    Half saturation growth P level (mg/m3)
