@@ -1,7 +1,7 @@
 % Plots TOC, temperature and oxygen MyLake output vs observations
 
 tlims=[datenum(MyLake_results.m_start):datenum(MyLake_results.m_stop)]';
-zinx=find(MyLake_results.zz<4.1);
+zinx=find(MyLake_results.z<4.1);
 
 TP_mod = mean((MyLake_results.Pzt(zinx,:)+MyLake_results.PPzt(zinx,:)+MyLake_results.DOPzt(zinx,:))', 2); % +MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:)
 
@@ -36,7 +36,7 @@ ax.XTick = xData;
 datetick(ax, 'x','mmm-yy','keepticks')
 
 ylabel('mg P / m^3')
-legend('TP')
+legend('TIP + DOP (no Chl)')
 
 
 subplot(5,1,2)

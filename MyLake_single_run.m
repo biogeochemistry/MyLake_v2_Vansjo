@@ -157,6 +157,7 @@ end
 disp('Saving sediments profiles for the initial concentrations for the next run');
 Sediment_save_result_for_init_conc
 MyLake_save_result_for_init_conc
+save('IO/MyLakeResults.mat', 'MyLake_results', 'Sediment_results')
 disp('Finished at:')
 disp(datetime('now'));
 toc

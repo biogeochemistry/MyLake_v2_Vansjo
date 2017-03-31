@@ -49,7 +49,7 @@ m_stop=[2011, 12, 31]; %
 
 [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
 
-zinx=find(MyLake_results.zz<4);
+zinx=find(MyLake_results.z<4);
 TP_mod = mean((MyLake_results.Pzt(zinx,:)+MyLake_results.PPzt(zinx,:)+MyLake_results.DOPzt(zinx,:))', 2); % + +MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:)
 Chl_mod = mean((MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:))', 2);
 Pzt_mod = mean((MyLake_results.Pzt(zinx,:))', 2);
