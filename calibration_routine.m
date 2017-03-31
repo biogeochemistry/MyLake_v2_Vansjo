@@ -38,7 +38,7 @@ lake_params{49-7} = x(6);  % 19    Loss rate (1/day) at 20 deg C
 lake_params{50-7} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
 lake_params{51-7} = x(8);  % 21    Half saturation growth P level (mg/m3)
 lake_params{38-7} = x(9);  %   settling velocity for S (m day-1)
-sediment_params{22} = x(10);  % 38    Q10 for reactions of respiration
+sediment_params{22} = x(10);  % 38    R16 sorption of P on Fe k
 
 
 
