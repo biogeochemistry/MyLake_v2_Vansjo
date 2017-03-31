@@ -22,7 +22,7 @@ lake_params = {
     0, 'I_scT',                % 17    scaling coefficient for inflow temperature (-)
     1, 'I_scC',                % 18    scaling factor for inflow concentration of C (-)
     1, 'I_scS',                % 19    scaling factor for inflow concentration of S (-)
-    1.1, 'I_scTP',             % 20    scaling factor for inflow concentration of total P (-)
+    1, 'I_scTP',             % 20    scaling factor for inflow concentration of total P (-)
     1, 'I_scDOP',              % 21    scaling factor for inflow concentration of diss. organic P (-)
     1, 'I_scChl',              % 22    scaling factor for inflow concentration of Chl a (-)
     1, 'I_scDOC',              % 23    scaling factor for inflow concentration of DOC  (-)
@@ -33,9 +33,9 @@ lake_params = {
     3.30E-07, 'S_res_epi',     % 3     Particle resuspension mass transfer coefficient, epilimnion (m day-1, dry)
     3.30E-08, 'S_res_hypo',    % 4     Particle resuspension mass transfer coefficient, hypolimnion (m day-1, dry)
     0.03, 'H_sed',             % 5     height of active sediment layer (m, wet mass)
-    2500, 'Psat_L',            % 6     Half saturation parameter for Langmuir isotherm
-    8000, 'Fmax_L',            % 7     Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
-    0.3, 'w_s',                % 8     settling velocity for S (m day-1)
+    15, 'Psat_L',              % 6     Half saturation parameter for Langmuir isotherm
+    30, 'Fmax_L',              % 7     Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
+    0.1, 'w_s',                % 8     settling velocity for S (m day-1)
     0.02, 'w_chl',             % 9     settling velocity for Chl a (m day-1)
     1, 'Y_cp',                 % 10    yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   1/55*112/1 = 1
     0.2, 'm_twty',             % 11    loss rate (1/day) at 20 deg C
@@ -87,13 +87,14 @@ sediment_params = {
     0.2,   'Kin_FeOOH';  % the same as Km
     2000,  'k_amox';
     5000,  'k_Feox';     % Canavan, R. W (2006)
-    % 8.7e1, 'k_Feox'; % Original is too fast for our time steps. This term cause instability in R8 and mass balance for Fe fails
     0.1,   'k_Sdis';
     2500,  'k_Spre';
     3.17,  'k_FeS2pre';
     0.1,   'k_alum';
-    1.35,  'k_pdesorb_a';
-    1.35,  'k_pdesorb_b';
+    % 1.35,  'k_pdesorb_a';
+    300,  'k_pdesorb_a';
+    % 1.35,  'k_pdesorb_b';
+    300,  'k_pdesorb_b';
     6500,  'k_rhom';
     0.1,   'k_tS_Fe';
     9600,  'Ks_FeS';    % Canavan, R. W (2006)

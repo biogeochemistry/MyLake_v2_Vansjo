@@ -1,7 +1,7 @@
 % Plots TOC, temperature and oxygen MyLake output vs observations
 
 tlims=[datenum(MyLake_results.m_start):datenum(MyLake_results.m_stop)]';
-zinx=find(MyLake_results.zz<4);
+zinx=find(MyLake_results.zz<4.1);
 
 TP_mod = mean((MyLake_results.Pzt(zinx,:)+MyLake_results.PPzt(zinx,:)+MyLake_results.DOPzt(zinx,:)+MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:))', 2);
 

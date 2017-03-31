@@ -1,8 +1,11 @@
+% for i=1:100
 tic
+disp('Started at:')
+disp(datetime('now'));
 [lake_params, sediment_params] = load_params();
 
 run_INCA = 0; % 1- MyLake will run INCA, 0- No run
-use_INCA = 1; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
+use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
 
 no_runs = 1; % 26/7/2016 ... did not find no_run so I added it again
 
@@ -35,7 +38,7 @@ for current_run = 1:no_runs
             m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         else
-            m_start=[2000, 1, 1]; %
+            m_start=[2005, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         end
 
@@ -151,5 +154,10 @@ end
 % Nobs(2) = numel(dev2);
 %
 % clear dev1 dev2 Nobs % note: cannot clear within parfor
-
+disp('Saving sediments profiles for the initial concentrations for the next run');
+Sediment_save_result_for_init_conc
+MyLake_save_result_for_init_conc
+disp('Finished at:')
+disp(datetime('now'));
 toc
+% end
