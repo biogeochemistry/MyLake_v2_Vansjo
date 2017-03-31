@@ -4,9 +4,9 @@ format shortEng
 format compact
 % parpool
 % gaoptions = optimoptions('ga','UseParallel',true);
-x0 = [2500; 8000; 0.02; 0.2; 1.5; 0.2; 0.02;  0.2; 1.5; 0.2; 2];
-lb = x0*0.5;
-ub = x0*1.5;
+x0 = [0.02; 0.2; 1.5; 0.2; 0.02;  0.2; 1.5; 0.2; 0.1; 100];
+lb = x0*0.1;
+ub = x0*10;
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
 
@@ -26,20 +26,20 @@ function [res] = opt_fun(x)
 
 
 run_INCA = 0; % 1- MyLake will run INCA, 0- No run
-use_INCA = 1; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
+use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
 
 
-lake_params{36-7} = x(1); % 6     Half saturation parameter for Langmuir isotherm
-lake_params{37-7} = x(2); % 7     Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
-lake_params{39-7} = x(3); % 9     settling velocity for Chl1 a (m day-1)
-lake_params{41-7} = x(4); % 11    loss rate (1/day) at 20 deg C
-lake_params{42-7} = x(5); % 12    specific growth rate (1/day) at 20 deg C
-lake_params{45-7} = x(6); % 15    Half saturation growth P level (mg/m3)
-lake_params{48-7} = x(7); % 18    Settling velocity for Chl2 a (m day-1)
-lake_params{49-7} = x(8);  % 19    Loss rate (1/day) at 20 deg C
-lake_params{50-7} = x(9);  % 20    Specific growth rate (1/day) at 20 deg C
-lake_params{51-7} = x(10);  % 21    Half saturation growth P level (mg/m3)
-lake_params{68-7} = x(11);  % 38    Q10 for reactions of respiration
+lake_params{39-7} = x(1); % 9     settling velocity for Chl1 a (m day-1)
+lake_params{41-7} = x(2); % 11    loss rate (1/day) at 20 deg C
+lake_params{42-7} = x(3); % 12    specific growth rate (1/day) at 20 deg C
+lake_params{45-7} = x(4); % 15    Half saturation growth P level (mg/m3)
+lake_params{48-7} = x(5); % 18    Settling velocity for Chl2 a (m day-1)
+lake_params{49-7} = x(6);  % 19    Loss rate (1/day) at 20 deg C
+lake_params{50-7} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
+lake_params{51-7} = x(8);  % 21    Half saturation growth P level (mg/m3)
+lake_params{38-7} = x(9);  %   settling velocity for S (m day-1)
+sediment_params{22} = x(10);  % 38    Q10 for reactions of respiration
+
 
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
