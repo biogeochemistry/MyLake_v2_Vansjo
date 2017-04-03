@@ -12,21 +12,18 @@ no_runs = 1; % 26/7/2016 ... did not find no_run so I added it again
 big_results = cell(1,no_runs);  % collects the results
 big_inputs = cell(1,no_runs);   % collects the inputs
 
+x = [0.00365275111636845, 0.444888225060776, 6.21096051969837, 1.98304729966760, 0.00423770963447693, 0.585402600080357, 4.17074391909280, 1.84803487767737, 0.0420205265067727, 84.9948291324757, 10.8648610244860];
 
-% lake_params{36-7} =2.5196*1e3; %  2500    Half saturation parameter for Langmuir isotherm
-% lake_params{37-7} =7.3827*1e3; %   8000    Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
-% lake_params{39-7} =0.00002*1e3; %   0.02    settling velocity for Chl1 a (m day-1)
-% lake_params{41-7} =0.0001*1e3; %   0.2    loss rate (1/day) at 20 deg C
-% lake_params{42-7} =0.0020*1e3; %   1.5    specific growth rate (1/day) at 20 deg C
-% lake_params{45-7} =0.0002*1e3; %   0.2    Half saturation growth P level (mg/m3)
-% lake_params{48-7} =0.00002*1e3; %   0.02    Settling velocity for Chl2 a (m day-1)
-% lake_params{49-7} =0.0002*1e3;  %    0.2    Loss rate (1/day) at 20 deg C
-% lake_params{50-7} =0.0008*1e3;  %   1.5    Specific growth rate (1/day) at 20 deg C
-% lake_params{51-7} =0.0003*1e3;  %   0.2    Half saturation growth P level (mg/m3)
-% lake_params{68-7} =0.0023*1e3;  %   2];    Q10 for reactions of respiration
-
-
-
+lake_params{39-7} = x(1); % 9     settling velocity for Chl1 a (m day-1)
+lake_params{41-7} = x(2); % 11    loss rate (1/day) at 20 deg C
+lake_params{42-7} = x(3); % 12    specific growth rate (1/day) at 20 deg C
+lake_params{45-7} = x(4); % 15    Half saturation growth P level (mg/m3)
+lake_params{48-7} = x(5); % 18    Settling velocity for Chl2 a (m day-1)
+lake_params{49-7} = x(6);  % 19    Loss rate (1/day) at 20 deg C
+lake_params{50-7} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
+lake_params{51-7} = x(8);  % 21    Half saturation growth P level (mg/m3)
+lake_params{38-7} = x(9);  %   settling velocity for S (m day-1)
+sediment_params{22} = x(10);  % 38    R16 sorption of P on Fe k
 
 
 % parfor
@@ -38,7 +35,7 @@ for current_run = 1:no_runs
             m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         else
-            m_start=[2005, 1, 1]; %
+            m_start=[1984, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         end
 
