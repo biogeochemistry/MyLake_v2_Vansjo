@@ -25,23 +25,25 @@ def load_data():
     return MyLake_results, Sediment_results
 
 
-def contour_plot(results, elem, lbl=False, cmap=ListedColormap(sns.color_palette("Blues", 51))):
+def contour_plot(results, elem, lbl=False, years_ago=1, cmap=ListedColormap(sns.color_palette("Blues", 51))):
     plt.figure(figsize=(6, 4), dpi=192)
-    X, Y = np.meshgrid(results['days'][0, 0][0][-365:], -results['z'][0, 0])
-    z = results[elem][0, 0][:, -365:]
+    start = -365 * years_ago
+    end = -365 * (years_ago - 1) - 1
+    X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 366, -results['z'][0, 0])
+    z = results[elem][0, 0][:, start:end]
     CS = plt.contourf(X, Y, z, 51, cmap=cmap, origin='lower')
 #     plt.clabel(CS, inline=1, fontsize=10, colors='w')
     cbar = plt.colorbar(CS)
 
     if not results['O2zt'][0, 0][:, 0].shape[0] == 256:
-        ice_thickness = results['His'][0, 0][0, -365:]
-        plt.fill_between(results['days'][0, 0][0][-365:], 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
+        ice_thickness = results['His'][0, 0][0, start:end]
+        plt.fill_between(results['days'][0, 0][0][start:end] - 366, 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
 
     plt.ylabel('Depth, [m]')
     ax = plt.gca()
     ax.ticklabel_format(useOffset=False)
     ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b'))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
     if lbl:
         cbar.ax.set_ylabel(lbl)
     else:
@@ -88,10 +90,25 @@ def plot_fit(MyLake_results):
     axes[3].plot(-366 + Part[:, 0], Part[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
 
     axes[3].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
-    axes[3].xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+    axes[3].xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
     axes[1].set_xlim([732313 - 366, 735234 - 366 * 2])
     for ax in axes:
         ax.grid(linestyle='-', linewidth=0.2)
         ax.set_ylim([0, 50])
         ax.set_ylabel(r'$mg / m^3$')
         ax.legend(loc=1)
+
+
+def plot_flux(results, elem, lbl, years_ago=1):
+    plt.figure(figsize=(6, 4), dpi=192)
+    start = -365 * years_ago
+    end = -365 * (years_ago - 1) - 1
+    plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_SWI_fluxes'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3)
+    ax = plt.gca()
+    ax.set_ylabel(lbl)
+    ax.ticklabel_format(useOffset=False)
+    ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
+    ax.set_xlim([results['days'][0, 0][0][start:end][0] - 366, results['days'][0, 0][0][start:end][-1] - 366])
+    plt.tight_layout()
+    plt.show()
