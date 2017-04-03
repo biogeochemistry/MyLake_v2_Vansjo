@@ -1530,8 +1530,8 @@ for i = 1:length(tt)
     diatomzt(:,i) = diatomz;
     POCzt(:,i) = POCz;
 
-    H_sw_zt(:,i) = H_sw_z;
-    H_sw_zt_2(:,i) = H_sw_z_2;
+    H_sw_zt(:,i) = diff([-H_sw_z; 0]);;
+    H_sw_zt_2(:,i) = diff([-H_sw_z_2; 0]);;
     PAR_zt(:,i) = PAR_z;
 
     % O2diffzt(:,i) = O2_diff;
@@ -1780,8 +1780,8 @@ MyLake_results.P3zt_sed = P3zt_sed;
 MyLake_results.P3zt_sed_sc = P3zt_sed_sc;
 MyLake_results.His = His;
 MyLake_results.MixStat = MixStat;
-MyLake_results.H_sw_zt = diff([-H_sw_z; 0]);
-MyLake_results.H_sw_zt_2 = diff([-H_sw_z_2; 0]);
+MyLake_results.H_sw_zt = H_sw_zt;
+MyLake_results.H_sw_zt_2 = H_sw_zt_2;
 MyLake_results.PAR_zt = PAR_zt;
 MyLake_results.CDOMzt = CDOMzt;
 MyLake_results.DOCzt1 = DOCzt1;
