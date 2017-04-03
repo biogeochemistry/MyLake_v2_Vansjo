@@ -291,6 +291,11 @@ SiO2zt  = zeros(Nz,length(tt));
 diatomzt  = zeros(Nz,length(tt));
 POCzt  = zeros(Nz,length(tt));
 
+
+H_sw_zt  = zeros(Nz,length(tt));
+H_sw_zt_2  = zeros(Nz,length(tt));
+PAR_zt  = zeros(Nz,length(tt));
+
 O2_diffzt = zeros(Nz,length(tt));
 O2_sat_relt = zeros(Nz,length(tt));
 O2_sat_abst = zeros(Nz,length(tt));
@@ -1525,6 +1530,10 @@ for i = 1:length(tt)
     diatomzt(:,i) = diatomz;
     POCzt(:,i) = POCz;
 
+    H_sw_zt(:,i) = H_sw_z;
+    H_sw_zt_2(:,i) = H_sw_z_2;
+    PAR_zt(:,i) = PAR_z;
+
     % O2diffzt(:,i) = O2_diff;
     CO2zt(:,i) = CO2z;
     O2_sat_relt(:,i) = O2_sat_rel;
@@ -1771,6 +1780,9 @@ MyLake_results.P3zt_sed = P3zt_sed;
 MyLake_results.P3zt_sed_sc = P3zt_sed_sc;
 MyLake_results.His = His;
 MyLake_results.MixStat = MixStat;
+MyLake_results.H_sw_zt = diff([-H_sw_z; 0]);
+MyLake_results.H_sw_zt_2 = diff([-H_sw_z_2; 0]);
+MyLake_results.PAR_zt = PAR_zt;
 MyLake_results.CDOMzt = CDOMzt;
 MyLake_results.DOCzt1 = DOCzt1;
 MyLake_results.DOCzt2 = DOCzt2;
