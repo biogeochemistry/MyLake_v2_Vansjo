@@ -13,6 +13,10 @@ sns.set_style("ticks")
 
 import scipy.io as sio
 
+from matplotlib import rc
+rc('font', **{'family': 'sans-serif', 'sans-serif': ['Helvetica']})
+rc('text', usetex=True)
+
 
 def load_data():
     mat_contents = sio.loadmat('../IO/MyLakeResults.mat')
@@ -89,5 +93,5 @@ def plot_fit(MyLake_results):
     for ax in axes:
         ax.grid(linestyle='-', linewidth=0.2)
         ax.set_ylim([0, 50])
-        ax.set_ylabel('mg / m3')
+        ax.set_ylabel(r'$mg / m^3$')
         ax.legend(loc=1)
