@@ -85,7 +85,7 @@ sediment_params = {
     0.01,  'Kin_NO3';    % the same as Km
     0.2,   'Kin_FeOH3';  % the same as Km
     0.2,   'Kin_FeOOH';  % the same as Km
-    2000,  'k_amox';
+    2,     'k_amox';     % Canavan, R. W (2006)
     5000,  'k_Feox';     % Canavan, R. W (2006)
     0.1,   'k_Sdis';
     2500,  'k_Spre';
