@@ -30,7 +30,9 @@ def contour_plot(results, elem, lbl=False, years_ago=1, cmap=ListedColormap(sns.
     start = -365 * years_ago
     end = -365 * (years_ago - 1) - 1
     X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 366, -results['z'][0, 0])
-    z = results[elem][0, 0][:, start:end]
+    z = 0
+    for e in elem:
+        z += results[e][0, 0][:, start:end]
     CS = plt.contourf(X, Y, z, 51, cmap=cmap, origin='lower')
 #     plt.clabel(CS, inline=1, fontsize=10, colors='w')
     cbar = plt.colorbar(CS)
@@ -53,8 +55,9 @@ def contour_plot(results, elem, lbl=False, years_ago=1, cmap=ListedColormap(sns.
 
 def plot_profile(results, elem):
     plt.figure(figsize=(6, 4), dpi=192)
-    plt.plot(results[elem][0, 0][:, -1], -results['z'][0, 0], sns.xkcd_rgb["denim blue"], lw=3, label=elem)
-    plt.xlabel(elem)
+    for e in elem:
+        plt.plot(results[e][0, 0][:, -1], -results['z'][0, 0], lw=3, label=e)
+    plt.xlabel('mmol/L')
     plt.ylabel('Depth, m')
     ax = plt.gca()
     ax.ticklabel_format(useOffset=False)
@@ -67,7 +70,7 @@ def plot_profile(results, elem):
 def plot_fit(MyLake_results):
     fig, axes = plt.subplots(4, 1, sharex='col', figsize=(8, 5), dpi=192)
 
-    inx = sum(MyLake_results['z'][0, 0] < 4.1)[0]
+    inx = sum(MyLake_results['z'][0, 0] < 4)[0]
     TOTP = np.mean(MyLake_results['Pzt'][0, 0][0:inx, :], axis=0) + \
         np.mean(MyLake_results['PPzt'][0, 0][0:inx, :], axis=0) + \
         np.mean(MyLake_results['DOPzt'][0, 0][0:inx, :], axis=0) + \
