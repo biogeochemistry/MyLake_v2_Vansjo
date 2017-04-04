@@ -57,11 +57,9 @@ end
 
 function solid_fx = solid_bc(C, w_s, fi)
     % C   - concentration in WC [mg m-3]
-    % M_C - molar mass    [mg mol-1]
     % w_s - settling velocity of solids [cm year-1]
-    % fi  - porosity [-]
     % solid_fx - flux of solid at SWI [umol cm-2 yr-1]
-    solid_fx = (1 - fi(1)) * w_s  * C(end);
+    solid_fx = w_s  * C(end);
 end
 
 
