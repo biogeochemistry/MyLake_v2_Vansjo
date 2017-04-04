@@ -73,16 +73,17 @@ def plot_fit(MyLake_results):
         np.mean(MyLake_results['DOPzt'][0, 0][0:inx, :], axis=0) + \
         np.mean(MyLake_results['DOCzt'][0, 0][0:inx, :], axis=0) + \
         np.mean(MyLake_results['Chlzt'][0, 0][0:inx, :], axis=0) + \
-        np.mean(MyLake_results['Czt'][0, 0][0:inx, :], axis=0)
+        np.mean(MyLake_results['Czt'][0, 0][0:inx, :], axis=0)  + \
+        np.mean(MyLake_results['POCzt'][0, 0][0:inx, :], axis=0)
     Chl = np.mean(MyLake_results['Czt'][0, 0][0:inx, :], axis=0) + np.mean(MyLake_results['Chlzt']
                                                                            [0, 0][0:inx, :], axis=0)
     PO4 = np.mean(MyLake_results['Pzt'][0, 0][0:inx, :], axis=0)
     Part = np.mean(MyLake_results['PPzt'][0, 0][0:inx, :], axis=0) + np.mean(MyLake_results['POCzt'][0, 0][0:inx, :], axis=0)
 
-    axes[0].plot(-366 + MyLake_results['days'][0, 0][0], TOTP, c=sns.xkcd_rgb["denim blue"], lw=3, label='TP')
+    axes[0].plot(-366 + MyLake_results['days'][0, 0][0], TOTP, c=sns.xkcd_rgb["denim blue"], lw=3, label='Total P')
     axes[1].plot(-366 + MyLake_results['days'][0, 0][0], Chl, c=sns.xkcd_rgb["denim blue"], lw=3, label='Chl-a')
     axes[2].plot(-366 + MyLake_results['days'][0, 0][0], PO4, c=sns.xkcd_rgb["denim blue"], lw=3, label='PO_4')
-    axes[3].plot(-366 + MyLake_results['days'][0, 0][0], Part, c=sns.xkcd_rgb["denim blue"], lw=3, label='Part')
+    axes[3].plot(-366 + MyLake_results['days'][0, 0][0], Part, c=sns.xkcd_rgb["denim blue"], lw=3, label='Solid P')
 
     TOTP = np.loadtxt('../obs/store_obs/TOTP.dat', delimiter=',')
     Chl = np.loadtxt('../obs/store_obs/Cha_aquaM_march_2017.dat', delimiter=',')

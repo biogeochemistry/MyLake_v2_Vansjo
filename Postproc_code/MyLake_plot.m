@@ -3,7 +3,7 @@
 tlims=[datenum(MyLake_results.m_start):datenum(MyLake_results.m_stop)]';
 zinx=find(MyLake_results.z<4.1);
 
-TP_mod = mean((MyLake_results.Pzt(zinx,:)+MyLake_results.PPzt(zinx,:) + MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:)+MyLake_results.DOPzt(zinx,:) +MyLake_results.DOCzt(zinx,:))', 2);
+TP_mod = mean((MyLake_results.Pzt(zinx,:)+MyLake_results.PPzt(zinx,:) + MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:)+MyLake_results.DOPzt(zinx,:) +MyLake_results.DOCzt(zinx,:)+MyLake_results.POCzt(zinx,:))', 2);
 
 Chl_mod = mean((MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:))', 2);
 Pzt_mod = mean((MyLake_results.Pzt(zinx,:))', 2);
