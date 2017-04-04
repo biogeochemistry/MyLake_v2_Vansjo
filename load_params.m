@@ -105,7 +105,7 @@ sediment_params = {
     0.3134,'k_oms';
     1000,  'k_tsox';   % Canavan, R. W (2006)
     3.3e-3,'k_FeSpre'; % Canavan, R. W (2006)
-    100,    'accel';
+    30,    'accel';
 
     1e-6,   'f_pfe';
     1.35,   'k_pdesorb_c';
