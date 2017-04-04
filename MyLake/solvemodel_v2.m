@@ -2151,6 +2151,7 @@ function [dcdt] = rates(C, dt)
     R17a = 0; % No FeOOH in WC
     R17b = 0; % No FeOOH in WC
     R18a = k_pdesorb_c_wc_q10 .* Pz .* Al3z; % NOTE: No separate pool for sorbed P on aluminum in WC
+    R18a = 0; % NOTE: No separate pool for sorbed P on aluminum in WC
     R18b = 0; % NOTE: the rate is unknown
     R19  = k_apa_wc_q10 .* (Pz - kapa_wc); % NOTE: no Ca3PO42 pool in WC
     R19  = (R19 >= 0) .* R19;
