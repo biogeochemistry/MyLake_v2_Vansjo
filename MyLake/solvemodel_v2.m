@@ -2093,8 +2093,8 @@ function [dcdt] = rates(C, dt)
 
     R1a =  0; % k_OM_wc_q10  .* Chlz .* f_O2 * accel_wc;
     R1b =  0; % k_OM_wc_q10  .* Cz .* f_O2 * accel_wc;
-    R1c =  k_OM_wc_q10  .* DOPz .* f_O2;
-    R1d =  k_OMb_wc_q10 .* DOCz .* f_O2;
+    R1c =  k_OM_wc_q10  .* DOPz .* f_O2 .* accel_wc;
+    R1d =  k_OMb_wc_q10 .* DOCz .* f_O2 .* accel_wc;
 
     R2a =  0; % k_OM_wc_q10  .* Chlz .* f_NO3;
     R2b =  0; % k_OM_wc_q10  .* Cz .* f_NO3;
