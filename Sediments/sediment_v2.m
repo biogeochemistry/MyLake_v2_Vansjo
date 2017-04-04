@@ -708,15 +708,16 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
 
 % Estimate flux
   sediment_SWI_fluxes.Ox = top_sediment_diffusion_flux(Ox(:,end), D_O2, 31998, dx, fi);;
-  sediment_SWI_fluxes.OM1 = sediment_bc.OM1_fx;
-  sediment_SWI_fluxes.OM2 = sediment_bc.OM2_fx;
+  sediment_SWI_fluxes.OM1 = -sediment_bc.OM1_fx;
+  sediment_SWI_fluxes.OM2 = -sediment_bc.OM2_fx;
   sediment_SWI_fluxes.PO4 = top_sediment_diffusion_flux(PO4(:,end),D_PO4, 30973.762, dx, fi);
   sediment_SWI_fluxes.NO3 = top_sediment_diffusion_flux(NO3(:,end),D_NO3, 62004, dx, fi);
-  sediment_SWI_fluxes.FeOH3 = sediment_bc.FeOH3_fx;
+  sediment_SWI_fluxes.FeOH3 = -sediment_bc.FeOH3_fx;
   sediment_SWI_fluxes.Fe2 = top_sediment_diffusion_flux(Fe2(:,end),D_Fe2, 55845, dx, fi);
   sediment_SWI_fluxes.NH4 = top_sediment_diffusion_flux(NH4(:,end),D_NH4, 18038, dx, fi);
-  sediment_SWI_fluxes.AlOH3 = sediment_bc.AlOH3_fx;
-  sediment_SWI_fluxes.PO4adsa = sediment_bc.PO4adsa_fx;
+  sediment_SWI_fluxes.AlOH3 = -sediment_bc.AlOH3_fx;
+  sediment_SWI_fluxes.PO4adsa = -sediment_bc.PO4adsa_fx;
+  sediment_SWI_fluxes.PO4adsb = -sediment_bc.PO4adsb_fx;
   sediment_SWI_fluxes.SO4 = top_sediment_diffusion_flux(SO4(:,end),D_SO4, 96062, dx, fi);
   sediment_SWI_fluxes.DOM1 = top_sediment_diffusion_flux(DOM1(:,end),D_DOM1, 30973.762, dx, fi);
   sediment_SWI_fluxes.DOM2 = top_sediment_diffusion_flux(DOM2(:,end),D_DOM2, 30973.762, dx, fi);
