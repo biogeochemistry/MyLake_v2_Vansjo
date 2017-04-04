@@ -68,14 +68,18 @@ def plot_fit(MyLake_results):
     fig, axes = plt.subplots(4, 1, sharex='col', figsize=(8, 5), dpi=192)
 
     inx = sum(MyLake_results['z'][0, 0] < 4.1)[0]
-    TOTP = np.mean(MyLake_results['Pzt'][0, 0][0:inx, :], axis=0) + np.mean(MyLake_results['PPzt']
-                                                                            [0, 0][0:inx, :], axis=0) + np.mean(MyLake_results['DOPzt'][0, 0][0:inx, :], axis=0)
+    TOTP = np.mean(MyLake_results['Pzt'][0, 0][0:inx, :], axis=0) + \
+        np.mean(MyLake_results['PPzt'][0, 0][0:inx, :], axis=0) + \
+        np.mean(MyLake_results['DOPzt'][0, 0][0:inx, :], axis=0) + \
+        np.mean(MyLake_results['DOCzt'][0, 0][0:inx, :], axis=0) + \
+        np.mean(MyLake_results['Chlzt'][0, 0][0:inx, :], axis=0) + \
+        np.mean(MyLake_results['Czt'][0, 0][0:inx, :], axis=0)
     Chl = np.mean(MyLake_results['Czt'][0, 0][0:inx, :], axis=0) + np.mean(MyLake_results['Chlzt']
                                                                            [0, 0][0:inx, :], axis=0)
     PO4 = np.mean(MyLake_results['Pzt'][0, 0][0:inx, :], axis=0)
     Part = np.mean(MyLake_results['PPzt'][0, 0][0:inx, :], axis=0) + np.mean(MyLake_results['POCzt'][0, 0][0:inx, :], axis=0)
 
-    axes[0].plot(-366 + MyLake_results['days'][0, 0][0], TOTP, c=sns.xkcd_rgb["denim blue"], lw=3, label='TIP + DOP (no Chl)')
+    axes[0].plot(-366 + MyLake_results['days'][0, 0][0], TOTP, c=sns.xkcd_rgb["denim blue"], lw=3, label='TP')
     axes[1].plot(-366 + MyLake_results['days'][0, 0][0], Chl, c=sns.xkcd_rgb["denim blue"], lw=3, label='Chl-a')
     axes[2].plot(-366 + MyLake_results['days'][0, 0][0], PO4, c=sns.xkcd_rgb["denim blue"], lw=3, label='PO_4')
     axes[3].plot(-366 + MyLake_results['days'][0, 0][0], Part, c=sns.xkcd_rgb["denim blue"], lw=3, label='Part')
@@ -103,12 +107,18 @@ def plot_flux(results, elem, lbl, years_ago=1):
     plt.figure(figsize=(6, 4), dpi=192)
     start = -365 * years_ago
     end = -365 * (years_ago - 1) - 1
-    plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_SWI_fluxes'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3)
+    plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_SWI_fluxes'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3, label='Diffusive')
+    plt.plot(results['days'][0, 0][0][start:end] - 366, results['Bioirrigation_fx_zt'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["medium green"], lw=3, label='Bioirrigation')
     ax = plt.gca()
     ax.set_ylabel(lbl)
     ax.ticklabel_format(useOffset=False)
     ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
     ax.set_xlim([results['days'][0, 0][0][start:end][0] - 366, results['days'][0, 0][0][start:end][-1] - 366])
+    ax.grid(linestyle='-', linewidth=0.2)
+    ax.legend(loc=1)
+    legend = plt.legend(frameon=1)
+    frame = legend.get_frame()
+    frame.set_facecolor('white')
     plt.tight_layout()
     plt.show()
