@@ -4,7 +4,7 @@ format shortEng
 format compact
 % parpool
 % gaoptions = optimoptions('ga','UseParallel',true);
-x0 = [0.02; 0.2; 1.5; 0.2; 0.02;  0.2; 1.5; 0.2; 0.1; 100; 100];
+x0 = [0.02; 0.2; 1.5; 0.2; 0.02;  0.2; 1.5; 0.2; 0.1; 100; 30];
 lb = x0*0.1;
 ub = x0*10;
 
