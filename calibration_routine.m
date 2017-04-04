@@ -4,7 +4,7 @@ format shortEng
 format compact
 % parpool
 % gaoptions = optimoptions('ga','UseParallel',true);
-x0 = [0.02; 0.2; 1.5; 0.2; 0.02;  0.2; 1.5; 0.2; 0.1; 100];
+x0 = [0.02; 0.2; 1.5; 0.2; 0.02;  0.2; 1.5; 0.2; 0.1; 100; 100];
 lb = x0*0.1;
 ub = x0*10;
 
@@ -38,7 +38,8 @@ lake_params{49-7} = x(6);  % 19    Loss rate (1/day) at 20 deg C
 lake_params{50-7} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
 lake_params{51-7} = x(8);  % 21    Half saturation growth P level (mg/m3)
 lake_params{38-7} = x(9);  %   settling velocity for S (m day-1)
-sediment_params{22} = x(10);  % 38    R16 sorption of P on Fe k
+sediment_params{22} = x(10);  %    R16 sorption of P on Fe k
+sediment_params{34} = x(11);  %    accel
 
 
 
