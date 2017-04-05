@@ -1,4 +1,4 @@
-% for i=1:100
+for i=1:1000
 tic
 disp('Started at:')
 disp(datetime('now'));
@@ -12,7 +12,12 @@ no_runs = 1; % 26/7/2016 ... did not find no_run so I added it again
 big_results = cell(1,no_runs);  % collects the results
 big_inputs = cell(1,no_runs);   % collects the inputs
 
-x = [0.00365275111636845, 0.444888225060776, 6.21096051969837, 1.98304729966760, 0.00423770963447693, 0.585402600080357, 4.17074391909280, 1.84803487767737, 0.0420205265067727, 84.9948291324757];
+% x = [0.00365275111636845, 0.444888225060776, 6.21096051969837, 1.98304729966760, 0.00423770963447693, 0.585402600080357, 4.17074391909280, 1.84803487767737, 0.0420205265067727, 84.9948291324757, 30];
+
+x = [0.0957, 0.8462, 12.2918, 0.4898, 0.1904, 1.3158, 9.7200, 1.4780, 0.2006, 1.0220, 40.9828];
+% x = [0.0957, 0.8462, 12.2918, 0.4898, 0.1904, 1.3158, 9.7200, 1.4780, 0.5   , 820.0220, 40.9828];
+
+% x = [0.0957, 0.8462, 13.8622, 1.7753, 0.1904, 0.5186, 1.9203, 1.2372, 0.0926, 821.0220, 120.7667]; % RMSD 34
 
 lake_params{39-7} = x(1); % 9     settling velocity for Chl1 a (m day-1)
 lake_params{41-7} = x(2); % 11    loss rate (1/day) at 20 deg C
@@ -23,8 +28,9 @@ lake_params{49-7} = x(6);  % 19    Loss rate (1/day) at 20 deg C
 lake_params{50-7} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
 lake_params{51-7} = x(8);  % 21    Half saturation growth P level (mg/m3)
 lake_params{38-7} = x(9);  %   settling velocity for S (m day-1)
+% lake_params{38-7} = 0.2;  %   settling velocity for S (m day-1)
 sediment_params{22} = x(10);  % 38    R16 sorption of P on Fe k
-
+sediment_params{34} = x(11);  %    accel
 
 % parfor
 for current_run = 1:no_runs
@@ -36,7 +42,7 @@ for current_run = 1:no_runs
             m_stop=[2012, 12, 31]; %
         else
             m_start=[2000, 1, 1]; %
-            m_stop=[2008, 12, 31]; %
+            m_stop=[2011, 12, 31]; %
         end
 
     elseif current_run == 2;
@@ -158,4 +164,4 @@ save('IO/MyLakeResults.mat', 'MyLake_results', 'Sediment_results')
 disp('Finished at:')
 disp(datetime('now'));
 toc
-% end
+end
