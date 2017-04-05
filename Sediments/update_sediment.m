@@ -1,5 +1,5 @@
-function [sediment_bc] = convert_wc_to_sediment(MyLake_concentrations, MyLake_params, sediment_params)
-%convert_wc_to_sediment function convert BC values for sediment module (different Units)
+function [sediment_bc] = update_sediment(MyLake_concentrations, MyLake_params, sediment_params)
+%update_sedimets function convert BC values for sediment module (different Units)
     %   [Water-column units] ------>  [Sediments units]
     % for dissolved species - concentration BC
     % for solid - Neumann (flux) BC
@@ -59,7 +59,7 @@ function solid_fx = solid_bc(C, w_s, fi)
     % C   - concentration in WC [mg m-3]
     % w_s - settling velocity of solids [cm year-1]
     % solid_fx - flux of solid at SWI [umol cm-2 yr-1]
-    solid_fx = w_s  * C(end);
+    solid_fx = w_s * (1 - fi(1)) * C(end);
 end
 
 
