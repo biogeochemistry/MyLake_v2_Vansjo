@@ -82,7 +82,7 @@ warning off MATLAB:fzero:UndeterminedSyntax %suppressing a warning message
 global ies80
 
 % fast variable passing
-    global k_OM_wc_q10 k_OMb_wc_q10 k_DOM1_wc k_DOM2_wc Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch
+global k_OM_wc_q10 k_OMb_wc_q10 k_DOM1_wc_q10 k_DOM2_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc k_Feox_wc k_Sdis_wc k_Spre_wc k_alum_wc k_pdesorb_c_wc k_pdesorb_a_wc k_pdesorb_b_wc k_rhom_wc k_tS_Fe_wc Ks_FeS_wc k_Fe_dis_wc k_Fe_pre_wc k_apa_wc kapa_wc k_oms_wc k_tsox_wc k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch
 
 
 tic
@@ -459,8 +459,8 @@ DoM=[]; %initialize
 % ============ water-column module ============
 k_OM_wc          = sediment_params.k_OM  * wc_factor;
 k_OMb_wc         = sediment_params.k_OMb * wc_factor;
-k_DOM1_wc        = sediment_params.k_OMb * wc_factor;
-k_DOM2_wc        = sediment_params.k_OMb * wc_factor;
+k_DOM1_wc        = sediment_params.k_DOM1 * wc_factor;
+k_DOM2_wc        = sediment_params.k_DOM2 * wc_factor;
 Km_O2_wc         = sediment_params.Km_O2;
 Km_NO3_wc        = sediment_params.Km_NO3;
 Km_FeOH3_wc      = sediment_params.Km_FeOH3;
@@ -1305,14 +1305,8 @@ for i = 1:length(tt)
 
         k_OM_wc_q10        = k_OM_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
         k_OMb_wc_q10       = k_OMb_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-        k_tsox_wc_q10      = k_tsox_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-        k_tS_Fe_wc_q10     = k_tS_Fe_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-        k_Feox_wc_q10      = k_Feox_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-        k_amox_wc_q10      = k_amox_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-        k_oms_wc_q10       = k_oms_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-        k_pdesorb_a_wc_q10 = k_pdesorb_a_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-        k_pdesorb_c_wc_q10 = k_pdesorb_c_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-        k_apa_wc_q10       = k_apa_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
+        k_DOM1_wc_q10       = k_DOM1_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
+        k_DOM2_wc_q10       = k_DOM2_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
 
         O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
         Chlz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762);
@@ -1402,7 +1396,7 @@ for i = 1:length(tt)
 
 
         % Preparing units and estimate flux from [WC] ----> [Sediments]
-        sediment_bc = convert_wc_to_sediment(MyLake_concentrations, MyLake_params, sediment_params);
+        sediment_bc = update_sediment(MyLake_concentrations, MyLake_params, sediment_params);
 
         % Running sediment module
         [sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrated_over_depth_fluxes, sediment_concentrations, z_sediment, R_values_sedimentz] = sediment_v2(...
@@ -2023,7 +2017,7 @@ function [dcdt] = rates(C, dt)
 % parameters for water-column chemistry
 % NOTE: the rates are the same as in sediments (per year!! not day) except microbial which are factorized due to lower concertation of bacteria in WC then in sediments. Units are per "year" due to time step is in year units too;
 
-    global k_OM_wc_q10 k_OMb_wc_q10 k_DOM1_wc k_DOM2_wc Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc_q10 k_Feox_wc_q10 k_Sdis_wc_q10 k_Spre_wc_q10 k_alum_wc_q10 k_pdesorb_c_wc_q10 k_pdesorb_a_wc_q10 k_pdesorb_b_wc_q10 k_rhom_wc_q10 k_tS_Fe_wc_q10 Ks_FeS_wc k_Fe_dis_wc_q10 k_Fe_pre_wc_q10 k_apa_wc_q10 kapa_wc k_oms_wc_q10 k_tsox_wc_q10 k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch
+    global k_OM_wc_q10 k_OMb_wc_q10 k_DOM1_wc_q10 k_DOM2_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc k_Feox_wc k_Sdis_wc k_Spre_wc k_alum_wc k_pdesorb_c_wc k_pdesorb_a_wc k_pdesorb_b_wc k_rhom_wc k_tS_Fe_wc Ks_FeS_wc k_Fe_dis_wc k_Fe_pre_wc k_apa_wc kapa_wc k_oms_wc k_tsox_wc k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch
 
     dcdt=zeros(size(C));
     O2z = C(:,1) .* (C(:,1)>0);
@@ -2095,26 +2089,26 @@ function [dcdt] = rates(C, dt)
 
     R1a =  0; % k_OM_wc_q10  .* Chlz .* f_O2 * accel_wc;
     R1b =  0; % k_OM_wc_q10  .* Cz .* f_O2 * accel_wc;
-    R1c =  k_OM_wc_q10  .* DOPz .* f_O2 .* accel_wc;
-    R1d =  k_OMb_wc_q10 .* DOCz .* f_O2 .* accel_wc;
+    R1c =  k_DOM1_wc_q10  .* DOPz .* f_O2 .* accel_wc;
+    R1d =  k_DOM2_wc_q10 .* DOCz .* f_O2 .* accel_wc;
     R1e =  k_OMb_wc_q10 .* POCz .* f_O2 .* accel_wc;
 
     R2a =  0; % k_OM_wc_q10  .* Chlz .* f_NO3;
     R2b =  0; % k_OM_wc_q10  .* Cz .* f_NO3;
-    R2c =  k_OM_wc_q10  .* DOPz .* f_NO3;
-    R2d =  k_OMb_wc_q10 .* DOCz .* f_NO3;
+    R2c =  k_DOM1_wc_q10  .* DOPz .* f_NO3;
+    R2d =  k_DOM2_wc_q10 .* DOCz .* f_NO3;
     R2e =  k_OMb_wc_q10 .* POCz .* f_NO3;
 
     R3a =  0; % k_OM_wc_q10  .* Chlz .* f_FeOH3;
     R3b =  0; % k_OM_wc_q10  .* Cz .* f_FeOH3;
-    R3c =  k_OM_wc_q10  .* DOPz .* f_FeOH3;
-    R3d =  k_OMb_wc_q10 .* DOCz .* f_FeOH3;
+    R3c =  k_DOM1_wc_q10  .* DOPz .* f_FeOH3;
+    R3d =  k_DOM2_wc_q10 .* DOCz .* f_FeOH3;
     R3e =  k_OMb_wc_q10 .* POCz .* f_FeOH3;
 
     R5a =  0; % k_OM_wc_q10  .* Chlz .* f_SO4;
     R5b =  0; % k_OM_wc_q10  .* Cz .* f_SO4;
-    R5c =  k_OM_wc_q10 .* DOPz .* f_SO4;
-    R5d =  k_OMb_wc_q10 .* DOCz .* f_SO4;
+    R5c =  k_DOM1_wc_q10  .* DOPz .* f_SO4;
+    R5d =  k_DOM2_wc_q10 .* DOCz .* f_SO4;
     R5e =  k_OMb_wc_q10 .* POCz .* f_SO4;
 
     Ra  = R1a+R2a+R3a+R5a;
@@ -2127,40 +2121,40 @@ function [dcdt] = rates(C, dt)
     R2  = R2a+R2b+R2c+R2d+R2e;
     R3  = R3a+R3b+R3c+R3d+R3e;
     R5  = R5a+R5b+R5c+R5d+R5e;
-    R6  = k_tsox_wc_q10 .* O2z .* Sum_H2S;
-    R7  = k_tS_Fe_wc_q10 .* Fe3z .* Sum_H2S;
-    R8  = k_Feox_wc_q10 .* Fe2z .* O2z;
+    R6  = k_tsox_wc .* O2z .* Sum_H2S;
+    R7  = k_tS_Fe_wc .* Fe3z .* Sum_H2S;
+    R8  = k_Feox_wc .* Fe2z .* O2z;
     % NOTE: Due to the reaction is too fast and could cause overshooting:
     % we need to make this check if R*dt > Conc of source:
-    R8 = (R8.*dt < Fe2z).*R8 + (R8.*dt > Fe2z).* Fe2z ./ (dt);
+    R8 = (R8.*dt < Fe2z).*R8 + (R8.*dt > Fe2z).* Fe2z ./ (dt) * 0.99;
 
-    % R9  = k_amox_wc_q10 .* O2z ./ (Km_oxao_wc + O2z) .* NH4z ./ (Km_amao_wc + NH4z);   % NOTE: Doesnt work - Highly unstable.
-    R9 = k_amox_wc_q10  .* O2z .* NH4z;
+    % R9  = k_amox_wc .* O2z ./ (Km_oxao_wc + O2z) .* NH4z ./ (Km_amao_wc + NH4z);   % NOTE: Doesnt work - Highly unstable.
+    R9 = k_amox_wc  .* O2z .* NH4z;
 
-    R10a = 0; %k_oms_wc_q10 .* Sum_H2S .* Chlz;
-    R10b = 0; %k_oms_wc_q10 .* Sum_H2S .* Cz;
-    R10c = k_oms_wc_q10 .* Sum_H2S .* DOPz;
-    R10d = k_oms_wc_q10 .* Sum_H2S .* DOCz;
+    R10a = 0; %k_oms_wc .* Sum_H2S .* Chlz;
+    R10b = 0; %k_oms_wc .* Sum_H2S .* Cz;
+    R10c = k_oms_wc .* Sum_H2S .* DOPz;
+    R10d = k_oms_wc .* Sum_H2S .* DOCz;
 
     R12  = 0; % NOTE: no FeS
     R13  = 0; % NOTE: no FeS
     R14a = 0; % NOTE: no FeS
     R14b = 0; % NOTE: no FeS
-    R16a = k_pdesorb_a_wc_q10 .* Fe3z .* Pz;
+    R16a = k_pdesorb_a_wc .* Fe3z .* Pz;
     R16b = f_pfe_wc .* (4 * R3 + 2 * R7);
     R17a = 0; % No FeOOH in WC
     R17b = 0; % No FeOOH in WC
-    R18a = k_pdesorb_c_wc_q10 .* Pz .* Al3z; % NOTE: No separate pool for sorbed P on aluminum in WC
+    R18a = k_pdesorb_c_wc .* Pz .* Al3z; % NOTE: No separate pool for sorbed P on aluminum in WC
     R18a = 0; % NOTE: No separate pool for sorbed P on aluminum in WC
     R18b = 0; % NOTE: the rate is unknown
-    R19  = k_apa_wc_q10 .* (Pz - kapa_wc); % NOTE: no Ca3PO42 pool in WC
+    R19  = k_apa_wc .* (Pz - kapa_wc); % NOTE: no Ca3PO42 pool in WC
     R19  = (R19 >= 0) .* R19;
 
     dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1_wc*R1a + Cx1_wc*R1b + Cx1_wc*R1c + Cx2_wc*R1d+ Cx2_wc*R1e) - 3*R12 + Cx1_wc * R_dO2_Chl; % O2z
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R10d - dfloc;% DOCz
     dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx1_wc*R2c + Cx2_wc*R2d+ Cx2_wc*R2e) + R9 - Ny1_wc * (R_dChl_growth + R_dCz_growth); % NO3z
-    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) - 2*R7  + R8 ; % Fe3z
+    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) - 2*R7  + R8 - R16a + R16b; % Fe3z
     dcdt(:,6)  = - 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx1_wc*R5c + Cx2_wc*R5d+ Cx2_wc*R5e) + R6 ; % SO4z
     dcdt(:,7)  =  (Ny1_wc * Ra + Ny1_wc * Rb + Ny1_wc * Rc + Ny2_wc * Rd+ Ny2_wc * Re) - R9 ;% NH4z
     dcdt(:,8)  = 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) + 2*R7 - R8 + R14b - R14a; % Fe2z
