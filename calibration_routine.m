@@ -5,8 +5,12 @@ format compact
 % parpool
 % gaoptions = optimoptions('ga','UseParallel',true);
 x0 = [0.02; 0.2; 1.5; 0.2; 0.02;  0.2; 1.5; 0.2; 0.1; 100; 30];
-lb = x0*0.1;
-ub = x0*10;
+% lb = x0*0.1;
+% ub = x0*10;
+
+lb = [0.05; 0.1; 1; 0.2; 0.05; 0.1; 1; 0.2; 0.1; 1; 1]
+ub = [0.5; 0.3; 1.5; 2; 0.5; 0.3; 1.5; 2; 1; 1000; 100]
+
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
 
