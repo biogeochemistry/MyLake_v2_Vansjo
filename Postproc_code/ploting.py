@@ -56,13 +56,14 @@ def contour_plot(results, elem, lbl=False, years_ago=1, cmap=ListedColormap(sns.
 def plot_profile(results, elem):
     plt.figure(figsize=(6, 4), dpi=192)
     for e in elem:
-        plt.plot(results[e][0, 0][:, -1], -results['z'][0, 0], lw=3, label=e)
+        plt.plot(results[e][0, 0][1:-1, -1], -results['z'][0, 0][1:-1, -1], lw=3, label=e)
     plt.xlabel('mmol/L')
     plt.ylabel('Depth, m')
     ax = plt.gca()
     ax.ticklabel_format(useOffset=False)
     ax.grid(linestyle='-', linewidth=0.2)
     plt.legend()
+    plt.ylim([-results['z'][0, 0][-1], -results['z'][0, 0][0]])
     plt.tight_layout()
     plt.show()
 
@@ -111,8 +112,12 @@ def plot_flux(results, elem, lbl, years_ago=1):
     plt.figure(figsize=(6, 4), dpi=192)
     start = -365 * years_ago
     end = -365 * (years_ago - 1) - 1
-    plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_SWI_fluxes'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3, label='Diffusive')
-    plt.plot(results['days'][0, 0][0][start:end] - 366, results['Bioirrigation_fx_zt'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["medium green"], lw=3, label='Bioirrigation')
+    try:
+        plt.plot(results['days'][0, 0][0][start:end] - 366, results['Bioirrigation_fx_zt'][0, 0][elem]
+                 [0, 0][0][start:end], sns.xkcd_rgb["medium green"], lw=3, label='Bioirrigation')
+        plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_SWI_fluxes'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3, label='Diffusive')
+    except:
+        plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_SWI_fluxes'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3, label=elem)
     ax = plt.gca()
     ax.set_ylabel(lbl)
     ax.ticklabel_format(useOffset=False)
