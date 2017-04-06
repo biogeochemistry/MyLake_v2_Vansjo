@@ -91,18 +91,20 @@ def plot_fit(MyLake_results):
     TOTP = np.mean(MyLake_results['Pzt'][0, 0][0:inx, :], axis=0) + \
         np.mean(MyLake_results['PPzt'][0, 0][0:inx, :], axis=0) + \
         np.mean(MyLake_results['DOPzt'][0, 0][0:inx, :], axis=0) + \
+        np.mean(MyLake_results['DOCzt'][0, 0][0:inx, :], axis=0) + \
+        np.mean(MyLake_results['POCzt'][0, 0][0:inx, :], axis=0) + \
         np.mean(MyLake_results['Chlzt'][0, 0][0:inx, :], axis=0) + \
         np.mean(MyLake_results['Czt'][0, 0][0:inx, :], axis=0)
     Chl = np.mean(MyLake_results['Czt'][0, 0][0:inx, :], axis=0) + np.mean(MyLake_results['Chlzt']
                                                                            [0, 0][0:inx, :], axis=0)
     PO4 = np.mean(MyLake_results['Pzt'][0, 0][0:inx, :], axis=0)
-    Part = np.mean(MyLake_results['PPzt'][0, 0][0:inx, :], axis=0)
+    Part = np.mean(MyLake_results['PPzt'][0, 0][0:inx, :], axis=0) + np.mean(MyLake_results['POCzt'][0, 0][0:inx, :], axis=0)
 
     axes[0].plot(-366 + MyLake_results['days'][0, 0][0], TOTP, c=sns.xkcd_rgb["denim blue"], lw=3, label='Total P')
     axes[1].plot(-366 + MyLake_results['days'][0, 0][0], Chl, c=sns.xkcd_rgb["denim blue"], lw=3, label='Chl-a')
     axes[2].plot(-366 + MyLake_results['days'][0, 0][0], PO4, c=sns.xkcd_rgb["denim blue"], lw=3, label='PO_4')
     axes[3].plot(-366 + MyLake_results['days'][0, 0][0], Part, c=sns.xkcd_rgb["denim blue"], lw=3, label='Solid P')
-    axes[4].plot(-366 + MyLake_results['days'][0, 0][0], np.mean(MyLake_results['DOPzt'][0, 0][0:inx, :], axis=0), c=sns.xkcd_rgb["denim blue"], lw=3, label='DOP')
+    axes[4].plot(-366 + MyLake_results['days'][0, 0][0], np.mean(MyLake_results['POCzt'][0, 0][0:inx, :], axis=0), c=sns.xkcd_rgb["denim blue"], lw=3, label='DOC')
 
     TOTP = np.loadtxt('../obs/store_obs/TOTP.dat', delimiter=',')
     Chl = np.loadtxt('../obs/store_obs/Cha_aquaM_march_2017.dat', delimiter=',')
@@ -117,7 +119,7 @@ def plot_fit(MyLake_results):
     axes[3].xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
     axes[1].set_xlim([732313 - 366, 735234 - 366 * 2])
 
-    for ax in axes:
+    for ax in axes[:-1]:
         ax.grid(linestyle='-', linewidth=0.2)
         ax.set_ylim([0, 50])
         ax.set_ylabel(r'$mg / m^3$')

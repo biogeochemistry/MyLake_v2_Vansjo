@@ -8,7 +8,7 @@ x0 = [0.02; 0.2; 1.5; 0.2; 0.02;  0.2; 1.5; 0.2; 0.1; 100; 30];
 % lb = x0*0.1;
 % ub = x0*10;
 
-lb = [0.05; 0.1; 1; 0.2; 0.05; 0.1; 1; 0.2; 0.1; 1; 1]
+lb = [0.05; 0.1; 1; 0.2; 0.05; 0.1; 1; 0.2; 0.01; 1; 1]
 ub = [0.5; 0.3; 1.5; 2; 0.5; 0.3; 1.5; 2; 1; 1000; 100]
 
 
@@ -55,10 +55,10 @@ m_stop=[2011, 12, 31]; %
 [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
 
 zinx=find(MyLake_results.z<4);
-TP_mod = mean((MyLake_results.Pzt(zinx,:)+MyLake_results.PPzt(zinx,:) + MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:)+MyLake_results.DOPzt(zinx,:))', 2);
+TP_mod = mean((MyLake_results.Pzt(zinx,:)+MyLake_results.PPzt(zinx,:) + MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:)+MyLake_results.DOPzt(zinx,:)+MyLake_results.POCzt(zinx,:)+MyLake_results.DOCzt(zinx,:))', 2);
 Chl_mod = mean((MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:))', 2);
 Pzt_mod = mean((MyLake_results.Pzt(zinx,:))', 2);
-PPzt_mod = mean((MyLake_results.PPzt(zinx,:))', 2);
+PPzt_mod = mean((MyLake_results.PPzt(zinx,:)+MyLake_results.POCzt(zinx,:))', 2);
 
 load 'obs/store_obs/TOTP.dat' % measured
 % load 'obs/store_obs/Cha.dat' % measured
