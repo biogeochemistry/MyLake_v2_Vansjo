@@ -392,8 +392,6 @@ Cz = C0; % (mg m-3)
 Sz = S0; % (kg m-3)
 Chlz = Chl0;  % (mg m-3)
 DOPz = DOP0;  % (mg m-3)
-Pz = (TP0-DOP0-Chlz-Cz) / 2;
-PPz = (TP0-DOP0-Chlz-Cz) / 2; % (mg m-3) NEW!!!
 DOCz = DOC0;   % (mg m-3)
 DICz = DIC0;   % (mg m-3)
 O2z = O20;   % (mg m-3)
@@ -413,7 +411,8 @@ SiO4z = SiO40;
 SiO2z = SiO20;
 diatomz = diatom0;
 POCz = POC0;
-
+Pz = (TP0-DOP0-DOC0-POC0-Chlz-Cz) / 2;
+PPz = (TP0-DOP0-DOC0-POC0-Chlz-Cz) / 2; % (mg m-3) NEW!!!
 
 
 
@@ -835,7 +834,7 @@ for i = 1:length(tt)
         Iflw_SiO2 = I_scSiO2 * Inflw(i,21);
         Iflw_diatom = I_scdiatom * Inflw(i,22);
         Iflw_POC = Inflw(i,23);
-        Iflw_PP = Iflw_TP - Iflw_DOP - Iflw_Chl- Iflw_Chl;
+        Iflw_PP = Iflw_TP - Iflw_DOP - Iflw_DOC - Iflw_POC - Iflw_Chl- Iflw_Chl;
         Iflw_PP = Iflw_PP .* (Iflw_PP > 0);
 
         %Added suspended solids correction: minimum allowed P bioavailability factor is 0.1
@@ -871,10 +870,10 @@ for i = 1:length(tt)
             DOPz=IOflow_v11(dz, zz, Vz, DOPz, lvlD, Iflw, Iflw_DOP); %Particulate organic P
 
             % TODO: this needs to be moved in the reaction module too.
-            TIPz=Pz + PPz; % Total inorg. phosphorus (excl. Chla and DOP) in the water column (mg m-3)
+            % TIPz=Pz + PPz; % Total inorg. phosphorus (excl. Chla and DOP) in the water column (mg m-3)
 
              %Total inorg. phosphorus (excl. Chla and DOP)
-            TIPz=IOflow_v11(dz, zz, Vz, TIPz, lvlD, Iflw, Iflw_TP-((Iflw_Chl+Iflw_C)./Y_cp)-Iflw_DOP); %NEW!!!
+            % TIPz=IOflow_v11(dz, zz, Vz, TIPz, lvlD, Iflw, Iflw_TP-((Iflw_Chl+Iflw_C)./Y_cp)-Iflw_DOP); %NEW!!!
 
 
             %== P-partitioning in water==
@@ -1236,7 +1235,7 @@ for i = 1:length(tt)
     end %of ice cover module
 
     %== P-partitioning in water==
-    TIPz=Pz + PPz; % Total inorg. phosphorus (excl. Chla and DOP) in the water column (mg m-3)
+    % TIPz=Pz + PPz; % Total inorg. phosphorus (excl. Chla and DOP) in the water column (mg m-3)
     % [Pz, trash]=Ppart(Sz./rho_sed,TIPz,Psat_L,Fmax_L,rho_sed,Fstable);
     % PPz=TIPz-Pz;
 
@@ -2147,7 +2146,7 @@ function [dcdt] = rates(C, dt)
     R13  = 0; % NOTE: no FeS
     R14a = 0; % NOTE: no FeS
     R14b = 0; % NOTE: no FeS
-    R16a = k_pdesorb_a_wc .* Fe3z .* Pz;
+    R16a = k_pdesorb_a_wc .* (Fe3z-PPz) .* Pz;
     R16b = f_pfe_wc .* (4 * R3 + 2 * R7);
     R17a = 0; % No FeOOH in WC
     R17b = 0; % No FeOOH in WC
@@ -2161,7 +2160,7 @@ function [dcdt] = rates(C, dt)
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R10d - dfloc;% DOCz
     dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx1_wc*R2c + Cx2_wc*R2d+ Cx2_wc*R2e) + R9 - Ny1_wc * (R_dChl_growth + R_dCz_growth); % NO3z
-    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) - 2*R7  + R8 - R16a + R16b; % Fe3z
+    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) - 2*R7  + R8; % Fe3z
     dcdt(:,6)  = - 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx1_wc*R5c + Cx2_wc*R5d+ Cx2_wc*R5e) + R6 ; % SO4z
     dcdt(:,7)  =  (Ny1_wc * Ra + Ny1_wc * Rb + Ny1_wc * Rc + Ny2_wc * Rd+ Ny2_wc * Re) - R9 ;% NH4z
     dcdt(:,8)  = 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) + 2*R7 - R8 + R14b - R14a; % Fe2z
