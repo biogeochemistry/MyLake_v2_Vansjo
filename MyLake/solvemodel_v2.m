@@ -834,6 +834,8 @@ for i = 1:length(tt)
         Iflw_SiO2 = I_scSiO2 * Inflw(i,21);
         Iflw_diatom = I_scdiatom * Inflw(i,22);
         Iflw_POC = Inflw(i,23);
+        Iflw_PP = Iflw_TP - Iflw_DOP - Iflw_Chl- Iflw_Chl;
+        Iflw_PP = Iflw_PP .* (Iflw_PP > 0);
 
         %Added suspended solids correction: minimum allowed P bioavailability factor is 0.1
         if any((1-(Iflw_DOP+(Iflw_Chl+Iflw_C)./Y_cp)./Iflw_TP-(Iflw_S*Fstable)./Iflw_TP)<0.1); % NEW!!!!
@@ -893,9 +895,10 @@ for i = 1:length(tt)
             Fe3z=IOflow_v11(dz, zz, Vz, Fe3z, lvlD, Iflw, Iflw_Fe3); %Fe3
             Al3z=IOflow_v11(dz, zz, Vz, Al3z, lvlD, Iflw, Iflw_Al3); %Al3
             SiO4z=IOflow_v11(dz, zz, Vz, SiO4z, lvlD, Iflw, Iflw_SiO4); %SiO4
-            SiO2z=IOflow_v11(dz, zz, Vz, Al3z, lvlD, Iflw, Iflw_SiO2); %SiO2
-            diatomz=IOflow_v11(dz, zz, Vz, SiO4z, lvlD, Iflw, Iflw_diatom); %diatom
-            POCz=IOflow_v11(dz, zz, Vz, SiO4z, lvlD, Iflw, Iflw_POC); %diatom
+            SiO2z=IOflow_v11(dz, zz, Vz, SiO2z, lvlD, Iflw, Iflw_SiO2); %SiO2
+            diatomz=IOflow_v11(dz, zz, Vz, diatomz, lvlD, Iflw, Iflw_diatom); %diatom
+            POCz=IOflow_v11(dz, zz, Vz, POCz, lvlD, Iflw, Iflw_POC); %POC
+            PPz=IOflow_v11(dz, zz, Vz, PPz, lvlD, Iflw, Iflw_PP); %PP
         else
             lvlD=NaN;
         end %if(Iflw>0)
