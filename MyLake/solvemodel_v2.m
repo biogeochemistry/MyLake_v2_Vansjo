@@ -332,6 +332,7 @@ dO2BODt = zeros(Nz,length(tt));    %Oxygen consumption due to BOD (mg m-3))
 dfloc =  zeros(Nz,length(tt));  % floculation rates
 testi1t = zeros(Nz,length(tt));
 testi2t = zeros(Nz,length(tt));testi3t = zeros(Nz,length(tt));
+lvlDzt = zeros(1,length(tt));
 
 % Initial profiles
 
@@ -1531,6 +1532,8 @@ for i = 1:length(tt)
     H_sw_zt_2(:,i) = diff([-H_sw_z_2; 0]);;
     PAR_zt(:,i) = PAR_z;
 
+    lvlDzt(:,i) = lvlD;
+
     % O2diffzt(:,i) = O2_diff;
     CO2zt(:,i) = CO2z;
     O2_sat_relt(:,i) = O2_sat_rel;
@@ -1780,6 +1783,7 @@ MyLake_results.MixStat = MixStat;
 MyLake_results.H_sw_zt = H_sw_zt;
 MyLake_results.H_sw_zt_2 = H_sw_zt_2;
 MyLake_results.PAR_zt = PAR_zt;
+MyLake_results.lvlDzt = lvlDzt;
 MyLake_results.CDOMzt = CDOMzt;
 MyLake_results.DOCzt1 = DOCzt1;
 MyLake_results.DOCzt2 = DOCzt2;

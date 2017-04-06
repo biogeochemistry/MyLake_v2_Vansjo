@@ -68,8 +68,24 @@ def plot_profile(results, elem):
     plt.show()
 
 
+def plot_intime(results, elem):
+    plt.figure(figsize=(6, 4), dpi=192)
+    for e in elem:
+        plt.plot(-366 + results['days'][0, 0][0], results[e][0, 0].T, lw=3, label=e)
+    ax = plt.gca()
+    ax.ticklabel_format(useOffset=False)
+    ax.grid(linestyle='-', linewidth=0.2)
+    plt.legend()
+    plt.tight_layout()
+    ax = plt.gca()
+    ax.ticklabel_format(useOffset=False)
+    ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
+    plt.show()
+
+
 def plot_fit(MyLake_results):
-    fig, axes = plt.subplots(4, 1, sharex='col', figsize=(8, 5), dpi=192)
+    fig, axes = plt.subplots(5, 1, sharex='col', figsize=(8, 5), dpi=192)
 
     inx = sum(MyLake_results['z'][0, 0] < 4)[0]
     TOTP = np.mean(MyLake_results['Pzt'][0, 0][0:inx, :], axis=0) + \
@@ -86,6 +102,7 @@ def plot_fit(MyLake_results):
     axes[1].plot(-366 + MyLake_results['days'][0, 0][0], Chl, c=sns.xkcd_rgb["denim blue"], lw=3, label='Chl-a')
     axes[2].plot(-366 + MyLake_results['days'][0, 0][0], PO4, c=sns.xkcd_rgb["denim blue"], lw=3, label='PO_4')
     axes[3].plot(-366 + MyLake_results['days'][0, 0][0], Part, c=sns.xkcd_rgb["denim blue"], lw=3, label='Solid P')
+    axes[4].plot(-366 + MyLake_results['days'][0, 0][0], np.mean(MyLake_results['DOPzt'][0, 0][0:inx, :], axis=0), c=sns.xkcd_rgb["denim blue"], lw=3, label='DOP')
 
     TOTP = np.loadtxt('../obs/store_obs/TOTP.dat', delimiter=',')
     Chl = np.loadtxt('../obs/store_obs/Cha_aquaM_march_2017.dat', delimiter=',')
@@ -99,6 +116,7 @@ def plot_fit(MyLake_results):
     axes[3].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
     axes[3].xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
     axes[1].set_xlim([732313 - 366, 735234 - 366 * 2])
+
     for ax in axes:
         ax.grid(linestyle='-', linewidth=0.2)
         ax.set_ylim([0, 50])
