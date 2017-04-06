@@ -123,12 +123,12 @@ sediment_params = {
     14.4,   'alfa0';
 
     % OM composition
-    112,    'Cx1';
-    10,     'Ny1';
+    106,    'Cx1';
+    16,     'Ny1';
     1,      'Pz1';
     200,    'Cx2';
     20,     'Ny2';
-    1,      'Pz2';
+    0,      'Pz2';
 
     0.001,  'ts';
     };
