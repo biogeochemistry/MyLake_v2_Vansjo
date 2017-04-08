@@ -19,7 +19,7 @@ lake_params = {
     15, 'lambda_s',            % 14    PAR light attenuation coefficient for snow (m-1)
     0.36, 'F_sed_sld',         % 15    volume fraction of solids in sediment (= 1-porosity)
     1, 'I_scV',                % 16    scaling factor for inflow volume (-)
-    0, 'I_scT',                % 17    scaling coefficient for inflow temperature (-)
+    1, 'I_scT',                % 17    scaling coefficient for inflow temperature (-)
     1, 'I_scC',                % 18    scaling factor for inflow concentration of C (-)
     1, 'I_scS',                % 19    scaling factor for inflow concentration of S (-)
     1, 'I_scTP',             % 20    scaling factor for inflow concentration of total P (-)
