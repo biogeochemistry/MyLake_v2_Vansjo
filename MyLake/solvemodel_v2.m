@@ -411,8 +411,8 @@ SiO4z = SiO40;
 SiO2z = SiO20;
 diatomz = diatom0;
 POCz = POC0;
-Pz = (TP0-DOP0-DOC0-POC0-Chlz-Cz) / 2;
-PPz = (TP0-DOP0-DOC0-POC0-Chlz-Cz) / 2; % (mg m-3) NEW!!!
+Pz = (TP0-DOP0-Chlz-Cz) / 2;
+PPz = (TP0-DOP0-Chlz-Cz) / 2; % (mg m-3) NEW!!!
 
 
 
@@ -834,8 +834,11 @@ for i = 1:length(tt)
         Iflw_SiO2 = I_scSiO2 * Inflw(i,21);
         Iflw_diatom = I_scdiatom * Inflw(i,22);
         Iflw_POC = Inflw(i,23);
-        Iflw_PP = Iflw_TP - Iflw_DOP - Iflw_DOC - Iflw_POC - Iflw_Chl- Iflw_Chl;
-        Iflw_PP = Iflw_PP .* (Iflw_PP > 0);
+        Iflw_Pz = Iflw_TP - Iflw_DOP - Iflw_Chl- Iflw_Chl;
+        % Iflw_PP = (Iflw_TP - Iflw_DOP - Iflw_Chl - Iflw_Chl)/2;
+        % Iflw_Pz = (Iflw_TP - Iflw_DOP - Iflw_Chl - Iflw_Chl)/2;
+        Iflw_PP = 0; Iflw_PP .* (Iflw_PP > 0);
+        Iflw_Pz = Iflw_Pz .* (Iflw_Pz > 0);
 
         %Added suspended solids correction: minimum allowed P bioavailability factor is 0.1
         if any((1-(Iflw_DOP+(Iflw_Chl+Iflw_C)./Y_cp)./Iflw_TP-(Iflw_S*Fstable)./Iflw_TP)<0.1); % NEW!!!!
@@ -899,6 +902,7 @@ for i = 1:length(tt)
             diatomz=IOflow_v11(dz, zz, Vz, diatomz, lvlD, Iflw, Iflw_diatom); %diatom
             POCz=IOflow_v11(dz, zz, Vz, POCz, lvlD, Iflw, Iflw_POC); %POC
             PPz=IOflow_v11(dz, zz, Vz, PPz, lvlD, Iflw, Iflw_PP); %PP
+            Pz=IOflow_v11(dz, zz, Vz, Pz, lvlD, Iflw, Iflw_Pz); %Pz
         else
             lvlD=NaN;
         end %if(Iflw>0)
@@ -1330,6 +1334,8 @@ for i = 1:length(tt)
         Cz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
         Sz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
         POCz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz,  30973.762);
+
+        % [Fe3z, Pz, PPz] = eq_P(Fe3z, Pz, PPz, Kads);
 
         C0 = [O2z, Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, Sz, POCz];
 
@@ -2018,6 +2024,28 @@ function C = convert_mg_per_qubic_m_to_umol_per_qubic_cm(C,M_C)
 function C = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C,M_C)
     C = C.*M_C;
 %end of function
+
+function [Fe3z, Pz, PPz] = eq_P(Fe3z, Pz, PPz, Kads)
+    x0 = [PPz(1), Pz(1)];
+    for i=1:length(Fe3z)
+        Stot(i) = Fe3z(i)+PPz(i);
+        Atot(i) = Pz(i) + PPz(i);
+        f = @(x)p_langmuir(x, Stot(i), Atot(i), Kads);
+
+        options = optimoptions('fsolve','Display','none', 'MaxIterations', 1000);
+        x = fsolve(f,x0, options);
+        PPz(i) = x(1);
+        Pz(i) = x(2);
+        Fe3(i) = Stot(i) - PPz(i);
+        x0=x;
+    end
+
+function F = p_langmuir(x, Stot, Atot, Kads)
+    SA = x(1);
+    A = x(2);
+    F(1) = Stot.*Kads.*A/(1+Kads.*A) - SA;
+    F(2) = A + SA - Atot;
+
 
 function [dcdt] = rates(C, dt)
 % parameters for water-column chemistry
