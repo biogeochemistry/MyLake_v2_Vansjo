@@ -4,7 +4,7 @@ format shortEng
 format compact
 % parpool
 % gaoptions = optimoptions('ga','UseParallel',true);
-x0 = [0.02; 0.2; 1.5; 0.2; 0.02;  0.2; 1.5; 0.2; 0.1; 100; 30];
+x = [245.0402e-003, 193.8201e-003, 1.3948e+000, 700.8806e-003, 76.1493e-003, 121.8722e-003, 1.3160e+000, 363.7310e-003, 77.1076e-003, 443.2972e+000, 34.9491e+000];
 % lb = x0*0.1;
 % ub = x0*10;
 
@@ -68,23 +68,23 @@ load 'obs/store_obs/Part.dat' % measured
 
 
 [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, TOTP(:,1)));
-c_TOTP = RMSE(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
+r_TOTP = RMSE(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
 
 
 [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, Cha_aquaM_march_2017(:,1)));
-c_Chl = RMSE(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
+r_Chl = RMSE(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
 
 
 [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, PO4(:,1)));
-c_PO4 = RMSE(Pzt_mod(loc_sim, 1), PO4(loc_obs, 2));
+r_PO4 = RMSE(Pzt_mod(loc_sim, 1), PO4(loc_obs, 2));
 
 
 [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, Part(:,1)));
-c_PP = RMSE(PPzt_mod(loc_sim, 1), Part(loc_obs, 2));
+r_PP = RMSE(PPzt_mod(loc_sim, 1), Part(loc_obs, 2));
 
 
 x'
-res = sum([c_TOTP, c_Chl, c_PO4, c_PP])
+res = sum([r_TOTP, 2*r_Chl, r_PO4, r_PP])
 
 
 function r = RMSE(y, yhat)
