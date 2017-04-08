@@ -720,7 +720,7 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   sediment_SWI_fluxes.PO4adsb = -sediment_bc.PO4adsb_fx;
   sediment_SWI_fluxes.SO4 = top_sediment_diffusion_flux(SO4(:,end),D_SO4, 96062, dx, fi);
   sediment_SWI_fluxes.DOM1 = top_sediment_diffusion_flux(DOM1(:,end),D_DOM1, 30973.762, dx, fi);
-  sediment_SWI_fluxes.DOM2 = top_sediment_diffusion_flux(DOM2(:,end),D_DOM2, 30973.762, dx, fi);
+  sediment_SWI_fluxes.DOM2 = top_sediment_diffusion_flux(DOM2(:,end),D_DOM2, 12010.7, dx, fi);
 
   sediment_bioirrigation_fluxes.Ox = - top_sediment_rate_to_flux(bioirrigation(Ox(:,end), alfax, fi),31998,dx,m);
   sediment_bioirrigation_fluxes.PO4 = - top_sediment_rate_to_flux(bioirrigation(PO4(:,end), alfax, fi),30973.762,dx,m);
@@ -729,7 +729,7 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   sediment_bioirrigation_fluxes.NH4 = - top_sediment_rate_to_flux(bioirrigation(NH4(:,end), alfax, fi),18038,dx,m);
   sediment_bioirrigation_fluxes.SO4 = - top_sediment_rate_to_flux(bioirrigation(SO4(:,end), alfax, fi),96062,dx,m);
   sediment_bioirrigation_fluxes.DOM1 = - top_sediment_rate_to_flux(bioirrigation(DOM1(:,end), alfax, fi),30973.762,dx,m);
-  sediment_bioirrigation_fluxes.DOM2 = - top_sediment_rate_to_flux(bioirrigation(DOM2(:,end), alfax, fi),30973.762,dx,m);
+  sediment_bioirrigation_fluxes.DOM2 = - top_sediment_rate_to_flux(bioirrigation(DOM2(:,end), alfax, fi),12010.7,dx,m);
 
 
     sediment_concentrations.Oxygen = Ox(:,end);

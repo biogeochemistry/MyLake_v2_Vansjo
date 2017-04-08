@@ -1317,7 +1317,7 @@ for i = 1:length(tt)
 
         O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
         Chlz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762);
-        DOCz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762);
+        DOCz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 12010.7);
         NO3z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(NO3z, 62004);
         Fe3z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe3z, 106867.0); %Fe(OH)3
         SO4z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(SO4z, 96062);
@@ -1333,7 +1333,7 @@ for i = 1:length(tt)
         DOPz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762); %DOPz
         Cz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
         Sz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
-        POCz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz,  30973.762);
+        POCz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz,  12010.7);
 
         % [Fe3z, Pz, PPz] = eq_P(Fe3z, Pz, PPz, Kads);
 
@@ -1343,7 +1343,7 @@ for i = 1:length(tt)
 
         O2z  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,1), 31998.8);
         Chlz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,2), 30973.762);
-        DOCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,3), 30973.762);
+        DOCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,3), 12010.7);
         NO3z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,4), 62004);
         Fe3z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,5), 106867.0); %Fe(OH)3
         SO4z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,6), 96062);
@@ -1359,7 +1359,7 @@ for i = 1:length(tt)
         DOPz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,16), 30973.762); %DOPz
         Cz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,17), 30973.762);
         Sz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,18), 30973.762);
-        POCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,19), 30973.762);
+        POCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,19), 12010.7);
     end
 
 
@@ -1373,8 +1373,8 @@ for i = 1:length(tt)
 
             MyLake_concentrations.Chlz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762);
             MyLake_concentrations.Cz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
-            MyLake_concentrations.POCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz, 30973.762);
-            MyLake_concentrations.DOCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762);
+            MyLake_concentrations.POCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz, 12010.7);
+            MyLake_concentrations.DOCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 12010.7);
             MyLake_concentrations.DOPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762);
             MyLake_concentrations.O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
             MyLake_concentrations.Pz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Pz, 30973.762);
