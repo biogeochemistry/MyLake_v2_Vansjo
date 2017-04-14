@@ -26,6 +26,7 @@ lake_params = {
     1, 'I_scDOP',              % 21    scaling factor for inflow concentration of diss. organic P (-)
     1, 'I_scChl',              % 22    scaling factor for inflow concentration of Chl a (-)
     1, 'I_scDOC',              % 23    scaling factor for inflow concentration of DOC  (-)
+    1, 'I_scPOC',              % 23    scaling factor for inflow concentration of POC  (-)
 
     % BioPar
     2.5, 'swa_b0',             % 1     non-PAR light attenuation coeff. (m-1)
