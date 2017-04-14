@@ -149,9 +149,11 @@ I_scTP = Phys_par(20); %scaling factor for inflow concentration of total P (-)
 I_scDOP = Phys_par(21); %scaling factor for inflow concentration of diss. organic P (-)
 I_scChl = Phys_par(22); %scaling factor for inflow concentration of Chl a (-)
 I_scDOC = Phys_par(23); %scaling factor for inflow concentration of DOC  (-)
-I_scDIC = Bio_par(32);   %Scaling factor for inflow concentration of DOC  (-)
-I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scPOC = Phys_par(24); %scaling factor for inflow concentration of POC  (-)
 
+I_scDIC = Bio_par(32);   %Scaling factor for inflow concentration of DOC  (-)
+
+I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
 I_scNO3 =Bio_par(37); %scaling factor for inflow concentration of O2  (-)
 I_scNH4 = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
 I_scSO4 = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
@@ -2160,10 +2162,11 @@ function [dcdt] = rates(C, dt)
     R8  = k_Feox_wc .* Fe2z .* O2z;
     % NOTE: Due to the reaction is too fast and could cause overshooting:
     % we need to make this check if R*dt > Conc of source:
-    R8 = (R8.*dt < Fe2z).*R8 + (R8.*dt > Fe2z).* Fe2z ./ (dt) * 0.99;
+    R8 = (R8.*dt < Fe2z).*R8 + (R8.*dt > Fe2z).* Fe2z ./ (dt) * 0.5;
 
     % R9  = k_amox_wc .* O2z ./ (Km_oxao_wc + O2z) .* NH4z ./ (Km_amao_wc + NH4z);   % NOTE: Doesnt work - Highly unstable.
     R9 = k_amox_wc  .* O2z .* NH4z;
+    R9 = (R9.*dt < NH4z).*R9 + (R9.*dt > NH4z).* NH4z ./ (dt) * 0.5;
 
     R10a = 0; %k_oms_wc .* Sum_H2S .* Chlz;
     R10b = 0; %k_oms_wc .* Sum_H2S .* Cz;
