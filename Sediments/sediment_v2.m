@@ -707,20 +707,20 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   end
 
 % Estimate flux
-  sediment_SWI_fluxes.Ox           = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(top_sediment_diffusion_flux(Ox(:, end), D_O2, dx, fi), 31998);
-  sediment_SWI_fluxes.OM1          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(-sediment_bc.OM1_fx, 30973.762);
-  sediment_SWI_fluxes.OM2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(-sediment_bc.OM2_fx, 12010.7);
-  sediment_SWI_fluxes.PO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(top_sediment_diffusion_flux(PO4(:, end), D_PO4, dx, fi), 30973.762);
-  sediment_SWI_fluxes.NO3          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(top_sediment_diffusion_flux(NO3(:, end), D_NO3, dx, fi), 62004);
-  sediment_SWI_fluxes.FeOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(-sediment_bc.FeOH3_fx, 106867.0);
-  sediment_SWI_fluxes.Fe2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(top_sediment_diffusion_flux(Fe2(:, end), D_Fe2, dx, fi), 55845);
-  sediment_SWI_fluxes.NH4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(top_sediment_diffusion_flux(NH4(:, end), D_NH4, dx, fi), 18038);
-  sediment_SWI_fluxes.AlOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(-sediment_bc.AlOH3_fx, 78003.6);
-  sediment_SWI_fluxes.PO4adsa      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(-sediment_bc.PO4adsa_fx, 30973.762);
-  sediment_SWI_fluxes.PO4adsb      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(-sediment_bc.PO4adsb_fx, 30973.762);
-  sediment_SWI_fluxes.SO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(top_sediment_diffusion_flux(SO4(:, end), D_SO4, dx, fi), 96062);
-  sediment_SWI_fluxes.DOM1         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(top_sediment_diffusion_flux(DOM1(:, end), D_DOM1, dx, fi), 30973.762);
-  sediment_SWI_fluxes.DOM2         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(top_sediment_diffusion_flux(DOM2(:, end), D_DOM2, dx, fi), 12010.7);
+  sediment_SWI_fluxes.Ox           = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(Ox(:, end), D_O2, dx, fi), 31998);
+  sediment_SWI_fluxes.OM1          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.OM1_fx, 30973.762);
+  sediment_SWI_fluxes.OM2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.OM2_fx, 12010.7);
+  sediment_SWI_fluxes.PO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(PO4(:, end), D_PO4, dx, fi), 30973.762);
+  sediment_SWI_fluxes.NO3          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(NO3(:, end), D_NO3, dx, fi), 62004);
+  sediment_SWI_fluxes.FeOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.FeOH3_fx, 106867.0);
+  sediment_SWI_fluxes.Fe2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(Fe2(:, end), D_Fe2, dx, fi), 55845);
+  sediment_SWI_fluxes.NH4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(NH4(:, end), D_NH4, dx, fi), 18038);
+  sediment_SWI_fluxes.AlOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.AlOH3_fx, 78003.6);
+  sediment_SWI_fluxes.PO4adsa      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.PO4adsa_fx, 30973.762);
+  sediment_SWI_fluxes.PO4adsb      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.PO4adsb_fx, 30973.762);
+  sediment_SWI_fluxes.SO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(SO4(:, end), D_SO4, dx, fi), 96062);
+  sediment_SWI_fluxes.DOM1         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(DOM1(:, end), D_DOM1, dx, fi), 30973.762);
+  sediment_SWI_fluxes.DOM2         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(DOM2(:, end), D_DOM2, dx, fi), 12010.7);
 
 
   sediment_bioirrigation_fluxes.Ox   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_rate_to_flux( bioirrigation(Ox(:, end), alfax, fi), dx), 31998);
