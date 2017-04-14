@@ -51,7 +51,7 @@ global ies80;
 f = fopen(param_filename);
 garbage = fgetl(f);
 garbage = fgetl(f); % file get line
-data = textscan(f, '%s%f%f%f%s', 63, 'Delimiter', '\t');
+data = textscan(f, '%s%f%f%f%s', 64, 'Delimiter', '\t');
 fclose(f);
 % read 46 lines
 par_names = data{1};
@@ -59,10 +59,10 @@ par = data{2};
 par_range = [data{3} data{4}]; % horizontally concatenate
 Phys_par_names = par_names(1:23,:);
 Bio_par_names = par_names(24:60,:);
-Phys_par = par(1:23,:);
-Bio_par = par(24:63,:);
-Phys_par_range = par_range(1:23,:);
-Bio_par_range = par_range(24:63,:);
+Phys_par = par(1:24,:);
+Bio_par = par(25:64,:);
+Phys_par_range = par_range(1:24,:);
+Bio_par_range = par_range(25:64,:);
 % Bio_par(34) = 0.25;
 % Bio_par(35) = 1.95;
 % Bio_par(36) = 2.65;
