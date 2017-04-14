@@ -708,28 +708,28 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
 
 % Estimate flux
   sediment_SWI_fluxes.Ox = top_sediment_diffusion_flux(Ox(:,end), D_O2, 31998, dx, fi);;
-  sediment_SWI_fluxes.OM1 = -sediment_bc.OM1_fx;
-  sediment_SWI_fluxes.OM2 = -sediment_bc.OM2_fx;
+  sediment_SWI_fluxes.OM1 = top_sediment_advective_flux(sediment_bc.OM1_fx, 30973.762);
+  sediment_SWI_fluxes.OM2 = top_sediment_advective_flux(sediment_bc.OM2_fx, 12010.7);
   sediment_SWI_fluxes.PO4 = top_sediment_diffusion_flux(PO4(:,end),D_PO4, 30973.762, dx, fi);
   sediment_SWI_fluxes.NO3 = top_sediment_diffusion_flux(NO3(:,end),D_NO3, 62004, dx, fi);
-  sediment_SWI_fluxes.FeOH3 = -sediment_bc.FeOH3_fx;
+  sediment_SWI_fluxes.FeOH3 = top_sediment_advective_flux(sediment_bc.FeOH3_fx, 106867.0);
   sediment_SWI_fluxes.Fe2 = top_sediment_diffusion_flux(Fe2(:,end),D_Fe2, 55845, dx, fi);
   sediment_SWI_fluxes.NH4 = top_sediment_diffusion_flux(NH4(:,end),D_NH4, 18038, dx, fi);
-  sediment_SWI_fluxes.AlOH3 = -sediment_bc.AlOH3_fx;
-  sediment_SWI_fluxes.PO4adsa = -sediment_bc.PO4adsa_fx;
-  sediment_SWI_fluxes.PO4adsb = -sediment_bc.PO4adsb_fx;
+  sediment_SWI_fluxes.AlOH3 = top_sediment_advective_flux(sediment_bc.AlOH3_fx, 78003.6);
+  sediment_SWI_fluxes.PO4adsa = top_sediment_advective_flux(sediment_bc.PO4adsa_fx, 30973.762);
+  sediment_SWI_fluxes.PO4adsb = top_sediment_advective_flux(sediment_bc.PO4adsb_fx, 30973.762);
   sediment_SWI_fluxes.SO4 = top_sediment_diffusion_flux(SO4(:,end),D_SO4, 96062, dx, fi);
   sediment_SWI_fluxes.DOM1 = top_sediment_diffusion_flux(DOM1(:,end),D_DOM1, 30973.762, dx, fi);
   sediment_SWI_fluxes.DOM2 = top_sediment_diffusion_flux(DOM2(:,end),D_DOM2, 12010.7, dx, fi);
 
-  sediment_bioirrigation_fluxes.Ox = top_sediment_rate_to_flux(bioirrigation(Ox(:,end), alfax, fi),31998,dx,m);
-  sediment_bioirrigation_fluxes.PO4 = top_sediment_rate_to_flux(bioirrigation(PO4(:,end), alfax, fi),30973.762,dx,m);
-  sediment_bioirrigation_fluxes.Fe2 = top_sediment_rate_to_flux(bioirrigation(Fe2(:,end), alfax, fi),55845,dx,m);
-  sediment_bioirrigation_fluxes.NO3 = top_sediment_rate_to_flux(bioirrigation(NO3(:,end), alfax, fi),62004,dx,m);
-  sediment_bioirrigation_fluxes.NH4 = top_sediment_rate_to_flux(bioirrigation(NH4(:,end), alfax, fi),18038,dx,m);
-  sediment_bioirrigation_fluxes.SO4 = top_sediment_rate_to_flux(bioirrigation(SO4(:,end), alfax, fi),96062,dx,m);
-  sediment_bioirrigation_fluxes.DOM1 = top_sediment_rate_to_flux(bioirrigation(DOM1(:,end), alfax, fi),30973.762,dx,m);
-  sediment_bioirrigation_fluxes.DOM2 = top_sediment_rate_to_flux(bioirrigation(DOM2(:,end), alfax, fi),12010.7,dx,m);
+  sediment_bioirrigation_fluxes.Ox = top_sediment_rate_to_flux( bioirrigation(Ox(:,end), alfax, fi), 31998, dx, 1);
+  sediment_bioirrigation_fluxes.PO4 = top_sediment_rate_to_flux( bioirrigation(PO4(:, end),  alfax,  fi), 30973.762, dx, 1);
+  sediment_bioirrigation_fluxes.Fe2 = top_sediment_rate_to_flux( bioirrigation(Fe2(:, end),  alfax,  fi), 55845, dx, 1);
+  sediment_bioirrigation_fluxes.NO3 = top_sediment_rate_to_flux( bioirrigation(NO3(:, end),  alfax,  fi), 62004, dx, 1);
+  sediment_bioirrigation_fluxes.NH4 = top_sediment_rate_to_flux( bioirrigation(NH4(:, end),  alfax,  fi), 18038, dx, 1);
+  sediment_bioirrigation_fluxes.SO4 = top_sediment_rate_to_flux( bioirrigation(SO4(:, end),  alfax,  fi), 96062, dx, 1);
+  sediment_bioirrigation_fluxes.DOM1 = top_sediment_rate_to_flux( bioirrigation(DOM1(:, end),  alfax,  fi), 30973.762, dx, 1);
+  sediment_bioirrigation_fluxes.DOM2 = top_sediment_rate_to_flux( bioirrigation(DOM2(:, end),  alfax,  fi), 12010.7, dx, 1);
 
 
     sediment_concentrations.Oxygen = Ox(:,end);
@@ -799,62 +799,6 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
 
 end
 
-
-%% top_sediment_rate_to_flux: returns the flux of species at SWI converted to th units used in WC [ mg m-2 d-1 ].
-function [flux] = top_sediment_rate_to_flux(R, M_C, dx, m)
-    % TODO: Check units here!!
-    % R - rate [umol cm-3 y-1]
-    % M_C - molar mass in [ mg mol-1]
-    % dx - mesh size [cm];
-    % [umol cm-3 y-1] * [ mg mol-1] * 10^-6 = [mg cm-3 y-1] / 365 = [mg cm-3 d-1] * 10^6 = [mg m-3 d-1]
-
-    dx_m=dx/100; %                                                            [cm] -> [m]
-    flux = integrate_over_depth(R, dx_m, m) .* M_C / 365; %                [umol cm-3 y-1] -> [mg m-2 d-1],
-end
-
-function [int_rate] = integrate_over_depth(R, dx, m)
-  %% integrate_over_depth: integrates the rates of reaction over the depth and return the average values for the current day
-  % int_rate  [umol cm-2 year -1 ]
-  % R - rate of interest
-  % dx - the mesh size
-  % m - number of time step in 1 day
-  int_rate = sum(daily_average(R, m),1)*dx;
-end
-
-%% daily_average: returns the average rate during 1 day.
-function [averaged] = daily_average(R, m)
-  % R - rate of interest
-  % m - number of time steps in 1 day
-  averaged = sum(R,2)/(m-1);
-end
-
-
-function [flux] = top_sediment_diffusion_flux(C, D, M_C, dx, fi)
-  % calculates flux of the particular dissolved specie through the top boundary of the sediment
-  % in [ mg m-2 d-1 ] units
-  % C(1) - BC of dissolved species
-  % C - concentration
-  % D - diffusion coefficient
-  % M_C - molar mass in [ mg mol-1]
-  % fi - porosity
-  % NOTE: No mass balance here?
-
-  dx_m=dx/100; %                    [cm] -> [m]
-  dC = (C(2)- C(3)) * M_C; %       [umol cm-3] -> [mg m-3]
-  D_m = D / 10^4 / 365; %           [cm2 y-1] -> [m2 d-1]
-  flux = - D_m * fi(1) * dC / dx_m; %  [ mg m-2 d-1 ]
-end
-
-function bioR = bioirrigation(C, alfax, fi)
-  % bioirrigation rate is the "artificial" function represents the bioirrigation by organisms in the sediment (worms etc) implemented according to Boudreau, B.P., 1999.
-  % Co - bc wc-sediment value of current species
-  % C - concentration profile of current species
-  % fi - porosity
-  Co = C(1);
-  bioR = fi .* alfax .* (C - Co);
-  % NOTE:Disabled for now
-  % bioR = 0;
-end
 
 
 function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm, H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S, Fe2, Ca2, NO3, SO4, PO4, FeS, FeS2, FeOH3, FeOOH, Ca3PO42, PO4adsa, PO4adsb, Temperature)
@@ -1093,6 +1037,68 @@ function [C_new] = sediments_chemical_reactions_module(C0,dt,ts, method)
 end
 
 
+%% top_sediment_rate_to_flux: returns the flux of species at SWI converted to th units used in WC [ mg m-2 d-1 ].
+function [flux] = top_sediment_rate_to_flux(R, M_C, dx, m)
+    % TODO: Check units here!!
+    % R - rate [umol cm-3 y-1]
+    % M_C - molar mass in [ mg mol-1]
+    % dx - mesh size [cm];
+    % [umol cm-3 y-1] * [ mg mol-1] * 10^-6 = [mg cm-3 y-1] / 365 = [mg cm-3 d-1] * 10^6 = [mg m-3 d-1]
+
+    dx_m=dx/100; %                                                            [cm] -> [m]
+    flux = integrate_over_depth(R, dx_m, m) .* M_C / 365; %                [umol cm-3 y-1] -> [mg m-3 d-1],
+end
+
+function [int_rate] = integrate_over_depth(R, dx, m)
+  %% integrate_over_depth: integrates the rates of reaction over the depth and return the average values for the current day
+  % int_rate  [umol cm-2 year -1 ]
+  % R - rate of interest
+  % dx - the mesh size
+  % m - number of time step in 1 day
+  int_rate = sum(daily_average(R, m),1)*dx;
+end
+
+%% daily_average: returns the average rate during 1 day.
+function [averaged] = daily_average(R, m)
+  % R - rate of interest
+  % m - number of time steps in 1 day
+  averaged = sum(R,2)/m;
+end
+
+function [flux] = top_sediment_advective_flux(fx_umol_cm_y, M_C)
+  % flux of solid species converted from [umol/cm^2/y] -> [mg/m2/d]
+  % M_C - molar weight [mg/mol] / 10^6 -> [mg/umol]
+  % fx_umol_cm_y - flux of species [umol/cm^2/y]
+  flux = - fx_umol_cm_y * 10^4 / 365 * M_C / 10^6;
+end
+
+
+function [flux] = top_sediment_diffusion_flux(C, D, M_C, dx, fi)
+  % calculates flux of the particular dissolved specie through the top boundary of the sediment
+  % in [ mg m-2 d-1 ] units
+  % C(1) - BC of dissolved species
+  % C - concentration
+  % D - diffusion coefficient
+  % M_C - molar mass in [ mg mol-1]
+  % fi - porosity
+  % NOTE: No mass balance here?
+
+  flux_cm = - D * (fi(2) * C(2) - fi(3) * C(3));  %  [umol/cm^2/y]
+  flux = flux_cm * 10^4 / 365 * M_C / 10^6; %  [umol/cm^2/y] -> [mg/m2/d]
+end
+
+function bioR = bioirrigation(C, alfax, fi)
+  % bioirrigation rate is the "artificial" function represents the bioirrigation by organisms in the sediment (worms etc) implemented according to Boudreau, B.P., 1999.
+  % Co - bc wc-sediment value of current species
+  % C - concentration profile of current species
+  % fi - porosity
+  Co = C(1);
+  bioR = fi .* alfax .* (C - Co);
+  % NOTE:Disabled for now
+  % bioR = 0;
+end
+
+
 function [dcdt] = sediment_rates(C, dt)
 % parameters for water-column chemistry
 % NOTE: the rates are the same as in sediments except microbial which are factorized due to lower concertation of bacteria in WC then in sediments. Units are per "year" due to time step is in year units too;
@@ -1186,7 +1192,7 @@ function [dcdt] = sediment_rates(C, dt)
     % if R*dt > Conc then R8 = C/dt
     % if R*dt < Conc then R8 = R8
     % R8 = (R8.*dt < Fe2/50).*R8 + (R8.*dt > Fe2/50).* R8 ./ 1000;
-    R8 = (R8.*dt < Fe2).*R8 + (R8.*dt > Fe2).* Fe2 ./ (dt) * 0.99;
+    R8 = (R8.*dt < Fe2).*R8 + (R8.*dt > Fe2).* Fe2 ./ (dt) * 0.5;
 
     % R9 = k_amox * Ox ./ (Km_oxao + Ox) .* (NH4 ./ (Km_amao + NH4)); % NOTE: Doesnt work - Highly unstable.
     R9 = k_amox  .* NH4 .* Ox;
