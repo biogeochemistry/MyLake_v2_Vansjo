@@ -1337,7 +1337,7 @@ for i = 1:length(tt)
         Sz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
         POCz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz,  12010.7);
 
-        % [Fe3z, Pz, PPz] = eq_P(Fe3z, Pz, PPz, Kads);
+        % [Fe3z, Pz, PPz] = equilibrium_P_sorption(Fe3z, Pz, PPz, Kads);
 
         C0 = [O2z, Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, Sz, POCz];
 
@@ -2027,7 +2027,7 @@ function C = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C,M_C)
     C = C.*M_C;
 %end of function
 
-function [Fe3z, Pz, PPz] = eq_P(Fe3z, Pz, PPz, Kads)
+function [Fe3z, Pz, PPz] = equilibrium_P_sorption(Fe3z, Pz, PPz, Kads)
     x0 = [PPz(1), Pz(1)];
     for i=1:length(Fe3z)
         Stot(i) = Fe3z(i)+PPz(i);
@@ -2048,6 +2048,18 @@ function F = p_langmuir(x, Stot, Atot, Kads)
     F(1) = Stot.*Kads.*A/(1+Kads.*A) - SA;
     F(2) = A + SA - Atot;
 
+function F = P_equlibrium_logK(x, param, Sum_Fe, Sum_P)
+    pH = param;
+    Fe3_H2P = x(1);
+    Fe3_HP = x(2);
+    Fe3_P = x(3);
+    Fe3 = x(4);
+    P = x(5);
+    F(1) = log10(Fe3_H2P) - log10(Fe3) - log10(P) - 31.29 + 3 * pH;
+    F(2) = log10(Fe3_HP) - log10(Fe3) - log10(P) - 25.39 + 2 * pH;
+    F(3) = log10(Fe3_P) - log10(Fe3) - log10(P) - 17.72 +  pH  ;
+    F(4) = Fe3_P + Fe3_HP + Fe3_H2P + Fe3 - Sum_Fe;
+    F(5) = Fe3_P + Fe3_HP + Fe3_H2P + P - Sum_P;
 
 function [dcdt] = rates(C, dt)
 % parameters for water-column chemistry
