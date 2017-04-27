@@ -1069,7 +1069,6 @@ end
 %% daily_average: returns the average rate during 1 day.
 function [averaged] = daily_average(R)
   % R - rate of interest
-  % m - number of points simulated during 1 day (timesteps - 1)
   averaged = sum(R,2)/size(R,2);
 end
 
@@ -1087,7 +1086,7 @@ function [flux] = top_sediment_diffusion_flux(C, D, dx, fi)
   % fi - porosity
   % Central difference
 
-  flux = - D * (fi(1) * C(1) - fi(3) * C(3)) / 2 / dx;  %  [umol/cm^2/y]
+  flux = - D * (fi(2) * C(2) - fi(3) * C(3)) / dx;  %  [umol/cm^2/y]
 end
 
 % function [flux] = top_sediment_bioirrigation_flux(C, alfax, fi, L, M_C)
