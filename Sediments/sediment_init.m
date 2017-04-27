@@ -366,54 +366,57 @@ function [sediment_matrix_templates] = templates()
 
     % formation of templates:
     % Solid template the same for all solid species due to diffusion and advection coef the same for all.
-    [LU_solid,  RK_solid,  LD_solid,  LA_solid,  RD_solid,  RA_solid] = matrices_template_solid(Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [Solid_AL, Solid_AR, solid_flux_coef] = cn_template_solid(Db, tortuosity, v, fi, dx, dt, n);
+    sediment_params.solid_flux_coef = solid_flux_coef;
 
     % solute templates:
-    [LU_ox0,  RK_ox0,  LD_ox0,  LA_ox0,  RD_ox0,  RA_ox0]        = matrices_template_solute(sediment_params.D_O2 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_NO30, RK_NO30, LD_NO30, LA_NO30, RD_NO30, RA_NO30]       = matrices_template_solute(sediment_params.D_NO3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_SO40, RK_SO40, LD_SO40, LA_SO40, RD_SO40, RA_SO40]       = matrices_template_solute(sediment_params.D_SO4 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_NH40, RK_NH40, LD_NH40, LA_NH40, RD_NH40, RA_NH40]       = matrices_template_solute(sediment_params.D_NH4 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_Fe20, RK_Fe20, LD_Fe20, LA_Fe20, RD_Fe20, RA_Fe20]       = matrices_template_solute(sediment_params.D_Fe2 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_H2S0, RK_H2S0, LD_H2S0, LA_H2S0, RD_H2S0, RA_H2S0]       = matrices_template_solute(sediment_params.D_H2S + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_S00, RK_S00, LD_S00, LA_S00, RD_S00, RA_S00]             = matrices_template_solute(sediment_params.D_S0 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_PO40, RK_PO40, LD_PO40, LA_PO40, RD_PO40, RA_PO40]       = matrices_template_solute(sediment_params.D_PO4 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_Ca20, RK_Ca20, LD_Ca20, LA_Ca20, RD_Ca20, RA_Ca20]       = matrices_template_solute(sediment_params.D_Ca2 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_HS0, RK_HS0, LD_HS0, LA_HS0, RD_HS0, RA_HS0]             = matrices_template_solute(sediment_params.D_HS + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_H0, RK_H0, LD_H0, LA_H0, RD_H0, RA_H0]                   = matrices_template_solute(sediment_params.D_H + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_OH0, RK_OH0, LD_OH0, LA_OH0, RD_OH0, RA_OH0]             = matrices_template_solute(sediment_params.D_OH + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_CO20, RK_CO20, LD_CO20, LA_CO20, RD_CO20, RA_CO20]       = matrices_template_solute(sediment_params.D_CO2 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_CO30, RK_CO30, LD_CO30, LA_CO30, RD_CO30, RA_CO30]       = matrices_template_solute(sediment_params.D_CO3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_HCO30, RK_HCO30, LD_HCO30, LA_HCO30, RD_HCO30, RA_HCO30] = matrices_template_solute(sediment_params.D_HCO3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_NH30, RK_NH30, LD_NH30, LA_NH30, RD_NH30, RA_NH30]       = matrices_template_solute(sediment_params.D_NH3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_H2CO30, RK_H2CO30, LD_H2CO30, LA_H2CO30, RD_H2CO30, RA_H2CO30]= matrices_template_solute(sediment_params.D_H2CO3 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_DOM10, RK_DOM10, LD_DOM10, LA_DOM10, RD_DOM10, RA_DOM10]= matrices_template_solute(sediment_params.D_DOM1 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
-    [LU_DOM20, RK_DOM20, LD_DOM20, LA_DOM20, RD_DOM20, RA_DOM20]= matrices_template_solute(sediment_params.D_DOM2 + Db, tortuosity, v, fi, dx, dt, alpha, betta, n);
+    [Ox_AL, Ox_AR]        = cn_template_solute(sediment_params.D_O2 + Db, tortuosity, v, fi, dx, dt, n);
+    [NO3_AL, NO3_AR]        = cn_template_solute(sediment_params.D_NO3 + Db, tortuosity, v, fi, dx, dt, n);
+    [SO4_AL, SO4_AR]        = cn_template_solute(sediment_params.D_SO4 + Db, tortuosity, v, fi, dx, dt, n);
+    [NH4_AL, NH4_AR]        = cn_template_solute(sediment_params.D_NH4 + Db, tortuosity, v, fi, dx, dt, n);
+    [Fe2_AL, Fe2_AR]        = cn_template_solute(sediment_params.D_Fe2 + Db, tortuosity, v, fi, dx, dt, n);
+    [H2S_AL, H2S_AR]        = cn_template_solute(sediment_params.D_H2S + Db, tortuosity, v, fi, dx, dt, n);
+    [S0_AL, S0_AR]        = cn_template_solute(sediment_params.D_S0 + Db, tortuosity, v, fi, dx, dt, n);
+    [PO4_AL, PO4_AR]        = cn_template_solute(sediment_params.D_PO4 + Db, tortuosity, v, fi, dx, dt, n);
+    [Ca2_AL, Ca2_AR]        = cn_template_solute(sediment_params.D_Ca2 + Db, tortuosity, v, fi, dx, dt, n);
+    [HS_AL, HS_AR]        = cn_template_solute(sediment_params.D_HS + Db, tortuosity, v, fi, dx, dt, n);
+    [H_AL, H_AR]        = cn_template_solute(sediment_params.D_H + Db, tortuosity, v, fi, dx, dt, n);
+    [OH_AL, OH_AR]        = cn_template_solute(sediment_params.D_OH + Db, tortuosity, v, fi, dx, dt, n);
+    [CO2_AL, CO2_AR]        = cn_template_solute(sediment_params.D_CO2 + Db, tortuosity, v, fi, dx, dt, n);
+    [CO3_AL, CO3_AR]        = cn_template_solute(sediment_params.D_CO3 + Db, tortuosity, v, fi, dx, dt, n);
+    [HCO3_AL, HCO3_AR]        = cn_template_solute(sediment_params.D_HCO3 + Db, tortuosity, v, fi, dx, dt, n);
+    [NH3_AL, NH3_AR]        = cn_template_solute(sediment_params.D_NH3 + Db, tortuosity, v, fi, dx, dt, n);
+    [H2CO3_AL, H2CO3_AR]        = cn_template_solute(sediment_params.D_H2CO3 + Db, tortuosity, v, fi, dx, dt, n);
+    [DOM1_AL, DOM1_AR]        = cn_template_solute(sediment_params.D_DOM1 + Db, tortuosity, v, fi, dx, dt, n);
+    [DOM2_AL, DOM2_AR]        = cn_template_solute(sediment_params.D_DOM2 + Db, tortuosity, v, fi, dx, dt, n);
+
 
     sediment_matrix_templates = {...
 
-        LU_solid,  RK_solid,  LD_solid,  LA_solid,  RD_solid,  RA_solid, 'Solid';  % 1
-        LU_ox0,  RK_ox0,  LD_ox0,  LA_ox0,  RD_ox0,  RA_ox0, 'Oxygen'; % 2
-        LU_NO30, RK_NO30, LD_NO30, LA_NO30, RD_NO30, RA_NO30, 'NO3'; % 3
-        LU_SO40, RK_SO40, LD_SO40, LA_SO40, RD_SO40, RA_SO40, 'SO4'; % 4
-        LU_NH40, RK_NH40, LD_NH40, LA_NH40, RD_NH40, RA_NH40, 'NH4'; % 5
-        LU_Fe20, RK_Fe20, LD_Fe20, LA_Fe20, RD_Fe20, RA_Fe20, 'Fe2'; % 6
-        LU_H2S0, RK_H2S0, LD_H2S0, LA_H2S0, RD_H2S0, RA_H2S0, 'H2S'; % 7
-        LU_S00, RK_S00, LD_S00, LA_S00, RD_S00, RA_S00, 'S0'; % 8
-        LU_PO40, RK_PO40, LD_PO40, LA_PO40, RD_PO40, RA_PO40, 'PO4'; % 9
-        LU_Ca20, RK_Ca20, LD_Ca20, LA_Ca20, RD_Ca20, RA_Ca20, 'Ca2'; % 10
-        LU_HS0, RK_HS0, LD_HS0, LA_HS0, RD_HS0, RA_HS0, 'HS'; % 11
-        LU_H0, RK_H0, LD_H0, LA_H0, RD_H0, RA_H0, 'H'; % 12
-        LU_OH0, RK_OH0, LD_OH0, LA_OH0, RD_OH0, RA_OH0, 'OH'; % 13
-        LU_CO20, RK_CO20, LD_CO20, LA_CO20, RD_CO20, RA_CO20, 'CO2'; % 14
-        LU_CO30, RK_CO30, LD_CO30, LA_CO30, RD_CO30, RA_CO30, 'CO3'; % 15
-        LU_HCO30, RK_HCO30, LD_HCO30, LA_HCO30, RD_HCO30, RA_HCO30, 'HCO3'; % 16
-        LU_NH30, RK_NH30, LD_NH30, LA_NH30, RD_NH30, RA_NH30, 'NH3'; % 17
-        LU_H2CO30, RK_H2CO30, LD_H2CO30, LA_H2CO30, RD_H2CO30, RA_H2CO30, 'H2CO3'; %18
-        LU_DOM10, RK_DOM10, LD_DOM10, LA_DOM10, RD_DOM10, RA_DOM10, 'DOM1'; %19
-        LU_DOM20, RK_DOM20, LD_DOM20, LA_DOM20, RD_DOM20, RA_DOM20, 'DOM2'; %20
+        Solid_AL, Solid_AR, 'Solid';  % 1
+        Ox_AL, Ox_AR, 'Oxygen'; % 2
+        NO3_AL, NO3_AR, 'NO3'; % 3
+        SO4_AL, SO4_AR, 'SO4'; % 4
+        NH4_AL, NH4_AR, 'NH4'; % 5
+        Fe2_AL, Fe2_AR, 'Fe2'; % 6
+        H2S_AL, H2S_AR, 'H2S'; % 7
+        S0_AL, S0_AR, 'S0'; % 8
+        PO4_AL, PO4_AR, 'PO4'; % 9
+        Ca2_AL, Ca2_AR, 'Ca2'; % 10
+        HS_AL, HS_AR, 'HS'; % 11
+        H_AL, H_AR, 'H'; % 12
+        OH_AL, OH_AR, 'OH'; % 13
+        CO2_AL, CO2_AR, 'CO2'; % 14
+        CO3_AL, CO3_AR, 'CO3'; % 15
+        HCO3_AL, HCO3_AR, 'HCO3'; % 16
+        NH3_AL, NH3_AR, 'NH3'; % 17
+        H2CO3_AL, H2CO3_AR, 'H2CO3'; %18
+        DOM1_AL, DOM1_AR, 'DOM1'; %19
+        DOM2_AL, DOM2_AR, 'DOM2'; %20
     };
 
 end
+
 
 function [LU_solute, RK_solute, LD, LA, RD, RA] = matrices_template_solute(D_m, theta, v, fi, dx, dt, alpha, betta, n)
   %MATRICES Formation of matrices for species
@@ -496,5 +499,49 @@ function [LU_solid, RK_solid, LD, LA, RD, RA] = matrices_template_solid(D_m, the
   RK_solid(1,2) = 2* RD(1);
   RK_solid(1,1) = ((-RA(1) - RD(1)) * 2*dx*v/D + (1-fi(1))-2*RD(1));
   % RK_solid(1,1) = ((-RA(1) - RD(1)) * 2*dx*v/D + 1-2*RD(1));
+end
+
+
+function [AL, AR] = cn_template_solute(D_m, tortuosity, v, fi, dx, dt, n)
+  %MATRICES Formation of matrices for species
+  % ======================================================================
+
+    D = D_m / tortuosity^2;
+    s = fi * D * dt / dx / dx;
+    q = fi * v * dt / dx;
+
+
+    AL      = spdiags([-s/2+q/4 fi+s -s/2-q/4],[-1 0 1],n,n);
+    AL(1,1) = fi(1);
+    AL(1,2) = 0;
+    AL(n,n) = fi(n)+s(n);
+    AL(n,n-1) = -s(n);
+
+    AR      = spdiags([ s/2-q/4 fi-s s/2+q/4],[-1 0 1],n,n);
+    AR(1,1) = fi(1);
+    AR(1,2) = 0;
+    AR(n,n) = fi(n)-s(n);
+    AR(n,n-1) = s(n);
+end
+
+function [AL, AR, flux_coef] = cn_template_solid(D, theta, v, fi, dx, dt, n)
+  %MATRICES Formation of matrices for species
+  % ======================================================================
+
+    s = (1-fi) * D * dt / dx / dx;
+    q = (1-fi) * v * dt / dx;
+
+    AL      = spdiags([-s/2+q/4 (1-fi+s) -s/2-q/4],[-1 0 1],n,n);
+    AL(1,1) = 1-fi(1)+s(1);
+    AL(1,2) = -s(1);
+    AL(n,n) = 1-fi(n)+s(n);
+    AL(n,n-1) = -s(n);
+    AR      = spdiags([ s/2-q/4 (1-fi-s)  s/2+q/4],[-1 0 1],n,n);
+    AR(1,1) = 1-fi(1)-s(1);
+    AR(1,2) = +s(1);
+    AR(n,n) = 1-fi(n)-s(n);
+    AR(n,n-1) = s(n);
+
+    flux_coef = 2*dx / (1-fi(1)) / D * (2*s(1) - q(1));
 end
 
