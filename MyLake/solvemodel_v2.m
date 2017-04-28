@@ -2175,6 +2175,7 @@ function [dcdt] = rates(C, dt)
     % NOTE: Due to the reaction is too fast and could cause overshooting:
     % we need to make this check if R*dt > Conc of source:
     R8 = (R8.*dt < Fe2z).*R8 + (R8.*dt > Fe2z).* Fe2z ./ (dt) * 0.5;
+    R8 = (R8.*dt < O2z).*R8 + (R8.*dt > O2z).* O2z ./ (dt) * 0.5;
 
     % R9  = k_amox_wc .* O2z ./ (Km_oxao_wc + O2z) .* NH4z ./ (Km_amao_wc + NH4z);   % NOTE: Doesnt work - Highly unstable.
     R9 = k_amox_wc  .* O2z .* NH4z;
