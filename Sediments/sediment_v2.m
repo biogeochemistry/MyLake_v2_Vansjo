@@ -1025,10 +1025,16 @@ function [flux] = top_sediment_diffusion_flux(C, D, dx, fi)
   % C - concentration
   % D - diffusion coefficient
   % M_C - molar mass in [ mg mol-1]
-  % fi - porosity
-  % Central difference
+  % fi - porosity (no porosity because C is the concentration in pores (not bulk))
+  %
+  flux = - D * (C(2) - C(3)) / dx;  %  [umol/cm^2/y]
 
-  flux = - D * (fi(2) * C(2) - fi(3) * C(3)) / dx;  %  [umol/cm^2/y]
+  % fourth-order
+  % flux = D * (-25 * C(2) + 48 * C(3) - 36 * C(4) + 16 * C(5) - 3 * C(6)) / dx / 12;  %  [umol/cm^2/y]
+
+  % third order
+  % flux = D * (-11 * C(2) + 18 * C(3) - 9 * C(4) + 2 * C(5)) / dx / 6;  %  [umol/cm^2/y]
+
 end
 
 % function [flux] = top_sediment_bioirrigation_flux(C, alfax, fi, L, M_C)
