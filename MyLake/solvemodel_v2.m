@@ -1410,7 +1410,7 @@ for i = 1:length(tt)
         sediment_bc = update_sediment(MyLake_concentrations, MyLake_params, sediment_params);
 
         % Running sediment module
-        [sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrated_over_depth_fluxes, sediment_concentrations, z_sediment, R_values_sedimentz] = sediment_v2(...
+        [sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrated_over_depth_fluxes, sediment_concentrations] = sediment_v2(...
             sediment_concentrations, sediment_params, sediment_matrix_templates, sediment_bc);
 
         MyLakeOldConcentrations.O2z = O2z;
@@ -1727,13 +1727,11 @@ sediment_results.CO3zt = CO3_sediment_zt;
 sediment_results.HCO3zt = HCO3_sediment_zt;
 sediment_results.H2CO3zt = H2CO3_sediment_zt;
 sediment_results.pHzt = pH_sediment_zt;
-sediment_results.z = z_sediment;
 sediment_results.R_valueszt = R_values_sediment_zt;
 sediment_results.Bioirrigation_fx_zt = sediment_bioirrigation_fluxes_zt;
 sediment_results.MyLake_params = MyLake_params;
 sediment_results.params = sediment_params;
 sediment_results.sediment_SWI_fluxes = sediment_SWI_fluxes_zt;
-sediment_results.sediment_integrated_over_depth_fluxes_t = sediment_integrated_over_depth_fluxes_t;
 sediment_results.days = datenum(M_start):datenum(M_stop);
 sediment_results.m_start = M_start;
 sediment_results.m_stop = M_stop;
