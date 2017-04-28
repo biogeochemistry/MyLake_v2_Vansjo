@@ -1,4 +1,4 @@
-function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrated_over_depth_fluxes, sediment_concentrations, xz, R_values] = sediment_v2(sediment_concentrations, sediment_params, sediment_matrix_templates, sediment_bc)
+function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrated_over_depth_fluxes, sediment_concentrations] = sediment_v2(sediment_concentrations, sediment_params, sediment_matrix_templates, sediment_bc)
   % SEDIMENTS This function models the chemical process in the sediment
 
   global k_OM k_OMb k_DOM1 k_DOM2 Km_O2 Km_NO3 Km_FeOH3 Km_FeOOH Km_SO4 Km_oxao Km_amao Kin_O2 Kin_NO3  Kin_FeOH3 Kin_FeOOH k_amox k_Feox k_Sdis k_Spre k_FeS2pre k_pdesorb_c k_pdesorb_a k_pdesorb_b k_alum k_rhom   k_tS_Fe Ks_FeS k_Fe_dis k_Fe_pre k_apa  kapa k_oms k_tsox k_FeSpre f_pfe accel Cx1 Ny1 Pz1 Cx2 Ny2 Pz2 F Ny1 Ny2 Pz1 Pz2 alfax fi n
@@ -349,58 +349,48 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   sediment_SWI_fluxes.DOM2         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(DOM2(:, end), D_DOM2, dx, fi), 12010.7);
 
 
-  sediment_bioirrigation_fluxes.Ox   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_rate_to_flux( bioirrigation(Ox(:, end), alfax, fi), dx), 31998);
-  sediment_bioirrigation_fluxes.PO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_rate_to_flux( bioirrigation(PO4(:, end),  alfax,  fi), dx), 30973.762);
-  sediment_bioirrigation_fluxes.Fe2  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_rate_to_flux( bioirrigation(Fe2(:, end),  alfax,  fi), dx), 55845);
-  sediment_bioirrigation_fluxes.NO3  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_rate_to_flux( bioirrigation(NO3(:, end),  alfax,  fi), dx), 62004);
-  sediment_bioirrigation_fluxes.NH4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_rate_to_flux( bioirrigation(NH4(:, end),  alfax,  fi), dx), 18038);
-  sediment_bioirrigation_fluxes.SO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_rate_to_flux( bioirrigation(SO4(:, end),  alfax,  fi), dx), 96062);
-  sediment_bioirrigation_fluxes.DOM1 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_rate_to_flux( bioirrigation(DOM1(:, end),  alfax,  fi), dx), 30973.762);
-  sediment_bioirrigation_fluxes.DOM2 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_rate_to_flux( bioirrigation(DOM2(:, end),  alfax,  fi), dx), 12010.7);
+  sediment_bioirrigation_fluxes.Ox   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(Ox(:, end), alfax, fi), x), 31998);
+  sediment_bioirrigation_fluxes.PO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(PO4(:, end),  alfax,  fi), x), 30973.762);
+  sediment_bioirrigation_fluxes.Fe2  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(Fe2(:, end),  alfax,  fi), x), 55845);
+  sediment_bioirrigation_fluxes.NO3  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(NO3(:, end),  alfax,  fi), x), 62004);
+  sediment_bioirrigation_fluxes.NH4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(NH4(:, end),  alfax,  fi), x), 18038);
+  sediment_bioirrigation_fluxes.SO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(SO4(:, end),  alfax,  fi), x), 96062);
+  sediment_bioirrigation_fluxes.DOM1 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(DOM1(:, end),  alfax,  fi), x), 30973.762);
+  sediment_bioirrigation_fluxes.DOM2 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(DOM2(:, end),  alfax,  fi), x), 12010.7);
 
 
 
-  % sediment_bioirrigation_fluxes.Ox = top_sediment_bioirrigation_flux(Ox(:,end), alfax, fi, depth, 31998);
-  % sediment_bioirrigation_fluxes.PO4 = top_sediment_bioirrigation_flux(PO4(:, end),  alfax,  fi, depth, 30973.762);
-  % sediment_bioirrigation_fluxes.Fe2 = top_sediment_bioirrigation_flux(Fe2(:, end),  alfax,  fi, depth, 55845);
-  % sediment_bioirrigation_fluxes.NO3 = top_sediment_bioirrigation_flux(NO3(:, end),  alfax,  fi, depth, 62004);
-  % sediment_bioirrigation_fluxes.NH4 = top_sediment_bioirrigation_flux(NH4(:, end),  alfax,  fi, depth, 18038);
-  % sediment_bioirrigation_fluxes.SO4 = top_sediment_bioirrigation_flux(SO4(:, end),  alfax,  fi, depth, 96062);
-  % sediment_bioirrigation_fluxes.DOM1 = top_sediment_bioirrigation_flux(DOM1(:, end),  alfax,  fi, depth, 30973.762);
-  % sediment_bioirrigation_fluxes.DOM2 = top_sediment_bioirrigation_flux(DOM2(:, end),  alfax,  fi, depth, 12010.7);
-
-
-    sediment_concentrations.Oxygen = Ox(:,end);
-    sediment_concentrations.OM1 = OM(:,end);
-    sediment_concentrations.OM2 = OMb(:,end);
-    sediment_concentrations.NO3 = NO3(:,end);
-    sediment_concentrations.FeOH3 = FeOH3(:,end);
-    sediment_concentrations.SO4 = SO4(:,end);
-    sediment_concentrations.NH4 = NH4(:,end);
-    sediment_concentrations.Fe2 = Fe2(:,end);
-    sediment_concentrations.FeOOH = FeOOH(:,end);
-    sediment_concentrations.H2S = H2S(:,end);
-    sediment_concentrations.HS = HS(:,end);
-    sediment_concentrations.FeS = FeS(:,end);
-    sediment_concentrations.S0 = S0(:,end);
-    sediment_concentrations.PO4 = PO4(:,end);
-    sediment_concentrations.S8 = S8(:,end);
-    sediment_concentrations.FeS2 = FeS2(:,end);
-    sediment_concentrations.AlOH3 = AlOH3(:,end);
-    sediment_concentrations.PO4adsa = PO4adsa(:,end);
-    sediment_concentrations.PO4adsb = PO4adsb(:,end);
-    sediment_concentrations.Ca2 = Ca2(:,end);
-    sediment_concentrations.Ca3PO42 = Ca3PO42(:,end);
-    sediment_concentrations.OMS = OMS(:,end);
-    sediment_concentrations.H = H(:,end);
-    sediment_concentrations.OH = OH(:,end);
-    sediment_concentrations.CO2 = CO2(:,end);
-    sediment_concentrations.CO3 = CO3(:,end);
-    sediment_concentrations.HCO3 = HCO3(:,end);
-    sediment_concentrations.NH3 = NH3(:,end);
-    sediment_concentrations.H2CO3 = H2CO3(:,end);
-    sediment_concentrations.DOM1 = DOM1(:,end);
-    sediment_concentrations.DOM2 = DOM2(:,end);
+  sediment_concentrations.Oxygen = Ox(:,end);
+  sediment_concentrations.OM1 = OM(:,end);
+  sediment_concentrations.OM2 = OMb(:,end);
+  sediment_concentrations.NO3 = NO3(:,end);
+  sediment_concentrations.FeOH3 = FeOH3(:,end);
+  sediment_concentrations.SO4 = SO4(:,end);
+  sediment_concentrations.NH4 = NH4(:,end);
+  sediment_concentrations.Fe2 = Fe2(:,end);
+  sediment_concentrations.FeOOH = FeOOH(:,end);
+  sediment_concentrations.H2S = H2S(:,end);
+  sediment_concentrations.HS = HS(:,end);
+  sediment_concentrations.FeS = FeS(:,end);
+  sediment_concentrations.S0 = S0(:,end);
+  sediment_concentrations.PO4 = PO4(:,end);
+  sediment_concentrations.S8 = S8(:,end);
+  sediment_concentrations.FeS2 = FeS2(:,end);
+  sediment_concentrations.AlOH3 = AlOH3(:,end);
+  sediment_concentrations.PO4adsa = PO4adsa(:,end);
+  sediment_concentrations.PO4adsb = PO4adsb(:,end);
+  sediment_concentrations.Ca2 = Ca2(:,end);
+  sediment_concentrations.Ca3PO42 = Ca3PO42(:,end);
+  sediment_concentrations.OMS = OMS(:,end);
+  sediment_concentrations.H = H(:,end);
+  sediment_concentrations.OH = OH(:,end);
+  sediment_concentrations.CO2 = CO2(:,end);
+  sediment_concentrations.CO3 = CO3(:,end);
+  sediment_concentrations.HCO3 = HCO3(:,end);
+  sediment_concentrations.NH3 = NH3(:,end);
+  sediment_concentrations.H2CO3 = H2CO3(:,end);
+  sediment_concentrations.DOM1 = DOM1(:,end);
+  sediment_concentrations.DOM2 = DOM2(:,end);
 
   R_values = {
     % daily_average(R1_graphs, m) ,              'R1';
@@ -423,10 +413,7 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   sediment_integrated_over_depth_fluxes = {...
     0,   'Ox integrated over depth flux to sediments';
   };
-    % Debugging purposes
-    % if any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(Ox(:,end), alfax, fi),31998,dx,m),31998,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(PO4(:,end), alfax, fi),30973.762,dx,m),30973.762,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(Fe2(:,end), alfax, fi),55845,dx,m),55845,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(NO3(:,end), alfax, fi),62004,dx,m),62004,dx,m))) | any(isnan(top_sediment_rate_to_flux(top_sediment_rate_to_flux(bioirrigation(NH4(:,end), alfax, fi),18038,dx,m),18038,dx,m)))
-    %   error('Breaking out of Sediments function: NaN values');
-    % end
+
 
 
 
@@ -667,6 +654,14 @@ function [int_rate] = integrate_over_depth(R, dx)
   int_rate = sum(daily_average(R),1)*dx;
 end
 
+function [int_rate] = integrate_over_depth_2(R, z)
+  %% integrate_over_depth_2: integrates the rates of reaction over the depth and return the average values for the current day using trapezoidal rule
+  % int_rate  [umol cm-2 year -1 ]
+  % R - rate of interest
+  % z - the depth
+  int_rate = trapz(z,R);
+end
+
 %% daily_average: returns the average rate during 1 day.
 function [averaged] = daily_average(R)
   % R - rate of interest
@@ -700,14 +695,6 @@ function [flux] = top_sediment_diffusion_flux(C, D, dx, fi)
   % flux = - D * (C(1) - C(3)) / 2 / dx;  %  [umol/cm^2/y]
 end
 
-% function [flux] = top_sediment_bioirrigation_flux(C, alfax, fi, L, M_C)
-%   % according to Boudreau 1996, p. 143
-%   Co = C(1);
-%   av = mean(fi(2:end) .* C(2:end));
-%   flux_cm = L .* alfax .* (av - Co);  %  [umol/cm^2/y]
-%   flux = flux_cm * 10^4 / 365 * M_C / 10^6; %  [umol/cm^2/y] -> [mg/m2/d]
-% end
-
 function bioR = bioirrigation(C, alfax, fi)
   % bioirrigation rate is the "artificial" function represents the bioirrigation by organisms in the sediment (worms etc) implemented according to Boudreau, B.P., 1999.
   % Co - bc wc-sediment value of current species
@@ -716,7 +703,7 @@ function bioR = bioirrigation(C, alfax, fi)
   Co = C(1);
   bioR = fi .* alfax .* (C - Co);
   % NOTE:Disabled for now
-  bioR = 0;
+  % bioR = 0;
 end
 
 
