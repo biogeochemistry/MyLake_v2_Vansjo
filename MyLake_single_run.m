@@ -50,7 +50,7 @@ for current_run = 1:no_runs
             m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         else
-            m_start=[2011, 1, 1]; %
+            m_start=[2000, 1, 1]; %
             m_stop=[2011, 12, 31]; %
         end
 
