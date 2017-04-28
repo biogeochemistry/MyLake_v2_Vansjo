@@ -2179,6 +2179,7 @@ function [dcdt] = rates(C, dt)
     % R9  = k_amox_wc .* O2z ./ (Km_oxao_wc + O2z) .* NH4z ./ (Km_amao_wc + NH4z);   % NOTE: Doesnt work - Highly unstable.
     R9 = k_amox_wc  .* O2z .* NH4z;
     R9 = (R9.*dt < NH4z).*R9 + (R9.*dt > NH4z).* NH4z ./ (dt) * 0.5;
+    R9 = (R9.*dt < O2z).*R9 + (R9.*dt > O2z).* O2z ./ (dt) * 0.5;
 
     R10a = 0; %k_oms_wc .* Sum_H2S .* Chlz;
     R10b = 0; %k_oms_wc .* Sum_H2S .* Cz;

@@ -120,7 +120,7 @@ sediment_params = {
     0.1,    'w';
     256,    'n';
     30,     'depth';
-    0.26,   'F';
+    1,   'F';
     14.4,   'alfa0';
 
     % OM composition
