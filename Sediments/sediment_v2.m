@@ -245,7 +245,7 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
           error('NaN')
       end
 
-      ts_during_one_dt = 10;
+      ts_during_one_dt = 1;
       int_method = 0;
       C_new = sediments_chemical_reactions_module(C0,dt,ts_during_one_dt, int_method);
 
@@ -468,6 +468,7 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
         OH(i) = x(9)^2;
         H2CO3(i) = x(10)^2;
       end
+
 
     elseif algorithm == 2 % Stumm, W. & Morgan, J., 1995. Aquatic Chemistry. implemented in C++
       for i=1:size(H,1)
@@ -696,7 +697,7 @@ function [flux] = top_sediment_diffusion_flux(C, D, dx, fi)
   % flux = D * (-3 * C(2) + 4 * C(3) - C(4)) / dx / 2;  %  [umol/cm^2/y]
 
   % first order
-  % flux = - D * (C(2) - C(3)) / dx;  %  [umol/cm^2/y]
+  % flux = - D * (C(1) - C(3)) / 2 / dx;  %  [umol/cm^2/y]
 end
 
 % function [flux] = top_sediment_bioirrigation_flux(C, alfax, fi, L, M_C)
@@ -817,10 +818,12 @@ function [dcdt] = sediment_rates(C, dt)
     % if R*dt < Conc then R8 = R8
     % R8 = (R8.*dt < Fe2/50).*R8 + (R8.*dt > Fe2/50).* R8 ./ 1000;
     R8 = (R8.*dt < Fe2).*R8 + (R8.*dt > Fe2).* Fe2 ./ (dt) * 0.5;
+    R8 = (R8.*dt < Ox).*R8 + (R8.*dt > Ox).* Ox ./ (dt) * 0.5;
 
     % R9 = k_amox * Ox ./ (Km_oxao + Ox) .* (NH4 ./ (Km_amao + NH4)); % NOTE: Doesnt work - Highly unstable.
     R9 = k_amox  .* NH4 .* Ox;
     R9 = (R9.*dt < NH4).*R9 + (R9.*dt > NH4).* NH4 ./ (dt) * 0.5;
+    R9 = (R9.*dt < Ox).*R9 + (R9.*dt > Ox).* Ox ./ (dt) * 0.5;
 
     R10a = k_oms * Sum_H2S .* OM;
     R10b = k_oms * Sum_H2S .* OMb;
