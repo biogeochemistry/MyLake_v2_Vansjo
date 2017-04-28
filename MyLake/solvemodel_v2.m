@@ -1410,7 +1410,7 @@ for i = 1:length(tt)
         sediment_bc = update_sediment(MyLake_concentrations, MyLake_params, sediment_params);
 
         % Running sediment module
-        [sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrated_over_depth_fluxes, sediment_concentrations] = sediment_v2(...
+        [sediment_bioirrigation_fluxes, sediment_D_fluxes, sediment_concentrations, sediment_additional_results] = sediment_v2(...
             sediment_concentrations, sediment_params, sediment_matrix_templates, sediment_bc);
 
         MyLakeOldConcentrations.O2z = O2z;
@@ -1422,7 +1422,7 @@ for i = 1:length(tt)
         MyLakeOldConcentrations.DOCz = DOCz;
 
         % Update WC:  [sediment] ----> [WC]
-        [MyLakeNewConcentrations] = update_wc(MyLakeOldConcentrations, MyLake_params, sediment_SWI_fluxes, sediment_bioirrigation_fluxes);
+        [MyLakeNewConcentrations] = update_wc(MyLakeOldConcentrations, MyLake_params, sediment_D_fluxes, sediment_bioirrigation_fluxes);
 
         O2z = MyLakeNewConcentrations.O2z;
         Pz = MyLakeNewConcentrations.Pz;
@@ -1470,19 +1470,19 @@ for i = 1:length(tt)
         DOM1_sediment_zt(:,i) = sediment_concentrations.DOM1;
         DOM2_sediment_zt(:,i) = sediment_concentrations.DOM2;
         pH_sediment_zt(:,i) = -log10(H_sediment_zt(:,i)*10^-3);
-        sediment_SWI_fluxes_zt.Ox(i) = sediment_SWI_fluxes.Ox;
-        sediment_SWI_fluxes_zt.OM1(i) = sediment_SWI_fluxes.OM1;
-        sediment_SWI_fluxes_zt.OM2(i) = sediment_SWI_fluxes.OM2;
-        sediment_SWI_fluxes_zt.PO4(i) = sediment_SWI_fluxes.PO4;
-        sediment_SWI_fluxes_zt.NO3(i) = sediment_SWI_fluxes.NO3;
-        sediment_SWI_fluxes_zt.FeOH3(i) = sediment_SWI_fluxes.FeOH3;
-        sediment_SWI_fluxes_zt.Fe2(i) = sediment_SWI_fluxes.Fe2;
-        sediment_SWI_fluxes_zt.NH4(i) = sediment_SWI_fluxes.NH4;
-        sediment_SWI_fluxes_zt.AlOH3(i) = sediment_SWI_fluxes.AlOH3;
-        sediment_SWI_fluxes_zt.PO4adsa(i) = sediment_SWI_fluxes.PO4adsa;
-        sediment_SWI_fluxes_zt.SO4(i) = sediment_SWI_fluxes.SO4;
-        sediment_SWI_fluxes_zt.DOM1(i) = sediment_SWI_fluxes.DOM1;
-        sediment_SWI_fluxes_zt.DOM2(i) = sediment_SWI_fluxes.DOM2;
+        sediment_D_fluxes_zt.Ox(i) = sediment_D_fluxes.Ox;
+        sediment_D_fluxes_zt.OM1(i) = sediment_D_fluxes.OM1;
+        sediment_D_fluxes_zt.OM2(i) = sediment_D_fluxes.OM2;
+        sediment_D_fluxes_zt.PO4(i) = sediment_D_fluxes.PO4;
+        sediment_D_fluxes_zt.NO3(i) = sediment_D_fluxes.NO3;
+        sediment_D_fluxes_zt.FeOH3(i) = sediment_D_fluxes.FeOH3;
+        sediment_D_fluxes_zt.Fe2(i) = sediment_D_fluxes.Fe2;
+        sediment_D_fluxes_zt.NH4(i) = sediment_D_fluxes.NH4;
+        sediment_D_fluxes_zt.AlOH3(i) = sediment_D_fluxes.AlOH3;
+        sediment_D_fluxes_zt.PO4adsa(i) = sediment_D_fluxes.PO4adsa;
+        sediment_D_fluxes_zt.SO4(i) = sediment_D_fluxes.SO4;
+        sediment_D_fluxes_zt.DOM1(i) = sediment_D_fluxes.DOM1;
+        sediment_D_fluxes_zt.DOM2(i) = sediment_D_fluxes.DOM2;
         sediment_bioirrigation_fluxes_zt.Ox(i) = sediment_bioirrigation_fluxes.Ox;
         sediment_bioirrigation_fluxes_zt.PO4(i) = sediment_bioirrigation_fluxes.PO4;
         sediment_bioirrigation_fluxes_zt.Fe2(i) = sediment_bioirrigation_fluxes.Fe2;
@@ -1490,19 +1490,6 @@ for i = 1:length(tt)
         sediment_bioirrigation_fluxes_zt.NH4(i) = sediment_bioirrigation_fluxes.NH4;
         sediment_bioirrigation_fluxes_zt.DOM1(i) = sediment_bioirrigation_fluxes.DOM1;
         sediment_bioirrigation_fluxes_zt.DOM2(i) = sediment_bioirrigation_fluxes.DOM2;
-        R1_sediment_zt(:,i) = 'not collected';
-        R1_int_sediment_zt(:,i) = 'not collected';
-        R2_sediment_zt(:,i) = 'not collected';
-        R2_int_sediment_zt(:,i) = 'not collected';
-        R3_sediment_zt(:,i) = 'not collected';
-        R3_int_sediment_zt(:,i) = 'not collected';
-        R4_sediment_zt(:,i) = 'not collected';
-        R4_int_sediment_zt(:,i) = 'not collected';
-        R5_sediment_zt(:,i) = 'not collected';
-        R5_int_sediment_zt(:,i) = 'not collected';
-        R6_sediment_zt(:,i) = 'not collected';
-        R6_int_sediment_zt(:,i) = 'not collected';
-        O2_sediment_integrated_over_depth_fluxes_t(:,i)=sediment_integrated_over_depth_fluxes{1};
     end
 
     % Output MyLake matrices
@@ -1669,72 +1656,48 @@ end; %for i = 1:length(tt)
 
 
 %Saving sediment values
-if matsedlab_sediment_module;           % MATSEDLAB sediment module
-
-    R_values_sediment_zt = {
-
-    R1_sediment_zt,         'R1';
-    R1_int_sediment_zt,     'R1 integrated';
-    R2_sediment_zt,         'R2';
-    R2_int_sediment_zt,     'R2 integrated';
-    R3_sediment_zt,         'R3';
-    R3_int_sediment_zt,     'R3 integrated';
-    R4_sediment_zt,         'R4';
-    R4_int_sediment_zt,     'R4 integrated';
-    R5_sediment_zt,         'R5';
-    R5_int_sediment_zt,     'R5 integrated';
-    R6_sediment_zt,         'R6';
-    R6_int_sediment_zt,     'R6 integrated';
-    };
-
-
-
-sediment_integrated_over_depth_fluxes_t = {
-    O2_sediment_integrated_over_depth_fluxes_t, 'Oxygen integrated over depth flux';
-    };
-
-
-sediment_results.OMzt = OM_sediment_zt;
-sediment_results.OMbzt = OMb_sediment_zt;
-sediment_results.DOM1zt = DOM1_sediment_zt;
-sediment_results.DOM2zt = DOM2_sediment_zt;
-sediment_results.OMSzt = OMS_sediment_zt;
-sediment_results.PO4zt = PO4_sediment_zt;
-sediment_results.PO4adsazt = PO4adsa_sediment_zt;
-sediment_results.PO4adsbzt = PO4adsb_sediment_zt;
-sediment_results.O2zt = O2_sediment_zt;
-sediment_results.NO3zt = NO3_sediment_zt;
-sediment_results.NH4zt = NH4_sediment_zt;
-sediment_results.NH3zt = NH3_sediment_zt;
-sediment_results.FeOH3zt = FeOH3_sediment_zt;
-sediment_results.FeOOHzt = FeOOH_sediment_zt;
-sediment_results.Fe2zt = Fe2_sediment_zt;
-sediment_results.SO4zt = SO4_sediment_zt;
-sediment_results.H2Szt = H2S_sediment_zt;
-sediment_results.HSzt = HS_sediment_zt;
-sediment_results.FeSzt = FeS_sediment_zt;
-sediment_results.FeS2zt = FeS2_sediment_zt;
-sediment_results.AlOH3zt = AlOH3_sediment_zt;
-sediment_results.S0zt = S0_sediment_zt;
-sediment_results.S8zt = S8_sediment_zt;
-sediment_results.Hzt = H_sediment_zt;
-sediment_results.Ca2zt = Ca2_sediment_zt;
-sediment_results.Ca3PO42zt = Ca3PO42_sediment_zt;
-sediment_results.Hzt = H_sediment_zt;
-sediment_results.OHzt = OH_sediment_zt;
-sediment_results.CO2zt = CO2_sediment_zt;
-sediment_results.CO3zt = CO3_sediment_zt;
-sediment_results.HCO3zt = HCO3_sediment_zt;
-sediment_results.H2CO3zt = H2CO3_sediment_zt;
-sediment_results.pHzt = pH_sediment_zt;
-sediment_results.R_valueszt = R_values_sediment_zt;
-sediment_results.Bioirrigation_fx_zt = sediment_bioirrigation_fluxes_zt;
-sediment_results.MyLake_params = MyLake_params;
-sediment_results.params = sediment_params;
-sediment_results.sediment_SWI_fluxes = sediment_SWI_fluxes_zt;
-sediment_results.days = datenum(M_start):datenum(M_stop);
-sediment_results.m_start = M_start;
-sediment_results.m_stop = M_stop;
+if matsedlab_sediment_module           % MATSEDLAB sediment module
+    sediment_results.OMzt = OM_sediment_zt;
+    sediment_results.OMbzt = OMb_sediment_zt;
+    sediment_results.DOM1zt = DOM1_sediment_zt;
+    sediment_results.DOM2zt = DOM2_sediment_zt;
+    sediment_results.OMSzt = OMS_sediment_zt;
+    sediment_results.PO4zt = PO4_sediment_zt;
+    sediment_results.PO4adsazt = PO4adsa_sediment_zt;
+    sediment_results.PO4adsbzt = PO4adsb_sediment_zt;
+    sediment_results.O2zt = O2_sediment_zt;
+    sediment_results.NO3zt = NO3_sediment_zt;
+    sediment_results.NH4zt = NH4_sediment_zt;
+    sediment_results.NH3zt = NH3_sediment_zt;
+    sediment_results.FeOH3zt = FeOH3_sediment_zt;
+    sediment_results.FeOOHzt = FeOOH_sediment_zt;
+    sediment_results.Fe2zt = Fe2_sediment_zt;
+    sediment_results.SO4zt = SO4_sediment_zt;
+    sediment_results.H2Szt = H2S_sediment_zt;
+    sediment_results.HSzt = HS_sediment_zt;
+    sediment_results.FeSzt = FeS_sediment_zt;
+    sediment_results.FeS2zt = FeS2_sediment_zt;
+    sediment_results.AlOH3zt = AlOH3_sediment_zt;
+    sediment_results.S0zt = S0_sediment_zt;
+    sediment_results.S8zt = S8_sediment_zt;
+    sediment_results.Hzt = H_sediment_zt;
+    sediment_results.Ca2zt = Ca2_sediment_zt;
+    sediment_results.Ca3PO42zt = Ca3PO42_sediment_zt;
+    sediment_results.Hzt = H_sediment_zt;
+    sediment_results.OHzt = OH_sediment_zt;
+    sediment_results.CO2zt = CO2_sediment_zt;
+    sediment_results.CO3zt = CO3_sediment_zt;
+    sediment_results.HCO3zt = HCO3_sediment_zt;
+    sediment_results.H2CO3zt = H2CO3_sediment_zt;
+    sediment_results.pHzt = pH_sediment_zt;
+    sediment_results.z = sediment_params.x';
+    sediment_results.Bioirrigation_fx_zt = sediment_bioirrigation_fluxes_zt;
+    sediment_results.MyLake_params = MyLake_params;
+    sediment_results.params = sediment_params;
+    sediment_results.sediment_D_fluxes = sediment_D_fluxes_zt;
+    sediment_results.days = datenum(M_start):datenum(M_stop);
+    sediment_results.m_start = M_start;
+    sediment_results.m_stop = M_stop;
 
 else
 

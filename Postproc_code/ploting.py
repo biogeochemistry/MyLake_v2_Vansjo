@@ -86,10 +86,10 @@ class ResultsPlotter:
         try:
             plt.plot(results['days'][0, 0][0][start:end] - 366, results['Bioirrigation_fx_zt'][0, 0][elem]
                      [0, 0][0][start:end], sns.xkcd_rgb["medium green"], lw=3, label='Bioirrigation')
-            plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_SWI_fluxes'][0, 0]
+            plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_D_fluxes'][0, 0]
                      [elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3, label='Diffusive')
         except:
-            plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_SWI_fluxes'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3, label=elem)
+            plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_D_fluxes'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3, label=elem)
         ax = plt.gca()
         ax.set_ylabel(elem + ' flux, $[mg/m^{2}/d]$')
         ax.ticklabel_format(useOffset=False)
@@ -198,11 +198,13 @@ class ResultsPlotter:
     #     plt.clabel(CS, inline=1, fontsize=10, colors='w')
         cbar = plt.colorbar(CS)
 
+        plt.ylabel('Depth, [cm]')
+
         if env == 'water-column':
             ice_thickness = results['His'][0, 0][0, start:end]
             plt.fill_between(results['days'][0, 0][0][start:end] - 366, 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
+            plt.ylabel('Depth, [m]')
 
-        plt.ylabel('Depth, [m]')
         ax = plt.gca()
         ax.ticklabel_format(useOffset=False)
         ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))

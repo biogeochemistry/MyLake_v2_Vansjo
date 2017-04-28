@@ -1,4 +1,4 @@
-function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrated_over_depth_fluxes, sediment_concentrations] = sediment_v2(sediment_concentrations, sediment_params, sediment_matrix_templates, sediment_bc)
+function [ sediment_bioirrigation_fluxes, sediment_D_fluxes, sediment_concentrations, sediment_additional_results] = sediment_v2(sediment_concentrations, sediment_params, sediment_matrix_templates, sediment_bc)
   % SEDIMENTS This function models the chemical process in the sediment
 
   global k_OM k_OMb k_DOM1 k_DOM2 Km_O2 Km_NO3 Km_FeOH3 Km_FeOOH Km_SO4 Km_oxao Km_amao Kin_O2 Kin_NO3  Kin_FeOH3 Kin_FeOOH k_amox k_Feox k_Sdis k_Spre k_FeS2pre k_pdesorb_c k_pdesorb_a k_pdesorb_b k_alum k_rhom   k_tS_Fe Ks_FeS k_Fe_dis k_Fe_pre k_apa  kapa k_oms k_tsox k_FeSpre f_pfe accel Cx1 Ny1 Pz1 Cx2 Ny2 Pz2 F Ny1 Ny2 Pz1 Pz2 alfax fi n
@@ -333,20 +333,20 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   end
 
 % Estimate flux
-  sediment_SWI_fluxes.Ox           = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(Ox(:, end), D_O2, dx, fi), 31998);
-  sediment_SWI_fluxes.OM1          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.OM1_fx, 30973.762);
-  sediment_SWI_fluxes.OM2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.OM2_fx, 12010.7);
-  sediment_SWI_fluxes.PO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(PO4(:, end), D_PO4, dx, fi), 30973.762);
-  sediment_SWI_fluxes.NO3          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(NO3(:, end), D_NO3, dx, fi), 62004);
-  sediment_SWI_fluxes.FeOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.FeOH3_fx, 106867.0);
-  sediment_SWI_fluxes.Fe2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(Fe2(:, end), D_Fe2, dx, fi), 55845);
-  sediment_SWI_fluxes.NH4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(NH4(:, end), D_NH4, dx, fi), 18038);
-  sediment_SWI_fluxes.AlOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.AlOH3_fx, 78003.6);
-  sediment_SWI_fluxes.PO4adsa      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.PO4adsa_fx, 30973.762);
-  sediment_SWI_fluxes.PO4adsb      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.PO4adsb_fx, 30973.762);
-  sediment_SWI_fluxes.SO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(SO4(:, end), D_SO4, dx, fi), 96062);
-  sediment_SWI_fluxes.DOM1         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(DOM1(:, end), D_DOM1, dx, fi), 30973.762);
-  sediment_SWI_fluxes.DOM2         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(DOM2(:, end), D_DOM2, dx, fi), 12010.7);
+  sediment_D_fluxes.Ox           = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(Ox(:, end), D_O2, dx, fi), 31998);
+  sediment_D_fluxes.OM1          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.OM1_fx, 30973.762);
+  sediment_D_fluxes.OM2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.OM2_fx, 12010.7);
+  sediment_D_fluxes.PO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(PO4(:, end), D_PO4, dx, fi), 30973.762);
+  sediment_D_fluxes.NO3          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(NO3(:, end), D_NO3, dx, fi), 62004);
+  sediment_D_fluxes.FeOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.FeOH3_fx, 106867.0);
+  sediment_D_fluxes.Fe2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(Fe2(:, end), D_Fe2, dx, fi), 55845);
+  sediment_D_fluxes.NH4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(NH4(:, end), D_NH4, dx, fi), 18038);
+  sediment_D_fluxes.AlOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.AlOH3_fx, 78003.6);
+  sediment_D_fluxes.PO4adsa      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.PO4adsa_fx, 30973.762);
+  sediment_D_fluxes.PO4adsb      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( -sediment_bc.PO4adsb_fx, 30973.762);
+  sediment_D_fluxes.SO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(SO4(:, end), D_SO4, dx, fi), 96062);
+  sediment_D_fluxes.DOM1         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(DOM1(:, end), D_DOM1, dx, fi), 30973.762);
+  sediment_D_fluxes.DOM2         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(DOM2(:, end), D_DOM2, dx, fi), 12010.7);
 
 
   sediment_bioirrigation_fluxes.Ox   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(Ox(:, end), alfax, fi), x), 31998);
@@ -410,14 +410,14 @@ function [ sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrat
   % Estimating of the water-column and sediment interaction due to diffusion and bioirrigation:
 
 
-  sediment_integrated_over_depth_fluxes = {...
+  sediment_additional_results = {...
     0,   'Ox integrated over depth flux to sediments';
   };
 
 
 
 
-    if any(isnan(sediment_SWI_fluxes.Ox))| any(isnan(sediment_bc.OM1_fx))| any(isnan(sediment_bc.OM2_fx))| any(isnan(sediment_bc.FeOH3_fx))| any(isnan(Ox)) | any(isnan(OM)) | any(isnan(OMb)) | any(isnan(NO3)) | any(isnan(FeOH3)) | any(isnan(SO4)) | any(isnan(NH4)) | any(isnan(Fe2)) | any(isnan(FeOOH)) | any(isnan(H2S)) | any(isnan(HS)) | any(isnan(FeS)) | any(isnan(S0)) | any(isnan(PO4)) | any(isnan(S8)) | any(isnan(FeS2)) | any(isnan(AlOH3)) | any(isnan(PO4adsa)) | any(isnan(PO4adsb)) | any(isnan(H)) | any(isnan(Ca2)) | any(isnan(Ca3PO42)) | any(isnan(OMS)) | any(isnan(OH)) | any(isnan(HCO3)) | any(isnan(CO2)) | any(isnan(CO3)) | any(isnan(NH3)) | any(isnan(H2CO3))
+    if any(isnan(sediment_D_fluxes.Ox))| any(isnan(sediment_bc.OM1_fx))| any(isnan(sediment_bc.OM2_fx))| any(isnan(sediment_bc.FeOH3_fx))| any(isnan(Ox)) | any(isnan(OM)) | any(isnan(OMb)) | any(isnan(NO3)) | any(isnan(FeOH3)) | any(isnan(SO4)) | any(isnan(NH4)) | any(isnan(Fe2)) | any(isnan(FeOOH)) | any(isnan(H2S)) | any(isnan(HS)) | any(isnan(FeS)) | any(isnan(S0)) | any(isnan(PO4)) | any(isnan(S8)) | any(isnan(FeS2)) | any(isnan(AlOH3)) | any(isnan(PO4adsa)) | any(isnan(PO4adsb)) | any(isnan(H)) | any(isnan(Ca2)) | any(isnan(Ca3PO42)) | any(isnan(OMS)) | any(isnan(OH)) | any(isnan(HCO3)) | any(isnan(CO2)) | any(isnan(CO3)) | any(isnan(NH3)) | any(isnan(H2CO3))
       error('Breaking out of Sediments function: NaN values');
     end
 
