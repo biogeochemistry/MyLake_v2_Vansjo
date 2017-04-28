@@ -1,4 +1,4 @@
-function [ sediment_concentrations, sediment_params, sediment_matrix_templates, species_sediment] = sediment_init( pH, max_depth, temperature )
+function [ sediment_concentrations, sediment_params, sediment_matrix_templates] = sediment_init( pH, max_depth, temperature )
   % Input:
   % bottom pH of the lake, temperature at SWI.
 
@@ -12,42 +12,6 @@ function [ sediment_concentrations, sediment_params, sediment_matrix_templates, 
     sediment_params = params(max_depth, temperature);
     sediment_concentrations = init_concentrations(pH);
     sediment_matrix_templates = templates();
-    species_sediment = species();
-end
-
-function [species_sediment] = species()
-  % which species to simulate 1 = true , 0 = false
-    species_sediment.Oxygen = true;
-    species_sediment.OM1 = true;
-    species_sediment.OM2 = true;
-    species_sediment.NO3 = true;
-    species_sediment.FeOH3 = true;
-    species_sediment.SO4 = true;
-    species_sediment.NH4 = true;
-    species_sediment.Fe2 = true;
-    species_sediment.FeOOH = true;
-    species_sediment.H2S = true;
-    species_sediment.HS = true;
-    species_sediment.FeS = true;
-    species_sediment.S0 = true;
-    species_sediment.PO4 = true;
-    species_sediment.S8 = true;
-    species_sediment.FeS2 = true;
-    species_sediment.AlOH3 = true;
-    species_sediment.PO4adsa = true;
-    species_sediment.PO4adsb = true;
-    species_sediment.Ca2 = true;
-    species_sediment.Ca3PO42 = true;
-    species_sediment.OMS = true;
-    species_sediment.H = true;
-    species_sediment.OH = true;
-    species_sediment.CO2 = true;
-    species_sediment.CO3 = true;
-    species_sediment.HCO3 = true;
-    species_sediment.NH3 = true;
-    species_sediment.H2CO3 = true;
-    species_sediment.DOM1 = true;
-    species_sediment.DOM2 = true;
 end
 
 function [sediment_params] = params(max_depth, temperature)
@@ -415,90 +379,6 @@ function [sediment_matrix_templates] = templates()
         DOM2_AL, DOM2_AR, 'DOM2'; %20
     };
 
-end
-
-
-function [LU_solute, RK_solute, LD, LA, RD, RA] = matrices_template_solute(D_m, theta, v, fi, dx, dt, alpha, betta, n)
-  %MATRICES Formation of matrices for species
-  % ======================================================================
-
-  D = D_m / theta^2;
-
-  % NOTE: Removed porosity from advective term
-
-  % Coefficients solute:
-  LD = fi(2:end) * D * dt * betta / dx^2 ;
-  % LA = fi(2:end) * v * dt * alpha / (2 * dx) ;
-  LA = v * dt * alpha / (2 * dx) ;
-  RD = fi(2:end) * D * dt * (1 - betta) / dx^2 ;
-  % RA = fi(2:end) * v * dt * (1 - alpha) / (2 * dx);
-  RA =  v * dt * (1 - alpha) / (2 * dx);
-
-  % Constructing left matrix LU for solute species(left unknowns):
-  LUdiags = ones(n-1,3); % n-1 due to BC at the toLU
-  LUdiags(:,1) = LUdiags(:,1).*(-LA-LD);
-  LUdiags(n-2,1) = -2*LD(n-2);
-  LUdiags(:,2) = LUdiags(:,2).*(1+2*LD);
-  LUdiags(:,3) = LUdiags(:,3).*(LA-LD);
-  LUnum = [-1 0 1];
-  LU_solute = spdiags(LUdiags,LUnum,n-1,n-1);
-
-
-  % Constructing right matrix RK (right knowns):
-  RKdiags = ones(n-1,3); % n-1 due to BC at the top
-  RKdiags(:,1) = RKdiags(:,1) .* (RA+RD);
-  RKdiags(n-2,1) = 2*RD(n-2);
-  RKdiags(:,2) = RKdiags(:,2).*(1-2*RD);
-  RKdiags(:,3) = RKdiags(:,3).*(-RA+RD);
-  RKnum = [-1 0 1];
-  RK_solute = spdiags(RKdiags,RKnum,n-1,n-1);
-end
-
-function [LU_solid, RK_solid, LD, LA, RD, RA] = matrices_template_solid(D_m, theta, v, fi, dx, dt, alpha, betta, n)
-  %MATRICES Formation of matrices for species
-  % ======================================================================
-
-  D = D_m / theta^2;
-
-  % NOTE: check the porosity
-
-  % Coefficients solid:
-  LD = (1-fi) * D * dt * betta / dx^2 ;
-  % LD = D * dt * betta / dx^2 ;
-  LA = (1-fi) * v * dt * alpha / (2 * dx) ;
-  % LA =  v * dt * alpha / (2 * dx) ;
-  RD = (1-fi) * D * dt * (1 - betta) / dx^2 ;
-  % RD = D * dt * (1 - betta) / dx^2 ;
-  RA = (1-fi) * v * dt * (1 - alpha) / (2 * dx);
-  % RA =  v * dt * (1 - alpha) / (2 * dx);
-
-
-  % Constructing left matrix LU_solid for solid species(left unknowns):
-  LUdiags_solid = ones(n,3); % n-1 due to BC at the top
-  LUdiags_solid(:,1) = LUdiags_solid(:,1).*(-LA-LD);
-  LUdiags_solid(n-1,1) = -2*LD(n-1);
-  LUdiags_solid(:,2) = LUdiags_solid(:,2).*((1-fi)+2*LD);
-  % LUdiags_solid(:,2) = LUdiags_solid(:,2).*(1+2*LD);
-  LUdiags_solid(:,3) = LUdiags_solid(:,3).*(LA-LD);
-  LUnum_solid = [-1 0 1];
-  LU_solid = spdiags(LUdiags_solid,LUnum_solid,n,n);
-  LU_solid(1,2) = - 2*LD(1);
-  LU_solid(1,1) = ((LD(1)+LA(1))*2*dx*v/D+(1-fi(1))+2*LD(1));
-  % LU_solid(1,1) = ((LD(1)+LA(1))*2*dx*v/D+1+2*LD(1));
-
-
-  % Constructing right matrix RK_solid for solid species(right knowns)
-  RKdiags_solid = ones(n,3); % n-1 due to BC at the top
-  RKdiags_solid(:,1) = RKdiags_solid(:,1) .* (RA+RD);
-  RKdiags_solid(n-1,1) = 2*RD(n-1);
-  RKdiags_solid(:,2) = RKdiags_solid(:,2).*((1-fi)-2*RD);
-  % RKdiags_solid(:,2) = RKdiags_solid(:,2).*(1-2*RD);
-  RKdiags_solid(:,3) = RKdiags_solid(:,3).*(-RA+RD);
-  RKnum_solid = [-1 0 1];
-  RK_solid = spdiags(RKdiags_solid,RKnum_solid,n,n);
-  RK_solid(1,2) = 2* RD(1);
-  RK_solid(1,1) = ((-RA(1) - RD(1)) * 2*dx*v/D + (1-fi(1))-2*RD(1));
-  % RK_solid(1,1) = ((-RA(1) - RD(1)) * 2*dx*v/D + 1-2*RD(1));
 end
 
 
