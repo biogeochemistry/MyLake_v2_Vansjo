@@ -455,7 +455,7 @@ DoM=[]; %initialize
 
 % ============ sediment module ============
 % Allocation and initial sediment profiles concentrations and reading initial concentrations for sediment from file
-[sediment_concentrations, sediment_params, sediment_matrix_templates, species_sediment]  = sediment_init( pH, zm, In_Tz(end) );
+[sediment_concentrations, sediment_params, sediment_matrix_templates]  = sediment_init( pH, zm, In_Tz(end) );
 % ==========================================
 
 % ============ water-column module ============
@@ -1411,7 +1411,7 @@ for i = 1:length(tt)
 
         % Running sediment module
         [sediment_bioirrigation_fluxes, sediment_SWI_fluxes, sediment_integrated_over_depth_fluxes, sediment_concentrations, z_sediment, R_values_sedimentz] = sediment_v2(...
-            sediment_concentrations, sediment_params, sediment_matrix_templates, species_sediment, sediment_bc);
+            sediment_concentrations, sediment_params, sediment_matrix_templates, sediment_bc);
 
         MyLakeOldConcentrations.O2z = O2z;
         MyLakeOldConcentrations.Pz = Pz;
