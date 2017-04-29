@@ -703,7 +703,7 @@ function bioR = bioirrigation(C, alfax, fi)
   Co = C(1);
   bioR = fi .* alfax .* (C - Co);
   % NOTE:Disabled for now
-  % bioR = 0;
+  bioR = 0;
 end
 
 
