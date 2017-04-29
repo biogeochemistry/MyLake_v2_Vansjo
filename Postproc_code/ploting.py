@@ -78,18 +78,35 @@ class ResultsPlotter:
             results = self.myLake_results
         return results
 
+    def unit_converter(self, convert_units, env, e):
+        if convert_units:
+            if env == 'sediment':
+                coef = molar_masses[e[:-2]]
+                units = '[$mg/m^3$]'
+            elif env == 'water-column':
+                coef = 1 / molar_masses[e[:-2]]
+                units = '[$mmol/L$]'
+        else:
+            coef = 1
+            if env == 'sediment':
+                units = '[$mmol/L$]'
+            elif env == 'water-column':
+                units = '[$mg/m^3$]'
+        return coef, units
+
     def plot_flux(self, elem):
         results = self.sediment_results
         plt.figure(figsize=(6, 4), dpi=192)
         start = -365 * self.years_ago
         end = -365 * (self.years_ago - 1) - 1
+
+        plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_D_fluxes'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3, label=elem)
         try:
             plt.plot(results['days'][0, 0][0][start:end] - 366, results['Bioirrigation_fx_zt'][0, 0][elem]
                      [0, 0][0][start:end], sns.xkcd_rgb["medium green"], lw=3, label='Bioirrigation')
-            plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_D_fluxes'][0, 0]
-                     [elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3, label='Diffusive')
         except:
-            plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_D_fluxes'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3, label=elem)
+            pass
+
         ax = plt.gca()
         ax.set_ylabel(elem + ' flux, $[mg/m^{2}/d]$')
         ax.ticklabel_format(useOffset=False)
@@ -151,22 +168,6 @@ class ResultsPlotter:
         # axes[-1].grid(linestyle='-', linewidth=0.2)
         # axes[-1].set_ylabel(r'$mg / m^3$')
         # axes[-1].legend(loc=1)
-
-    def unit_converter(self, convert_units, env, e):
-        if convert_units:
-            if env == 'sediment':
-                coef = molar_masses[e[:-2]]
-                units = '[$mg/m^3$]'
-            elif env == 'water-column':
-                coef = 1 / molar_masses[e[:-2]]
-                units = '[$mmol/L$]'
-        else:
-            coef = 1
-            if env == 'sediment':
-                units = '[$mmol/L$]'
-            elif env == 'water-column':
-                units = '[$mg/m^3$]'
-        return coef, units
 
     def plot_profile(self, env, elem, convert_units=False):
         results = self.env_getter(env)
