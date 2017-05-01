@@ -2102,11 +2102,11 @@ function [dcdt] = rates(C, dt)
     R1d =  k_DOM2_wc_q10 .* DOCz .* f_O2 .* accel_wc;
     R1e =  k_OMb_wc_q10 .* POCz .* f_O2 .* accel_wc;
 
-    R2a =  0; % k_OM_wc_q10  .* Chlz .* f_NO3;
-    R2b =  0; % k_OM_wc_q10  .* Cz .* f_NO3;
-    R2c =  k_DOM1_wc_q10  .* DOPz .* f_NO3;
-    R2d =  k_DOM2_wc_q10 .* DOCz .* f_NO3;
-    R2e =  k_OMb_wc_q10 .* POCz .* f_NO3;
+    R2a =  0; % k_OM_wc_q10  .* Chlz .* f_NO3 .* accel_wc;
+    R2b =  0; % k_OM_wc_q10  .* Cz .* f_NO3 .* accel_wc;
+    R2c =  k_DOM1_wc_q10  .* DOPz .* f_NO3 .* accel_wc;
+    R2d =  k_DOM2_wc_q10 .* DOCz .* f_NO3 .* accel_wc;
+    R2e =  k_OMb_wc_q10 .* POCz .* f_NO3 .* accel_wc;
 
     R3a =  0; % k_OM_wc_q10  .* Chlz .* f_FeOH3;
     R3b =  0; % k_OM_wc_q10  .* Cz .* f_FeOH3;
@@ -2166,7 +2166,7 @@ function [dcdt] = rates(C, dt)
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R10d - dfloc;% DOCz
     dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx1_wc*R2c + Cx2_wc*R2d+ Cx2_wc*R2e) + R9 - Ny1_wc * (R_dChl_growth + R_dCz_growth); % NO3z
-    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) - 2*R7  + R8; % Fe3z
+    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) - 2*R7  + R8 - R16a; % Fe3z
     dcdt(:,6)  = - 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx1_wc*R5c + Cx2_wc*R5d+ Cx2_wc*R5e) + R6 ; % SO4z
     dcdt(:,7)  =  (Ny1_wc * Ra + Ny1_wc * Rb + Ny1_wc * Rc + Ny2_wc * Rd+ Ny2_wc * Re) - R9 ;% NH4z
     dcdt(:,8)  = 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) + 2*R7 - R8 + R14b - R14a; % Fe2z

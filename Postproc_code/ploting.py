@@ -5,6 +5,7 @@ import seaborn as sns
 from matplotlib.colors import ListedColormap
 import scipy.io as sio
 from matplotlib import rc
+from scipy.interpolate import UnivariateSpline
 
 sns.set_style("whitegrid")
 sns.set_style("ticks")
@@ -94,18 +95,25 @@ class ResultsPlotter:
                 units = '[$mg/m^3$]'
         return coef, units
 
-    def plot_flux(self, elem):
+    def plot_flux(self, elem, smoothing_factor=False):
         results = self.sediment_results
         plt.figure(figsize=(6, 4), dpi=192)
         start = -365 * self.years_ago
         end = -365 * (self.years_ago - 1) - 1
+        x = results['days'][0, 0][0][start:end] - 366
+        y = results['sediment_D_fluxes'][0, 0][elem][0, 0][0][start:end]
 
-        plt.plot(results['days'][0, 0][0][start:end] - 366, results['sediment_D_fluxes'][0, 0][elem][0, 0][0][start:end], sns.xkcd_rgb["denim blue"], lw=3, label=elem)
-        try:
-            plt.plot(results['days'][0, 0][0][start:end] - 366, results['Bioirrigation_fx_zt'][0, 0][elem]
-                     [0, 0][0][start:end], sns.xkcd_rgb["medium green"], lw=3, label='Bioirrigation')
-        except:
-            pass
+        if smoothing_factor:
+            spl = UnivariateSpline(x, y)
+            spl.set_smoothing_factor(smoothing_factor)
+            plt.plot(x, spl(x), sns.xkcd_rgb["denim blue"], lw=3, label=elem)
+        else:
+            plt.plot(x, y, sns.xkcd_rgb["denim blue"], lw=3, label=elem)
+        # try:
+        #     plt.plot(x, results['Bioirrigation_fx_zt'][0, 0][elem]
+        #              [0, 0][0][start:end], sns.xkcd_rgb["medium green"], lw=3, label='Bioirrigation')
+        # except:
+        #     pass
 
         ax = plt.gca()
         ax.set_ylabel(elem + ' flux, $[mg/m^{2}/d]$')
@@ -162,7 +170,7 @@ class ResultsPlotter:
         for ax in axes:
             ax.grid(linestyle='-', linewidth=0.2)
             ax.set_ylim([0, 50])
-            ax.set_ylabel(r'$mg / m^3$')
+            ax.set_ylabel(r'$[mg / m^3]$')
             ax.legend(loc=1)
 
         # axes[-1].grid(linestyle='-', linewidth=0.2)
@@ -172,11 +180,15 @@ class ResultsPlotter:
     def plot_profile(self, env, elem, convert_units=False):
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
+        end = -365 * (self.years_ago - 1) - 1
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
-            plt.plot(results[e][0, 0][:, -1] * coef, -results['z'][0, 0][:, -1], lw=3, label=e[:-2])
+            plt.plot(results[e][0, 0][:, -1 + end] * coef, -results['z'][0, 0][:, -1], lw=3, label=e[:-2])
         plt.xlabel(units)
-        plt.ylabel('Depth, m')
+        if env == 'water-column':
+            plt.ylabel('Depth, [m]')
+        else:
+            plt.ylabel('Depth, [cm]')
         ax = plt.gca()
         ax.ticklabel_format(useOffset=False)
         ax.grid(linestyle='-', linewidth=0.2)

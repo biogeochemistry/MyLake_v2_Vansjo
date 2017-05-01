@@ -349,14 +349,14 @@ function [ sediment_bioirrigation_fluxes, sediment_D_fluxes, sediment_concentrat
   sediment_D_fluxes.DOM2         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( top_sediment_diffusion_flux(DOM2(:, end), D_DOM2, dx, fi), 12010.7);
 
 
-  sediment_bioirrigation_fluxes.Ox   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth( bioirrigation(Ox(:, end), alfax, fi), dx), 31998);
-  sediment_bioirrigation_fluxes.PO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth( bioirrigation(PO4(:, end),  alfax,  fi), dx), 30973.762);
-  sediment_bioirrigation_fluxes.Fe2  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth( bioirrigation(Fe2(:, end),  alfax,  fi), dx), 55845);
-  sediment_bioirrigation_fluxes.NO3  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth( bioirrigation(NO3(:, end),  alfax,  fi), dx), 62004);
-  sediment_bioirrigation_fluxes.NH4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth( bioirrigation(NH4(:, end),  alfax,  fi), dx), 18038);
-  sediment_bioirrigation_fluxes.SO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth( bioirrigation(SO4(:, end),  alfax,  fi), dx), 96062);
-  sediment_bioirrigation_fluxes.DOM1 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth( bioirrigation(DOM1(:, end),  alfax,  fi), dx), 30973.762);
-  sediment_bioirrigation_fluxes.DOM2 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth( bioirrigation(DOM2(:, end),  alfax,  fi), dx), 12010.7);
+  sediment_bioirrigation_fluxes.Ox   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(Ox(:, end), alfax, fi), x), 31998);
+  sediment_bioirrigation_fluxes.PO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(PO4(:, end),  alfax,  fi), x), 30973.762);
+  sediment_bioirrigation_fluxes.Fe2  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(Fe2(:, end),  alfax,  fi), x), 55845);
+  sediment_bioirrigation_fluxes.NO3  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(NO3(:, end),  alfax,  fi), x), 62004);
+  sediment_bioirrigation_fluxes.NH4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(NH4(:, end),  alfax,  fi), x), 18038);
+  sediment_bioirrigation_fluxes.SO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(SO4(:, end),  alfax,  fi), x), 96062);
+  sediment_bioirrigation_fluxes.DOM1 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(DOM1(:, end),  alfax,  fi), x), 30973.762);
+  sediment_bioirrigation_fluxes.DOM2 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d( integrate_over_depth_2( bioirrigation(DOM2(:, end),  alfax,  fi), x), 12010.7);
 
 
 
@@ -659,7 +659,11 @@ function [int_rate] = integrate_over_depth_2(R, z)
   % int_rate  [umol cm-2 year -1 ]
   % R - rate of interest
   % z - the depth
-  int_rate = trapz(z,R);
+  if size(R,1) == 1
+    int_rate = 0;
+  else
+    int_rate = trapz(z,R);
+  end
 end
 
 %% daily_average: returns the average rate during 1 day.
@@ -765,10 +769,10 @@ function [dcdt] = sediment_rates(C, dt)
     R1c = k_DOM1.* DOM1 .* f_O2 * accel;
     R1d = k_DOM2.*DOM2 .* f_O2 * accel;
 
-    R2a = k_OM.*OM .* f_NO3;
-    R2b = k_OMb.*OMb .* f_NO3;
-    R2c = k_DOM1.*DOM1 .* f_NO3;
-    R2d = k_DOM2.*DOM2 .* f_NO3;
+    R2a = k_OM.*OM .* f_NO3 * accel;
+    R2b = k_OMb.*OMb .* f_NO3 * accel;
+    R2c = k_DOM1.*DOM1 .* f_NO3 * accel;
+    R2d = k_DOM2.*DOM2 .* f_NO3 * accel;
 
     R3a = k_OM.*OM .* f_FeOH3;
     R3b = k_OMb .*OMb .* f_FeOH3;
@@ -842,11 +846,11 @@ function [dcdt] = sediment_rates(C, dt)
     dcdt(:,2)  = -1*Ra - R10a; % POC1
     dcdt(:,3)  = -1*Rb - R10b; % POC2
     dcdt(:,4)  = - 0.8*(Cx1*R2a+Cx1*R2b)*F - 0.8*(Cx1*R2c+Cx1*R2d)+ R9 + bioirrigation(NO3, alfax, fi); % NO3
-    dcdt(:,5)  = -4 * (Cx1*R3a + Cx2*R3b+Cx1*R3c + Cx2*R3d) - 2*R7 + R8/F; % FeOH3
+    dcdt(:,5)  = -4 * (Cx1*R3a + Cx2*R3b+Cx1*R3c + Cx2*R3d) - 2*R7 + R8/F - R16a; % FeOH3
     dcdt(:,6)  = - 0.5*(Cx1*R5a + Cx2*R5b) * F -0.5*(Cx1*R5c + Cx2*R5d)+ R6 + bioirrigation(SO4, alfax, fi); % SO4
     dcdt(:,7)  = (Ny1 * Ra + Ny2 * Rb) * F + (Ny1 * Rc + Ny2 * Rd) - R9 + bioirrigation(NH4, alfax, fi); % NH4
     dcdt(:,8)  = 4*(Cx1*R3a + Cx2*R3b)*F + 4* (Cx1*R3c + Cx2*R3d) + 4*(Cx1*R4a + Cx2*R4b)*F + 4 * (Cx1*R4c + Cx2*R4d) + 2*R7 - R8 + R14b - R14a + bioirrigation(Fe2, alfax, fi); % Fe2
-    dcdt(:,9)  = -4*(Cx1*R4a + Cx2*R4b + Cx1*R4c + Cx2*R4d) + R12; % FeOOH
+    dcdt(:,9)  = -4*(Cx1*R4a + Cx2*R4b + Cx1*R4c + Cx2*R4d) + R12 - R17a; % FeOOH
     dcdt(:,10) = +bioirrigation(H2S, alfax, fi); % H2S
     dcdt(:,11) = 0.5*(Cx1*R5a + Cx2*R5b)*F + 0.5 * (Cx1*R5c + Cx2*R5d) - R6 - R7 + R14b - R14a - R10a - R10b - R10c - R10d -R13 +bioirrigation(HS, alfax, fi); % HS
     dcdt(:,12) = - R14b - R11 - 4*R12 -R13 + R14a; % FeS
