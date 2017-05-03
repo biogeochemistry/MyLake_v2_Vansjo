@@ -2154,6 +2154,8 @@ function [dcdt] = rates(C, dt)
     R14b = 0; % NOTE: no FeS
     R16a = k_pdesorb_a_wc .* (Fe3z-PPz) .* Pz;
     R16b = f_pfe_wc .* (4 * R3 + 2 * R7);
+    R16b = (R16b.*dt < PPz).*R16b + (R16b.*dt > PPz).* PPz ./ (dt) * 0.5;
+
     R17a = 0; % No FeOOH in WC
     R17b = 0; % No FeOOH in WC
     R18a = k_pdesorb_c_wc .* Pz .* Al3z; % NOTE: No separate pool for sorbed P on aluminum in WC

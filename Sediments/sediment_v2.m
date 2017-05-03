@@ -829,10 +829,15 @@ function [dcdt] = sediment_rates(C, dt)
     R14b  = (R14b >= 0) .* R14b; % can only be non negative
     R15a = k_Spre * S0;
     R15b = k_Sdis .* S8;
+
     R16a = k_pdesorb_a * (FeOH3 - PO4adsa) .* PO4;
     R16b = f_pfe .* (4 * R3 + 2 * R7);
+    R16b = (R16b.*dt < PO4adsa).*R16b + (R16b.*dt > PO4adsa).* PO4adsa ./ (dt) * 0.5;
+
     R17a = k_pdesorb_b * (FeOOH - PO4adsb) .* PO4;
     R17b = f_pfe .* (4 * R4);
+    R17b = (R17b.*dt < PO4adsb).*R17b + (R17b.*dt > PO4adsb).* PO4adsb ./ (dt) * 0.5;
+
     R18a = k_pdesorb_c .* PO4 .* AlOH3;
     R18b = 0;
     R19 = k_apa * (PO4 - kapa);
