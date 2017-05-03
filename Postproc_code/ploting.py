@@ -98,8 +98,8 @@ class ResultsPlotter:
     def plot_flux(self, elem, smoothing_factor=False):
         results = self.sediment_results
         plt.figure(figsize=(6, 4), dpi=192)
-        start = -365 * self.years_ago
-        end = -365 * (self.years_ago - 1) - 1
+        start = int(-365 * self.years_ago)
+        end = int(-365 * (self.years_ago - 1) - 1)
         x = results['days'][0, 0][0][start:end] - 366
         y = results['sediment_D_fluxes'][0, 0][elem][0, 0][0][start:end]
 
@@ -180,7 +180,7 @@ class ResultsPlotter:
     def plot_profile(self, env, elem, convert_units=False):
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
-        end = -365 * (self.years_ago - 1) - 1
+        end = int(-365 * (self.years_ago - 1) - 1)
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
             plt.plot(results[e][0, 0][:, -1 + end] * coef, -results['z'][0, 0][:, -1], lw=3, label=e[:-2])
@@ -200,8 +200,8 @@ class ResultsPlotter:
     def contour_plot(self, env, elem, convert_units=False, cmap=ListedColormap(sns.color_palette("Blues", 51))):
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
-        start = -365 * self.years_ago
-        end = -365 * (self.years_ago - 1) - 1
+        start = int(-365 * self.years_ago)
+        end = int(-365 * (self.years_ago - 1) - 1)
         X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 366, -results['z'][0, 0])
         z = 0
         for e in elem:
