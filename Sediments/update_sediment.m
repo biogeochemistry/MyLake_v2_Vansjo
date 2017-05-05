@@ -47,15 +47,18 @@ end
 
 function C_bc = dissolved_bc(C, fi)
 % return the value of boundary concentration for sediment
+% In MyLake the concentrations are bulk concentrations
+% in sediment the are per V of H2O or per V of solid
 % C - concentration of the particular species in MyLake [umol/cm3]
-    C_bc = C(end) * fi(1);
+    C_bc = C(end);
 end
 
 function solid_fx = solid_bc(C, w_s, fi)
-    % C   - concentration in WC [mg m-3]
+    % C   - concentration in WC [umol/cm3]
     % w_s - settling velocity of solids [cm year-1]
+    % mmol arriving at SWI interface is
     % solid_fx - flux of solid at SWI [umol cm-2 yr-1]
-    solid_fx = w_s * (1 - fi(1)) * C(end);
+    solid_fx = w_s * C(end) * (1 - fi(1));
 end
 
 
