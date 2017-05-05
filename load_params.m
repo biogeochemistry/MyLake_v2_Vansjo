@@ -72,8 +72,8 @@ lake_params = {
 
 sediment_params = {
     1,     'k_OM1';  % 1
-    0.1,  'k_OM2';  % 0.01
-    10,   'k_DOM1';  % 0.01
+    0.1,   'k_OM2';  % 0.01
+    10,    'k_DOM1';  % 0.01
     1,     'k_DOM2';  % 0.01
     0.008, 'Km_O2';     % Canavan, R. W (2006)
     0.01,  'Km_NO3';    % Canavan, R. W (2006)
@@ -92,10 +92,8 @@ sediment_params = {
     2500,  'k_Spre';
     3.17,  'k_FeS2pre';
     0.1,   'k_alum';
-    % 1.35,  'k_pdesorb_a';
-    300,  'k_pdesorb_a';
-    % 1.35,  'k_pdesorb_b';
-    300,  'k_pdesorb_b';
+    1.35,  'k_pdesorb_a';;
+    1.35,  'k_pdesorb_b';
     6500,  'k_rhom';
     0.1,   'k_tS_Fe';
     9600,  'Ks_FeS';    % Canavan, R. W (2006)
