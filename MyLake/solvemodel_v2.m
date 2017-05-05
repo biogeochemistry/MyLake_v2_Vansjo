@@ -1421,7 +1421,7 @@ for i = 1:length(tt)
         MyLakeOldConcentrations.DOCz = DOCz;
 
         % Update WC:  [sediment] ----> [WC]
-        [MyLakeNewConcentrations] = update_wc(MyLakeOldConcentrations, MyLake_params, sediment_transport_fluxes, sediment_bioirrigation_fluxes);
+        [MyLakeNewConcentrations] = update_wc(MyLakeOldConcentrations, MyLake_params, sediment_params, sediment_transport_fluxes, sediment_bioirrigation_fluxes);
 
         O2z = MyLakeNewConcentrations.O2z;
         Pz = MyLakeNewConcentrations.Pz;
@@ -2149,7 +2149,7 @@ function [dcdt] = rates(C, dt)
     R13  = 0; % NOTE: no FeS
     R14a = 0; % NOTE: no FeS
     R14b = 0; % NOTE: no FeS
-    R16a = k_pdesorb_a_wc .* (Fe3z-PPz) .* Pz;
+    R16a = 0; %k_pdesorb_a_wc .* (Fe3z-PPz) .* Pz;
     R16b = f_pfe_wc .* (4 * R3 + 2 * R7);
     R16b = (R16b.*dt < PPz).*R16b + (R16b.*dt > PPz).* PPz ./ (dt) * 0.5;
 

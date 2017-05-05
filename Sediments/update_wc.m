@@ -1,4 +1,4 @@
-function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_params, sediment_transport_fluxes, sediment_bioirrigation_fluxes )
+function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_params, sediment_params,sediment_transport_fluxes, sediment_bioirrigation_fluxes )
     %UPDATE_WC Summary of this function goes here
 
     O2z = MyLakeOldConcentrations.O2z;
@@ -10,24 +10,24 @@ function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_
     DOPz = MyLakeOldConcentrations.DOPz;
 
     % Diffusion Fluxes:
-    O2z = update_C_due_to_flux(O2z, sediment_transport_fluxes.Ox, MyLake_params);
-    Pz = update_C_due_to_flux(Pz, sediment_transport_fluxes.PO4, MyLake_params);
-    Fe2z = update_C_due_to_flux(Fe2z, sediment_transport_fluxes.Fe2, MyLake_params);
-    NO3z = update_C_due_to_flux(NO3z, sediment_transport_fluxes.NO3, MyLake_params);
-    NH4z = update_C_due_to_flux(NH4z, sediment_transport_fluxes.NH4, MyLake_params);
-    DOPz = update_C_due_to_flux(DOPz, sediment_transport_fluxes.DOM1, MyLake_params);
-    DOCz = update_C_due_to_flux(DOCz, sediment_transport_fluxes.DOM2, MyLake_params);
+    O2z = update_C_due_to_flux(O2z, sediment_transport_fluxes.Ox, MyLake_params, sediment_params);
+    Pz = update_C_due_to_flux(Pz, sediment_transport_fluxes.PO4, MyLake_params, sediment_params);
+    Fe2z = update_C_due_to_flux(Fe2z, sediment_transport_fluxes.Fe2, MyLake_params, sediment_params);
+    NO3z = update_C_due_to_flux(NO3z, sediment_transport_fluxes.NO3, MyLake_params, sediment_params);
+    NH4z = update_C_due_to_flux(NH4z, sediment_transport_fluxes.NH4, MyLake_params, sediment_params);
+    DOPz = update_C_due_to_flux(DOPz, sediment_transport_fluxes.DOM1, MyLake_params, sediment_params);
+    DOCz = update_C_due_to_flux(DOCz, sediment_transport_fluxes.DOM2, MyLake_params, sediment_params);
 
     % % Boudreau, B.P., 1999. Metals and models : Diagenetic modelling in freshwater lacustrine sediments *. , pp.227–251.
 
     % % Bioirrigation
-    O2z = update_C_due_to_flux(O2z, sediment_bioirrigation_fluxes.Ox, MyLake_params);
-    Pz = update_C_due_to_flux(Pz, sediment_bioirrigation_fluxes.PO4, MyLake_params);
-    Fe2z = update_C_due_to_flux(Fe2z, sediment_bioirrigation_fluxes.Fe2, MyLake_params);
-    NO3z = update_C_due_to_flux(NO3z, sediment_bioirrigation_fluxes.NO3, MyLake_params);
-    NH4z = update_C_due_to_flux(NH4z, sediment_bioirrigation_fluxes.NH4, MyLake_params);
-    DOPz = update_C_due_to_flux(DOPz, sediment_bioirrigation_fluxes.DOM1, MyLake_params);
-    DOCz = update_C_due_to_flux(DOCz, sediment_bioirrigation_fluxes.DOM2, MyLake_params);
+    O2z = update_C_due_to_flux(O2z, sediment_bioirrigation_fluxes.Ox, MyLake_params, sediment_params);
+    Pz = update_C_due_to_flux(Pz, sediment_bioirrigation_fluxes.PO4, MyLake_params, sediment_params);
+    Fe2z = update_C_due_to_flux(Fe2z, sediment_bioirrigation_fluxes.Fe2, MyLake_params, sediment_params);
+    NO3z = update_C_due_to_flux(NO3z, sediment_bioirrigation_fluxes.NO3, MyLake_params, sediment_params);
+    NH4z = update_C_due_to_flux(NH4z, sediment_bioirrigation_fluxes.NH4, MyLake_params, sediment_params);
+    DOPz = update_C_due_to_flux(DOPz, sediment_bioirrigation_fluxes.DOM1, MyLake_params, sediment_params);
+    DOCz = update_C_due_to_flux(DOCz, sediment_bioirrigation_fluxes.DOM2, MyLake_params, sediment_params);
 
     MyLakeNewConcentrations.O2z = O2z;
     MyLakeNewConcentrations.Pz = Pz;
@@ -43,12 +43,13 @@ function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_
 end
 
 %% update_C_due_to_flux: Update concentration of the WC due to flux from/to sediment
-function [C] = update_C_due_to_flux(C, flux, MyLake_params)
+function [C] = update_C_due_to_flux(C, flux, MyLake_params, sediment_params)
     Az_end = MyLake_params.Az(end);
     Vz_end = MyLake_params.Vz(end);
     dt     = MyLake_params.dt;
+    fi = sediment_params.fi;
 
-    dC = flux * dt * Az_end / Vz_end;
+    dC = fi(1)*flux * dt * Az_end / Vz_end;
     C(end) = C(end) + dC;
     C(end) = (C(end) > 0).*C(end);
 end
