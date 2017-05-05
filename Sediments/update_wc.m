@@ -1,4 +1,4 @@
-function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_params, sediment_SWI_fluxes, sediment_bioirrigation_fluxes )
+function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_params, sediment_transport_fluxes, sediment_bioirrigation_fluxes )
     %UPDATE_WC Summary of this function goes here
 
     O2z = MyLakeOldConcentrations.O2z;
@@ -10,13 +10,13 @@ function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_
     DOPz = MyLakeOldConcentrations.DOPz;
 
     % Diffusion Fluxes:
-    O2z = update_C_due_to_flux(O2z, sediment_SWI_fluxes.Ox, MyLake_params);
-    Pz = update_C_due_to_flux(Pz, sediment_SWI_fluxes.PO4, MyLake_params);
-    Fe2z = update_C_due_to_flux(Fe2z, sediment_SWI_fluxes.Fe2, MyLake_params);
-    NO3z = update_C_due_to_flux(NO3z, sediment_SWI_fluxes.NO3, MyLake_params);
-    NH4z = update_C_due_to_flux(NH4z, sediment_SWI_fluxes.NH4, MyLake_params);
-    DOPz = update_C_due_to_flux(DOPz, sediment_SWI_fluxes.DOM1, MyLake_params);
-    DOCz = update_C_due_to_flux(DOCz, sediment_SWI_fluxes.DOM2, MyLake_params);
+    O2z = update_C_due_to_flux(O2z, sediment_transport_fluxes.Ox, MyLake_params);
+    Pz = update_C_due_to_flux(Pz, sediment_transport_fluxes.PO4, MyLake_params);
+    Fe2z = update_C_due_to_flux(Fe2z, sediment_transport_fluxes.Fe2, MyLake_params);
+    NO3z = update_C_due_to_flux(NO3z, sediment_transport_fluxes.NO3, MyLake_params);
+    NH4z = update_C_due_to_flux(NH4z, sediment_transport_fluxes.NH4, MyLake_params);
+    DOPz = update_C_due_to_flux(DOPz, sediment_transport_fluxes.DOM1, MyLake_params);
+    DOCz = update_C_due_to_flux(DOCz, sediment_transport_fluxes.DOM2, MyLake_params);
 
     % % Boudreau, B.P., 1999. Metals and models : Diagenetic modelling in freshwater lacustrine sediments *. , pp.227–251.
 
