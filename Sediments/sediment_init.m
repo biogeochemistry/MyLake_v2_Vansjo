@@ -67,14 +67,6 @@ function [sediment_params] = params(max_depth, temperature)
     x = linspace(0, sediment_params.depth, sediment_params.n);
     sediment_params.x = x;      % x-axis
 
-    % Scheme properties:
-    % if alpha = betta = 0   then it is fully explicit
-    % if alpha = betta = 1   then it is fully implicit
-    % if alpha = betta = 1/2 then it is Crank-Nicolson
-    % if alpha != betta      then it is additive Runge-Kutta method
-    sediment_params.alpha = 0.5;  % Diffusion shift
-    sediment_params.betta = 0.5;  % Advection shift
-    sediment_params.gama = 1;   % Reaction shift
 
     % Physical properties:
     sediment_params.w = data{2}(41);      % time-dependent burial rate w = 0.1
@@ -91,7 +83,9 @@ function [sediment_params] = params(max_depth, temperature)
     fi_f  = data{2}(38);
     X_b   = data{2}(39);
     tortuosity = data{2}(40);
-    sediment_params.fi = ( fi_in - fi_f ) * exp( -x' / X_b ) + fi_f;;      % porosity
+
+    % NOTE:  const porosity for test
+    sediment_params.fi =  0.9 * ones(sediment_params.n, 1);  %( fi_in - fi_f ) * exp( -x' / X_b ) + fi_f;;      % porosity
     sediment_params.tortuosity = tortuosity;  % tortuosity
 
     % Bio properties:
@@ -320,9 +314,6 @@ function [sediment_matrix_templates] = templates()
     dx = x(2)-x(1);
     t = 0:sediment_params.ts:sediment_params.years;
     dt    = t(2)-t(1);
-    alpha = sediment_params.alpha; % Diffusion shift;
-    betta = sediment_params.betta; % Advection shift;
-    gama  = sediment_params.gama; % Reaction shift;
     v = sediment_params.w;
     fi  = sediment_params.fi;
     tortuosity = sediment_params.tortuosity;
@@ -412,16 +403,16 @@ function [AL, AR, flux_coef] = cn_template_solid(D, theta, v, fi, dx, dt, n)
     q = (1-fi) * v * dt / dx;
 
     AL      = spdiags([-s/2+q/4 (1-fi+s) -s/2-q/4],[-1 0 1],n,n);
-    AL(1,1) = 1-fi(1)+s(1);
+    AL(1,1) = 1-fi(1)+s(1) + dx*v*s(1)/D - dx*q(1)*v/2/D;
     AL(1,2) = -s(1);
     AL(n,n) = 1-fi(n)+s(n);
     AL(n,n-1) = -s(n);
     AR      = spdiags([ s/2-q/4 (1-fi-s)  s/2+q/4],[-1 0 1],n,n);
-    AR(1,1) = 1-fi(1)-s(1);
+    AR(1,1) = 1-fi(1)-s(1) - dx*v*s(1)/D + dx*q(1)*v/2/D ;
     AR(1,2) = +s(1);
     AR(n,n) = 1-fi(n)-s(n);
     AR(n,n-1) = s(n);
 
-    flux_coef = 2*dx / (1-fi(1)) / D * (2*s(1) - q(1));
+    flux_coef = dx / D * (2*s(1) - q(1)); % / (1-fi(1)) ;
 end
 
