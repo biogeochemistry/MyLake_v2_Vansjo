@@ -19,18 +19,24 @@ solute_species = ['O2zt', 'NO3zt', 'SO4zt', 'NH4zt', 'Fe2zt', 'H2Szt', 'S0zt', '
                   'HSzt', 'Hzt', 'OHzt', 'CO2zt', 'CO3zt', 'HCO3zt', 'NH3zt', 'H2CO3zt', 'DOM1zt', 'DOM2zt']
 molar_masses = {
     'O2': 31998.8,
+    'Ox': 31998.8,
+    'OM1': 30973.762,
+    'DOP': 30973.762,
     'OM': 30973.762,
-    'OM': 30973.762,
-    'DOM1': 12010.7,
+    'OM2': 12010.7,
+    'OMb': 12010.7,
+    'DOM1': 30973.762,
     'DOM2': 12010.7,
     'NO3': 62004,
     'FeOH3': 106867.0,
+    'Fe3': 106867.0,
     'SO4': 96062,
     'NH4': 18038,
     'Fe2': 55845,
     'H2S': 34080.9,
     'HS': 33072.9,
     'P': 30973.762,
+    'PO4adsa': 30973.762,
     'PO4': 30973.762,
     'Al3': 78003.6,
     'PP': 30973.762,
@@ -70,7 +76,7 @@ class ResultsPlotter:
         MyLake_results, Sediment_results = load_data()
         self.myLake_results = MyLake_results
         self.sediment_results = Sediment_results
-        self.years_ago = years_ago
+        self.years_ago = years_ago + 1
 
     def env_getter(self, env):
         if env == 'sediment':
@@ -95,34 +101,54 @@ class ResultsPlotter:
                 units = '[$mg/m^3$]'
         return coef, units
 
-    def plot_flux(self, elem, smoothing_factor=False):
+    def plot_flux(self, elem, convert_units=False, smoothing_factor=False):
         results = self.sediment_results
+
         plt.figure(figsize=(6, 4), dpi=192)
         start = int(-365 * self.years_ago)
         end = int(-365 * (self.years_ago - 1) - 1)
         x = results['days'][0, 0][0][start:end] - 366
-        y = results['sediment_D_fluxes'][0, 0][elem][0, 0][0][start:end]
-
+        y = results['sediment_transport_fluxes'][0, 0][elem][0, 0][0][start:end]
+        total = {}
+        lines = {}
+        if convert_units:
+            y = y / (molar_masses[elem] * 10**4 / 365 / 10**6)
+            lbl = elem + ' flux, $[umol/cm^{2}/y]$'
+            total['D'] = np.trapz(y, x / 365)
+        else:
+            lbl = elem + ' flux, $[mg/m^{2}/d]$'
+            total['D'] = np.trapz(y, x)
         if smoothing_factor:
             spl = UnivariateSpline(x, y)
             spl.set_smoothing_factor(smoothing_factor)
-            plt.plot(x, spl(x), sns.xkcd_rgb["denim blue"], lw=3, label=elem)
+            lines['D'], = plt.plot(x, spl(x), sns.xkcd_rgb["denim blue"], lw=3, label=elem)
         else:
-            plt.plot(x, y, sns.xkcd_rgb["denim blue"], lw=3, label=elem)
-        # try:
-        #     plt.plot(x, results['Bioirrigation_fx_zt'][0, 0][elem]
-        #              [0, 0][0][start:end], sns.xkcd_rgb["medium green"], lw=3, label='Bioirrigation')
-        # except:
-        #     pass
+            lines['D'], = plt.plot(x, y, sns.xkcd_rgb["denim blue"], lw=3, label=elem)
+        try:
+            b = results['Bioirrigation_fx_zt'][0, 0][elem][0, 0][0][start:end]
+            if convert_units:
+                b = b / (molar_masses[elem] * 10**4 / 365 / 10**6)
+            lines['B'], = plt.plot(x, b, sns.xkcd_rgb["medium green"], lw=3, label='Bioirrigation')
+            if convert_units:
+                x = x / 365
+            total['B'] = np.trapz(b, x)
+        except:
+            pass
 
+        if convert_units:
+            lbl_2 = ' $[umol/cm^{2}]$'
+        else:
+            lbl_2 = ' $[mg/m^{2}]$'
+        leg1 = plt.legend([lines[e] for e in lines.keys()], ["{:.2f} ".format(total[e]) + lbl_2 for e in total.keys()], loc=4)
         ax = plt.gca()
-        ax.set_ylabel(elem + ' flux, $[mg/m^{2}/d]$')
+        ax.set_ylabel(lbl)
         ax.ticklabel_format(useOffset=False)
         ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
         ax.set_xlim([results['days'][0, 0][0][start:end][0] - 366, results['days'][0, 0][0][start:end][-1] - 366])
         ax.grid(linestyle='-', linewidth=0.2)
         ax.legend(loc=1)
+        plt.gca().add_artist(leg1)
         legend = plt.legend(frameon=1)
         frame = legend.get_frame()
         frame.set_facecolor('white')
@@ -181,9 +207,26 @@ class ResultsPlotter:
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
         end = int(-365 * (self.years_ago - 1) - 1)
+        z = results['z'][0, 0][:, -1]
+        mass_per_area = {}
+        lines = {}
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
-            plt.plot(results[e][0, 0][:, -1 + end] * coef, -results['z'][0, 0][:, -1], lw=3, label=e[:-2])
+            y = results[e][0, 0][:, -1 + end] * coef
+            lines[e], = plt.plot(y, -z, lw=3, label=e[:-2])
+            if convert_units and env == 'sediment':
+                mass_per_area[e] = np.trapz(y, z / 100)
+                lbl = r'$mg / m^2$'
+            elif convert_units and env == 'water-column':
+                mass_per_area[e] = np.trapz(y, z * 100)
+                lbl = r'$umol/cm^{2}$'
+            elif not convert_units and env == 'water-column':
+                mass_per_area[e] = np.trapz(y, z)
+                lbl = r'$mg / m^2$'
+            elif not convert_units and env == 'sediment':
+                mass_per_area[e] = np.trapz(y, z)
+                lbl = r'$umol/cm^{2}$'
+        leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4)
         plt.xlabel(units)
         if env == 'water-column':
             plt.ylabel('Depth, [m]')
@@ -192,7 +235,8 @@ class ResultsPlotter:
         ax = plt.gca()
         ax.ticklabel_format(useOffset=False)
         ax.grid(linestyle='-', linewidth=0.2)
-        plt.legend()
+        plt.legend(loc=1)
+        plt.gca().add_artist(leg1)
         plt.ylim([-results['z'][0, 0][-1], -results['z'][0, 0][0]])
         plt.tight_layout()
         plt.show()
