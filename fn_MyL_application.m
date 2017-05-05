@@ -122,6 +122,7 @@ initfile='IO/mylake_initial_concentrations.txt';
 
 if use_INCA == 0
     inputfile='IO/store_INCAP_input_baseline_mod.txt';
+    % inputfile='IO/store_constant_input.txt';
     disp('Using existing input')
 elseif use_INCA == 1
     inputfile = store_INCAP_input; % setting use_INCA to 2 will look for store_INCAP_input
