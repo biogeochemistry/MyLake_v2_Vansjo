@@ -22,7 +22,7 @@ lake_params = {
     1, 'I_scT',                % 17    scaling coefficient for inflow temperature (-)
     1, 'I_scC',                % 18    scaling factor for inflow concentration of C (-)
     1, 'I_scS',                % 19    scaling factor for inflow concentration of S (-)
-    1, 'I_scTP',             % 20    scaling factor for inflow concentration of total P (-)
+    1, 'I_scTP',               % 20    scaling factor for inflow concentration of total P (-)
     1, 'I_scDOP',              % 21    scaling factor for inflow concentration of diss. organic P (-)
     1, 'I_scChl',              % 22    scaling factor for inflow concentration of Chl a (-)
     1, 'I_scDOC',              % 23    scaling factor for inflow concentration of DOC  (-)
@@ -118,7 +118,7 @@ sediment_params = {
     0.1,    'w';
     256,    'n';
     30,     'depth';
-    1,   'F';
+    1,      'F';
     14.4,   'alfa0';
 
     % OM composition
@@ -129,5 +129,5 @@ sediment_params = {
     20,     'Ny2';
     0,      'Pz2';
 
-    0.0001,  'ts';
+    1/365/25,  'ts';
     };
