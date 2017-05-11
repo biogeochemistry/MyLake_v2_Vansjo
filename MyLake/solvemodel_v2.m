@@ -1343,6 +1343,27 @@ for i = 1:length(tt)
 
         C_new = wc_chemical_reactions_module(C0,dt,ts_during_day, wc_int_method);
 
+        rates = (C_new-C0)/dt*365;
+        dcdt.O2(:,i) = rates(:, 1);
+        dcdt.Chl(:,i) = rates(:, 2);
+        dcdt.DOC(:,i) = rates(:, 3);
+        dcdt.NO3(:,i) = rates(:, 4);
+        dcdt.Fe3(:,i) = rates(:, 5);
+        dcdt.SO4(:,i) = rates(:, 6);
+        dcdt.NH4(:,i) = rates(:, 7);
+        dcdt.Fe2(:,i) = rates(:, 8);
+        dcdt.H2S(:,i) = rates(:, 9);
+        dcdt.HS(:,i) = rates(:, 10);
+        dcdt.P(:,i) = rates(:, 11);
+        dcdt.Al3(:,i) = rates(:, 12);
+        dcdt.PP(:,i) = rates(:, 13);
+        dcdt.Ca2(:,i) = rates(:, 14);
+        dcdt.CO2(:,i) = rates(:, 15);
+        dcdt.DOP(:,i) = rates(:, 16);
+        dcdt.C(:,i) = rates(:, 17);
+        dcdt.S(:,i) = rates(:, 18);
+        dcdt.POC(:,i) = rates(:, 19);
+
         O2z  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,1), 31998.8);
         Chlz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,2), 30973.762);
         DOCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,3), 12010.7);
@@ -1398,6 +1419,7 @@ for i = 1:length(tt)
             MyLake_params.Mass_Ratio_C_Chl = Mass_Ratio_C_Chl;
             MyLake_params.Az = Az;
             MyLake_params.Vz = Vz;
+            MyLake_params.dz = dz;
             MyLake_params.Tz = Tz;
             MyLake_params.dt = dt;
             MyLake_params.pH = pH;
@@ -1434,7 +1456,7 @@ for i = 1:length(tt)
 
         % Sediment module output
         % Output:
-        O2_sediment_zt(:,i) = sediment_concentrations.Oxygen;
+        O2_sediment_zt(:,i) = sediment_concentrations.O2;
         OM_sediment_zt(:,i) = sediment_concentrations.OM1;
         OMb_sediment_zt(:,i) = sediment_concentrations.OM2;
         NO3_sediment_zt(:,i) = sediment_concentrations.NO3;
@@ -1466,7 +1488,7 @@ for i = 1:length(tt)
         DOM1_sediment_zt(:,i) = sediment_concentrations.DOM1;
         DOM2_sediment_zt(:,i) = sediment_concentrations.DOM2;
         pH_sediment_zt(:,i) = -log10(H_sediment_zt(:,i)*10^-3);
-        sediment_transport_fluxes_zt.Ox(i) = sediment_transport_fluxes.Ox;
+        sediment_transport_fluxes_zt.O2(i) = sediment_transport_fluxes.O2;
         sediment_transport_fluxes_zt.OM1(i) = sediment_transport_fluxes.OM1;
         sediment_transport_fluxes_zt.OM2(i) = sediment_transport_fluxes.OM2;
         sediment_transport_fluxes_zt.PO4(i) = sediment_transport_fluxes.PO4;
@@ -1479,13 +1501,44 @@ for i = 1:length(tt)
         sediment_transport_fluxes_zt.SO4(i) = sediment_transport_fluxes.SO4;
         sediment_transport_fluxes_zt.DOM1(i) = sediment_transport_fluxes.DOM1;
         sediment_transport_fluxes_zt.DOM2(i) = sediment_transport_fluxes.DOM2;
-        sediment_bioirrigation_fluxes_zt.Ox(i) = sediment_bioirrigation_fluxes.Ox;
+        sediment_bioirrigation_fluxes_zt.O2(i) = sediment_bioirrigation_fluxes.O2;
         sediment_bioirrigation_fluxes_zt.PO4(i) = sediment_bioirrigation_fluxes.PO4;
         sediment_bioirrigation_fluxes_zt.Fe2(i) = sediment_bioirrigation_fluxes.Fe2;
         sediment_bioirrigation_fluxes_zt.NO3(i) = sediment_bioirrigation_fluxes.NO3;
         sediment_bioirrigation_fluxes_zt.NH4(i) = sediment_bioirrigation_fluxes.NH4;
         sediment_bioirrigation_fluxes_zt.DOM1(i) = sediment_bioirrigation_fluxes.DOM1;
         sediment_bioirrigation_fluxes_zt.DOM2(i) = sediment_bioirrigation_fluxes.DOM2;
+        sediment_additional_results_zt.dcdt.O2(:,i)      = sediment_additional_results.dcdt.O2;
+        sediment_additional_results_zt.dcdt.OM(:,i)      = sediment_additional_results.dcdt.OM;
+        sediment_additional_results_zt.dcdt.OMb(:,i)     = sediment_additional_results.dcdt.OMb;
+        sediment_additional_results_zt.dcdt.NO3(:,i)     = sediment_additional_results.dcdt.NO3;
+        sediment_additional_results_zt.dcdt.FeOH3(:,i)   = sediment_additional_results.dcdt.FeOH3;
+        sediment_additional_results_zt.dcdt.SO4(:,i)     = sediment_additional_results.dcdt.SO4;
+        sediment_additional_results_zt.dcdt.NH4(:,i)     = sediment_additional_results.dcdt.NH4;
+        sediment_additional_results_zt.dcdt.Fe2(:,i)     = sediment_additional_results.dcdt.Fe2;
+        sediment_additional_results_zt.dcdt.FeOOH(:,i)   = sediment_additional_results.dcdt.FeOOH;
+        sediment_additional_results_zt.dcdt.H2S(:,i)     = sediment_additional_results.dcdt.H2S;
+        sediment_additional_results_zt.dcdt.HS(:,i)      = sediment_additional_results.dcdt.HS;
+        sediment_additional_results_zt.dcdt.FeS(:,i)     = sediment_additional_results.dcdt.FeS;
+        sediment_additional_results_zt.dcdt.S0(:,i)      = sediment_additional_results.dcdt.S0;
+        sediment_additional_results_zt.dcdt.PO4(:,i)     = sediment_additional_results.dcdt.PO4;
+        sediment_additional_results_zt.dcdt.S8(:,i)      = sediment_additional_results.dcdt.S8;
+        sediment_additional_results_zt.dcdt.FeS2(:,i)    = sediment_additional_results.dcdt.FeS2;
+        sediment_additional_results_zt.dcdt.AlOH3(:,i)   = sediment_additional_results.dcdt.AlOH3;
+        sediment_additional_results_zt.dcdt.PO4adsa(:,i) = sediment_additional_results.dcdt.PO4adsa;
+        sediment_additional_results_zt.dcdt.PO4adsb(:,i) = sediment_additional_results.dcdt.PO4adsb;
+        sediment_additional_results_zt.dcdt.Ca2(:,i)     = sediment_additional_results.dcdt.Ca2;
+        sediment_additional_results_zt.dcdt.Ca3PO42(:,i) = sediment_additional_results.dcdt.Ca3PO42;
+        sediment_additional_results_zt.dcdt.OMS(:,i)     = sediment_additional_results.dcdt.OMS;
+        sediment_additional_results_zt.dcdt.H(:,i)       = sediment_additional_results.dcdt.H;
+        sediment_additional_results_zt.dcdt.OH(:,i)      = sediment_additional_results.dcdt.OH;
+        sediment_additional_results_zt.dcdt.CO2(:,i)     = sediment_additional_results.dcdt.CO2;
+        sediment_additional_results_zt.dcdt.CO3(:,i)     = sediment_additional_results.dcdt.CO3;
+        sediment_additional_results_zt.dcdt.HCO3(:,i)    = sediment_additional_results.dcdt.HCO3;
+        sediment_additional_results_zt.dcdt.NH3(:,i)     = sediment_additional_results.dcdt.NH3;
+        sediment_additional_results_zt.dcdt.H2CO3(:,i)   = sediment_additional_results.dcdt.H2CO3;
+        sediment_additional_results_zt.dcdt.DOM1(:,i)   = sediment_additional_results.dcdt.DOM1;
+        sediment_additional_results_zt.dcdt.DOM2(:,i)   = sediment_additional_results.dcdt.DOM2;
     end
 
     % Output MyLake matrices
@@ -1550,13 +1603,13 @@ for i = 1:length(tt)
     lambdazt(:,i) = lambdaz_wtot_avg;
 
     surfaceflux(1,i) = surfflux; %Carbon dioxide surface flux
-    CO2_eqt(1,i) = CO2_eq;       %Carbon dioxide equilibrium concentration
-    K0t(:,i) = K0;               %Dissolved carbon doxide solubility coefficient
-    CO2_ppmt(:,i) = CO2_ppm;
+    % CO2_eqt(1,i) = CO2_eq;       %Carbon dioxide equilibrium concentration
+    % K0t(:,i) = K0;               %Dissolved carbon doxide solubility coefficient
+    % CO2_ppmt(:,i) = CO2_ppm;
 
-    O2fluxt(1,i) = O2flux;       %Oxygen surface flux
-    O2_eqt(1,i) = O2_eq;         %Oxygen equilibrium concentration
-    K0_O2t(1,i) = K0_O2;         %Dissolved oxygen solubility coefficient
+    % O2fluxt(1,i) = O2flux;       %Oxygen surface flux
+    % O2_eqt(1,i) = O2_eq;         %Oxygen equilibrium concentration
+    % K0_O2t(1,i) = K0_O2;         %Dissolved oxygen solubility coefficient
     % dO2Chlt(:,i) = dO2_Chl;
     % dO2BODt(:,i) = dO2_BOD;
     % dO2SODt(:,i) = dO2_SOD;
@@ -1694,6 +1747,7 @@ if matsedlab_sediment_module           % MATSEDLAB sediment module
     sediment_results.days = datenum(M_start):datenum(M_stop);
     sediment_results.m_start = M_start;
     sediment_results.m_stop = M_stop;
+    sediment_results.dcdt = sediment_additional_results_zt.dcdt;
 
 else
 
@@ -1774,10 +1828,13 @@ MyLake_results.testi2t = testi2t;
 MyLake_results.z = zz;
 MyLake_results.days = datenum(M_start):datenum(M_stop);
 MyLake_results.params = MyLake_params;
-MyLake_results.inflow_input = Inflw;
-MyLake_results.weather_input = Wt;
+MyLake_results.params.Phys_par = Phys_par;
+MyLake_results.params.Bio_par = Bio_par;
+MyLake_results.Inflw = Inflw;
+MyLake_results.Wt = Wt;
 MyLake_results.m_start = M_start;
 MyLake_results.m_stop = M_stop;
+MyLake_results.dcdt = dcdt;
 
 runtime=toc;
 
@@ -2132,13 +2189,13 @@ function [dcdt] = rates(C, dt)
     R8  = k_Feox_wc .* Fe2z .* O2z;
     % NOTE: Due to the reaction is too fast and could cause overshooting:
     % we need to make this check if R*dt > Conc of source:
-    R8 = (R8.*dt < Fe2z).*R8 + (R8.*dt > Fe2z).* Fe2z ./ (dt) * 0.5;
-    R8 = (R8.*dt < O2z).*R8 + (R8.*dt > O2z).* O2z ./ (dt) * 0.5;
+    % R8 = (R8.*dt < Fe2z).*R8 + (R8.*dt > Fe2z).* Fe2z ./ (dt) * 0.5;
+    % R8 = (R8.*dt < O2z).*R8 + (R8.*dt > O2z).* O2z ./ (dt) * 0.5;
 
     % R9  = k_amox_wc .* O2z ./ (Km_oxao_wc + O2z) .* NH4z ./ (Km_amao_wc + NH4z);   % NOTE: Doesnt work - Highly unstable.
     R9 = k_amox_wc  .* O2z .* NH4z;
-    R9 = (R9.*dt < NH4z).*R9 + (R9.*dt > NH4z).* NH4z ./ (dt) * 0.5;
-    R9 = (R9.*dt < O2z).*R9 + (R9.*dt > O2z).* O2z ./ (dt) * 0.5;
+    % R9 = (R9.*dt < NH4z).*R9 + (R9.*dt > NH4z).* NH4z ./ (dt) * 0.5;
+    % R9 = (R9.*dt < O2z).*R9 + (R9.*dt > O2z).* O2z ./ (dt) * 0.5;
 
     R10a = 0; %k_oms_wc .* Sum_H2S .* Chlz;
     R10b = 0; %k_oms_wc .* Sum_H2S .* Cz;
@@ -2165,7 +2222,7 @@ function [dcdt] = rates(C, dt)
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R10d - dfloc;% DOCz
     dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx1_wc*R2c + Cx2_wc*R2d+ Cx2_wc*R2e) + R9 - Ny1_wc * (R_dChl_growth + R_dCz_growth); % NO3z
-    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) - 2*R7  + R8 - R16a; % Fe3z
+    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) - 2*R7  + R8; % Fe3z
     dcdt(:,6)  = - 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx1_wc*R5c + Cx2_wc*R5d+ Cx2_wc*R5e) + R6 ; % SO4z
     dcdt(:,7)  =  (Ny1_wc * Ra + Ny1_wc * Rb + Ny1_wc * Rc + Ny2_wc * Rd+ Ny2_wc * Re) - R9 ;% NH4z
     dcdt(:,8)  = 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d + Cx2_wc*R3e) + 2*R7 - R8 + R14b - R14a; % Fe2z
