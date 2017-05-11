@@ -85,7 +85,7 @@ function [sediment_params] = params(max_depth, temperature)
     tortuosity = data{2}(40);
 
     % NOTE:  const porosity for test
-    sediment_params.fi =  0.9 * ones(sediment_params.n, 1);  %( fi_in - fi_f ) * exp( -x' / X_b ) + fi_f;;      % porosity
+    sediment_params.fi =  ( fi_in - fi_f ) * exp( -x' / X_b ) + fi_f;;      % porosity
     sediment_params.tortuosity = tortuosity;  % tortuosity
 
     % Bio properties:
@@ -187,7 +187,7 @@ function [sediment_concentrations ] = init_concentrations(pH)
         sediment_concentrations.OM2 = interp1(in_z, Init(1:end, 3), zz);
         sediment_concentrations.DOM1 = interp1(in_z, Init(1:end, 4), zz);
         sediment_concentrations.DOM2 = interp1(in_z, Init(1:end, 5), zz);
-        sediment_concentrations.Oxygen = interp1(in_z, Init(1:end, 6), zz);
+        sediment_concentrations.O2 = interp1(in_z, Init(1:end, 6), zz);
         sediment_concentrations.NO3 = interp1(in_z, Init(1:end, 7), zz);
         sediment_concentrations.NH4 = interp1(in_z, Init(1:end, 8), zz);
         sediment_concentrations.NH3 = interp1(in_z, Init(1:end, 9), zz);
@@ -219,7 +219,7 @@ function [sediment_concentrations ] = init_concentrations(pH)
         sediment_concentrations.OM2     = ones(n,1) * 0;
         sediment_concentrations.DOM1    = ones(n,1) * 0;
         sediment_concentrations.DOM2    = ones(n,1) * 0;
-        sediment_concentrations.Oxygen  = ones(n,1) * 0;
+        sediment_concentrations.O2      = ones(n,1) * 0;
         sediment_concentrations.NO3     = ones(n,1) * 0;
         sediment_concentrations.NH4     = ones(n,1) * 0;
         sediment_concentrations.NH3     = ones(n,1) * 0;
@@ -325,7 +325,7 @@ function [sediment_matrix_templates] = templates()
     sediment_params.solid_flux_coef = solid_flux_coef;
 
     % solute templates:
-    [Ox_AL, Ox_AR]        = cn_template_solute(sediment_params.D_O2 + Db, tortuosity, v, fi, dx, dt, n);
+    [O2_AL, O2_AR]        = cn_template_solute(sediment_params.D_O2 + Db, tortuosity, v, fi, dx, dt, n);
     [NO3_AL, NO3_AR]        = cn_template_solute(sediment_params.D_NO3 + Db, tortuosity, v, fi, dx, dt, n);
     [SO4_AL, SO4_AR]        = cn_template_solute(sediment_params.D_SO4 + Db, tortuosity, v, fi, dx, dt, n);
     [NH4_AL, NH4_AR]        = cn_template_solute(sediment_params.D_NH4 + Db, tortuosity, v, fi, dx, dt, n);
@@ -349,7 +349,7 @@ function [sediment_matrix_templates] = templates()
     sediment_matrix_templates = {...
 
         Solid_AL, Solid_AR, 'Solid';  % 1
-        Ox_AL, Ox_AR, 'Oxygen'; % 2
+        O2_AL, O2_AR,    'O2'; % 2
         NO3_AL, NO3_AR, 'NO3'; % 3
         SO4_AL, SO4_AR, 'SO4'; % 4
         NH4_AL, NH4_AR, 'NH4'; % 5
@@ -413,6 +413,6 @@ function [AL, AR, flux_coef] = cn_template_solid(D, theta, v, fi, dx, dt, n)
     AR(n,n) = 1-fi(n)-s(n);
     AR(n,n-1) = s(n);
 
-    flux_coef = dx / D * (2*s(1) - q(1)); % / (1-fi(1)) ;
+    flux_coef = 2 * dx / D * (2*s(1) - q(1)) / (1-fi(1)) ;
 end
 
