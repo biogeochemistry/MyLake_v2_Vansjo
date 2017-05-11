@@ -10,7 +10,7 @@ function [sediment_bc] = update_sediment(MyLake_concentrations, MyLake_params, s
     w_chl_2 = MyLake_params.w_chl_2 * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
     fi = sediment_params.fi;
 
-    sediment_bc.Ox_c = dissolved_bc(MyLake_concentrations.O2z, fi);
+    sediment_bc.O2_c = dissolved_bc(MyLake_concentrations.O2z, fi);
     sediment_bc.OM1_fx = solid_bc(MyLake_concentrations.Chlz, w_chl, fi) + solid_bc(MyLake_concentrations.Cz, w_chl_2, fi);
     sediment_bc.OM2_fx = solid_bc(MyLake_concentrations.POCz, w_s, fi);
     sediment_bc.PO4_c = dissolved_bc(MyLake_concentrations.Pz, fi);

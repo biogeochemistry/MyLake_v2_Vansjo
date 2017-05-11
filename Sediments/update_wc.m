@@ -10,7 +10,7 @@ function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_
     DOPz = MyLakeOldConcentrations.DOPz;
 
     % Diffusion Fluxes:
-    O2z = update_C_due_to_flux(O2z, sediment_transport_fluxes.Ox, MyLake_params, sediment_params);
+    O2z = update_C_due_to_flux(O2z, sediment_transport_fluxes.O2, MyLake_params, sediment_params);
     Pz = update_C_due_to_flux(Pz, sediment_transport_fluxes.PO4, MyLake_params, sediment_params);
     Fe2z = update_C_due_to_flux(Fe2z, sediment_transport_fluxes.Fe2, MyLake_params, sediment_params);
     NO3z = update_C_due_to_flux(NO3z, sediment_transport_fluxes.NO3, MyLake_params, sediment_params);
@@ -21,7 +21,7 @@ function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_
     % % Boudreau, B.P., 1999. Metals and models : Diagenetic modelling in freshwater lacustrine sediments *. , pp.227–251.
 
     % % Bioirrigation
-    O2z = update_C_due_to_flux(O2z, sediment_bioirrigation_fluxes.Ox, MyLake_params, sediment_params);
+    O2z = update_C_due_to_flux(O2z, sediment_bioirrigation_fluxes.O2, MyLake_params, sediment_params);
     Pz = update_C_due_to_flux(Pz, sediment_bioirrigation_fluxes.PO4, MyLake_params, sediment_params);
     Fe2z = update_C_due_to_flux(Fe2z, sediment_bioirrigation_fluxes.Fe2, MyLake_params, sediment_params);
     NO3z = update_C_due_to_flux(NO3z, sediment_bioirrigation_fluxes.NO3, MyLake_params, sediment_params);
@@ -49,7 +49,7 @@ function [C] = update_C_due_to_flux(C, flux, MyLake_params, sediment_params)
     dt     = MyLake_params.dt;
     fi = sediment_params.fi;
 
-    dC = fi(1)*flux * dt * Az_end / Vz_end;
+    dC = flux * dt * Az_end / Vz_end;
     C(end) = C(end) + dC;
     C(end) = (C(end) > 0).*C(end);
 end
