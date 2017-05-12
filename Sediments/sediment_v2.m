@@ -244,7 +244,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
 
       ts_during_one_dt = 1;
       int_method = 1;
-      C_new = sediments_chemical_reactions_module(C0,dt,ts_during_one_dt, int_method);
+      [C_new, rates(i-1)] = sediments_chemical_reactions_module(C0,dt,ts_during_one_dt, int_method);
       dcdt(:,:,i) = (C_new-C0)./dt;
 
       O2(:,i-1)      = C_new(:,1);
@@ -418,39 +418,52 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_concentrations.DOM1 = DOM1(:,end);
   sediment_concentrations.DOM2 = DOM2(:,end);
 
-  rates = sum(dcdt,3)/size(dcdt,3);
+  dcdt = sum(dcdt,3)/size(dcdt,3);
 
-  sediment_additional_results.dcdt.O2      = rates(:,1);
-  sediment_additional_results.dcdt.OM      = rates(:,2);
-  sediment_additional_results.dcdt.OMb     = rates(:,3);
-  sediment_additional_results.dcdt.NO3     = rates(:,4);
-  sediment_additional_results.dcdt.FeOH3   = rates(:,5);
-  sediment_additional_results.dcdt.SO4     = rates(:,6);
-  sediment_additional_results.dcdt.NH4     = rates(:,7);
-  sediment_additional_results.dcdt.Fe2     = rates(:,8);
-  sediment_additional_results.dcdt.FeOOH   = rates(:,9);
-  sediment_additional_results.dcdt.H2S     = rates(:,10);
-  sediment_additional_results.dcdt.HS      = rates(:,11);
-  sediment_additional_results.dcdt.FeS     = rates(:,12);
-  sediment_additional_results.dcdt.S0      = rates(:,13);
-  sediment_additional_results.dcdt.PO4     = rates(:,14);
-  sediment_additional_results.dcdt.S8      = rates(:,15);
-  sediment_additional_results.dcdt.FeS2    = rates(:,16);
-  sediment_additional_results.dcdt.AlOH3   = rates(:,17);
-  sediment_additional_results.dcdt.PO4adsa = rates(:,18);
-  sediment_additional_results.dcdt.PO4adsb = rates(:,19);
-  sediment_additional_results.dcdt.Ca2     = rates(:,20);
-  sediment_additional_results.dcdt.Ca3PO42 = rates(:,21);
-  sediment_additional_results.dcdt.OMS     = rates(:,22);
-  sediment_additional_results.dcdt.H       = rates(:,23);
-  sediment_additional_results.dcdt.OH      = rates(:,24);
-  sediment_additional_results.dcdt.CO2     = rates(:,25);
-  sediment_additional_results.dcdt.CO3     = rates(:,26);
-  sediment_additional_results.dcdt.HCO3    = rates(:,27);
-  sediment_additional_results.dcdt.NH3     = rates(:,28);
-  sediment_additional_results.dcdt.H2CO3   = rates(:,29);
-  sediment_additional_results.dcdt.DOM1   = rates(:,30);
-  sediment_additional_results.dcdt.DOM2   = rates(:,31);
+  sediment_additional_results.dcdt.O2      = dcdt(:,1);
+  sediment_additional_results.dcdt.OM      = dcdt(:,2);
+  sediment_additional_results.dcdt.OMb     = dcdt(:,3);
+  sediment_additional_results.dcdt.NO3     = dcdt(:,4);
+  sediment_additional_results.dcdt.FeOH3   = dcdt(:,5);
+  sediment_additional_results.dcdt.SO4     = dcdt(:,6);
+  sediment_additional_results.dcdt.NH4     = dcdt(:,7);
+  sediment_additional_results.dcdt.Fe2     = dcdt(:,8);
+  sediment_additional_results.dcdt.FeOOH   = dcdt(:,9);
+  sediment_additional_results.dcdt.H2S     = dcdt(:,10);
+  sediment_additional_results.dcdt.HS      = dcdt(:,11);
+  sediment_additional_results.dcdt.FeS     = dcdt(:,12);
+  sediment_additional_results.dcdt.S0      = dcdt(:,13);
+  sediment_additional_results.dcdt.PO4     = dcdt(:,14);
+  sediment_additional_results.dcdt.S8      = dcdt(:,15);
+  sediment_additional_results.dcdt.FeS2    = dcdt(:,16);
+  sediment_additional_results.dcdt.AlOH3   = dcdt(:,17);
+  sediment_additional_results.dcdt.PO4adsa = dcdt(:,18);
+  sediment_additional_results.dcdt.PO4adsb = dcdt(:,19);
+  sediment_additional_results.dcdt.Ca2     = dcdt(:,20);
+  sediment_additional_results.dcdt.Ca3PO42 = dcdt(:,21);
+  sediment_additional_results.dcdt.OMS     = dcdt(:,22);
+  sediment_additional_results.dcdt.H       = dcdt(:,23);
+  sediment_additional_results.dcdt.OH      = dcdt(:,24);
+  sediment_additional_results.dcdt.CO2     = dcdt(:,25);
+  sediment_additional_results.dcdt.CO3     = dcdt(:,26);
+  sediment_additional_results.dcdt.HCO3    = dcdt(:,27);
+  sediment_additional_results.dcdt.NH3     = dcdt(:,28);
+  sediment_additional_results.dcdt.H2CO3   = dcdt(:,29);
+  sediment_additional_results.dcdt.DOM1   = dcdt(:,30);
+  sediment_additional_results.dcdt.DOM2   = dcdt(:,31);
+
+
+  % Estimate average rate during the day
+  fields = fieldnames(rates);
+  for i = 1:numel(fields)
+      r.(fields{i}) = 0;
+      for j=1:m-1
+          r.(fields{i}) = r.(fields{i}) + rates(j).(fields{i});
+      end
+      r.(fields{i}) = r.(fields{i})/(m-1);
+  end
+
+  sediment_additional_results.rates = r;
 
 
     if any(isnan(sediment_transport_fluxes.O2))| any(isnan(sediment_bc.OM1_fx))| any(isnan(sediment_bc.OM2_fx))| any(isnan(sediment_bc.FeOH3_fx))| any(isnan(O2)) | any(isnan(OM)) | any(isnan(OMb)) | any(isnan(NO3)) | any(isnan(FeOH3)) | any(isnan(SO4)) | any(isnan(NH4)) | any(isnan(Fe2)) | any(isnan(FeOOH)) | any(isnan(H2S)) | any(isnan(HS)) | any(isnan(FeS)) | any(isnan(S0)) | any(isnan(PO4)) | any(isnan(S8)) | any(isnan(FeS2)) | any(isnan(AlOH3)) | any(isnan(PO4adsa)) | any(isnan(PO4adsb)) | any(isnan(H)) | any(isnan(Ca2)) | any(isnan(Ca3PO42)) | any(isnan(OMS)) | any(isnan(OH)) | any(isnan(HCO3)) | any(isnan(CO2)) | any(isnan(CO3)) | any(isnan(NH3)) | any(isnan(H2CO3))
@@ -611,36 +624,50 @@ function [C_new] = rk4(C0,ts, dt)
     % ts - how many time steps during 1 day
     dt = dt/ts;
     for i = 1:ts
-        k_1 = dt.*sediment_rates(C0, dt);
-        k_2 = dt.*sediment_rates(C0+0.5.*k_1, dt);
-        k_3 = dt.*sediment_rates(C0+0.5.*k_2, dt);
-        k_4 = dt.*sediment_rates(C0+k_3, dt);
+        [dcdt_1, r_1] = sediment_rates(C0, dt)
+        k_1 = dt.*dcdt_1;
+        [dcdt_2, r_2] = sediment_rates(C0+0.5.*k_1, dt)
+        k_2 = dt.*dcdt_2;
+        [dcdt_3, r_3] = sediment_rates(C0+0.5.*k_2, dt)
+        k_3 = dt.*dcdt_3;
+        [dcdt_4, r_4] = sediment_rates(C0+k_3, dt)
+        k_4 = dt.*dcdt_4;
         C_new = C0 + (k_1+2.*k_2+2.*k_3+k_4)/6;
         C0 = C_new;
 
-        % if any(any(isnan(C_new)))
-        %     error('NaN')
-        % end
+        % average rate
+        fields = fieldnames(r_1);
+        for i = 1:numel(fields)
+          rates.(fields{i}) = (7*r_1.(fields{i}) + 32*r_3.(fields{i}) + 12*r_4.(fields{i}) + 32*r_5.(fields{i}) + 7*r_6.(fields{i}))/90;
+        end
     end
 end
 
 %% butcher5: Butcher's Fifth-Order Runge-Kutta
-function [C_new] = butcher5(C0,ts,dt)
+function [C_new, rates] = butcher5(C0,ts,dt)
 
     dt = dt/ts;
     for i = 1:ts
-        k_1 = dt.*sediment_rates(C0, dt);
-        k_2 = dt.*sediment_rates(C0 + 1/4.*k_1, dt);
-        k_3 = dt.*sediment_rates(C0 + 1/8.*k_1 + 1/8.*k_2, dt);
-        k_4 = dt.*sediment_rates(C0 - 1/2.*k_2 + k_3, dt);
-        k_5 = dt.*sediment_rates(C0 + 3/16.*k_1 + 9/16.*k_4, dt);
-        k_6 = dt.*sediment_rates(C0 - 3/7.*k_1 + 2/7.*k_2 + 12/7.*k_3 - 12/7.*k_4 + 8/7.*k_5, dt);
+        [dcdt_1, r_1] = sediment_rates(C0, dt);
+        k_1 = dt.*dcdt_1;
+        [dcdt_2, r_2] = sediment_rates(C0 + 1/4.*k_1, dt);
+        k_2 = dt.*dcdt_2;
+        [dcdt_3, r_3] = sediment_rates(C0 + 1/8.*k_1 + 1/8.*k_2, dt);
+        k_3 = dt.*dcdt_3;
+        [dcdt_4, r_4] = sediment_rates(C0 - 1/2.*k_2 + k_3, dt);
+        k_4 = dt.*dcdt_4;
+        [dcdt_5, r_5] = sediment_rates(C0 + 3/16.*k_1 + 9/16.*k_4, dt);
+        k_5 = dt.*dcdt_5;
+        [dcdt_6, r_6] = sediment_rates(C0 - 3/7.*k_1 + 2/7.*k_2 + 12/7.*k_3 - 12/7.*k_4 + 8/7.*k_5, dt);
+        k_6 = dt.*dcdt_6;
         C_new = C0 + (7.*k_1 + 32.*k_3 + 12.*k_4 + 32.*k_5 + 7.*k_6)/90;
         C0 = C_new;
 
-        % if any(any(isnan(C_new)))
-        %     error('NaN')
-        % end
+        % average rate
+        fields = fieldnames(r_1);
+        for i = 1:numel(fields)
+          rates.(fields{i}) = (7*r_1.(fields{i}) + 32*r_3.(fields{i}) + 12*r_4.(fields{i}) + 32*r_5.(fields{i}) + 7*r_6.(fields{i}))/90;
+        end
     end
 end
 
@@ -662,12 +689,12 @@ function C_new = pde_solver_solid(AL, AR, C_old, flux_bc, coef)
       C_new = (C_new>0).*C_new;
 end
 
-function [C_new] = sediments_chemical_reactions_module(C0,dt,ts, method)
+function [C_new, rates] = sediments_chemical_reactions_module(C0,dt,ts, method)
     % ts - how many time steps during 1 day
     if method == 0
         C_new = rk4(C0,ts,dt);
     elseif method == 1
-        C_new = butcher5(C0,ts,dt);
+        [C_new, rates] = butcher5(C0,ts,dt);
     end
     C_new = (C_new>0).*C_new;
 end
@@ -722,7 +749,7 @@ function [flux] = top_sediment_diffusion_flux(C, D, dx, fi)
   % fi - porosity (no porosity because C is the concentration in pores (not bulk))
 
   % fourth-order
-  flux = D * (-25 * fi(1)*C(1) + 48 * fi(2)*C(2) - 36 * fi(3)*C(3) + 16 * fi(4)*C(4) - 3 * fi(5)*C(5)) / dx / 12;  %  [umol/cm^2/y]
+  flux = D * (-25 * fi(2)*C(2) + 48 * fi(3)*C(3) - 36 * fi(4)*C(4) + 16 * fi(5)*C(5) - 3 * fi(6)*C(6)) / dx / 12;  %  [umol/cm^2/y]
 
   % third order
   % flux = D * (-11 * C(1) + 18 * C(2) - 9 * C(3) + 2 * C(4)) / dx / 6;  %  [umol/cm^2/y]
@@ -747,7 +774,7 @@ function bioR = bioirrigation(C, alfax, fi)
 end
 
 
-function [dcdt] = sediment_rates(C, dt)
+function [dcdt, r] = sediment_rates(C, dt)
 % parameters for water-column chemistry
 % NOTE: the rates are the same as in sediments. Units are per "year" due to time step is in year units too;
 
@@ -873,13 +900,20 @@ function [dcdt] = sediment_rates(C, dt)
     R17b = f_pfe .* (4 * R4);
     % R17b = (R17b.*dt < PO4adsb).*R17b + (R17b.*dt > PO4adsb).* PO4adsb ./ (dt) * 0.5;
 
-    R18a = k_pdesorb_c .* PO4 .* AlOH3;
+    % R18 disabled now (no solid species Al=PO4)
+    R18a = 0; % k_pdesorb_c .* PO4 .* AlOH3;
     R18b = 0;
     R19 = k_apa * (PO4 - kapa);
     R19 = (R19 >= 0) .* R19; % can only be non negative
 
+
+    % saving rates
+    r.R1a = R1a; r.R1b = R1b; r.R1c = R1c; r.R1d = R1d; r.R2a = R2a; r.R2b = R2b; r.R2c = R2c; r.R2d = R2d; r.R3a = R3a; r.R3b = R3b; r.R3c = R3c; r.R3d = R3d; r.R4a = R4a; r.R4b = R4b; r.R4c = R4c; r.R4d = R4d; r.R5a = R5a; r.R5b = R5b; r.R5c = R5c; r.R5d = R5d; r.Ra = Ra; r.Rb = Rb; r.Rc = Rc; r.Rd = Rd; r.R1 = R1; r.R2 = R2; r.R3 = R3; r.R4 = R4; r.R5 = R5; r.R6 = R6; r.R7 = R7; r.R8  = R8; r.R9 = R9; r.R10a = R10a; r.R10b = R10b; r.R10c = R10c; r.R10d = R10d; r.R11 = R11; r.R12 = R12; r.R13 = R13; r.R14a = R14a; r.R14b  = R14b; r.R15a = R15a; r.R15b = R15b; r.R16a = R16a; r.R16b  = R16b; r.R17a = R17a; r.R17b = R17b; r.R18a = R18a; r.R18b = R18b; r.R19 = R19;
+
+
     % for stoichiometry check:
     % Canavan, R. W., Slomp, C. P., Jourabchi, P., Van Cappellen, P., Laverman, A. M., & van den Berg, G. A. (2006). Organic matter mineralization in sediment of a coastal freshwater lake and response to salinization. Geochimica Et Cosmochimica Acta, 70(11), 2836–2855. http://doi.org/10.1016/j.gca.2006.03.012
+
 
     % F = 1./fi;
     F = 1./fi;

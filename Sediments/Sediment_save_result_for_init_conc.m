@@ -1,9 +1,9 @@
 function sediment_save_result_for_init_conc(sed_res, n)
 
 if n == 1
-    file_name = 'IO/sediment_initial_concentrations.txt'
+    file_name = 'IO/sediment_initial_concentrations.txt';
 else
-    file_name = 'IO/sediment_initial_concentrations_2.txt'
+    file_name = 'IO/sediment_initial_concentrations_2.txt';
 end
 
 fid = fopen(file_name,'wt');

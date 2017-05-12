@@ -1488,57 +1488,26 @@ for i = 1:length(tt)
         DOM1_sediment_zt(:,i) = sediment_concentrations.DOM1;
         DOM2_sediment_zt(:,i) = sediment_concentrations.DOM2;
         pH_sediment_zt(:,i) = -log10(H_sediment_zt(:,i)*10^-3);
-        sediment_transport_fluxes_zt.O2(i) = sediment_transport_fluxes.O2;
-        sediment_transport_fluxes_zt.OM1(i) = sediment_transport_fluxes.OM1;
-        sediment_transport_fluxes_zt.OM2(i) = sediment_transport_fluxes.OM2;
-        sediment_transport_fluxes_zt.PO4(i) = sediment_transport_fluxes.PO4;
-        sediment_transport_fluxes_zt.NO3(i) = sediment_transport_fluxes.NO3;
-        sediment_transport_fluxes_zt.FeOH3(i) = sediment_transport_fluxes.FeOH3;
-        sediment_transport_fluxes_zt.Fe2(i) = sediment_transport_fluxes.Fe2;
-        sediment_transport_fluxes_zt.NH4(i) = sediment_transport_fluxes.NH4;
-        sediment_transport_fluxes_zt.AlOH3(i) = sediment_transport_fluxes.AlOH3;
-        sediment_transport_fluxes_zt.PO4adsa(i) = sediment_transport_fluxes.PO4adsa;
-        sediment_transport_fluxes_zt.SO4(i) = sediment_transport_fluxes.SO4;
-        sediment_transport_fluxes_zt.DOM1(i) = sediment_transport_fluxes.DOM1;
-        sediment_transport_fluxes_zt.DOM2(i) = sediment_transport_fluxes.DOM2;
-        sediment_bioirrigation_fluxes_zt.O2(i) = sediment_bioirrigation_fluxes.O2;
-        sediment_bioirrigation_fluxes_zt.PO4(i) = sediment_bioirrigation_fluxes.PO4;
-        sediment_bioirrigation_fluxes_zt.Fe2(i) = sediment_bioirrigation_fluxes.Fe2;
-        sediment_bioirrigation_fluxes_zt.NO3(i) = sediment_bioirrigation_fluxes.NO3;
-        sediment_bioirrigation_fluxes_zt.NH4(i) = sediment_bioirrigation_fluxes.NH4;
-        sediment_bioirrigation_fluxes_zt.DOM1(i) = sediment_bioirrigation_fluxes.DOM1;
-        sediment_bioirrigation_fluxes_zt.DOM2(i) = sediment_bioirrigation_fluxes.DOM2;
-        sediment_additional_results_zt.dcdt.O2(:,i)      = sediment_additional_results.dcdt.O2;
-        sediment_additional_results_zt.dcdt.OM(:,i)      = sediment_additional_results.dcdt.OM;
-        sediment_additional_results_zt.dcdt.OMb(:,i)     = sediment_additional_results.dcdt.OMb;
-        sediment_additional_results_zt.dcdt.NO3(:,i)     = sediment_additional_results.dcdt.NO3;
-        sediment_additional_results_zt.dcdt.FeOH3(:,i)   = sediment_additional_results.dcdt.FeOH3;
-        sediment_additional_results_zt.dcdt.SO4(:,i)     = sediment_additional_results.dcdt.SO4;
-        sediment_additional_results_zt.dcdt.NH4(:,i)     = sediment_additional_results.dcdt.NH4;
-        sediment_additional_results_zt.dcdt.Fe2(:,i)     = sediment_additional_results.dcdt.Fe2;
-        sediment_additional_results_zt.dcdt.FeOOH(:,i)   = sediment_additional_results.dcdt.FeOOH;
-        sediment_additional_results_zt.dcdt.H2S(:,i)     = sediment_additional_results.dcdt.H2S;
-        sediment_additional_results_zt.dcdt.HS(:,i)      = sediment_additional_results.dcdt.HS;
-        sediment_additional_results_zt.dcdt.FeS(:,i)     = sediment_additional_results.dcdt.FeS;
-        sediment_additional_results_zt.dcdt.S0(:,i)      = sediment_additional_results.dcdt.S0;
-        sediment_additional_results_zt.dcdt.PO4(:,i)     = sediment_additional_results.dcdt.PO4;
-        sediment_additional_results_zt.dcdt.S8(:,i)      = sediment_additional_results.dcdt.S8;
-        sediment_additional_results_zt.dcdt.FeS2(:,i)    = sediment_additional_results.dcdt.FeS2;
-        sediment_additional_results_zt.dcdt.AlOH3(:,i)   = sediment_additional_results.dcdt.AlOH3;
-        sediment_additional_results_zt.dcdt.PO4adsa(:,i) = sediment_additional_results.dcdt.PO4adsa;
-        sediment_additional_results_zt.dcdt.PO4adsb(:,i) = sediment_additional_results.dcdt.PO4adsb;
-        sediment_additional_results_zt.dcdt.Ca2(:,i)     = sediment_additional_results.dcdt.Ca2;
-        sediment_additional_results_zt.dcdt.Ca3PO42(:,i) = sediment_additional_results.dcdt.Ca3PO42;
-        sediment_additional_results_zt.dcdt.OMS(:,i)     = sediment_additional_results.dcdt.OMS;
-        sediment_additional_results_zt.dcdt.H(:,i)       = sediment_additional_results.dcdt.H;
-        sediment_additional_results_zt.dcdt.OH(:,i)      = sediment_additional_results.dcdt.OH;
-        sediment_additional_results_zt.dcdt.CO2(:,i)     = sediment_additional_results.dcdt.CO2;
-        sediment_additional_results_zt.dcdt.CO3(:,i)     = sediment_additional_results.dcdt.CO3;
-        sediment_additional_results_zt.dcdt.HCO3(:,i)    = sediment_additional_results.dcdt.HCO3;
-        sediment_additional_results_zt.dcdt.NH3(:,i)     = sediment_additional_results.dcdt.NH3;
-        sediment_additional_results_zt.dcdt.H2CO3(:,i)   = sediment_additional_results.dcdt.H2CO3;
-        sediment_additional_results_zt.dcdt.DOM1(:,i)   = sediment_additional_results.dcdt.DOM1;
-        sediment_additional_results_zt.dcdt.DOM2(:,i)   = sediment_additional_results.dcdt.DOM2;
+
+        fields = fieldnames(sediment_transport_fluxes);
+        for fd_idx = 1:numel(fields)
+            sediment_transport_fluxes_zt.(fields{fd_idx})(:,i) = sediment_transport_fluxes.(fields{fd_idx});
+        end
+
+        fields = fieldnames(sediment_bioirrigation_fluxes);
+        for fd_idx = 1:numel(fields)
+            sediment_bioirrigation_fluxes_zt.(fields{fd_idx})(:,i) = sediment_bioirrigation_fluxes.(fields{fd_idx});
+        end
+
+        fields = fieldnames(sediment_additional_results.dcdt);
+        for fd_idx = 1:numel(fields)
+            sediment_additional_results_zt.dcdt.(fields{fd_idx})(:,i) = sediment_additional_results.dcdt.(fields{fd_idx});
+        end
+
+        fields = fieldnames(sediment_additional_results.rates);
+        for fd_idx = 1:numel(fields)
+            sediment_additional_results_zt.rates.(fields{fd_idx})(:,i) = sediment_additional_results.rates.(fields{fd_idx});
+        end
     end
 
     % Output MyLake matrices
@@ -1748,6 +1717,7 @@ if matsedlab_sediment_module           % MATSEDLAB sediment module
     sediment_results.m_start = M_start;
     sediment_results.m_stop = M_stop;
     sediment_results.dcdt = sediment_additional_results_zt.dcdt;
+    sediment_results.rates = sediment_additional_results_zt.rates;
 
 else
 
@@ -2164,9 +2134,9 @@ function [dcdt] = rates(C, dt)
 
     R3a =  0; % k_OM_wc_q10  .* Chlz .* f_FeOH3;
     R3b =  0; % k_OM_wc_q10  .* Cz .* f_FeOH3;
-    R3c =  k_DOM1_wc_q10  .* DOPz .* f_FeOH3;
-    R3d =  k_DOM2_wc_q10 .* DOCz .* f_FeOH3;
-    R3e =  k_OMb_wc_q10 .* POCz .* f_FeOH3;
+    R3c =  0; k_DOM1_wc_q10  .* DOPz .* f_FeOH3;
+    R3d =  0; k_DOM2_wc_q10 .* DOCz .* f_FeOH3;
+    R3e =  0; k_OMb_wc_q10 .* POCz .* f_FeOH3;
 
     R5a =  0; % k_OM_wc_q10  .* Chlz .* f_SO4;
     R5b =  0; % k_OM_wc_q10  .* Cz .* f_SO4;
