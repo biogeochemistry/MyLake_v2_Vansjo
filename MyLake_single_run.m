@@ -53,7 +53,7 @@ for current_run = 1:no_runs
             m_stop=[2012, 12, 31]; %
         else
             m_start=[2000, 1, 1]; %
-            m_stop=[2011, 12, 31]; %
+            m_stop=[2012, 12, 31]; %
         end
 
     elseif current_run == 2;
@@ -158,7 +158,7 @@ disp('Saving sediments profiles for the initial concentrations for the next run'
 sediment_save_result_for_init_conc(Sediment_results.basin1, 1)
 MyLake_save_result_for_init_conc(MyLake_results.basin1, 1)
 MyLake_save_result_for_init_conc(MyLake_results.basin2, 2)
-% sediment_save_result_for_init_conc(Sediment_results.basin2, 2)
+sediment_save_result_for_init_conc(Sediment_results.basin2, 2)
 save('IO/MyLakeResults.mat', 'MyLake_results', 'Sediment_results')
 disp('Finished at:')
 disp(datetime('now'));

@@ -175,11 +175,11 @@ outflowdiatomzt = MyLake_results_basin1.diatomzt(1,:)';
 % %# ############ This is Vansjø Vanemfj. ##############
 % if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis. 
     
-%     if use_INCA == 0
-land_to_vanem = 'IO/vanem_INCAP_input_baseline_mod.txt'
-%     else
-%         land_to_vanem = vanem_INCAP_input;  % created above by calling fn_INCA_MyL.m
-%     end
+    if use_INCA == 0
+        land_to_vanem = 'IO/vanem_INCAP_input_baseline_mod.txt';
+    else
+        land_to_vanem = vanem_INCAP_input;  % created above by calling fn_INCA_MyL.m
+    end
     
     
     store_to_vanem = [outflow outflowTemp outflowC outflowS outflowTP outflowDOP outflowChl outflowDOC outflowDIC outflowO outflowDIC outflowO outflowNO3zt outflowNH4zt outflowSO4zt outflowHSzt outflowH2Szt outflowFe2zt outflowCa2zt outflowpHzt outflowCH4zt outflowFe3zt outflowAl3zt outflowSiO4zt outflowSiO2zt outflowdiatomzt];
