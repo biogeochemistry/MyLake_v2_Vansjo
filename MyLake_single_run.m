@@ -1,4 +1,4 @@
-for i=1:1000
+% for i=1:1000
 tic
 disp('Started at:')
 disp(datetime('now'));
@@ -41,6 +41,8 @@ lake_params{39 -7} = x(9);  %       settling velocity for S (m day-1)
 sediment_params{22} = x(10);  % 38 R16 sorption of P on Fe k
 sediment_params{34} = x(11);  %    accel
 
+% sediment_params{34} = 1;  %    accel
+% lake_params{39 -7} = 0.5;  %       settling velocity for S (m day-1)
 % parfor
 for current_run = 1:no_runs
     if current_run == 1;
@@ -51,7 +53,7 @@ for current_run = 1:no_runs
             m_stop=[2012, 12, 31]; %
         else
             m_start=[2000, 1, 1]; %
-            m_stop=[2011, 12, 31]; %
+            m_stop=[2012, 12, 31]; %
         end
 
     elseif current_run == 2;
@@ -150,63 +152,15 @@ for current_run = 1:no_runs
 
 end
 
-% cd .. ; cd .. ;
-
-% big_results(2,:) = {'Hist_M0','Hist_M1','Hist_M2','Hist_M3','RCP4_GFDL_M0','RCP4_ISPL_M0','RCP8_GFDL_M0','RCP8_ISPL_M0','RCP8_GFDL_M4','RCP4_GFDL_M5','RCP8_GFDL_M6','RCP8_IPSL_M4','RCP4_IPSL_M5','RCP8_IPSL_M6',};
-% big_inputs(2,:) = {'Hist_M0','Hist_M1','Hist_M2','Hist_M3','RCP4_GFDL_M0','RCP4_ISPL_M0','RCP8_GFDL_M0','RCP8_ISPL_M0','RCP8_GFDL_M4','RCP4_GFDL_M5','RCP8_GFDL_M6','RCP8_IPSL_M4','RCP4_IPSL_M5','RCP8_IPSL_M6',};
-
-% dev1 = TP_mod(:)-TP_obs(:);
-% dev1(isnan(dev1))=[]; %removing NaNs
-% SS(1) = nansum((TP_mod(:)-TP_obs(:)).^2);
-% Nobs(1) = numel(dev1);
-%
-% dev2 = chl_mod(:)-chl_obs(:);
-% dev2(isnan(dev2))=[];
-% SS(2) = nansum((chl_mod(:)-chl_obs(:)).^2);
-% Nobs(2) = numel(dev2);
-%
-% clear dev1 dev2 Nobs % note: cannot clear within parfor
-
-% zinx=find(MyLake_results.z<4);
-% TP_mod = mean((MyLake_results.Pzt(zinx,:)+MyLake_results.PPzt(zinx,:) + MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:)+MyLake_results.DOPzt(zinx,:)+MyLake_results.POCzt(zinx,:)+MyLake_results.DOCzt(zinx,:))', 2);
-% Chl_mod = mean((MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:))', 2);
-% Pzt_mod = mean((MyLake_results.Pzt(zinx,:))', 2);
-% PPzt_mod = mean((MyLake_results.PPzt(zinx,:)+MyLake_results.POCzt(zinx,:))', 2);
-
-% load 'obs/store_obs/TOTP.dat' % measured
-% % load 'obs/store_obs/Cha.dat' % measured
-% load 'obs/store_obs/Cha_aquaM_march_2017.dat' % measured
-% load 'obs/store_obs/PO4.dat' % measured
-% load 'obs/store_obs/Part.dat' % measured
-
-
-% [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, TOTP(:,1)));
-% c_TOTP = RMSE(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
-
-
-% [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, Cha_aquaM_march_2017(:,1)));
-% c_Chl = RMSE(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
-
-
-% [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, PO4(:,1)));
-% c_PO4 = RMSE(Pzt_mod(loc_sim, 1), PO4(loc_obs, 2));
-
-
-% [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, Part(:,1)));
-% c_PP = RMSE(PPzt_mod(loc_sim, 1), Part(loc_obs, 2));
-
-
-% x'
-% res = sum([c_TOTP, c_Chl, c_PO4, c_PP])
-
-
 
 
 disp('Saving sediments profiles for the initial concentrations for the next run');
-Sediment_save_result_for_init_conc
-MyLake_save_result_for_init_conc
+sediment_save_result_for_init_conc(Sediment_results.basin1, 1)
+MyLake_save_result_for_init_conc(MyLake_results.basin1, 1)
+MyLake_save_result_for_init_conc(MyLake_results.basin2, 2)
+sediment_save_result_for_init_conc(Sediment_results.basin2, 2)
 save('IO/MyLakeResults.mat', 'MyLake_results', 'Sediment_results')
 disp('Finished at:')
 disp(datetime('now'));
 toc
-end
+% end

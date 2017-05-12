@@ -1,4 +1,4 @@
-function merge_l_b_inputs(lake1,lake2,lake3_filename)
+function merge_l_b_inputs(lake1,lake2,lake3_filename, m_start, m_stop)
 % function merge_l_b_inputs(lake1,lake2,lake3_filename)
 % Developed by ABL, 3.11.2015.
 
@@ -26,10 +26,17 @@ fclose(fid);
 sliced = size(lake2(:,1), 1)-1;
 nylake = NaN(sliced+1,n);
 
+
+time_in_file = [data{1},data{2},data{3}];
+tmet=datenum(time_in_file);
+idx_start = find(tmet==datenum(m_start));
+idx_stop = find(tmet==datenum(m_stop));
+
+
 % first 10 columns are the same
 for i=1:10
      name=header{1}{i};
-     column = data{i}(end-sliced:end);
+     column = data{i}(idx_start:idx_stop);
      data1.(name)=column;
      data2.(name)=column;
      nylake(:,i) =column;
@@ -53,7 +60,7 @@ nylake(:,16)=fac.*(data1.InflowQ.*data1.InflowDIP + data2.InflowQ.*data2.InflowD
 nylake(:,17)=fac.*(data1.InflowQ.*data1.InflowChla + data2.InflowQ.*data2.InflowChla);
 nylake(:,18)=fac.*(data1.InflowQ.*data1.DIC + data2.InflowQ.*data2.DIC);
 nylake(:,19)=fac.*(data1.InflowQ.*data1.DOC + data2.InflowQ.*data2.DOC);
-nylake(:,20)=fac.*(data1.InflowQ.*data1.DO + data2.InflowQ.*data2.DO);
+nylake(:,20)=fac.*(data1.InflowQ.*data1.O + data2.InflowQ.*data2.O);
 nylake(:,21)=fac.*(data1.InflowQ.*data1.NO3 + data2.InflowQ.*data2.NO3);
 nylake(:,22)=fac.*(data1.InflowQ.*data1.NH4 + data2.InflowQ.*data2.NH4);
 nylake(:,23)=fac.*(data1.InflowQ.*data1.SO4 + data2.InflowQ.*data2.SO4);
@@ -67,6 +74,7 @@ nylake(:,30)=fac.*(data1.InflowQ.*data1.SiO4 + data2.InflowQ.*data2.SiO4);
 nylake(:,31)=fac.*(data1.InflowQ.*data1.SiO2 + data2.InflowQ.*data2.SiO2);
 nylake(:,32)=fac.*(data1.InflowQ.*data1.diatom + data2.InflowQ.*data2.diatom);
 nylake(:,33)=fac.*(data1.InflowQ.*data1.POC + data2.InflowQ.*data2.POC);
+
 
 
 clear fid; 
