@@ -73,8 +73,8 @@ lake_params = {
 sediment_params = {
     1,     'k_OM1';  % 1
     0.1,   'k_OM2';  % 0.01
-    10,    'k_DOM1';  % 0.01
-    1,     'k_DOM2';  % 0.01
+    1,     'k_DOM1';  % 1
+    1,     'k_DOM2';  % 1
     0.008, 'Km_O2';     % Canavan, R. W (2006)
     0.01,  'Km_NO3';    % Canavan, R. W (2006)
     0.2,   'Km_Fe(OH)3';  % Canavan, R. W (2006)

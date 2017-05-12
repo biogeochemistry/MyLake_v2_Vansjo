@@ -15,9 +15,9 @@ rc('font', **{'family': 'sans-serif', 'sans-serif': ['Helvetica']})
 rc('text', usetex=True)
 
 
-solid_species = ['OMzt', 'OMbzt', 'FeOOHzt', 'FeSzt', 'S8zt', 'FeS2zt', 'AlOH3zt', 'Ca3PO42zt', 'PO4adsazt', 'PO4adsbzt', 'OMSzt', 'FeOH3zt']
-solute_species = ['O2zt', 'NO3zt', 'SO4zt', 'NH4zt', 'Fe2zt', 'H2Szt', 'S0zt', 'PO4zt', 'Ca2zt',
-                  'HSzt', 'Hzt', 'OHzt', 'CO2zt', 'CO3zt', 'HCO3zt', 'NH3zt', 'H2CO3zt', 'DOM1zt', 'DOM2zt']
+# solid_species = ['OMzt', 'OMbzt', 'FeOOHzt', 'FeSzt', 'S8zt', 'FeS2zt', 'AlOH3zt', 'Ca3PO42zt', 'PO4adsazt', 'PO4adsbzt', 'OMSzt', 'FeOH3zt']
+# solute_species = ['O2zt', 'NO3zt', 'SO4zt', 'NH4zt', 'Fe2zt', 'H2Szt', 'S0zt', 'PO4zt', 'Ca2zt',
+#                   'HSzt', 'Hzt', 'OHzt', 'CO2zt', 'CO3zt', 'HCO3zt', 'NH3zt', 'H2CO3zt', 'DOM1zt', 'DOM2zt']
 molar_masses = {
     'O2': 31998.8,
     'Ox': 31998.8,
@@ -44,10 +44,11 @@ molar_masses = {
     'Ca2': 80156.0,
     'CO2': 44009.5,
     'POC': 12010.7,
-    'OMb': 12010.7}
+    'OMb': 12010.7,
+    'Ca3PO42': 310176.7}
 
 
-solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'OMb']
+solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'OMb', 'Ca3PO42']
 disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S', 'HS', 'PO4', 'Al3', 'Ca2', 'CO2']
 
 
@@ -58,7 +59,7 @@ def load_data():
     return MyLake_results, Sediment_results
 
 
-def plot_intime(results, elem):
+def intime(results, elem):
     plt.figure(figsize=(6, 4), dpi=192)
     for e in elem:
         plt.plot(-366 + results['days'][0, 0][0], results[e][0, 0].T, lw=3, label=e)
@@ -81,7 +82,7 @@ class ResultsPlotter:
         MyLake_results, Sediment_results = load_data()
         self.myLake_results = MyLake_results
         self.sediment_results = Sediment_results
-        self.years_ago = years_ago + 1
+        years_ago = years_ago + 1
 
     def env_getter(self, env, basin=1):
         if env == 'sediment':
@@ -152,12 +153,12 @@ class ResultsPlotter:
             ax.set_ylabel(r'$[mg / m^3]$')
             ax.legend(loc=1)
 
-    def plot_flux(self, elem, convert_units=False, smoothing_factor=False):
+    def flux(self, elem, convert_units=False, smoothing_factor=False, years_ago=0.):
         results = self.env_getter('sediment', basin=1)
 
         plt.figure(figsize=(6, 4), dpi=192)
-        start = int(-365 * self.years_ago)
-        end = int(-365 * (self.years_ago - 1) - 1)
+        start = int(-365 * (years_ago + 1))
+        end = int(-365 * years_ago - 1)
         x = results['days'][0, 0][0][start:end] - 366
         y = results['sediment_transport_fluxes'][0, 0][elem][0, 0][0][start:end]
         total = {}
@@ -206,10 +207,10 @@ class ResultsPlotter:
         plt.tight_layout()
         plt.show()
 
-    def plot_profile(self, env, elem, convert_units=False):
+    def profile(self, env, elem, convert_units=False, years_ago=0.):
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
-        end = int(-365 * (self.years_ago - 1) - 1)
+        end = int(-365 * years_ago - 1)
         z = results['z'][0, 0][:, -1]
         mass_per_area = {}
         lines = {}
@@ -244,10 +245,10 @@ class ResultsPlotter:
         plt.tight_layout()
         plt.show()
 
-    def plot_rate_profile(self, env, elem):
+    def rate_profile(self, env, elem, years_ago=0.):
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
-        end = int(-365 * (self.years_ago - 1) - 1)
+        end = int(-365 * years_ago - 1)
         z = results['z'][0, 0][:, -1]
         rate_per_area = {}
         lines = {}
@@ -274,12 +275,12 @@ class ResultsPlotter:
         plt.tight_layout()
         plt.show()
 
-    def contour_plot(self, env, elem, convert_units=False, cmap=ListedColormap(sns.color_palette("Blues", 51))):
+    def contour_plot(self, env, elem, convert_units=False, years_ago=0., cmap=ListedColormap(sns.color_palette("Blues", 51))):
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
-        start = int(-365 * self.years_ago)
-        end = int(-365 * (self.years_ago - 1) - 1)
-        X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 366, -results['z'][0, 0][0:end - 1])
+        start = int(-365 * (years_ago + 1))
+        end = int(-365 * years_ago - 1)
+        X, Y = np.meshgrid(results['days'][0, 0][0][start:end], -results['z'][0, 0][0:end - 1])
         z = 0
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
@@ -292,7 +293,7 @@ class ResultsPlotter:
 
         if env == 'water-column':
             ice_thickness = results['His'][0, 0][0, start:end]
-            plt.fill_between(results['days'][0, 0][0][start:end] - 366, 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
+            plt.fill_between(results['days'][0, 0][0][start:end], 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
             plt.ylabel('Depth, [m]')
 
         ax = plt.gca()
@@ -311,12 +312,12 @@ class ResultsPlotter:
             cbar.ax.set_ylabel('Light limiting function(group 2), [-]')
         plt.show()
 
-    def rate_plot(self, env, elem, convert_units=False, cmap=ListedColormap(sns.color_palette("RdBu_r", 101))):
+    def rate(self, env, elem, convert_units=False, years_ago=0., cmap=ListedColormap(sns.color_palette("RdBu_r", 101))):
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
-        start = int(-365 * self.years_ago)
-        end = int(-365 * (self.years_ago - 1) - 1)
-        X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 366, -results['z'][0, 0])
+        start = int(-365 * (years_ago + 1))
+        end = int(-365 * years_ago - 1)
+        X, Y = np.meshgrid(results['days'][0, 0][0][start:end], -results['z'][0, 0])
         z = 0
         for e in elem:
             z += results['dcdt'][0, 0][e[:-2]][0, 0][:, start:end]
@@ -331,7 +332,7 @@ class ResultsPlotter:
 
         if env == 'water-column':
             ice_thickness = results['His'][0, 0][0, start:end]
-            plt.fill_between(results['days'][0, 0][0][start:end] - 366, 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
+            plt.fill_between(results['days'][0, 0][0][start:end], 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
             plt.ylabel('Depth, [m]')
         ax = plt.gca()
         ax.ticklabel_format(useOffset=False)
@@ -350,10 +351,10 @@ class ResultsPlotter:
             cbar.ax.set_ylabel('Rate ' + lbl + '$[mmol/L/y]$')
         plt.show()
 
-    def bulk_sediment_profile(self, elem, convert_units=False, cmap=ListedColormap(sns.color_palette("RdBu_r", 101))):
+    def bulk_sediment_profile(self, elem, convert_units=False, years_ago=0., cmap=ListedColormap(sns.color_palette("RdBu_r", 101))):
         results = self.env_getter('sediment')
         plt.figure(figsize=(6, 4), dpi=192)
-        end = int(-365 * (self.years_ago - 1) - 1)
+        end = int(-365 * years_ago - 1)
         z = results['z'][0, 0][:, -1]
         mass_per_area = {}
         lines = {}
