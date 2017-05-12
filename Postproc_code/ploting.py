@@ -77,7 +77,7 @@ def plot_intime(results, elem):
 class ResultsPlotter:
     """docstring for ResultsPlotter"""
 
-    def __init__(self, years_ago=1):
+    def __init__(self, years_ago=0.):
         MyLake_results, Sediment_results = load_data()
         self.myLake_results = MyLake_results
         self.sediment_results = Sediment_results
@@ -144,7 +144,7 @@ class ResultsPlotter:
 
         axes[3].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
         axes[3].xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
-        axes[1].set_xlim([732313 - 366, 735234 - 366 * 2])
+        axes[1].set_xlim([732313 - 366, 735234 - 366 * 1])
 
         for ax in axes:
             ax.grid(linestyle='-', linewidth=0.2)
@@ -167,7 +167,7 @@ class ResultsPlotter:
             lbl = elem + ' flux, $[umol/cm^{2}/y]$'
             total['D'] = np.trapz(y, x / 365)
         else:
-            lbl = elem + ' flux, $[mg/m^{2}/d /y]$'
+            lbl = elem + ' flux, $[mg/m^{2}/d]$'
             total['D'] = np.trapz(y, x)
         if smoothing_factor:
             spl = UnivariateSpline(x, y)
@@ -189,7 +189,7 @@ class ResultsPlotter:
         if convert_units:
             lbl_2 = ' $[umol/cm^{2}/y]$'
         else:
-            lbl_2 = ' $[mg/m^{2}/d]$'
+            lbl_2 = ' $[mg/m^{2}/y]$'
         leg1 = plt.legend([lines[e] for e in lines.keys()], ["{:.2f} ".format(total[e]) + lbl_2 for e in total.keys()], loc=4)
         ax = plt.gca()
         ax.set_ylabel(lbl)

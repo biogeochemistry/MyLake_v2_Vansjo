@@ -10,7 +10,7 @@ function merge_l_b_inputs(lake1,lake2,lake3_filename, m_start, m_stop)
 % Lake3_filename is assumed a given file with .txt extensions. Adjustmest can
 % be done to add the extension to the file if needed. 
 
-disp('Merging script ...')
+disp('Merging catchment input and Storefjorden input...')
 % opening file lake1
 fid=fopen(lake1);
 fgetl(fid);

@@ -193,7 +193,7 @@ outflowdiatomzt = MyLake_results_basin1.diatomzt(1,:)';
     parafile = lake_par_file;
     % initfile='IO/vanem_init.txt';
     initfile='IO/mylake_initial_concentrations_2.txt';
-    inputfile = vanem_input
+    inputfile = vanem_input;
     
     % note: I removed the DIC/O2 bits here ... take them again from Langtjern
     % app when migrating to Mylake DOCOMO
