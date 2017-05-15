@@ -1343,27 +1343,6 @@ for i = 1:length(tt)
 
         C_new = wc_chemical_reactions_module(C0,dt,ts_during_day, wc_int_method);
 
-        rates = (C_new-C0)/dt*365;
-        dcdt.O2(:,i) = rates(:, 1);
-        dcdt.Chl(:,i) = rates(:, 2);
-        dcdt.DOC(:,i) = rates(:, 3);
-        dcdt.NO3(:,i) = rates(:, 4);
-        dcdt.Fe3(:,i) = rates(:, 5);
-        dcdt.SO4(:,i) = rates(:, 6);
-        dcdt.NH4(:,i) = rates(:, 7);
-        dcdt.Fe2(:,i) = rates(:, 8);
-        dcdt.H2S(:,i) = rates(:, 9);
-        dcdt.HS(:,i) = rates(:, 10);
-        dcdt.P(:,i) = rates(:, 11);
-        dcdt.Al3(:,i) = rates(:, 12);
-        dcdt.PP(:,i) = rates(:, 13);
-        dcdt.Ca2(:,i) = rates(:, 14);
-        dcdt.CO2(:,i) = rates(:, 15);
-        dcdt.DOP(:,i) = rates(:, 16);
-        dcdt.C(:,i) = rates(:, 17);
-        dcdt.S(:,i) = rates(:, 18);
-        dcdt.POC(:,i) = rates(:, 19);
-
         O2z  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,1), 31998.8);
         Chlz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,2), 30973.762);
         DOCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,3), 12010.7);
@@ -1497,11 +1476,6 @@ for i = 1:length(tt)
         fields = fieldnames(sediment_bioirrigation_fluxes);
         for fd_idx = 1:numel(fields)
             sediment_bioirrigation_fluxes_zt.(fields{fd_idx})(:,i) = sediment_bioirrigation_fluxes.(fields{fd_idx});
-        end
-
-        fields = fieldnames(sediment_additional_results.dcdt);
-        for fd_idx = 1:numel(fields)
-            sediment_additional_results_zt.dcdt.(fields{fd_idx})(:,i) = sediment_additional_results.dcdt.(fields{fd_idx});
         end
 
         fields = fieldnames(sediment_additional_results.rates);
@@ -1716,7 +1690,6 @@ if matsedlab_sediment_module           % MATSEDLAB sediment module
     sediment_results.days = datenum(M_start):datenum(M_stop);
     sediment_results.m_start = M_start;
     sediment_results.m_stop = M_stop;
-    sediment_results.dcdt = sediment_additional_results_zt.dcdt;
     sediment_results.rates = sediment_additional_results_zt.rates;
 
 else
@@ -1804,7 +1777,6 @@ MyLake_results.Inflw = Inflw;
 MyLake_results.Wt = Wt;
 MyLake_results.m_start = M_start;
 MyLake_results.m_stop = M_stop;
-MyLake_results.dcdt = dcdt;
 
 runtime=toc;
 

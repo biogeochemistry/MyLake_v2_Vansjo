@@ -157,78 +157,38 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
 
 
   % Allocation of the memory for concentration with initial condition: (umol/cm3(aq)) or (umol/cm3(solid))
-  % ===============================================================
-  % NOTE: All columns consist of init vector of concentrations
 
-  O2 = zeros(n,m);
   O2(:,1) = O2_prev;
-  OM = zeros(n,m);
   OM(:,1) = OM_prev;
-  OMb = zeros(n,m);
   OMb(:,1) = OMb_prev;
-  NO3 = zeros(n,m);
   NO3(:,1) = NO3_prev;
-  FeOH3 = zeros(n,m);
   FeOH3(:,1) = FeOH3_prev;
-  SO4 = zeros(n,m);
   SO4(:,1) = SO4_prev;
-  Fe2 = zeros(n,m);
   Fe2(:,1) = Fe2_prev;
-  FeOOH = zeros(n,m);
   FeOOH(:,1) = FeOOH_prev;
-  FeS = zeros(n,m);
   FeS(:,1) = FeS_prev;
-  S0 = zeros(n,m);
   S0(:,1) = S0_prev;
-  PO4 = zeros(n,m);
   PO4(:,1) = PO4_prev;
-  S8 = zeros(n,m);
   S8(:,1) = S8_prev;
-  FeS2 = zeros(n,m);
   FeS2(:,1) = FeS2_prev;
-  AlOH3 = zeros(n,m);
   AlOH3(:,1) = AlOH3_prev;
-  PO4adsa = zeros(n,m);
   PO4adsa(:,1) = PO4adsa_prev;
-  PO4adsb = zeros(n,m);
   PO4adsb(:,1) = PO4adsb_prev;
-  Ca2 = zeros(n,m);
   Ca2(:,1) = Ca2_prev;
-  Ca3PO42 = zeros(n,m);
   Ca3PO42(:,1) = Ca3PO42_prev;
-  OMS = zeros(n,m);
   OMS(:,1) = OMS_prev;
-  H = zeros(n,m);
   H(:,1) = H_prev;
-  OH = zeros(n,m);
   OH(:,1) = OH_prev;
-  CO2 = zeros(n,m);
   CO2(:,1) = CO2_prev;
-  CO3 = zeros(n,m);
   CO3(:,1) = CO3_prev;
-  HCO3 = zeros(n,m);
   HCO3(:,1) = HCO3_prev;
-  NH3 = zeros(n,m);
   NH3(:,1) = NH3_prev;
-  NH4 = zeros(n,m);
   NH4(:,1) = NH4_prev;
-  HS = zeros(n,m);
   HS(:,1) = HS_prev;
-  H2S = zeros(n,m);
   H2S(:,1) = H2S_prev;
-  H2CO3 = zeros(n,m);
   H2CO3(:,1) = H2CO3_prev;
-  DOM1 = zeros(n,m);
   DOM1(:,1) = DOM1_prev;
-  DOM2 = zeros(n,m);
   DOM2(:,1) = DOM2_prev;
-
-
-
-  % Stiffness:
-  % =======================================================================================================
-  % CFL = (D_O2+Db)*dt/dx^2;
-
 
   % Solving equations!!!
   % =========================================================================================================
@@ -245,7 +205,6 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       ts_during_one_dt = 1;
       int_method = 1;
       [C_new, rates(i-1)] = sediments_chemical_reactions_module(C0,dt,ts_during_one_dt, int_method);
-      dcdt(:,:,i) = (C_new-C0)./dt;
 
       O2(:,i-1)      = C_new(:,1);
       OM(:,i-1)      = C_new(:,2);
@@ -417,40 +376,6 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_concentrations.H2CO3 = H2CO3(:,end);
   sediment_concentrations.DOM1 = DOM1(:,end);
   sediment_concentrations.DOM2 = DOM2(:,end);
-
-  dcdt = sum(dcdt,3)/size(dcdt,3);
-
-  sediment_additional_results.dcdt.O2      = dcdt(:,1);
-  sediment_additional_results.dcdt.OM      = dcdt(:,2);
-  sediment_additional_results.dcdt.OMb     = dcdt(:,3);
-  sediment_additional_results.dcdt.NO3     = dcdt(:,4);
-  sediment_additional_results.dcdt.FeOH3   = dcdt(:,5);
-  sediment_additional_results.dcdt.SO4     = dcdt(:,6);
-  sediment_additional_results.dcdt.NH4     = dcdt(:,7);
-  sediment_additional_results.dcdt.Fe2     = dcdt(:,8);
-  sediment_additional_results.dcdt.FeOOH   = dcdt(:,9);
-  sediment_additional_results.dcdt.H2S     = dcdt(:,10);
-  sediment_additional_results.dcdt.HS      = dcdt(:,11);
-  sediment_additional_results.dcdt.FeS     = dcdt(:,12);
-  sediment_additional_results.dcdt.S0      = dcdt(:,13);
-  sediment_additional_results.dcdt.PO4     = dcdt(:,14);
-  sediment_additional_results.dcdt.S8      = dcdt(:,15);
-  sediment_additional_results.dcdt.FeS2    = dcdt(:,16);
-  sediment_additional_results.dcdt.AlOH3   = dcdt(:,17);
-  sediment_additional_results.dcdt.PO4adsa = dcdt(:,18);
-  sediment_additional_results.dcdt.PO4adsb = dcdt(:,19);
-  sediment_additional_results.dcdt.Ca2     = dcdt(:,20);
-  sediment_additional_results.dcdt.Ca3PO42 = dcdt(:,21);
-  sediment_additional_results.dcdt.OMS     = dcdt(:,22);
-  sediment_additional_results.dcdt.H       = dcdt(:,23);
-  sediment_additional_results.dcdt.OH      = dcdt(:,24);
-  sediment_additional_results.dcdt.CO2     = dcdt(:,25);
-  sediment_additional_results.dcdt.CO3     = dcdt(:,26);
-  sediment_additional_results.dcdt.HCO3    = dcdt(:,27);
-  sediment_additional_results.dcdt.NH3     = dcdt(:,28);
-  sediment_additional_results.dcdt.H2CO3   = dcdt(:,29);
-  sediment_additional_results.dcdt.DOM1   = dcdt(:,30);
-  sediment_additional_results.dcdt.DOM2   = dcdt(:,31);
 
 
   % Estimate average rate during the day
