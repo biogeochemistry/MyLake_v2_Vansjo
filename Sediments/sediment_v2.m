@@ -203,7 +203,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
 
 
       ts_during_one_dt = 1;
-      int_method = 1;
+      int_method = 0;
       [C_new, rates(i-1)] = sediments_chemical_reactions_module(C0,dt,ts_during_one_dt, int_method);
 
       O2(:,i-1)      = C_new(:,1);
@@ -376,6 +376,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_concentrations.H2CO3 = H2CO3(:,end);
   sediment_concentrations.DOM1 = DOM1(:,end);
   sediment_concentrations.DOM2 = DOM2(:,end);
+  sediment_concentrations.pH = -log10(H(:,end)*10^-3);
 
 
   % Estimate average rate during the day
@@ -544,26 +545,52 @@ function F = delta_eqs(delta, H, OH, HCO3, CO2, CO3, NH3, NH4, HS, H2S)
      ];
 end
 
+function C_new = pde_solver_solute(AL, AR, C_old, const_bc)
+    C_old(1) = const_bc;
+    temp = AR*C_old;
+    % temp(1) = const_bc;
+    C_new = AL\ temp;
+    % C_new(1) = const_bc;
+    C_new = (C_new>0).*C_new;
+end
+
+function C_new = pde_solver_solid(AL, AR, C_old, flux_bc, coef)
+      temp = AR*C_old;
+      temp(1) = temp(1) + flux_bc * coef;
+      C_new = AL\ temp;
+      C_new = (C_new>0).*C_new;
+end
+
+function [C_new, rates] = sediments_chemical_reactions_module(C0,dt,ts, method)
+    % ts - how many time steps during 1 day
+    if method == 0
+        [C_new, rates] = rk4(C0,ts,dt);
+    elseif method == 1
+        [C_new, rates] = butcher5(C0,ts,dt);
+    end
+    C_new = (C_new>0).*C_new;
+end
+
 %% rk4: Runge-Kutta 4th order integration
-function [C_new] = rk4(C0,ts, dt)
+function [C_new, rates] = rk4(C0,ts, dt)
     % ts - how many time steps during 1 day
     dt = dt/ts;
     for i = 1:ts
-        [dcdt_1, r_1] = sediment_rates(C0, dt)
+        [dcdt_1, r_1] = sediment_rates(C0, dt);
         k_1 = dt.*dcdt_1;
-        [dcdt_2, r_2] = sediment_rates(C0+0.5.*k_1, dt)
+        [dcdt_2, r_2] = sediment_rates(C0+0.5.*k_1, dt);
         k_2 = dt.*dcdt_2;
-        [dcdt_3, r_3] = sediment_rates(C0+0.5.*k_2, dt)
+        [dcdt_3, r_3] = sediment_rates(C0+0.5.*k_2, dt);
         k_3 = dt.*dcdt_3;
-        [dcdt_4, r_4] = sediment_rates(C0+k_3, dt)
+        [dcdt_4, r_4] = sediment_rates(C0+k_3, dt);
         k_4 = dt.*dcdt_4;
         C_new = C0 + (k_1+2.*k_2+2.*k_3+k_4)/6;
         C0 = C_new;
 
         % average rate
         fields = fieldnames(r_1);
-        for i = 1:numel(fields)
-          rates.(fields{i}) = (7*r_1.(fields{i}) + 32*r_3.(fields{i}) + 12*r_4.(fields{i}) + 32*r_5.(fields{i}) + 7*r_6.(fields{i}))/90;
+        for fld_idx = 1:numel(fields)
+          rates.(fields{fld_idx}) = (r_1.(fields{fld_idx}) + 2*r_2.(fields{fld_idx}) + 2*r_3.(fields{fld_idx}) + r_4.(fields{fld_idx}))/6;
         end
     end
 end
@@ -590,40 +617,11 @@ function [C_new, rates] = butcher5(C0,ts,dt)
 
         % average rate
         fields = fieldnames(r_1);
-        for i = 1:numel(fields)
-          rates.(fields{i}) = (7*r_1.(fields{i}) + 32*r_3.(fields{i}) + 12*r_4.(fields{i}) + 32*r_5.(fields{i}) + 7*r_6.(fields{i}))/90;
+        for fld_idx = 1:numel(fields)
+          rates.(fields{fld_idx}) = (7*r_1.(fields{fld_idx}) + 32*r_3.(fields{fld_idx}) + 12*r_4.(fields{fld_idx}) + 32*r_5.(fields{fld_idx}) + 7*r_6.(fields{fld_idx}))/90;
         end
     end
 end
-
-
-
-function C_new = pde_solver_solute(AL, AR, C_old, const_bc)
-    C_old(1) = const_bc;
-    temp = AR*C_old;
-    % temp(1) = const_bc;
-    C_new = AL\ temp;
-    % C_new(1) = const_bc;
-    C_new = (C_new>0).*C_new;
-end
-
-function C_new = pde_solver_solid(AL, AR, C_old, flux_bc, coef)
-      temp = AR*C_old;
-      temp(1) = temp(1) + flux_bc * coef;
-      C_new = AL\ temp;
-      C_new = (C_new>0).*C_new;
-end
-
-function [C_new, rates] = sediments_chemical_reactions_module(C0,dt,ts, method)
-    % ts - how many time steps during 1 day
-    if method == 0
-        C_new = rk4(C0,ts,dt);
-    elseif method == 1
-        [C_new, rates] = butcher5(C0,ts,dt);
-    end
-    C_new = (C_new>0).*C_new;
-end
-
 
 %% top_sediment_rate_to_flux: returns the flux of species at SWI converted to th units used in WC [ mg m-2 d-1 ].
 function [flux] = top_sediment_rate_to_flux(R, dx)

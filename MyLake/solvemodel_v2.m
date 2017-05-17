@@ -98,7 +98,7 @@ tracer_switch=1;                %simulate tracers:  0=no, 1=yes
 matsedlab_sediment_module = 1;  %MATSEDLAB sediment module  %% NEW_DOCOMO
 wc_chemistry_module = 1;        % WC chemistry module: on/off
 ts_during_day = 25;             % WC chemistry module: time steps during the day: >= 25 for dz = 1m; could be less with better mesh.
-wc_int_method = 1;              % WC chemistry module: method: 0 - rk4th, 1 - rk5th;
+wc_int_method = 0;              % WC chemistry module: method: 0 - rk4th, 1 - rk5th;
 %fokema
 photobleaching=0;               %photo bleaching: 0=TSA model, 1=FOKEMA model
 floculation_switch=1;           % floculation according to Wachenfeldt 2008  %% NEW_DOCOMO
@@ -1341,7 +1341,7 @@ for i = 1:length(tt)
 
         C0 = [O2z, Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, Sz, POCz];
 
-        C_new = wc_chemical_reactions_module(C0,dt,ts_during_day, wc_int_method);
+        [C_new, wc_rates_av] = wc_chemical_reactions_module(C0,dt,ts_during_day, wc_int_method);
 
         O2z  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,1), 31998.8);
         Chlz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,2), 30973.762);
@@ -1433,40 +1433,10 @@ for i = 1:length(tt)
         DOCz = MyLakeNewConcentrations.DOCz;
 
 
-        % Sediment module output
-        % Output:
-        O2_sediment_zt(:,i) = sediment_concentrations.O2;
-        OM_sediment_zt(:,i) = sediment_concentrations.OM1;
-        OMb_sediment_zt(:,i) = sediment_concentrations.OM2;
-        NO3_sediment_zt(:,i) = sediment_concentrations.NO3;
-        FeOH3_sediment_zt(:,i) = sediment_concentrations.FeOH3;
-        SO4_sediment_zt(:,i) = sediment_concentrations.SO4;
-        NH4_sediment_zt(:,i) = sediment_concentrations.NH4;
-        Fe2_sediment_zt(:,i) = sediment_concentrations.Fe2;
-        FeOOH_sediment_zt(:,i) = sediment_concentrations.FeOOH;
-        H2S_sediment_zt(:,i) = sediment_concentrations.H2S;
-        HS_sediment_zt(:,i)  = sediment_concentrations.HS;
-        FeS_sediment_zt(:,i) = sediment_concentrations.FeS;
-        S0_sediment_zt(:,i)  = sediment_concentrations.S0;
-        PO4_sediment_zt(:,i) = sediment_concentrations.PO4;
-        S8_sediment_zt(:,i) = sediment_concentrations.S8;
-        FeS2_sediment_zt(:,i) = sediment_concentrations.FeS2;
-        AlOH3_sediment_zt(:,i) = sediment_concentrations.AlOH3;
-        PO4adsa_sediment_zt(:,i) = sediment_concentrations.PO4adsa;
-        PO4adsb_sediment_zt(:,i) = sediment_concentrations.PO4adsb;
-        Ca2_sediment_zt(:,i) = sediment_concentrations.Ca2;
-        Ca3PO42_sediment_zt(:,i) = sediment_concentrations.Ca3PO42;
-        OMS_sediment_zt(:,i) = sediment_concentrations.OMS;
-        H_sediment_zt(:,i) = sediment_concentrations.H;
-        OH_sediment_zt(:,i) = sediment_concentrations.OH;
-        CO2_sediment_zt(:,i) = sediment_concentrations.CO2;
-        CO3_sediment_zt(:,i) = sediment_concentrations.CO3;
-        HCO3_sediment_zt(:,i) = sediment_concentrations.HCO3;
-        NH3_sediment_zt(:,i) = sediment_concentrations.NH3;
-        H2CO3_sediment_zt(:,i) = sediment_concentrations.H2CO3;
-        DOM1_sediment_zt(:,i) = sediment_concentrations.DOM1;
-        DOM2_sediment_zt(:,i) = sediment_concentrations.DOM2;
-        pH_sediment_zt(:,i) = -log10(H_sediment_zt(:,i)*10^-3);
+        fields = fieldnames(sediment_concentrations);
+        for fd_idx = 1:numel(fields)
+            sediment_concentrations_zt.(fields{fd_idx})(:,i) = sediment_concentrations.(fields{fd_idx});
+        end
 
         fields = fieldnames(sediment_transport_fluxes);
         for fd_idx = 1:numel(fields)
@@ -1482,6 +1452,12 @@ for i = 1:length(tt)
         for fd_idx = 1:numel(fields)
             sediment_additional_results_zt.rates.(fields{fd_idx})(:,i) = sediment_additional_results.rates.(fields{fd_idx});
         end
+
+        fields = fieldnames(wc_rates_av);
+        for fd_idx = 1:numel(fields)
+            MyLake_results.rates.(fields{fd_idx})(:,i) = wc_rates_av.(fields{fd_idx});
+        end
+
     end
 
     % Output MyLake matrices
@@ -1649,39 +1625,7 @@ end; %for i = 1:length(tt)
 
 %Saving sediment values
 if matsedlab_sediment_module           % MATSEDLAB sediment module
-    sediment_results.OMzt = OM_sediment_zt;
-    sediment_results.OMbzt = OMb_sediment_zt;
-    sediment_results.DOM1zt = DOM1_sediment_zt;
-    sediment_results.DOM2zt = DOM2_sediment_zt;
-    sediment_results.OMSzt = OMS_sediment_zt;
-    sediment_results.PO4zt = PO4_sediment_zt;
-    sediment_results.PO4adsazt = PO4adsa_sediment_zt;
-    sediment_results.PO4adsbzt = PO4adsb_sediment_zt;
-    sediment_results.O2zt = O2_sediment_zt;
-    sediment_results.NO3zt = NO3_sediment_zt;
-    sediment_results.NH4zt = NH4_sediment_zt;
-    sediment_results.NH3zt = NH3_sediment_zt;
-    sediment_results.FeOH3zt = FeOH3_sediment_zt;
-    sediment_results.FeOOHzt = FeOOH_sediment_zt;
-    sediment_results.Fe2zt = Fe2_sediment_zt;
-    sediment_results.SO4zt = SO4_sediment_zt;
-    sediment_results.H2Szt = H2S_sediment_zt;
-    sediment_results.HSzt = HS_sediment_zt;
-    sediment_results.FeSzt = FeS_sediment_zt;
-    sediment_results.FeS2zt = FeS2_sediment_zt;
-    sediment_results.AlOH3zt = AlOH3_sediment_zt;
-    sediment_results.S0zt = S0_sediment_zt;
-    sediment_results.S8zt = S8_sediment_zt;
-    sediment_results.Hzt = H_sediment_zt;
-    sediment_results.Ca2zt = Ca2_sediment_zt;
-    sediment_results.Ca3PO42zt = Ca3PO42_sediment_zt;
-    sediment_results.Hzt = H_sediment_zt;
-    sediment_results.OHzt = OH_sediment_zt;
-    sediment_results.CO2zt = CO2_sediment_zt;
-    sediment_results.CO3zt = CO3_sediment_zt;
-    sediment_results.HCO3zt = HCO3_sediment_zt;
-    sediment_results.H2CO3zt = H2CO3_sediment_zt;
-    sediment_results.pHzt = pH_sediment_zt;
+    sediment_results.concentrations = sediment_concentrations_zt;
     sediment_results.z = sediment_params.x';
     sediment_results.Bioirrigation_fx_zt = sediment_bioirrigation_fluxes_zt;
     sediment_results.MyLake_params = MyLake_params;
@@ -1705,31 +1649,31 @@ int_R_O2dz = integrate_over_depth(d_O2zt, dz);
 MyLake_results.Qst = Qst;
 MyLake_results.Kzt = Kzt;
 MyLake_results.Tzt = Tzt;
-MyLake_results.Pzt = Pzt;
-MyLake_results.PPzt = PPzt;
-MyLake_results.Czt = Czt;
-MyLake_results.Chlzt = Chlzt;
-MyLake_results.POCzt = POCzt;
-MyLake_results.DOPzt = DOPzt;
-MyLake_results.DOCzt = DOCzt;
-MyLake_results.DICzt = DICzt;
-MyLake_results.CO2zt = CO2zt;
-MyLake_results.O2zt = O2zt;
-MyLake_results.NO3zt = NO3zt;
-MyLake_results.NH4zt = NH4zt;
-MyLake_results.Fe3zt = Fe3zt;
-MyLake_results.Fe2zt = Fe2zt;
-MyLake_results.SO4zt = SO4zt;
-MyLake_results.HSzt = HSzt;
-MyLake_results.H2Szt = H2Szt;
-MyLake_results.CH4zt = CH4zt;
-MyLake_results.Ca2zt = Ca2zt;
-MyLake_results.pHzt = pHzt;
-MyLake_results.Szt = Szt;
-MyLake_results.Al3zt = Al3zt;
-MyLake_results.SiO4zt = SiO4zt;
-MyLake_results.SiO2zt = SiO2zt;
-MyLake_results.diatomzt = diatomzt;
+MyLake_results.concentrations.P = Pzt;
+MyLake_results.concentrations.PP = PPzt;
+MyLake_results.concentrations.C = Czt;
+MyLake_results.concentrations.Chl = Chlzt;
+MyLake_results.concentrations.POC = POCzt;
+MyLake_results.concentrations.DOP = DOPzt;
+MyLake_results.concentrations.DOC = DOCzt;
+MyLake_results.concentrations.DIC = DICzt;
+MyLake_results.concentrations.CO2 = CO2zt;
+MyLake_results.concentrations.O2 = O2zt;
+MyLake_results.concentrations.NO3 = NO3zt;
+MyLake_results.concentrations.NH4 = NH4zt;
+MyLake_results.concentrations.Fe3 = Fe3zt;
+MyLake_results.concentrations.Fe2 = Fe2zt;
+MyLake_results.concentrations.SO4 = SO4zt;
+MyLake_results.concentrations.HS = HSzt;
+MyLake_results.concentrations.H2S = H2Szt;
+MyLake_results.concentrations.CH4 = CH4zt;
+MyLake_results.concentrations.Ca2 = Ca2zt;
+MyLake_results.concentrations.pH = pHzt;
+MyLake_results.concentrations.S = Szt;
+MyLake_results.concentrations.Al3 = Al3zt;
+MyLake_results.concentrations.SiO4 = SiO4zt;
+MyLake_results.concentrations.SiO2 = SiO2zt;
+MyLake_results.concentrations.diatom = diatomzt;
 MyLake_results.d_O2zt = d_O2zt;
 MyLake_results.int_R_O2dz = int_R_O2dz;
 MyLake_results.O2_diffzt = O2_diffzt;
@@ -1741,8 +1685,8 @@ MyLake_results.P3zt_sed = P3zt_sed;
 MyLake_results.P3zt_sed_sc = P3zt_sed_sc;
 MyLake_results.His = His;
 MyLake_results.MixStat = MixStat;
-MyLake_results.H_sw_zt = H_sw_zt;
-MyLake_results.H_sw_zt_2 = H_sw_zt_2;
+MyLake_results.H_sw = H_sw_zt;
+MyLake_results.H_sw_2 = H_sw_zt_2;
 MyLake_results.PAR_zt = PAR_zt;
 MyLake_results.lvlDzt = lvlDzt;
 MyLake_results.CDOMzt = CDOMzt;
@@ -1916,12 +1860,12 @@ Pfpart = (TIP - (1-vf).*Pdiss)./(rho_sed*vf); %inorg. P conc. in sediment partic
 %% rates: rates of chemical equations in water column
 
 
-function [C_new] = wc_chemical_reactions_module(C0, dt, ts, method)
+function [C_new, rates] = wc_chemical_reactions_module(C0, dt, ts, method)
     % ts - how many time steps during 1 day
     if method == 0
-        C_new = rk4(C0,dt,ts);
+        [C_new, rates] = rk4(C0,dt,ts);
     elseif method == 1
-        C_new = butcher5(C0,dt,ts);
+        [C_new, rates] = butcher5(C0,dt,ts);
     end
     C_new = (C_new>0).*C_new;
 
@@ -1929,44 +1873,65 @@ function [C_new] = wc_chemical_reactions_module(C0, dt, ts, method)
 
 
 %% rk4: Runge-Kutta 4th order integration
-function [C_new] = rk4(C0,dt,ts)
-
+function [C_new, rates_av] = rk4(C0,dt,ts)
     % ts - how many time steps during 1 day
     dt = dt/ts/365;
     for i = 1:ts
-        k_1 = dt.*rates(C0, dt);
-        k_2 = dt.*rates(C0+0.5.*k_1, dt);
-        k_3 = dt.*rates(C0+0.5.*k_2, dt);
-        k_4 = dt.*rates(C0+k_3, dt);
+        [dcdt_1, r_1] = wc_rates(C0, dt);
+        k_1 = dt.*dcdt_1;
+        [dcdt_2, r_2] = wc_rates(C0+0.5.*k_1, dt);
+        k_2 = dt.*dcdt_2;
+        [dcdt_3, r_3] = wc_rates(C0+0.5.*k_2, dt);
+        k_3 = dt.*dcdt_3;
+        [dcdt_4, r_4] = wc_rates(C0+k_3, dt);
+        k_4 = dt.*dcdt_4;
         C_new = C0 + (k_1+2.*k_2+2.*k_3+k_4)/6;
         C0 = C_new;
 
-        if any(any(isnan(C_new)))
-            error('NaN')
+        % average rate
+        fields = fieldnames(r_1);
+        for fld_idx = 1:numel(fields)
+          r.(fields{fld_idx}) = (r_1.(fields{fld_idx}) + 2*r_2.(fields{fld_idx}) + 2*r_3.(fields{fld_idx}) + r_4.(fields{fld_idx}))/6;
         end
 
+        rates(i) = r;
     end
-%end of function
 
+    fields = fieldnames(rates);
+    for i = 1:numel(fields)
+      rates_av.(fields{i}) = 0;
+      for j=1:ts-1
+          rates_av.(fields{i}) = rates_av.(fields{i}) + rates(j).(fields{i});
+      end
+      rates_av.(fields{i}) = rates_av.(fields{i})/(ts-1);
+    end
 
 %% butcher5: Butcher's Fifth-Order Runge-Kutta
-function [C_new] = butcher5(C0,dt,ts)
+function [C_new, rates] = butcher5(C0,dt,ts)
+
     dt = dt/ts/365;
     for i = 1:ts
-        k_1 = dt.*rates(C0, dt);
-        k_2 = dt.*rates(C0 + 1/4.*k_1, dt);
-        k_3 = dt.*rates(C0 + 1/8.*k_1 + 1/8.*k_2, dt);
-        k_4 = dt.*rates(C0 - 1/2.*k_2 + k_3, dt);
-        k_5 = dt.*rates(C0 + 3/16.*k_1 + 9/16.*k_4, dt);
-        k_6 = dt.*rates(C0 - 3/7.*k_1 + 2/7.*k_2 + 12/7.*k_3 - 12/7.*k_4 + 8/7.*k_5, dt);
+        [dcdt_1, r_1] = wc_rates(C0, dt);
+        k_1 = dt.*dcdt_1;
+        [dcdt_2, r_2] = wc_rates(C0 + 1/4.*k_1, dt);
+        k_2 = dt.*dcdt_2;
+        [dcdt_3, r_3] = wc_rates(C0 + 1/8.*k_1 + 1/8.*k_2, dt);
+        k_3 = dt.*dcdt_3;
+        [dcdt_4, r_4] = wc_rates(C0 - 1/2.*k_2 + k_3, dt);
+        k_4 = dt.*dcdt_4;
+        [dcdt_5, r_5] = wc_rates(C0 + 3/16.*k_1 + 9/16.*k_4, dt);
+        k_5 = dt.*dcdt_5;
+        [dcdt_6, r_6] = wc_rates(C0 - 3/7.*k_1 + 2/7.*k_2 + 12/7.*k_3 - 12/7.*k_4 + 8/7.*k_5, dt);
+        k_6 = dt.*dcdt_6;
         C_new = C0 + (7.*k_1 + 32.*k_3 + 12.*k_4 + 32.*k_5 + 7.*k_6)/90;
         C0 = C_new;
 
-        if any(any(isnan(C_new)))
-            error('NaN')
+        % average rate
+        fields = fieldnames(r_1);
+        for fld_idx = 1:numel(fields)
+          rates.(fields{fld_idx}) = (7*r_1.(fields{fld_idx}) + 32*r_3.(fields{fld_idx}) + 12*r_4.(fields{fld_idx}) + 32*r_5.(fields{fld_idx}) + 7*r_6.(fields{fld_idx}))/90;
         end
     end
-%end of function
 
 function [int_rate] = integrate_over_depth(R, dz)
 %% integrate_over_depth: integrates the rates of reaction over the depth
@@ -2017,7 +1982,7 @@ function F = P_equlibrium_logK(x, param, Sum_Fe, Sum_P)
     F(4) = Fe3_P + Fe3_HP + Fe3_H2P + Fe3 - Sum_Fe;
     F(5) = Fe3_P + Fe3_HP + Fe3_H2P + P - Sum_P;
 
-function [dcdt] = rates(C, dt)
+function [dcdt, r] = wc_rates(C, dt)
 % parameters for water-column chemistry
 % NOTE: the rates are the same as in sediments (per year!! not day) except microbial which are factorized due to lower concertation of bacteria in WC then in sediments. Units are per "year" due to time step is in year units too;
 
@@ -2159,6 +2124,10 @@ function [dcdt] = rates(C, dt)
     R18b = 0; % NOTE: the rate is unknown
     R19  = k_apa_wc .* (Pz - kapa_wc); % NOTE: no Ca3PO42 pool in WC
     R19  = (R19 >= 0) .* R19;
+
+    % saving rates
+    r.R1a = R1a; r.R1b = R1b; r.R1c = R1c; r.R1d = R1d; r.R1e = R1e; r.R2a = R2a; r.R2b = R2b; r.R2c = R2c; r.R2d = R2d; r.R2e = R2e; r.R3a = R3a; r.R3b = R3b; r.R3c = R3c; r.R3d = R3d; r.R3e = R3e; r.R5a = R5a; r.R5b = R5b; r.R5c = R5c; r.R5d = R5d; r.R5e = R5e; r.Ra = Ra; r.Rb = Rb; r.Rc = Rc; r.Rd = Rd; r.Re = Re; r.R1 = R1; r.R2 = R2; r.R3 = R3; r.R5 = R5; r.R6 = R6; r.R7 = R7; r.R8  = R8; r.R9 = R9; r.R10a = R10a; r.R10b = R10b; r.R10c = R10c; r.R10d = R10d; r.R12 = R12; r.R13 = R13; r.R14a = R14a; r.R14b  = R14b; r.R16a = R16a; r.R16b  = R16b; r.R17a = R17a; r.R17b = R17b; r.R18a = R18a; r.R18b = R18b; r.R19 = R19;
+
 
     dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1_wc*R1a + Cx1_wc*R1b + Cx1_wc*R1c + Cx2_wc*R1d+ Cx2_wc*R1e) - 3*R12 + Cx1_wc * R_dO2_Chl; % O2z
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
