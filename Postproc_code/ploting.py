@@ -62,7 +62,7 @@ def load_data():
 def intime(results, elem):
     plt.figure(figsize=(6, 4), dpi=192)
     for e in elem:
-        plt.plot(-366 + results['days'][0, 0][0], results[e][0, 0].T, lw=3, label=e)
+        plt.plot(-366 + results['days'][0, 0][0], results['concentrations'][0, 0][e][0, 0].T, lw=3, label=e)
     ax = plt.gca()
     ax.ticklabel_format(useOffset=False)
     ax.grid(linestyle='-', linewidth=0.2)
@@ -94,10 +94,10 @@ class ResultsPlotter:
     def unit_converter(self, convert_units, env, e):
         if convert_units:
             if env == 'sediment':
-                coef = molar_masses[e[:-2]]
+                coef = molar_masses[e]
                 units = '[$mg/m^3$]'
             elif env == 'water-column':
-                coef = 1 / molar_masses[e[:-2]]
+                coef = 1 / molar_masses[e]
                 units = '[$mmol/L$]'
         else:
             coef = 1
@@ -216,8 +216,8 @@ class ResultsPlotter:
         lines = {}
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
-            y = results[e][0, 0][:, -1 + end] * coef
-            lines[e], = plt.plot(y, -z, lw=3, label=e[:-2])
+            y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef
+            lines[e], = plt.plot(y, -z, lw=3, label=e)
             if convert_units and env == 'sediment':
                 mass_per_area[e] = np.trapz(y, z / 100)
                 lbl = r'$mg / m^2$'
@@ -253,15 +253,15 @@ class ResultsPlotter:
         rate_per_area = {}
         lines = {}
         for e in elem:
-            y = results['dcdt'][0, 0][e[:-2]][0, 0][:, -1 + end]
-            lines[e], = plt.plot(y, -z, lw=3, label=e[:-2])
+            y = results['rates'][0, 0][e][0, 0][:, -1 + end]
+            lines[e], = plt.plot(y, -z, lw=3, label=e)
             if env == 'water-column':
                 rate_per_area[e] = np.trapz(y, z * 100)
             elif env == 'sediment':
                 rate_per_area[e] = np.trapz(y, z)
         lbl = r'$umol/cm^{2} / y$'
         leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(rate_per_area[e]) + lbl for e in elem], loc=4)
-        plt.xlabel('$umol/cm^{2}/y$')
+        plt.xlabel('$umol/cm^{3}/y$')
         if env == 'water-column':
             plt.ylabel('Depth, [m]')
         else:
@@ -284,7 +284,7 @@ class ResultsPlotter:
         z = 0
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
-            z += results[e][0, 0][0:end - 1, start:end] * coef
+            z += results['concentrations'][0, 0][e][0, 0][0:end - 1, start:end] * coef
         CS = plt.contourf(X, Y, z, 51, cmap=cmap, origin='lower')
     #     plt.clabel(CS, inline=1, fontsize=10, colors='w')
         cbar = plt.colorbar(CS)
@@ -302,7 +302,7 @@ class ResultsPlotter:
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
         lbl = ''
         for e in elem:
-            lbl += e[:-2] + ', '
+            lbl += e + ', '
         cbar.ax.set_ylabel(lbl + units)
         if elem[0] == 'Tzt':
             cbar.ax.set_ylabel('Temperature, [C]')
@@ -320,7 +320,7 @@ class ResultsPlotter:
         X, Y = np.meshgrid(results['days'][0, 0][0][start:end], -results['z'][0, 0])
         z = 0
         for e in elem:
-            z += results['dcdt'][0, 0][e[:-2]][0, 0][:, start:end]
+            z += results['dcdt'][0, 0][e][0, 0][:, start:end]
         # CS = plt.contourf(X, Y, z, 51, cmap=cmap, origin='lower')
         lim = np.max(np.abs(z))
         lim = np.linspace(-lim - 1e-16, +lim + 1e-16, 51)
@@ -340,7 +340,7 @@ class ResultsPlotter:
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
         lbl = ''
         for e in elem:
-            lbl += e[:-2] + ', '
+            lbl += e + ', '
         if elem[0] == 'Tzt':
             cbar.ax.set_ylabel('Temperature, [C]')
         elif elem[0] == 'H_sw_zt':
@@ -361,11 +361,11 @@ class ResultsPlotter:
         fi = results['params'][0, 0]['fi'][0, 0][:, -1]
         for e in elem:
             coef, units = self.unit_converter(convert_units, 'sediment', e)
-            if e[:-2] in disolved:
-                y = results[e][0, 0][:, -1 + end] * coef * fi
-            elif e[:-2] in solid:
-                y = results[e][0, 0][:, -1 + end] * coef * (1 - fi)
-            lines[e], = plt.plot(y, -z, lw=3, label=e[:-2])
+            if e in disolved:
+                y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef * fi
+            elif e in solid:
+                y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef * (1 - fi)
+            lines[e], = plt.plot(y, -z, lw=3, label=e)
             if convert_units:
                 mass_per_area[e] = np.trapz(y, z / 100)
                 lbl = r'$mg / m^2$'
