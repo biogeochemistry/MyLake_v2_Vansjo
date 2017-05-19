@@ -1,4 +1,4 @@
-function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_params, sediment_params,sediment_transport_fluxes, sediment_bioirrigation_fluxes )
+function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, sediment_concentrations, sediment_transport_fluxes, sediment_bioirrigation_fluxes, MyLake_params, sediment_params)
     %UPDATE_WC Summary of this function goes here
 
     O2z = MyLakeOldConcentrations.O2z;
@@ -10,24 +10,24 @@ function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_
     DOPz = MyLakeOldConcentrations.DOPz;
 
     % Diffusion Fluxes:
-    O2z = update_C_due_to_flux(O2z, sediment_transport_fluxes.O2, MyLake_params, sediment_params);
-    Pz = update_C_due_to_flux(Pz, sediment_transport_fluxes.PO4, MyLake_params, sediment_params);
-    Fe2z = update_C_due_to_flux(Fe2z, sediment_transport_fluxes.Fe2, MyLake_params, sediment_params);
-    NO3z = update_C_due_to_flux(NO3z, sediment_transport_fluxes.NO3, MyLake_params, sediment_params);
-    NH4z = update_C_due_to_flux(NH4z, sediment_transport_fluxes.NH4, MyLake_params, sediment_params);
-    DOPz = update_C_due_to_flux(DOPz, sediment_transport_fluxes.DOM1, MyLake_params, sediment_params);
-    DOCz = update_C_due_to_flux(DOCz, sediment_transport_fluxes.DOM2, MyLake_params, sediment_params);
+    O2z = update_C_as_neumann(O2z, sediment_transport_fluxes.O2, MyLake_params, sediment_params);
+    Pz = update_C_as_neumann(Pz, sediment_transport_fluxes.PO4, MyLake_params, sediment_params);
+    Fe2z = update_C_as_neumann(Fe2z, sediment_transport_fluxes.Fe2, MyLake_params, sediment_params);
+    NO3z = update_C_as_neumann(NO3z, sediment_transport_fluxes.NO3, MyLake_params, sediment_params);
+    NH4z = update_C_as_neumann(NH4z, sediment_transport_fluxes.NH4, MyLake_params, sediment_params);
+    DOPz = update_C_as_neumann(DOPz, sediment_transport_fluxes.DOM1, MyLake_params, sediment_params);
+    DOCz = update_C_as_neumann(DOCz, sediment_transport_fluxes.DOM2, MyLake_params, sediment_params);
 
     % % Boudreau, B.P., 1999. Metals and models : Diagenetic modelling in freshwater lacustrine sediments *. , pp.227–251.
 
     % % Bioirrigation
-    O2z = update_C_due_to_flux(O2z, sediment_bioirrigation_fluxes.O2, MyLake_params, sediment_params);
-    Pz = update_C_due_to_flux(Pz, sediment_bioirrigation_fluxes.PO4, MyLake_params, sediment_params);
-    Fe2z = update_C_due_to_flux(Fe2z, sediment_bioirrigation_fluxes.Fe2, MyLake_params, sediment_params);
-    NO3z = update_C_due_to_flux(NO3z, sediment_bioirrigation_fluxes.NO3, MyLake_params, sediment_params);
-    NH4z = update_C_due_to_flux(NH4z, sediment_bioirrigation_fluxes.NH4, MyLake_params, sediment_params);
-    DOPz = update_C_due_to_flux(DOPz, sediment_bioirrigation_fluxes.DOM1, MyLake_params, sediment_params);
-    DOCz = update_C_due_to_flux(DOCz, sediment_bioirrigation_fluxes.DOM2, MyLake_params, sediment_params);
+    O2z = update_C_as_neumann(O2z, sediment_bioirrigation_fluxes.O2, MyLake_params, sediment_params);
+    Pz = update_C_as_neumann(Pz, sediment_bioirrigation_fluxes.PO4, MyLake_params, sediment_params);
+    Fe2z = update_C_as_neumann(Fe2z, sediment_bioirrigation_fluxes.Fe2, MyLake_params, sediment_params);
+    NO3z = update_C_as_neumann(NO3z, sediment_bioirrigation_fluxes.NO3, MyLake_params, sediment_params);
+    NH4z = update_C_as_neumann(NH4z, sediment_bioirrigation_fluxes.NH4, MyLake_params, sediment_params);
+    DOPz = update_C_as_neumann(DOPz, sediment_bioirrigation_fluxes.DOM1, MyLake_params, sediment_params);
+    DOCz = update_C_as_neumann(DOCz, sediment_bioirrigation_fluxes.DOM2, MyLake_params, sediment_params);
 
     MyLakeNewConcentrations.O2z = O2z;
     MyLakeNewConcentrations.Pz = Pz;
@@ -42,8 +42,8 @@ function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, MyLake_
     end
 end
 
-%% update_C_due_to_flux: Update concentration of the WC due to flux from/to sediment
-function [C] = update_C_due_to_flux(C, flux, MyLake_params, sediment_params)
+%% update_C_as_neumann: Update concentration of the WC due to flux from/to sediment
+function [C] = update_C_as_neumann(C, flux, MyLake_params, sediment_params)
     Az_end = MyLake_params.Az(end);
     Vz_end = MyLake_params.Vz(end);
     dt     = MyLake_params.dt;
@@ -54,5 +54,9 @@ function [C] = update_C_due_to_flux(C, flux, MyLake_params, sediment_params)
     C(end) = (C(end) > 0).*C(end);
 end
 
+%% update_C_as_dirichlet: function description
+function [C] = update_C_as_dirichlet(C_wc, BC_value)
+    % BC_value - boundary condition produced by sediment
+    % C_wc - concentration of the species in the water-column
+    C_WC(end) = BC_value;
 
-%
