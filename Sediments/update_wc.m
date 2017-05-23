@@ -59,4 +59,4 @@ function [C] = update_C_as_dirichlet(C_wc, BC_value)
     % BC_value - boundary condition produced by sediment
     % C_wc - concentration of the species in the water-column
     C_WC(end) = BC_value;
-
+end
