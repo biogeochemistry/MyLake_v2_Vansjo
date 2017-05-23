@@ -1422,7 +1422,7 @@ for i = 1:length(tt)
         MyLakeOldConcentrations.DOCz = DOCz;
 
         % Update WC:  [sediment] ----> [WC]
-        [MyLakeNewConcentrations] = update_wc(MyLakeOldConcentrations, MyLake_params, sediment_params, sediment_transport_fluxes, sediment_bioirrigation_fluxes);
+        [MyLakeNewConcentrations] = update_wc(MyLakeOldConcentrations, sediment_concentrations, sediment_transport_fluxes, sediment_bioirrigation_fluxes, MyLake_params, sediment_params);
 
         O2z = MyLakeNewConcentrations.O2z;
         Pz = MyLakeNewConcentrations.Pz;
@@ -1647,8 +1647,8 @@ int_R_O2dz = integrate_over_depth(d_O2zt, dz);
 
 
 MyLake_results.Qst = Qst;
-MyLake_results.Kzt = Kzt;
-MyLake_results.Tzt = Tzt;
+MyLake_results.K = Kzt;
+MyLake_results.T = Tzt;
 MyLake_results.concentrations.P = Pzt;
 MyLake_results.concentrations.PP = PPzt;
 MyLake_results.concentrations.C = Czt;
