@@ -88,84 +88,85 @@ sediment_save_result_for_init_conc(Sediment_results.basin1, 1)
 MyLake_save_result_for_init_conc(MyLake_results.basin1, 1)
 
 
-if false % simulate 2nd basin?
+if true % simulate 2nd basin?
 
     surfacearea = MyLake_results_basin1.params.Az(1); % m2
     precipvolume = surfacearea * MyLake_results_basin1.Wt(:, 7) / 1000; % m3 day-1
     runoffintolake = MyLake_results_basin1.params.Phys_par(16) * MyLake_results_basin1.Inflw(:, 1); % I_scV should be 1'is input scaling 1?'
     outflow = precipvolume + runoffintolake; %% dd x 1
-    outflowTemp = MyLake_results_basin1.Tzt(1, :)';
-    outflowC = MyLake_results_basin1.Czt(1, :)';
-    outflowS = MyLake_results_basin1.Szt(1, :)';
-    outflowTP = MyLake_results_basin1.Czt(1, :)' + MyLake_results_basin1.Pzt(1, :)' + MyLake_results_basin1.Chlzt(1, :)' + MyLake_results_basin1.PPzt(1, :)' + MyLake_results_basin1.DOPzt(1, :)' ;
-    outflowDOP = MyLake_results_basin1.DOPzt(1, :)';
-    outflowChl = MyLake_results_basin1.Chlzt(1, :)';
-    outflowDOC = MyLake_results_basin1.DOCzt(1, :)';
-    outflowDIC = MyLake_results_basin1.DOCzt(1, :)'; %dummy for MyLake TSA
-    outflowO = MyLake_results_basin1.DOCzt(1, :)'; %dummy for MyLake TSA
-    outflowDIC = MyLake_results_basin1.DICzt(1, :)';
-    outflowO = MyLake_results_basin1.O2zt(1, :)';
-    outflowNO3zt = MyLake_results_basin1.NO3zt(1,:)';
-    outflowNH4zt = MyLake_results_basin1.NH4zt(1,:)';
-    outflowSO4zt = MyLake_results_basin1.SO4zt(1,:)';
-    outflowHSzt = MyLake_results_basin1.HSzt(1,:)';
-    outflowH2Szt = MyLake_results_basin1.H2Szt(1,:)';
-    outflowFe2zt = MyLake_results_basin1.Fe2zt(1,:)';
-    outflowCa2zt = MyLake_results_basin1.Ca2zt(1,:)';
-    outflowpHzt = MyLake_results_basin1.pHzt(1,:)';
-    outflowCH4zt = MyLake_results_basin1.CH4zt(1,:)';
-    outflowFe3zt = MyLake_results_basin1.Fe3zt(1,:)';
-    outflowAl3zt = MyLake_results_basin1.Al3zt(1,:)';
-    outflowSiO4zt = MyLake_results_basin1.SiO4zt(1,:)';
-    outflowSiO2zt = MyLake_results_basin1.SiO2zt(1,:)';
-    outflowdiatomzt = MyLake_results_basin1.diatomzt(1,:)';
+    outflowTemp = MyLake_results_basin1.T(1, :)';
+    outflowC = MyLake_results_basin1.concentrations.C(1, :)';
+    outflowS = MyLake_results_basin1.concentrations.S(1, :)';
+    outflowTP = MyLake_results_basin1.concentrations.C(1, :)' + MyLake_results_basin1.concentrations.P(1, :)' + MyLake_results_basin1.concentrations.Chl(1, :)' + MyLake_results_basin1.concentrations.PP(1, :)' + MyLake_results_basin1.concentrations.DOP(1, :)' ;
+    outflowDOP = MyLake_results_basin1.concentrations.DOP(1, :)';
+    outflowChl = MyLake_results_basin1.concentrations.Chl(1, :)';
+    outflowDOC = MyLake_results_basin1.concentrations.DOC(1, :)';
+    outflowDIC = MyLake_results_basin1.concentrations.DOC(1, :)'; %dummy for MyLake TSA
+    outflowO = MyLake_results_basin1.concentrations.DOC(1, :)'; %dummy for MyLake TSA
+    outflowDIC = MyLake_results_basin1.concentrations.DIC(1, :)';
+    outflowO = MyLake_results_basin1.concentrations.O2(1, :)';
+    outflowNO3zt = MyLake_results_basin1.concentrations.NO3(1,:)';
+    outflowNH4zt = MyLake_results_basin1.concentrations.NH4(1,:)';
+    outflowSO4zt = MyLake_results_basin1.concentrations.SO4(1,:)';
+    outflowHSzt = MyLake_results_basin1.concentrations.HS(1,:)';
+    outflowH2Szt = MyLake_results_basin1.concentrations.H2S(1,:)';
+    outflowFe2zt = MyLake_results_basin1.concentrations.Fe2(1,:)';
+    outflowCa2zt = MyLake_results_basin1.concentrations.Ca2(1,:)';
+    outflowpHzt = MyLake_results_basin1.concentrations.pH(1,:)';
+    outflowCH4zt = MyLake_results_basin1.concentrations.CH4(1,:)';
+    outflowFe3zt = MyLake_results_basin1.concentrations.Fe3(1,:)';
+    outflowAl3zt = MyLake_results_basin1.concentrations.Al3(1,:)';
+    outflowSiO4zt = MyLake_results_basin1.concentrations.SiO4(1,:)';
+    outflowSiO2zt = MyLake_results_basin1.concentrations.SiO2(1,:)';
+    outflowdiatomzt = MyLake_results_basin1.concentrations.diatom(1,:)';
 
 
     % %# ############ This is Vansjø Vanemfj. ##############
     % if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis. 
-        
-        if use_INCA == 0
-            land_to_vanem = 'IO/vanem_INCAP_input_baseline_mod.txt';
-        else
-            land_to_vanem = vanem_INCAP_input;  % created above by calling fn_INCA_MyL.m
-        end
-        
-        
-        store_to_vanem = [outflow outflowTemp outflowC outflowS outflowTP outflowDOP outflowChl outflowDOC outflowDIC outflowO outflowDIC outflowO outflowNO3zt outflowNH4zt outflowSO4zt outflowHSzt outflowH2Szt outflowFe2zt outflowCa2zt outflowpHzt outflowCH4zt outflowFe3zt outflowAl3zt outflowSiO4zt outflowSiO2zt outflowdiatomzt];
-       
-        Q_lake = outflow;
-        
-        vanem_input = tempname;
-        merge_l_b_inputs(land_to_vanem, store_to_vanem, vanem_input, m_start, m_stop)
-        
-        %parafile='k_values_lake.txt';
-        parafile = lake_par_file;
-        % initfile='IO/vanem_init.txt';
-        initfile='IO/mylake_initial_concentrations_2.txt';
-        inputfile = vanem_input;
-        
-        % note: I removed the DIC/O2 bits here ... take them again from Langtjern
-        % app when migrating to Mylake DOCOMO
-        
-        
-        
-        disp('Vanemfjorden ...')
-        
-        % [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DICz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
-        % Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
-            % = modelinputs_v2(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parafile, 'lake', dt);
-        
-        [MyLake_results_basin2, sediment_results_basin2] = solvemodel_v2(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake');
-       
-        delete (vanem_input)
-        disp('Cleanup ... done.')
+    
+    if use_INCA == 0
+        land_to_vanem = 'IO/vanem_INCAP_input_baseline_mod.txt';
+    else
+        land_to_vanem = vanem_INCAP_input;  % created above by calling fn_INCA_MyL.m
+    end
+    
+    
+    store_to_vanem = [outflow outflowTemp outflowC outflowS outflowTP outflowDOP outflowChl outflowDOC outflowDIC outflowO outflowDIC outflowO outflowNO3zt outflowNH4zt outflowSO4zt outflowHSzt outflowH2Szt outflowFe2zt outflowCa2zt outflowpHzt outflowCH4zt outflowFe3zt outflowAl3zt outflowSiO4zt outflowSiO2zt outflowdiatomzt];
+   
+    Q_lake = outflow;
+    
+    vanem_input = tempname;
+    merge_l_b_inputs(land_to_vanem, store_to_vanem, vanem_input, m_start, m_stop)
+    
+    %parafile='k_values_lake.txt';
+    parafile = lake_par_file;
+    % initfile='IO/vanem_init.txt';
+    initfile='IO/mylake_initial_concentrations_2.txt';
+    inputfile = vanem_input;
+    
+    % note: I removed the DIC/O2 bits here ... take them again from Langtjern
+    % app when migrating to Mylake DOCOMO
+    
+    
+    
+    disp('Vanemfjorden ...')
+    
+    % [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DICz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
+    % Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
+        % = modelinputs_v2(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parafile, 'lake', dt);
+    
+    [MyLake_results_basin2, sediment_results_basin2] = solvemodel_v2(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake');
+   
+    delete (vanem_input)
+    disp('Cleanup ... done.')
 
-        MyLake_results.basin2 = MyLake_results_basin2;
-        Sediment_results.basin2 = sediment_results_basin2;
+    MyLake_results.basin2 = MyLake_results_basin2;
+    Sediment_results.basin2 = sediment_results_basin2;
 
-        disp('Saving sediment and water-column profiles for the initial concentrations for the next run');
-        MyLake_save_result_for_init_conc(MyLake_results.basin2, 2)
-        sediment_save_result_for_init_conc(Sediment_results.basin2, 2)
+    disp('Saving sediment and water-column profiles for the initial concentrations for the next run');
+    MyLake_save_result_for_init_conc(MyLake_results.basin2, 2)
+    sediment_save_result_for_init_conc(Sediment_results.basin2, 2)
+
 end
 
 
