@@ -1,4 +1,4 @@
-% for i=1:1000
+for i=1:1000
 tic
 disp('Started at:')
 disp(datetime('now'));
@@ -161,4 +161,4 @@ save('IO/MyLakeResults.mat', 'MyLake_results', 'Sediment_results')
 disp('Finished at:')
 disp(datetime('now'));
 toc
-% end
+end

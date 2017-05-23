@@ -1,3 +1,4 @@
+import h5py
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.dates as mdates
@@ -106,52 +107,6 @@ class ResultsPlotter:
             elif env == 'water-column':
                 units = '[$mg/m^3$]'
         return coef, units
-
-    def phosphorus_fit(self):
-        fig, axes = plt.subplots(4, 1, sharex='col', figsize=(8, 5), dpi=192)
-
-        results = self.env_getter('water-column', basin=1)
-
-        inx = sum(results['z'][0, 0] < 4)[0]
-        TOTP = np.mean(results['Pzt'][0, 0][0:inx, :], axis=0) + \
-            np.mean(results['PPzt'][0, 0][0:inx, :], axis=0) + \
-            np.mean(results['DOPzt'][0, 0][0:inx, :], axis=0) + \
-            np.mean(results['Chlzt'][0, 0][0:inx, :], axis=0) + \
-            np.mean(results['Czt'][0, 0][0:inx, :], axis=0)
-        # np.mean(results['DOCzt'][0, 0][0:inx, :], axis=0) + \
-        # np.mean(results['POCzt'][0, 0][0:inx, :], axis=0) + \
-        Chl = np.mean(results['Czt'][0, 0][0:inx, :], axis=0) + np.mean(results['Chlzt']
-                                                                        [0, 0][0:inx, :], axis=0)
-        PO4 = np.mean(results['Pzt'][0, 0][0:inx, :], axis=0)
-        Part = np.mean(results['PPzt'][0, 0][0:inx, :], axis=0)
-        # + np.mean(results['POCzt'][0, 0][0:inx, :], axis=0)
-
-        axes[0].plot(-366 + results['days'][0, 0][0], TOTP, c=sns.xkcd_rgb["denim blue"], lw=3, label='Total P')
-        axes[1].plot(-366 + results['days'][0, 0][0], Chl, c=sns.xkcd_rgb["denim blue"], lw=3, label='Chl-a')
-        axes[2].plot(-366 + results['days'][0, 0][0], PO4, c=sns.xkcd_rgb["denim blue"], lw=3, label='PO_4')
-        axes[3].plot(-366 + results['days'][0, 0][0], Part, c=sns.xkcd_rgb["denim blue"], lw=3, label='Solid P')
-        # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['DOPzt'][0, 0][0:inx, :], axis=0), lw=3, label='DOPzt')
-        # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['Pzt'][0, 0][0:inx, :], axis=0), lw=3, label='Pzt')
-        # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['POCzt'][0, 0][0:inx, :], axis=0), lw=3, label='POCzt')
-
-        TOTP = np.loadtxt('../obs/store_obs/TOTP.dat', delimiter=',')
-        Chl = np.loadtxt('../obs/store_obs/Cha_aquaM_march_2017.dat', delimiter=',')
-        PO4 = np.loadtxt('../obs/store_obs/PO4.dat', delimiter=',')
-        Part = np.loadtxt('../obs/store_obs/Part.dat', delimiter=',')
-        axes[0].plot(-366 + TOTP[:, 0], TOTP[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
-        axes[1].plot(-366 + Chl[:, 0], Chl[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
-        axes[2].plot(-366 + PO4[:, 0], PO4[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
-        axes[3].plot(-366 + Part[:, 0], Part[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
-
-        axes[3].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
-        axes[3].xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
-        axes[1].set_xlim([732313 - 366, 735234 - 366 * 1])
-
-        for ax in axes:
-            ax.grid(linestyle='-', linewidth=0.2)
-            ax.set_ylim([0, 50])
-            ax.set_ylabel(r'$[mg / m^3]$')
-            ax.legend(loc=1)
 
     def flux(self, elem, convert_units=False, smoothing_factor=False, years_ago=0.):
         results = self.env_getter('sediment', basin=1)
@@ -284,7 +239,10 @@ class ResultsPlotter:
         z = 0
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
-            z += results['concentrations'][0, 0][e][0, 0][0:end - 1, start:end] * coef
+            try:
+                z += results['concentrations'][0, 0][e][0, 0][0:end - 1, start:end] * coef
+            except:
+                z += results[e][0, 0][0:end - 1, start:end] * coef
         CS = plt.contourf(X, Y, z, 51, cmap=cmap, origin='lower')
     #     plt.clabel(CS, inline=1, fontsize=10, colors='w')
         cbar = plt.colorbar(CS)
@@ -304,7 +262,7 @@ class ResultsPlotter:
         for e in elem:
             lbl += e + ', '
         cbar.ax.set_ylabel(lbl + units)
-        if elem[0] == 'Tzt':
+        if elem[0] == 'T':
             cbar.ax.set_ylabel('Temperature, [C]')
         if elem[0] == 'H_sw_zt':
             cbar.ax.set_ylabel('Light limiting function (group 1), [-]')
@@ -341,7 +299,7 @@ class ResultsPlotter:
         lbl = ''
         for e in elem:
             lbl += e + ', '
-        if elem[0] == 'Tzt':
+        if elem[0] == 'T':
             cbar.ax.set_ylabel('Temperature, [C]')
         elif elem[0] == 'H_sw_zt':
             cbar.ax.set_ylabel('Light limiting function (group 1), [-]')
@@ -385,8 +343,8 @@ class ResultsPlotter:
         plt.show()
 
     def temperature_fit(self):
-        results = self.env_getter('water-column', 2)
-        Tzt = results['Tzt'][0, 0]
+        results = self.env_getter('water-column', basin=2)
+        T = results['T'][0, 0]
         t = results['days'][0, 0][0] - 366
 
         df = pd.read_csv('../obs/vanem_obs/temperature.txt', sep=',')
@@ -399,7 +357,7 @@ class ResultsPlotter:
 
         for i, d in enumerate(np.sort(df.z.unique())):
             inx = np.where(results['z'][0, 0] == d)[0][0]
-            axes[i].plot(t, Tzt[inx, :], c=sns.xkcd_rgb["denim blue"], lw=2)
+            axes[i].plot(t, T[inx, :], c=sns.xkcd_rgb["denim blue"], lw=2)
             axes[i].plot(df[df.z == d].date, df[df.z == d]['T'], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4, label=str(d) + ' m')
 
         axes[3].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
@@ -413,3 +371,49 @@ class ResultsPlotter:
             legend = ax.legend(frameon=1, loc=1)
             frame = legend.get_frame()
             frame.set_facecolor('white')
+
+    def phosphorus_fit(self):
+        fig, axes = plt.subplots(4, 1, sharex='col', figsize=(8, 5), dpi=192)
+
+        results = self.env_getter('water-column', basin=1)
+
+        inx = sum(results['z'][0, 0] < 4)[0]
+        TOTP = np.mean(results['concentrations'][0, 0]['P'][0, 0][0:inx, :], axis=0) + \
+            np.mean(results['concentrations'][0, 0]['PP'][0, 0][0:inx, :], axis=0) + \
+            np.mean(results['concentrations'][0, 0]['DOP'][0, 0][0:inx, :], axis=0) + \
+            np.mean(results['concentrations'][0, 0]['Chl'][0, 0][0:inx, :], axis=0) + \
+            np.mean(results['concentrations'][0, 0]['C'][0, 0][0:inx, :], axis=0)
+        # np.mean(results['concentrations'][0, 0]['DOC'][0, 0][0:inx, :], axis=0) + \
+        # np.mean(results['concentrations'][0, 0]['POC'][0, 0][0:inx, :], axis=0) + \
+        Chl = np.mean(results['concentrations'][0, 0]['C'][0, 0][0:inx, :], axis=0) + np.mean(results['concentrations'][0, 0]['Chl']
+                                                                                              [0, 0][0:inx, :], axis=0)
+        PO4 = np.mean(results['concentrations'][0, 0]['P'][0, 0][0:inx, :], axis=0)
+        Part = np.mean(results['concentrations'][0, 0]['PP'][0, 0][0:inx, :], axis=0)
+        # + np.mean(results['concentrations'][0, 0]['POC'][0, 0][0:inx, :], axis=0)
+
+        axes[0].plot(-366 + results['days'][0, 0][0], TOTP, c=sns.xkcd_rgb["denim blue"], lw=3, label='Total P')
+        axes[1].plot(-366 + results['days'][0, 0][0], Chl, c=sns.xkcd_rgb["denim blue"], lw=3, label='Chl-a')
+        axes[2].plot(-366 + results['days'][0, 0][0], PO4, c=sns.xkcd_rgb["denim blue"], lw=3, label='PO_4')
+        axes[3].plot(-366 + results['days'][0, 0][0], Part, c=sns.xkcd_rgb["denim blue"], lw=3, label='Solid P')
+        # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['DOP'][0, 0][0:inx, :], axis=0), lw=3, label='DOP')
+        # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['P'][0, 0][0:inx, :], axis=0), lw=3, label='P')
+        # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['POC'][0, 0][0:inx, :], axis=0), lw=3, label='POC')
+
+        TOTP = np.loadtxt('../obs/store_obs/TOTP.dat', delimiter=',')
+        Chl = np.loadtxt('../obs/store_obs/Cha_aquaM_march_2017.dat', delimiter=',')
+        PO4 = np.loadtxt('../obs/store_obs/PO4.dat', delimiter=',')
+        Part = np.loadtxt('../obs/store_obs/Part.dat', delimiter=',')
+        axes[0].plot(-366 + TOTP[:, 0], TOTP[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
+        axes[1].plot(-366 + Chl[:, 0], Chl[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
+        axes[2].plot(-366 + PO4[:, 0], PO4[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
+        axes[3].plot(-366 + Part[:, 0], Part[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
+
+        axes[3].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
+        axes[3].xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
+        axes[1].set_xlim([732313 - 366, 735234 - 366 * 1])
+
+        for ax in axes:
+            ax.grid(linestyle='-', linewidth=0.2)
+            ax.set_ylim([0, 50])
+            ax.set_ylabel(r'$[mg / m^3]$')
+            ax.legend(loc=1)
