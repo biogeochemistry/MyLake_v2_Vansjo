@@ -321,29 +321,29 @@ function [sediment_matrix_templates] = templates()
 
     % formation of templates:
     % Solid template the same for all solid species due to diffusion and advection coef the same for all.
-    [Solid_AL, Solid_AR, solid_flux_coef] = cn_template_solid(Db, tortuosity, v, fi, dx, dt, n);
+    [Solid_AL, Solid_AR, solid_flux_coef] = cn_template_neumann(Db, tortuosity, v, fi, dx, dt, n);
     sediment_params.solid_flux_coef = solid_flux_coef;
 
     % solute templates:
-    [O2_AL, O2_AR]        = cn_template_solute(sediment_params.D_O2 + Db, tortuosity, v, fi, dx, dt, n);
-    [NO3_AL, NO3_AR]        = cn_template_solute(sediment_params.D_NO3 + Db, tortuosity, v, fi, dx, dt, n);
-    [SO4_AL, SO4_AR]        = cn_template_solute(sediment_params.D_SO4 + Db, tortuosity, v, fi, dx, dt, n);
-    [NH4_AL, NH4_AR]        = cn_template_solute(sediment_params.D_NH4 + Db, tortuosity, v, fi, dx, dt, n);
-    [Fe2_AL, Fe2_AR]        = cn_template_solute(sediment_params.D_Fe2 + Db, tortuosity, v, fi, dx, dt, n);
-    [H2S_AL, H2S_AR]        = cn_template_solute(sediment_params.D_H2S + Db, tortuosity, v, fi, dx, dt, n);
-    [S0_AL, S0_AR]        = cn_template_solute(sediment_params.D_S0 + Db, tortuosity, v, fi, dx, dt, n);
-    [PO4_AL, PO4_AR]        = cn_template_solute(sediment_params.D_PO4 + Db, tortuosity, v, fi, dx, dt, n);
-    [Ca2_AL, Ca2_AR]        = cn_template_solute(sediment_params.D_Ca2 + Db, tortuosity, v, fi, dx, dt, n);
-    [HS_AL, HS_AR]        = cn_template_solute(sediment_params.D_HS + Db, tortuosity, v, fi, dx, dt, n);
-    [H_AL, H_AR]        = cn_template_solute(sediment_params.D_H + Db, tortuosity, v, fi, dx, dt, n);
-    [OH_AL, OH_AR]        = cn_template_solute(sediment_params.D_OH + Db, tortuosity, v, fi, dx, dt, n);
-    [CO2_AL, CO2_AR]        = cn_template_solute(sediment_params.D_CO2 + Db, tortuosity, v, fi, dx, dt, n);
-    [CO3_AL, CO3_AR]        = cn_template_solute(sediment_params.D_CO3 + Db, tortuosity, v, fi, dx, dt, n);
-    [HCO3_AL, HCO3_AR]        = cn_template_solute(sediment_params.D_HCO3 + Db, tortuosity, v, fi, dx, dt, n);
-    [NH3_AL, NH3_AR]        = cn_template_solute(sediment_params.D_NH3 + Db, tortuosity, v, fi, dx, dt, n);
-    [H2CO3_AL, H2CO3_AR]        = cn_template_solute(sediment_params.D_H2CO3 + Db, tortuosity, v, fi, dx, dt, n);
-    [DOM1_AL, DOM1_AR]        = cn_template_solute(sediment_params.D_DOM1 + Db, tortuosity, v, fi, dx, dt, n);
-    [DOM2_AL, DOM2_AR]        = cn_template_solute(sediment_params.D_DOM2 + Db, tortuosity, v, fi, dx, dt, n);
+    [O2_AL, O2_AR]        = cn_template_dirichlet(sediment_params.D_O2 + Db, tortuosity, v, fi, dx, dt, n);
+    [NO3_AL, NO3_AR]        = cn_template_dirichlet(sediment_params.D_NO3 + Db, tortuosity, v, fi, dx, dt, n);
+    [SO4_AL, SO4_AR]        = cn_template_dirichlet(sediment_params.D_SO4 + Db, tortuosity, v, fi, dx, dt, n);
+    [NH4_AL, NH4_AR]        = cn_template_dirichlet(sediment_params.D_NH4 + Db, tortuosity, v, fi, dx, dt, n);
+    [Fe2_AL, Fe2_AR]        = cn_template_dirichlet(sediment_params.D_Fe2 + Db, tortuosity, v, fi, dx, dt, n);
+    [H2S_AL, H2S_AR]        = cn_template_dirichlet(sediment_params.D_H2S + Db, tortuosity, v, fi, dx, dt, n);
+    [S0_AL, S0_AR]        = cn_template_dirichlet(sediment_params.D_S0 + Db, tortuosity, v, fi, dx, dt, n);
+    [PO4_AL, PO4_AR]        = cn_template_dirichlet(sediment_params.D_PO4 + Db, tortuosity, v, fi, dx, dt, n);
+    [Ca2_AL, Ca2_AR]        = cn_template_dirichlet(sediment_params.D_Ca2 + Db, tortuosity, v, fi, dx, dt, n);
+    [HS_AL, HS_AR]        = cn_template_dirichlet(sediment_params.D_HS + Db, tortuosity, v, fi, dx, dt, n);
+    [H_AL, H_AR]        = cn_template_dirichlet(sediment_params.D_H + Db, tortuosity, v, fi, dx, dt, n);
+    [OH_AL, OH_AR]        = cn_template_dirichlet(sediment_params.D_OH + Db, tortuosity, v, fi, dx, dt, n);
+    [CO2_AL, CO2_AR]        = cn_template_dirichlet(sediment_params.D_CO2 + Db, tortuosity, v, fi, dx, dt, n);
+    [CO3_AL, CO3_AR]        = cn_template_dirichlet(sediment_params.D_CO3 + Db, tortuosity, v, fi, dx, dt, n);
+    [HCO3_AL, HCO3_AR]        = cn_template_dirichlet(sediment_params.D_HCO3 + Db, tortuosity, v, fi, dx, dt, n);
+    [NH3_AL, NH3_AR]        = cn_template_dirichlet(sediment_params.D_NH3 + Db, tortuosity, v, fi, dx, dt, n);
+    [H2CO3_AL, H2CO3_AR]        = cn_template_dirichlet(sediment_params.D_H2CO3 + Db, tortuosity, v, fi, dx, dt, n);
+    [DOM1_AL, DOM1_AR]        = cn_template_dirichlet(sediment_params.D_DOM1 + Db, tortuosity, v, fi, dx, dt, n);
+    [DOM2_AL, DOM2_AR]        = cn_template_dirichlet(sediment_params.D_DOM2 + Db, tortuosity, v, fi, dx, dt, n);
 
 
     sediment_matrix_templates = {...
@@ -373,7 +373,7 @@ function [sediment_matrix_templates] = templates()
 end
 
 
-function [AL, AR] = cn_template_solute(D_m, tortuosity, v, fi, dx, dt, n)
+function [AL, AR] = cn_template_dirichlet(D_m, tortuosity, v, fi, dx, dt, n)
   %MATRICES Formation of matrices for species
   % ======================================================================
 
@@ -395,7 +395,7 @@ function [AL, AR] = cn_template_solute(D_m, tortuosity, v, fi, dx, dt, n)
     AR(n,n-1) = s(n);
 end
 
-function [AL, AR, flux_coef] = cn_template_solid(D, theta, v, fi, dx, dt, n)
+function [AL, AR, flux_coef] = cn_template_neumann(D, theta, v, fi, dx, dt, n)
   %MATRICES Formation of matrices for species
   % ======================================================================
 
