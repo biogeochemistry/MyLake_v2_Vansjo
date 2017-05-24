@@ -653,7 +653,7 @@ function [int_rate] = integrate_over_depth_2(R, z)
   end
 end
 
-%% daily_average: returns the average rate during 1 day.
+%% daily_average: returns the average rate during 1 run (usually it is during 1 day if run with MyLake)
 function [averaged] = daily_average(R)
   % R - rate of interest
   averaged = sum(R,2)/size(R,2);
@@ -840,7 +840,7 @@ function [dcdt, r] = sediment_rates(C, dt)
 
 
     % F = 1./fi;
-    F = 1./fi;
+    F = (1-fi) ./ fi;
 
     dcdt(:,1)  = - bioirrigation(Ox, alfax, fi) +  -0.25 * R8  - 2 * R9  - (Cx1*R1a + Cx2*R1b) .* F - (Cx1*R1c + Cx2*R1d) - 3 * R12; % Ox
     dcdt(:,2)  = -1*Ra - R10a; % POC1
