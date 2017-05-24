@@ -143,10 +143,10 @@ class ResultsPlotter:
             pass
 
         if convert_units:
-            lbl_2 = ' $[umol/cm^{2}/y]$'
+            lbl_2 = ' $[umol/cm^{2}]$'
         else:
-            lbl_2 = ' $[mg/m^{2}/y]$'
-        leg1 = plt.legend([lines[e] for e in lines.keys()], ["{:.2f} ".format(total[e]) + lbl_2 for e in total.keys()], loc=4)
+            lbl_2 = ' $[mg/m^{2}]$'
+        leg1 = plt.legend([lines[e] for e in lines.keys()], ["{:.2f} ".format(total[e]) + lbl_2 for e in total.keys()], loc=4, frameon=1, title="Integrated over time")
         ax = plt.gca()
         ax.set_ylabel(lbl)
         ax.ticklabel_format(useOffset=False)
@@ -156,9 +156,10 @@ class ResultsPlotter:
         ax.grid(linestyle='-', linewidth=0.2)
         ax.legend(loc=1)
         plt.gca().add_artist(leg1)
-        legend = plt.legend(frameon=1, loc=1)
-        frame = legend.get_frame()
+        leg2 = plt.legend(frameon=1, loc=1)
+        frame = leg2.get_frame()
         frame.set_facecolor('white')
+        # frame.set_alpha(0.7)
         plt.tight_layout()
         plt.show()
 
@@ -185,7 +186,7 @@ class ResultsPlotter:
             elif not convert_units and env == 'sediment':
                 mass_per_area[e] = np.trapz(y, z)
                 lbl = r'$umol/cm^{2}$'
-        leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4)
+        leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
         plt.xlabel(units)
         if env == 'water-column':
             plt.ylabel('Depth, [m]')
@@ -215,7 +216,7 @@ class ResultsPlotter:
             elif env == 'sediment':
                 rate_per_area[e] = np.trapz(y, z)
         lbl = r'$umol/cm^{2} / y$'
-        leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(rate_per_area[e]) + lbl for e in elem], loc=4)
+        leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(rate_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
         plt.xlabel('$umol/cm^{3}/y$')
         if env == 'water-column':
             plt.ylabel('Depth, [m]')
@@ -224,7 +225,7 @@ class ResultsPlotter:
         ax = plt.gca()
         ax.ticklabel_format(useOffset=False)
         ax.grid(linestyle='-', linewidth=0.2)
-        plt.legend(loc=1)
+        plt.legend(loc=1, frameon=1)
         plt.gca().add_artist(leg1)
         plt.ylim([-results['z'][0, 0][-1], -results['z'][0, 0][0]])
         plt.tight_layout()
@@ -330,7 +331,7 @@ class ResultsPlotter:
             elif not convert_units:
                 mass_per_area[e] = np.trapz(y, z)
                 lbl = r'$umol/cm^{2}$'
-        leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4)
+        leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
         plt.xlabel(units)
         plt.ylabel('Depth, [cm]')
         ax = plt.gca()
