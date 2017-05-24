@@ -41,7 +41,7 @@ lake_params{39 -7} = x(9);  %       settling velocity for S (m day-1)
 sediment_params{22} = x(10);  % 38 R16 sorption of P on Fe k
 sediment_params{34} = x(11);  %    accel
 
-sediment_params{34} = 1;  %    accel
+sediment_params{34} = 10;  %    accel
 lake_params{39 -7} = 0.5;  %       settling velocity for S (m day-1)
 lake_params{49 -7} = 0.1; % 18    Settling velocity for Chl2 a (m day-1)
 lake_params{40 -7} = 0.1; % 9     settling velocity for Chl1 a (m day-1)

@@ -88,7 +88,7 @@ sediment_save_result_for_init_conc(Sediment_results.basin1, 1)
 MyLake_save_result_for_init_conc(MyLake_results.basin1, 1)
 
 
-if true % simulate 2nd basin?
+if false % simulate 2nd basin?
 
     surfacearea = MyLake_results_basin1.params.Az(1); % m2
     precipvolume = surfacearea * MyLake_results_basin1.Wt(:, 7) / 1000; % m3 day-1
