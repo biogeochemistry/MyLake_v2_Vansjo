@@ -742,14 +742,18 @@ function [dcdt, r] = sediment_rates(C, dt)
     DOM1    = C(:,30) .* (C(:,30)>0) ;
     DOM2    = C(:,31) .* (C(:,31)>0) ;
 
+    tot_FeOH3 = PO4adsa + FeOH3;
+
     f_O2    = Ox ./  (Km_O2 + Ox);
     f_NO3   = NO3 ./  (Km_NO3 + NO3) .* Kin_O2 ./ (Kin_O2 + Ox);
-    f_FeOH3 = FeOH3 ./  (Km_FeOH3 + FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3) .* Kin_O2 ./ (Kin_O2 + Ox);
-    f_FeOOH = FeOOH ./  (Km_FeOOH + FeOOH) .* Kin_FeOH3 ./ (Kin_FeOH3 + FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3) .* Kin_O2 ./ (Kin_O2 + Ox);
-    f_SO4   = SO4 ./ (Km_SO4 + SO4 ) .* Kin_FeOOH ./ (Kin_FeOOH + FeOOH) .* Kin_FeOH3 ./ (Kin_FeOH3 + FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3) .* Kin_O2 ./ (Kin_O2 + Ox);
+    f_FeOH3 = tot_FeOH3 ./  (Km_FeOH3 + tot_FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3) .* Kin_O2 ./ (Kin_O2 + Ox);
+    f_FeOOH = FeOOH ./  (Km_FeOOH + FeOOH) .* Kin_FeOH3 ./ (Kin_FeOH3 + tot_FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3) .* Kin_O2 ./ (Kin_O2 + Ox);
+    f_SO4   = SO4 ./ (Km_SO4 + SO4 ) .* Kin_FeOOH ./ (Kin_FeOOH + FeOOH) .* Kin_FeOH3 ./ (Kin_FeOH3 + tot_FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3) .* Kin_O2 ./ (Kin_O2 + Ox);
     Sum_H2S = H2S + HS;;
+
     Sat_FeS = Fe2*1e-3 .* Sum_H2S*1e-3 ./ ((H*1e-3).^2 .* Ks_FeS);
 
+    part_PO4ads_tot_Fe_a = PO4adsa ./ tot_FeOH3; % ratio of ads P to total Fe(III)
 
     R1a = k_OM.*OM .* f_O2 * accel;
     R1b = k_OMb.*OMb .* f_O2 * accel;
@@ -761,10 +765,18 @@ function [dcdt, r] = sediment_rates(C, dt)
     R2c = k_DOM1.*DOM1 .* f_NO3 * accel;
     R2d = k_DOM2.*DOM2 .* f_NO3 * accel;
 
-    R3a = k_OM.*OM .* f_FeOH3;
-    R3b = k_OMb .*OMb .* f_FeOH3;
-    R3c = k_DOM1 .*DOM1 .* f_FeOH3;
-    R3d = k_DOM2 .*DOM2 .* f_FeOH3;
+    R3a_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_OM.*OM .* f_FeOH3;
+    R3b_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_OMb .*OMb .* f_FeOH3;
+    R3c_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_DOM1 .*DOM1 .* f_FeOH3;
+    R3d_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_DOM2 .*DOM2 .* f_FeOH3;
+    R3a_P = part_PO4ads_tot_Fe_a .* k_OM.*OM .* f_FeOH3;
+    R3b_P = part_PO4ads_tot_Fe_a .* k_OMb .*OMb .* f_FeOH3;
+    R3c_P = part_PO4ads_tot_Fe_a .* k_DOM1 .*DOM1 .* f_FeOH3;
+    R3d_P = part_PO4ads_tot_Fe_a .* k_DOM2 .*DOM2 .* f_FeOH3;
+    R3a = R3a_Fe + R3a_P;
+    R3b = R3b_Fe + R3b_P;
+    R3c = R3c_Fe + R3c_P;
+    R3d = R3d_Fe + R3d_P;
 
     R4a = k_OM.*OM .* f_FeOOH;
     R4b = k_OMb.*OMb .* f_FeOOH;
@@ -817,8 +829,8 @@ function [dcdt, r] = sediment_rates(C, dt)
     R15a = k_Spre * S0;
     R15b = k_Sdis .* S8;
 
-    R16a = k_pdesorb_a * (FeOH3 - PO4adsa) .* PO4;
-    R16b = f_pfe .* (4 * R3 + 2 * R7);
+    R16a = k_pdesorb_a * FeOH3 .* PO4;
+    R16b = R3a_P + R3b_P + R3c_P + R3d_P; % f_pfe .* (4 * R3 + 2 * R7);
     % R16b = (R16b.*dt < PO4adsa).*R16b + (R16b.*dt > PO4adsa).* PO4adsa ./ (dt) * 0.5;
     R17a = k_pdesorb_b * (FeOOH - PO4adsb) .* PO4;
     R17b = f_pfe .* (4 * R4);
@@ -846,10 +858,10 @@ function [dcdt, r] = sediment_rates(C, dt)
     dcdt(:,2)  = -1*Ra - R10a; % POC1
     dcdt(:,3)  = -1*Rb - R10b; % POC2
     dcdt(:,4)  = - bioirrigation(NO3, alfax, fi) +  - 0.8*(Cx1*R2a+Cx1*R2b) .* F - 0.8*(Cx1*R2c+Cx1*R2d)+ R9; % NO3
-    dcdt(:,5)  = -4 * (Cx1*R3a + Cx2*R3b + Cx1*R3c + Cx2*R3d) - 2*R7 + R8./ F; % FeOH3
+    dcdt(:,5)  = -4 * (Cx1*R3a + Cx2*R3b + Cx1*R3c + Cx2*R3d) - 2*R7 + R8./ F - R16a; % FeOH3
     dcdt(:,6)  = - bioirrigation(SO4, alfax, fi) +  - 0.5*(Cx1*R5a + Cx2*R5b) .* F -0.5*(Cx1*R5c + Cx2*R5d)+ R6; % SO4
     dcdt(:,7)  = - bioirrigation(NH4, alfax, fi) +  (Ny1 * Ra + Ny2 * Rb) .* F + (Ny1 * Rc + Ny2 * Rd) - R9; % NH4
-    dcdt(:,8)  = - bioirrigation(Fe2, alfax, fi) +  4*(Cx1*R3a + Cx2*R3b) .* F + 4* (Cx1*R3c + Cx2*R3d) + 4*(Cx1*R4a + Cx2*R4b) .* F + 4 * (Cx1*R4c + Cx2*R4d) + 2*R7 - R8 + R14b - R14a; % Fe2
+    dcdt(:,8)  = - bioirrigation(Fe2, alfax, fi) +  4*(Cx1*R3a + Cx2*R3b) .* F + 4* (Cx1*R3c + Cx2*R3d) + 4*(Cx1*R4a + Cx2*R4b) .* F + 4 * (Cx1*R4c + Cx2*R4d) + 2*R7 - R8 + R14b - R14a + R16b; % Fe2
     dcdt(:,9)  = -4*(Cx1*R4a + Cx2*R4b + Cx1*R4c + Cx2*R4d) + R12; % FeOOH
     dcdt(:,10) = - bioirrigation(H2S, alfax, fi); % H2S
     dcdt(:,11) = - bioirrigation(HS, alfax, fi) +  0.5*(Cx1*R5a + Cx2*R5b) .* F + 0.5 * (Cx1*R5c + Cx2*R5d) - R6 - R7 + R14b - R14a - R10a - R10b - R10c - R10d -R13; % HS
