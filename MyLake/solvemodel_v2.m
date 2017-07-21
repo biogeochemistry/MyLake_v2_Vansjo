@@ -1310,6 +1310,10 @@ for i = 1:length(tt)
         error('NaN')
     end
 
+    if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
+        error('NaN')
+    end
+
     if wc_chemistry_module
 
         k_OM_wc_q10        = k_OM_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
@@ -1368,6 +1372,11 @@ for i = 1:length(tt)
         error('NaN')
     end
 
+    if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
+        error('NaN')
+    end
+
+
     % sediment module
     if matsedlab_sediment_module
             % Making cells of params for using during coupling
@@ -1420,6 +1429,10 @@ for i = 1:length(tt)
         MyLakeOldConcentrations.NH4z = NH4z;
         MyLakeOldConcentrations.DOPz = DOPz;
         MyLakeOldConcentrations.DOCz = DOCz;
+
+        if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
+            error('NaN')
+        end
 
         % Update WC:  [sediment] ----> [WC]
         [MyLakeNewConcentrations] = update_wc(MyLakeOldConcentrations, sediment_concentrations, sediment_transport_fluxes, sediment_bioirrigation_fluxes, MyLake_params, sediment_params);
@@ -2050,12 +2063,17 @@ function [dcdt, r] = wc_rates(C, dt)
 
 
     % New chemistry
+
+    tot_FeOH3 = PPz + Fe3z;
+
     f_O2    = O2z ./  (Km_O2_wc + O2z) ;
     f_NO3   = NO3z ./  (Km_NO3_wc + NO3z) .* Kin_O2_wc ./ (Kin_O2_wc + O2z) ;
-    f_FeOH3 = Fe3z ./  (Km_FeOH3_wc + Fe3z) .* Kin_NO3_wc ./ (Kin_NO3_wc + NO3z) .* Kin_O2_wc ./ (Kin_O2_wc + O2z) ;
-    f_SO4 = SO4z ./ (Km_SO4_wc + SO4z) .* Kin_FeOH3_wc ./ (Kin_FeOH3_wc + Fe3z) .* Kin_NO3_wc ./ (Kin_NO3_wc + NO3z) .* Kin_O2_wc ./ (Kin_O2_wc + O2z) ;
+    f_FeOH3 = tot_FeOH3 ./  (Km_FeOH3_wc + tot_FeOH3) .* Kin_NO3_wc ./ (Kin_NO3_wc + NO3z) .* Kin_O2_wc ./ (Kin_O2_wc + O2z) ;
+    f_SO4 = SO4z ./ (Km_SO4_wc + SO4z) .* Kin_FeOH3_wc ./ (Kin_FeOH3_wc + tot_FeOH3) .* Kin_NO3_wc ./ (Kin_NO3_wc + NO3z) .* Kin_O2_wc ./ (Kin_O2_wc + O2z);
 
     Sum_H2S = H2Sz + HSz;
+
+    part_PO4ads_tot_Fe = PPz ./ (tot_FeOH3+1e-16); % Avoid division by zero
 
     R1a =  0; % k_OM_wc_q10  .* Chlz .* f_O2 * accel_wc;
     R1b =  0; % k_OM_wc_q10  .* Cz .* f_O2 * accel_wc;
@@ -2069,11 +2087,21 @@ function [dcdt, r] = wc_rates(C, dt)
     R2d =  k_DOM2_wc_q10 .* DOCz .* f_NO3 .* accel_wc;
     R2e =  k_OMb_wc_q10 .* POCz .* f_NO3 .* accel_wc;
 
-    R3a =  0; % k_OM_wc_q10  .* Chlz .* f_FeOH3;
-    R3b =  0; % k_OM_wc_q10  .* Cz .* f_FeOH3;
-    R3c =  0; k_DOM1_wc_q10  .* DOPz .* f_FeOH3;
-    R3d =  0; k_DOM2_wc_q10 .* DOCz .* f_FeOH3;
-    R3e =  0; k_OMb_wc_q10 .* POCz .* f_FeOH3;
+    R3a_Fe =  (1 - part_PO4ads_tot_Fe) .* 0; % k_OM_wc_q10  .* Chlz .* f_FeOH3;
+    R3b_Fe =  (1 - part_PO4ads_tot_Fe) .* 0; % k_OM_wc_q10  .* Cz .* f_FeOH3;
+    R3c_Fe =  (1 - part_PO4ads_tot_Fe) .* k_DOM1_wc_q10  .* DOPz .* f_FeOH3;
+    R3d_Fe =  (1 - part_PO4ads_tot_Fe) .* k_DOM2_wc_q10 .* DOCz .* f_FeOH3;
+    R3e_Fe =  (1 - part_PO4ads_tot_Fe) .* k_OMb_wc_q10 .* POCz .* f_FeOH3;
+    R3a_P =  part_PO4ads_tot_Fe .* 0; % k_OM_wc_q10  .* Chlz .* f_FeOH3;
+    R3b_P =  part_PO4ads_tot_Fe .* 0; % k_OM_wc_q10  .* Cz .* f_FeOH3;
+    R3c_P =  part_PO4ads_tot_Fe .* k_DOM1_wc_q10  .* DOPz .* f_FeOH3;
+    R3d_P =  part_PO4ads_tot_Fe .* k_DOM2_wc_q10 .* DOCz .* f_FeOH3;
+    R3e_P =  part_PO4ads_tot_Fe .* k_OMb_wc_q10 .* POCz .* f_FeOH3;
+    R3a = R3a_P + R3a_Fe;
+    R3b = R3b_P + R3b_Fe;
+    R3c = R3c_P + R3c_Fe;
+    R3d = R3d_P + R3d_Fe;
+    R3e = R3e_P + R3e_Fe;
 
     R5a =  0; % k_OM_wc_q10  .* Chlz .* f_SO4;
     R5b =  0; % k_OM_wc_q10  .* Cz .* f_SO4;
@@ -2113,9 +2141,12 @@ function [dcdt, r] = wc_rates(C, dt)
     R13  = 0; % NOTE: no FeS
     R14a = 0; % NOTE: no FeS
     R14b = 0; % NOTE: no FeS
-    R16a = k_pdesorb_a_wc .* (Fe3z-PPz) .* Pz;
-    R16b = f_pfe_wc .* (4 * R3 + 2 * R7);
-    R16b = (R16b.*dt < PPz).*R16b + (R16b.*dt > PPz).* PPz ./ (dt) * 0.5;
+
+    R16a = k_pdesorb_a_wc .* Fe3z .* Pz;
+    % R16b = f_pfe_wc .* (4 * R3 + 2 * R7);
+    R16b = 4*(Cx1_wc*R3a_P + Cx1_wc*R3b_P + Cx1_wc*R3c_P + Cx2_wc*R3d_P+ Cx2_wc*R3e_P);
+
+    % R16b = (R16b.*dt < PPz).*R16b + (R16b.*dt > PPz).* PPz ./ (dt) * 0.5;
 
     R17a = 0; % No FeOOH in WC
     R17b = 0; % No FeOOH in WC
@@ -2125,6 +2156,11 @@ function [dcdt, r] = wc_rates(C, dt)
     R19  = k_apa_wc .* (Pz - kapa_wc); % NOTE: no Ca3PO42 pool in WC
     R19  = (R19 >= 0) .* R19;
 
+    if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
+        error('NaN')
+    end
+
+
     % saving rates
     r.R1a = R1a; r.R1b = R1b; r.R1c = R1c; r.R1d = R1d; r.R1e = R1e; r.R2a = R2a; r.R2b = R2b; r.R2c = R2c; r.R2d = R2d; r.R2e = R2e; r.R3a = R3a; r.R3b = R3b; r.R3c = R3c; r.R3d = R3d; r.R3e = R3e; r.R5a = R5a; r.R5b = R5b; r.R5c = R5c; r.R5d = R5d; r.R5e = R5e; r.Ra = Ra; r.Rb = Rb; r.Rc = Rc; r.Rd = Rd; r.Re = Re; r.R1 = R1; r.R2 = R2; r.R3 = R3; r.R5 = R5; r.R6 = R6; r.R7 = R7; r.R8  = R8; r.R9 = R9; r.R10a = R10a; r.R10b = R10b; r.R10c = R10c; r.R10d = R10d; r.R12 = R12; r.R13 = R13; r.R14a = R14a; r.R14b  = R14b; r.R16a = R16a; r.R16b  = R16b; r.R17a = R17a; r.R17b = R17b; r.R18a = R18a; r.R18b = R18b; r.R19 = R19;
 
@@ -2133,7 +2169,7 @@ function [dcdt, r] = wc_rates(C, dt)
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R10d - dfloc;% DOCz
     dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx1_wc*R2c + Cx2_wc*R2d+ Cx2_wc*R2e) + R9 - Ny1_wc * (R_dChl_growth + R_dCz_growth); % NO3z
-    dcdt(:,5)  = - 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d+ Cx2_wc*R3e) - 2*R7  + R8; % Fe3z
+    dcdt(:,5)  = - 4*(Cx1_wc*R3a_Fe + Cx1_wc*R3b_Fe + Cx1_wc*R3c_Fe + Cx2_wc*R3d_Fe+ Cx2_wc*R3e_Fe) - 2*R7  + R8 - R16a; % Fe3z
     dcdt(:,6)  = - 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx1_wc*R5c + Cx2_wc*R5d+ Cx2_wc*R5e) + R6 ; % SO4z
     dcdt(:,7)  =  (Ny1_wc * Ra + Ny1_wc * Rb + Ny1_wc * Rc + Ny2_wc * Rd+ Ny2_wc * Re) - R9 ;% NH4z
     dcdt(:,8)  = 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d + Cx2_wc*R3e) + 2*R7 - R8 + R14b - R14a; % Fe2z
@@ -2141,7 +2177,7 @@ function [dcdt, r] = wc_rates(C, dt)
     dcdt(:,10) = 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx1_wc*R5c + Cx2_wc*R5d+ Cx2_wc*R5e) - R6 - R7  - R10a - R10b - R10c - R10d + R14b - R14a - R13 ;% HSz
     dcdt(:,11) = (Pz1_wc * Ra + Pz1_wc * Rb + Pz1_wc * Rc + Pz2_wc * Rd+ Pz2_wc * Re) - R18a + R18b - R16a - R17a + R16b + R17b - 2*R19 + R_dDOP - Pz1_wc * (R_dChl_growth + R_dCz_growth);% Pz
     dcdt(:,12) = -R18a ;% Al3z
-    dcdt(:,13) = R16a - R16b  ;% PPz
+    dcdt(:,13) = R16a - R16b;% PPz
     dcdt(:,14) = -3*R19 ;% Ca2z
     dcdt(:,15) = 0;% CO2z
     dcdt(:,16) = -Rc - R10c - R_dDOP;% DOPz
