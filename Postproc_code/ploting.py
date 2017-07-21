@@ -8,6 +8,7 @@ from matplotlib.colors import ListedColormap
 import scipy.io as sio
 from matplotlib import rc
 from scipy.interpolate import UnivariateSpline
+import datetime
 
 sns.set_style("whitegrid")
 sns.set_style("ticks")
@@ -53,34 +54,18 @@ solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'OMb', 'Ca3PO42']
 disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S', 'HS', 'PO4', 'Al3', 'Ca2', 'CO2']
 
 
-def load_data():
-    mat_contents = sio.loadmat('../IO/MyLakeResults.mat')
+def load_data(f):
+    mat_contents = sio.loadmat(f)
     MyLake_results = mat_contents['MyLake_results']
     Sediment_results = mat_contents['Sediment_results']
     return MyLake_results, Sediment_results
 
 
-def intime(results, elem):
-    plt.figure(figsize=(6, 4), dpi=192)
-    for e in elem:
-        plt.plot(-366 + results['days'][0, 0][0], results['concentrations'][0, 0][e][0, 0].T, lw=3, label=e)
-    ax = plt.gca()
-    ax.ticklabel_format(useOffset=False)
-    ax.grid(linestyle='-', linewidth=0.2)
-    plt.legend()
-    plt.tight_layout()
-    ax = plt.gca()
-    ax.ticklabel_format(useOffset=False)
-    ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
-    plt.show()
-
-
 class ResultsPlotter:
     """docstring for ResultsPlotter"""
 
-    def __init__(self, years_ago=0.):
-        MyLake_results, Sediment_results = load_data()
+    def __init__(self, years_ago=0., f='../IO/MyLakeResults.mat'):
+        MyLake_results, Sediment_results = load_data(f)
         self.myLake_results = MyLake_results
         self.sediment_results = Sediment_results
         years_ago = years_ago + 1
@@ -163,7 +148,7 @@ class ResultsPlotter:
         plt.tight_layout()
         plt.show()
 
-    def profile(self, env, elem, convert_units=False, years_ago=0.):
+    def profile(self, env, elem, convert_units=False, years_ago=0., log_scale=False):
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
         end = int(-365 * years_ago - 1)
@@ -173,6 +158,8 @@ class ResultsPlotter:
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
             y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef
+            if log_scale:
+                y = np.log10(y)
             lines[e], = plt.plot(y, -z, lw=3, label=e)
             if convert_units and env == 'sediment':
                 mass_per_area[e] = np.trapz(y, z / 100)
@@ -236,14 +223,14 @@ class ResultsPlotter:
         plt.figure(figsize=(6, 4), dpi=192)
         start = int(-365 * (years_ago + 1))
         end = int(-365 * years_ago - 1)
-        X, Y = np.meshgrid(results['days'][0, 0][0][start:end], -results['z'][0, 0][0:end - 1])
+        X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 365, -results['z'][0, 0][0: -1])
         z = 0
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
             try:
-                z += results['concentrations'][0, 0][e][0, 0][0:end - 1, start:end] * coef
+                z += results['concentrations'][0, 0][e][0, 0][0: -1, start:end] * coef
             except:
-                z += results[e][0, 0][0:end - 1, start:end] * coef
+                z += results[e][0, 0][0:-1, start:end] * coef
         CS = plt.contourf(X, Y, z, 51, cmap=cmap, origin='lower')
     #     plt.clabel(CS, inline=1, fontsize=10, colors='w')
         cbar = plt.colorbar(CS)
@@ -252,7 +239,7 @@ class ResultsPlotter:
 
         if env == 'water-column':
             ice_thickness = results['His'][0, 0][0, start:end]
-            plt.fill_between(results['days'][0, 0][0][start:end], 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
+            plt.fill_between(results['days'][0, 0][0][start:end] - 366, 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
             plt.ylabel('Depth, [m]')
 
         ax = plt.gca()
@@ -418,3 +405,53 @@ class ResultsPlotter:
             ax.set_ylim([0, 50])
             ax.set_ylabel(r'$[mg / m^3]$')
             ax.legend(loc=1)
+
+    def intime(self, env, elem, depth):
+        results = self.env_getter(env)
+
+        inx = sum(results['z'][0, 0] == depth)[0]
+
+        for e in elem:
+            y = results['concentrations'][0, 0]['P'][0, 0][inx, :]
+            plt.scatter(-366 + results['days'][0, 0][0], y, lw=3, label=e)
+        ax = plt.gca()
+        ax.ticklabel_format(useOffset=False)
+        ax.grid(linestyle='-', linewidth=0.2)
+        plt.legend()
+        plt.tight_layout()
+        ax = plt.gca()
+        ax.ticklabel_format(useOffset=False)
+        ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
+        # ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
+        plt.show()
+
+    def oxygen_fit_wc(self, depth, ax=None, dstart='2005-03-07', dend='2011-03-07'):
+        self.plot_fit_wc('O2', depth, ax=None, dstart=dstart, dend=dend, factor=1e-3)
+
+    def plot_fit_wc(self, elem, depth, ax=None, dstart='2005-03-07', dend='2011-03-07', factor=1):
+        env = 'water-column'
+        results = self.env_getter(env)
+
+        inx = sum(results['z'][0, 0] == depth)[0]
+
+        if elem == 'T':
+            y = results['T'][0, 0][inx, :]
+            lbl = 'Temperature, C'
+        else:
+            y = results['concentrations'][0, 0][elem][0, 0][inx, :] * factor
+            lbl = elem + ' concentration'
+        if not ax:
+            ax = plt.gca()
+
+        ax.plot(-366 + results['days'][0, 0][0], y, lw=5, label='model')
+        ax.ticklabel_format(useOffset=False)
+        ax.grid(linestyle='-', linewidth=0.2)
+        plt.tight_layout()
+        dend = datetime.datetime.strptime(dend, '%Y-%m-%d')
+        dstart = datetime.datetime.strptime(dstart, '%Y-%m-%d')
+        plt.xlim(dstart, dend)
+        ax.set_xlabel('Date')
+        ax.set_ylabel(lbl)
+        legend = ax.legend(title='Depth: ' + str(depth) + 'm', frameon=1)
+        plt.setp(legend.get_title(), fontsize='xx-small')
+        return ax

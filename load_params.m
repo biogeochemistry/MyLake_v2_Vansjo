@@ -8,8 +8,8 @@ lake_params = {
     0.000898, 'Kz_K1_ice',     % 3     under ice diffusion parameter (-)
     2.21E-06, 'Kz_N0',         % 4     min. stability frequency (s-2)
     0.3627, 'C_shelter',       % 5     wind shelter parameter (-)
-    59.42, 'lat',              % 6     latitude (decimal degrees)
-    10.83, 'lon',              % 7     longitude (decimal degrees)
+    59.40, 'lat',              % 6     latitude (decimal degrees)
+    10.80, 'lon',              % 7     longitude (decimal degrees)
     0.3, 'alb_melt_ice',       % 8     albedo of melting ice (-)
     0.77, 'alb_melt_snow',     % 9     albedo of melting snow (-)
     2.00E-04, 'PAR_sat',       % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
@@ -118,7 +118,7 @@ sediment_params = {
     0.1,    'w';
     256,    'n';
     30,     'depth';
-    1,      'F';
+    1,      'F'; % we are not using this value as a parameter. It is estimated as (1-fi) ./ fi;
     14.4,   'alfa0';
 
     % OM composition

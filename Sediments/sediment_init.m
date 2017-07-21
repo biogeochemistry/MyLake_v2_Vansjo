@@ -321,7 +321,7 @@ function [sediment_matrix_templates] = templates()
 
     % formation of templates:
     % Solid template the same for all solid species due to diffusion and advection coef the same for all.
-    [Solid_AL, Solid_AR, solid_flux_coef] = cn_template_neumann(Db, tortuosity, v, fi, dx, dt, n);
+    [Solid_AL, Solid_AR, solid_flux_coef] = cn_template_neumann(Db, v, fi, dx, dt, n);
     sediment_params.solid_flux_coef = solid_flux_coef;
 
     % solute templates:
@@ -395,7 +395,7 @@ function [AL, AR] = cn_template_dirichlet(D_m, tortuosity, v, fi, dx, dt, n)
     AR(n,n-1) = s(n);
 end
 
-function [AL, AR, flux_coef] = cn_template_neumann(D, theta, v, fi, dx, dt, n)
+function [AL, AR, flux_coef] = cn_template_neumann(D, v, fi, dx, dt, n)
   %MATRICES Formation of matrices for species
   % ======================================================================
 
@@ -407,6 +407,7 @@ function [AL, AR, flux_coef] = cn_template_neumann(D, theta, v, fi, dx, dt, n)
     AL(1,2) = -s(1);
     AL(n,n) = 1-fi(n)+s(n);
     AL(n,n-1) = -s(n);
+
     AR      = spdiags([ s/2-q/4 (1-fi-s)  s/2+q/4],[-1 0 1],n,n);
     AR(1,1) = 1-fi(1)-s(1) - dx*v*s(1)/D + dx*q(1)*v/2/D ;
     AR(1,2) = +s(1);
