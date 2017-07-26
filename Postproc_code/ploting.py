@@ -173,7 +173,8 @@ class ResultsPlotter:
             elif not convert_units and env == 'sediment':
                 mass_per_area[e] = np.trapz(y, z)
                 lbl = r'$umol/cm^{2}$'
-        leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
+        if not log_scale:
+            leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
         plt.xlabel(units)
         if env == 'water-column':
             plt.ylabel('Depth, [m]')
@@ -182,10 +183,14 @@ class ResultsPlotter:
         ax = plt.gca()
         ax.ticklabel_format(useOffset=False)
         ax.grid(linestyle='-', linewidth=0.2)
-        plt.legend(loc=1)
-        plt.gca().add_artist(leg1)
+        plt.legend(loc=1, frameon=1)
+        if not log_scale:
+            plt.gca().add_artist(leg1)
         plt.ylim([-results['z'][0, 0][-1], -results['z'][0, 0][0]])
         plt.tight_layout()
+        date = results['days'][0, 0][0][-1 + end]
+        date = datetime.datetime.fromordinal(date - 365)
+        plt.title('Profiles on ' + date.strftime('%d of %B, %Y'))
         plt.show()
 
     def rate_profile(self, env, elem, years_ago=0.):
@@ -328,6 +333,9 @@ class ResultsPlotter:
         plt.gca().add_artist(leg1)
         plt.ylim([-results['z'][0, 0][-1], -results['z'][0, 0][0]])
         plt.tight_layout()
+        date = results['days'][0, 0][0][-1 + end]
+        date = datetime.datetime.fromordinal(date - 365)
+        plt.title('Profiles on ' + date.strftime('%d of %B, %Y'))
         plt.show()
 
     def temperature_fit(self):
@@ -432,7 +440,7 @@ class ResultsPlotter:
         env = 'water-column'
         results = self.env_getter(env)
 
-        inx = sum(results['z'][0, 0] == depth)[0]
+        inx = np.where(results['z'][0, 0] == depth)[0][0]
 
         if elem == 'T':
             y = results['T'][0, 0][inx, :]
