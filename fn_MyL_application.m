@@ -1,4 +1,4 @@
-function [MyLake_results, Sediment_results] = fn_MyL_application(m_start,m_stop, K_sediments, K_lake, use_INCA, run_INCA, run_ID, clim_ID)
+function [MyLake_results, Sediment_results] = fn_MyL_application(m_start,m_stop, K_sediments, K_lake, use_INCA, run_INCA, run_ID, clim_ID, is_save_results)
 global sed_par_file lake_par_file Eevapor
 % This is the main MyLake application configuration file. INCA is a switch
 % It is made to run a after the parameter are set by Set_Prior
@@ -24,7 +24,7 @@ fclose(f); % the parameter line (xx,1) + 2 lines gives the location of the param
 
 for i=1:64
     data_lake{1, 2}(i,1) = K_lake{i}; % I_scDOC
-end    
+end
 
 
 fid=fopen(lake_par_file,'wt');
@@ -83,10 +83,13 @@ disp('Storefjorden ...')
 MyLake_results.basin1 = MyLake_results_basin1;
 Sediment_results.basin1 = sediment_results_basin1;
 
-disp('Saving sediment and water-column profiles for the initial concentrations for the next run');
-sediment_save_result_for_init_conc(Sediment_results.basin1, 1)
-MyLake_save_result_for_init_conc(MyLake_results.basin1, 1)
-
+if is_save_results
+    disp('Saving sediment and water-column profiles for basin 1: Storefjorden');
+    sediment_save_result_for_init_conc(Sediment_results.basin1, 1)
+    MyLake_save_result_for_init_conc(MyLake_results.basin1, 1)
+else
+    disp('Skipping saving the results and initial concentrations');
+end
 
 if false % simulate 2nd basin?
 
@@ -122,50 +125,55 @@ if false % simulate 2nd basin?
 
 
     % %# ############ This is Vansjø Vanemfj. ##############
-    % if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis. 
-    
+    % if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis.
+
     if use_INCA == 0
         land_to_vanem = 'IO/vanem_INCAP_input_baseline_mod.txt';
     else
         land_to_vanem = vanem_INCAP_input;  % created above by calling fn_INCA_MyL.m
     end
-    
-    
+
+
     store_to_vanem = [outflow outflowTemp outflowC outflowS outflowTP outflowDOP outflowChl outflowDOC outflowDIC outflowO outflowDIC outflowO outflowNO3zt outflowNH4zt outflowSO4zt outflowHSzt outflowH2Szt outflowFe2zt outflowCa2zt outflowpHzt outflowCH4zt outflowFe3zt outflowAl3zt outflowSiO4zt outflowSiO2zt outflowdiatomzt];
-   
+
     Q_lake = outflow;
-    
+
     vanem_input = tempname;
     merge_l_b_inputs(land_to_vanem, store_to_vanem, vanem_input, m_start, m_stop)
-    
+
     %parafile='k_values_lake.txt';
     parafile = lake_par_file;
     % initfile='IO/vanem_init.txt';
     initfile='IO/mylake_initial_concentrations_2.txt';
     inputfile = vanem_input;
-    
+
     % note: I removed the DIC/O2 bits here ... take them again from Langtjern
     % app when migrating to Mylake DOCOMO
-    
-    
-    
+
+
+
     disp('Vanemfjorden ...')
-    
+
     % [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DICz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
     % Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
         % = modelinputs_v2(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parafile, 'lake', dt);
-    
+
     [MyLake_results_basin2, sediment_results_basin2] = solvemodel_v2(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake');
-   
+
     delete (vanem_input)
     disp('Cleanup ... done.')
 
     MyLake_results.basin2 = MyLake_results_basin2;
     Sediment_results.basin2 = sediment_results_basin2;
 
-    disp('Saving sediment and water-column profiles for the initial concentrations for the next run');
+if is_save_results
+    disp('Saving sediment and water-column profiles for basin 2: Vanemfjorden');
     MyLake_save_result_for_init_conc(MyLake_results.basin2, 2)
     sediment_save_result_for_init_conc(Sediment_results.basin2, 2)
+else
+    disp('Skipping saving the results and initial concentrations');
+end
+
 
 end
 
