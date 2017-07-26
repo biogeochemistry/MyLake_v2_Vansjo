@@ -179,7 +179,7 @@ function [sediment_concentrations ] = init_concentrations(pH)
     n = sediment_params.n;
     dz  = z_max/(n-1);
     read_file = true;
-    if read_file == true
+    if read_file
         Init = dlmread('IO/sediment_initial_concentrations.txt', '\t', 1, 0);
         zz = [0:dz:z_max]'; %solution depth domain
         in_z = Init(1:end, 1);

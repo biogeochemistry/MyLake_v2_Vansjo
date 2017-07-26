@@ -3,11 +3,11 @@ function [lake_params, sediment_params] = load_params()
 
 lake_params = {
     % PhysPar
-    0.5, 'dz',                 % 1
-    0.0322, 'Kz_K1',           % 2     open water diffusion parameter (-)
+    0.5, 'dz',                   % 1
+    0.0164, 'Kz_K1',           % 2     open water diffusion parameter (-)
     0.000898, 'Kz_K1_ice',     % 3     under ice diffusion parameter (-)
-    2.21E-06, 'Kz_N0',         % 4     min. stability frequency (s-2)
-    0.3627, 'C_shelter',       % 5     wind shelter parameter (-)
+    7E-05, 'Kz_N0',            % 4     min. stability frequency (s-2)
+    0.74, 'C_shelter',         % 5     wind shelter parameter (-)
     59.40, 'lat',              % 6     latitude (decimal degrees)
     10.80, 'lon',              % 7     longitude (decimal degrees)
     0.3, 'alb_melt_ice',       % 8     albedo of melting ice (-)
@@ -19,7 +19,7 @@ lake_params = {
     15, 'lambda_s',            % 14    PAR light attenuation coefficient for snow (m-1)
     0.36, 'F_sed_sld',         % 15    volume fraction of solids in sediment (= 1-porosity)
     1, 'I_scV',                % 16    scaling factor for inflow volume (-)
-    1, 'I_scT',                % 17    scaling coefficient for inflow temperature (-)
+    0, 'I_scT',                % 17    adjusting delta for inflow temperature (-)
     1, 'I_scC',                % 18    scaling factor for inflow concentration of C (-)
     1, 'I_scS',                % 19    scaling factor for inflow concentration of S (-)
     1, 'I_scTP',               % 20    scaling factor for inflow concentration of total P (-)
@@ -30,7 +30,7 @@ lake_params = {
 
     % BioPar
     2.5, 'swa_b0',             % 1     non-PAR light attenuation coeff. (m-1)
-    1, 'swa_b1',               % 2     PAR light attenuation coeff. (m-1)
+    1.05, 'swa_b1',               % 2     PAR light attenuation coeff. (m-1)
     3.30E-07, 'S_res_epi',     % 3     Particle resuspension mass transfer coefficient, epilimnion (m day-1, dry)
     3.30E-08, 'S_res_hypo',    % 4     Particle resuspension mass transfer coefficient, hypolimnion (m day-1, dry)
     0.03, 'H_sed',             % 5     height of active sediment layer (m, wet mass)
@@ -59,7 +59,7 @@ lake_params = {
     1, 'theta_sod',            % 28    NOT USED: Temperature adjustment coefficient for SOD, T ? 10 °C
     1, 'theta_sod_ice',        % 29    NOT USED: Temperature adjustment coefficient for SOD, T < 10 °C
     4, 'BOD_temp_switch',      % 30    NOT USED: Threshold for bod or bod_ice °C
-    5.2, 'pH',                 % 31    Lake water pH
+    7.5, 'pH',                 % 31    Lake water pH
     2, 'Mass_Ratio_C_Chl',     % 32    NOT USED: Fixed empirical ratio C:Chl (mass/mass)
     100, 'I_scDIC',            % 33    Scaling factor for inflow concentration of DOC  (-)
     0.25, 'SS_C',              % 34    Carbon fraction in H_netsed_catch
@@ -97,8 +97,8 @@ sediment_params = {
     6500,  'k_rhom';
     0.1,   'k_tS_Fe';
     9600,  'Ks_FeS';    % Canavan, R. W (2006)
-    0.001, 'k_Fe_dis';  % Canavan, R. W (2006)
-    1.5e-3,'k_Fe_pre';  % Canavan, R. W (2006)
+    0.001, 'k_Fe_dis';  % reformulated as R = k*FeS if (sigma < 1)
+    1e5,   'k_Fe_pre';  % reformulated as R = k*Fe2*HS if (sigma > 1)
     0.37,  'k_apa';
     3e-6,  'kapa';
     0.3134,'k_oms';
