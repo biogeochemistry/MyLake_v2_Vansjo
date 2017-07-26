@@ -751,7 +751,7 @@ function [dcdt, r] = sediment_rates(C, dt)
     f_SO4   = SO4 ./ (Km_SO4 + SO4 ) .* Kin_FeOOH ./ (Kin_FeOOH + FeOOH) .* Kin_FeOH3 ./ (Kin_FeOH3 + tot_FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3) .* Kin_O2 ./ (Kin_O2 + Ox);
     Sum_H2S = H2S + HS;;
 
-    Sat_FeS = Fe2*1e-3 .* Sum_H2S*1e-3 ./ ((H*1e-3).^2 .* Ks_FeS);
+    Sat_FeS = Fe2*1e-3 .* Sum_H2S*1e-3 ./ (H*1e-3+1e-16).^2 ./ Ks_FeS;
 
     part_PO4ads_tot_Fe_a = PO4adsa ./ (tot_FeOH3+1e-16); % ratio of ads P to total Fe(III)
 
@@ -822,10 +822,13 @@ function [dcdt, r] = sediment_rates(C, dt)
     R11 = k_FeSpre .* FeS .* S0;
     R12 = k_rhom * Ox .* FeS;
     R13 = k_FeS2pre .* FeS .* Sum_H2S;
-    R14a = k_Fe_pre .* (Sat_FeS - 1);
-    R14b  =  k_Fe_dis .* FeS .* (1 - Sat_FeS);
-    R14a = (R14a >= 0) .* R14a; % can only be non negative
-    R14b  = (R14b >= 0) .* R14b; % can only be non negative
+
+    % NOTE: Could cause instability. These rates are too high when pH > 7
+    R14a = k_Fe_pre .* Fe2 .* HS .* (Sat_FeS > 1);
+    R14b  =  k_Fe_dis .* FeS .* (Sat_FeS < 1);
+    % R14a = (R14a >= 0) .* R14a; % can only be non negative
+    % R14b  = (R14b >= 0) .* R14b; % can only be non negative
+
     R15a = k_Spre * S0;
     R15b = k_Sdis .* S8;
 
@@ -865,7 +868,7 @@ function [dcdt, r] = sediment_rates(C, dt)
     dcdt(:,9)  = -4*(Cx1*R4a + Cx2*R4b + Cx1*R4c + Cx2*R4d) + R12; % FeOOH
     dcdt(:,10) = - bioirrigation(H2S, alfax, fi); % H2S
     dcdt(:,11) = - bioirrigation(HS, alfax, fi) +  0.5*(Cx1*R5a + Cx2*R5b) .* F + 0.5 * (Cx1*R5c + Cx2*R5d) - R6 - R7 + R14b - R14a - R10a - R10b - R10c - R10d -R13; % HS
-    dcdt(:,12) = - R14b - R11 - 4*R12 -R13 + R14a; % FeS
+    dcdt(:,12) =  - R11 - 4*R12 -R13 + R14a - R14b ; % FeS
     dcdt(:,13) = - R11 - R15a + R7 + R15b; % S0
     dcdt(:,14) = - bioirrigation(PO4, alfax, fi) +  (Pz1 * Ra + Pz2 * Rb) .* F + (Pz1 * Rc + Pz2 * Rd) + R16b + R17b - 2 * R19 - R18a - R16a - R17a; % PO4
     dcdt(:,15) = 4*R12 - R15b + R15a; % S8
