@@ -4,12 +4,23 @@ format shortEng
 format compact
 % parpool
 % gaoptions = optimoptions('ga','UseParallel',true);
-x = [0.032, 0.3627];
+
+% x = [0.032; 0.3627];
 % lb = x0*0.1;
 % ub = x0*10;
 
-lb = [0.01; 0.1];
-ub = [0.1; 0.5];
+x(1) = 0.0164; %, 'Kz_K1',           % 2     open water diffusion parameter (-)
+x(2) = 0.000898; %, 'Kz_K1_ice',     % 3     under ice diffusion parameter (-)
+x(3) = 7E-05; %, 'Kz_N0',         % 4     min. stability frequency (s-2)
+x(4) = 0.74; %, 'C_shelter',       % 5     wind shelter parameter (-)
+x(5) = 0.3; %, 'alb_melt_ice',       % 8     albedo of melting ice (-)
+x(6) = 0.77; %, 'alb_melt_snow',     % 9     albedo of melting snow (-)
+
+lb = zeros(size(x));
+ub = ones(size(x));
+
+% lb = [0.01; 0.1];
+% ub = [0.1; 0.5];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
@@ -21,7 +32,7 @@ parallelize     = true; % 15 generation takes 12 hours on 24 cores
 % options = gaoptimset('Display','iter','UseParallel', true, 'TolFun', 1e-2, 'PlotFcns', fcns);
 options = optimoptions('ga', 'MaxGenerations', max_generations, 'PopulationSize', population_size, 'UseParallel', parallelize);
 
-x = ga(@opt_fun,11,[],[],[],[],lb,ub, @nonlcon, options)
+x = ga(@opt_fun, length(x) ,[],[],[],[],lb,ub, @nonlcon, options)
 
 %% opt_fun: function which we are going to minimize
 function [res] = opt_fun(x)
@@ -31,10 +42,16 @@ function [res] = opt_fun(x)
 
 run_INCA = 0; % 1- MyLake will run INCA, 0- No run
 use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
+is_save_results = false; % Do not save profiles and initial concentrations
 
 
-lake_params{2} = x(1); % 9     open water diffusion parameter (-)
-lake_params{5} = x(2); % 11    wind shelter parameter (-)
+
+lake_params{2} = x(1); % 2     open water diffusion parameter (-)
+lake_params{3} = x(2); % 3     under ice diffusion parameter (-)
+lake_params{4} = x(3); % 4     min. stability frequency (s-2)
+lake_params{5} = x(4); % 5     wind shelter parameter (-)
+lake_params{8} = x(5); % 8     albedo of melting ice (-)
+lake_params{9} = x(6); % 9     albedo of melting snow (-)
 
 
 
@@ -44,7 +61,7 @@ clim_ID = run_ID
 m_start=[2004, 1, 1]; %
 m_stop=[2013, 12, 31]; %
 
-[MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID); % runs the model and outputs obs and sim
+[MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
 
 
 load('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
@@ -109,5 +126,5 @@ function r = RMSE(y, yhat)
     r = sqrt(mean((y-yhat).^2));
 
 function [c,ceq] = nonlcon(x)
-c = [-x(1); -x(2); -x(3); -x(4); -x(5); -x(6); -x(7); -x(8); -x(9); -x(10); -x(11)];
+c = [-x(1); -x(2)]; % -x(3); -x(4); -x(5); -x(6); -x(7); -x(8); -x(9); -x(10); -x(11)];
 ceq = [];
