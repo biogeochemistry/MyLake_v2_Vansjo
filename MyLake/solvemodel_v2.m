@@ -712,16 +712,36 @@ for i = 1:length(tt)
         - dum_b(inx_s))) - (2/3)*(U_sw_z_2(inx_s)+2).*(dum_b(inx_s)./dum_a(inx_s));
 
 
-    % NOTE: All reactions are moved in "rates" method below
-    % Suspended solids, particulate inorganic P
+    % NOTE: All reactions are moved in "rates" method below on 26.03.2017
+    % Corrected on 26.06.2017: diffusion and advection for all species in WC
+
     Fi_ad_w_s = tridiag_HAD_v11([NaN; Kz],w_s,Vz,Az,dz,dt); %Tridiagonal matrix for advection and diffusion
-    Sz = Fi_ad_w_s \ (Sz);           %Solving new suspended solids profile (advection + diffusion)
-    PPz = Fi_ad_w_s \ (PPz);     %Solving new suspended particulate inorganic P profile (advection + diffusion)
     Fi_ad_w_chl = tridiag_HAD_v11([NaN; Kz],w_chl,Vz,Az,dz,dt); %Tridiagonal matrix for advection and diffusion
-    Chlz = Fi_ad_w_chl \ (Chlz);  %Solving new phytoplankton profile (advection + diffusion) (always larger than background level)
     Fi_ad_w_chl_2 = tridiag_HAD_v11([NaN; Kz],w_chl_2,Vz,Az,dz,dt); %Tridiagonal matrix for advection and diffusion
+
     Cz = Fi_ad_w_chl_2 \ (Cz);  %Solving new phytoplankton profile (advection + diffusion) (always larger than background level)
+    Sz = Fi_ad_w_s \ (Sz);           %Solving new suspended solids profile (advection + diffusion)
     Pz = Fi \ (Pz); %Solving new dissolved inorganic P profile (diffusion)
+    Chlz = Fi_ad_w_chl \ (Chlz);  %Solving new phytoplankton profile (advection + diffusion) (always larger than background level)
+    PPz = Fi_ad_w_s \ (PPz);     %Solving new suspended particulate inorganic P profile (advection + diffusion)
+    DOPz = Fi \ (DOPz);
+    % DOCz  below
+    % DICz  below
+    % O2z  below
+    NO3z = Fi \ NO3z;
+    NH4z = Fi \ NH4z;
+    SO4z = Fi \ SO4z;
+    HSz = Fi \ HSz;
+    H2Sz = Fi \ H2Sz;
+    Fe2z = Fi \ Fe2z;
+    Ca2z = Fi \ Ca2z;
+    Fe3z = Fi_ad_w_s \ (Fe3z);
+    Al3z = Fi_ad_w_s \ (Al3z);
+    SiO4z = Fi \ (SiO4z);
+    SiO2z = Fi_ad_w_s \ (SiO2z);
+    diatomz = Fi_ad_w_s \ (diatomz);
+    POCz = Fi_ad_w_s \ (POCz);
+
 
     %Dissolved organic carbon
     % - current version
@@ -2001,6 +2021,10 @@ function [dcdt, r] = wc_rates(C, dt)
 
     global k_OM_wc_q10 k_OMb_wc_q10 k_DOM1_wc_q10 k_DOM2_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc k_Feox_wc k_Sdis_wc k_Spre_wc k_alum_wc k_pdesorb_c_wc k_pdesorb_a_wc k_pdesorb_b_wc k_rhom_wc k_tS_Fe_wc Ks_FeS_wc k_Fe_dis_wc k_Fe_pre_wc k_apa_wc kapa_wc k_oms_wc k_tsox_wc k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch
 
+    if any(isnan(C))
+        error('NaN')
+    end
+
     dcdt=zeros(size(C));
 
     O2z = C(:,1) .* (C(:,1)>0);
@@ -2156,9 +2180,7 @@ function [dcdt, r] = wc_rates(C, dt)
     R19  = k_apa_wc .* (Pz - kapa_wc); % NOTE: no Ca3PO42 pool in WC
     R19  = (R19 >= 0) .* R19;
 
-    if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
-        error('NaN')
-    end
+
 
 
     % saving rates
