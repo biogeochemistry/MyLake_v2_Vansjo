@@ -1,7 +1,7 @@
 function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_concentrations, sediment_additional_results] = sediment_v2(sediment_concentrations, sediment_params, sediment_matrix_templates, sediment_bc)
   % SEDIMENTS This function models the chemical process in the sediment
 
-  global k_OM k_OMb k_DOM1 k_DOM2 Km_O2 Km_NO3 Km_FeOH3 Km_FeOOH Km_SO4 Km_oxao Km_amao Kin_O2 Kin_NO3  Kin_FeOH3 Kin_FeOOH k_amox k_Feox k_Sdis k_Spre k_FeS2pre k_pdesorb_c k_pdesorb_a k_pdesorb_b k_alum k_rhom   k_tS_Fe Ks_FeS k_Fe_dis k_Fe_pre k_apa  kapa k_oms k_tsox k_FeSpre f_pfe accel Cx1 Ny1 Pz1 Cx2 Ny2 Pz2 F Ny1 Ny2 Pz1 Pz2 alfax fi n
+  global k_OM k_OMb k_DOM1 k_DOM2 Km_O2 Km_NO3 Km_FeOH3 Km_FeOOH Km_SO4 Km_oxao Km_amao Kin_O2 Kin_NO3  Kin_FeOH3 Kin_FeOOH k_amox k_Feox k_Sdis k_Spre k_FeS2pre k_pdesorb_c k_pdesorb_a k_pdesorb_b k_alum k_rhom   k_tS_Fe Ks_FeS k_Fe_dis k_Fe_pre k_apa  kapa k_oms k_tsox k_FeSpre f_pfe accel Cx1 Ny1 Pz1 Cx2 Ny2 Pz2 F Ny1 Ny2 Pz1 Pz2 alfax fi n rate_estimator_switch
 
 
   O2_prev = sediment_concentrations.O2;
@@ -380,17 +380,21 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
 
 
   % Estimate average rate during the day
-  fields = fieldnames(rates);
-  for i = 1:numel(fields)
-      r.(fields{i}) = 0;
-      for j=1:m-1
-          r.(fields{i}) = r.(fields{i}) + rates(j).(fields{i});
-      end
-      r.(fields{i}) = r.(fields{i})/(m-1);
+  if rate_estimator_switch
+    fields = fieldnames(rates);
+    for i = 1:numel(fields)
+        r.(fields{i}) = 0;
+        for j=1:m-1
+            r.(fields{i}) = r.(fields{i}) + rates(j).(fields{i});
+        end
+        r.(fields{i}) = r.(fields{i})/(m-1);
+    end
+
+    sediment_additional_results.rates = r;
+
+  else
+    sediment_additional_results.rates = false;
   end
-
-  sediment_additional_results.rates = r;
-
 
     if any(isnan(sediment_transport_fluxes.O2))| any(isnan(sediment_bc.OM1_fx))| any(isnan(sediment_bc.OM2_fx))| any(isnan(sediment_bc.FeOH3_fx))| any(isnan(O2)) | any(isnan(OM)) | any(isnan(OMb)) | any(isnan(NO3)) | any(isnan(FeOH3)) | any(isnan(SO4)) | any(isnan(NH4)) | any(isnan(Fe2)) | any(isnan(FeOOH)) | any(isnan(H2S)) | any(isnan(HS)) | any(isnan(FeS)) | any(isnan(S0)) | any(isnan(PO4)) | any(isnan(S8)) | any(isnan(FeS2)) | any(isnan(AlOH3)) | any(isnan(PO4adsa)) | any(isnan(PO4adsb)) | any(isnan(H)) | any(isnan(Ca2)) | any(isnan(Ca3PO42)) | any(isnan(OMS)) | any(isnan(OH)) | any(isnan(HCO3)) | any(isnan(CO2)) | any(isnan(CO3)) | any(isnan(NH3)) | any(isnan(H2CO3))
       error('Breaking out of Sediments function: NaN values');
@@ -575,6 +579,8 @@ end
 %% rk4: Runge-Kutta 4th order integration
 function [C_new, rates] = rk4(C0,ts, dt)
     % ts - how many time steps during 1 day
+    global rate_estimator_switch
+
     dt = dt/ts;
     for i = 1:ts
         [dcdt_1, r_1] = sediment_rates(C0, dt);
@@ -588,16 +594,21 @@ function [C_new, rates] = rk4(C0,ts, dt)
         C_new = C0 + (k_1+2.*k_2+2.*k_3+k_4)/6;
         C0 = C_new;
 
-        % average rate
-        fields = fieldnames(r_1);
-        for fld_idx = 1:numel(fields)
-          rates.(fields{fld_idx}) = (r_1.(fields{fld_idx}) + 2*r_2.(fields{fld_idx}) + 2*r_3.(fields{fld_idx}) + r_4.(fields{fld_idx}))/6;
+        if rate_estimator_switch
+          % average rate
+          fields = fieldnames(r_1);
+          for fld_idx = 1:numel(fields)
+            rates.(fields{fld_idx}) = (r_1.(fields{fld_idx}) + 2*r_2.(fields{fld_idx}) + 2*r_3.(fields{fld_idx}) + r_4.(fields{fld_idx}))/6;
+          end
+        else
+          rates = false;
         end
     end
 end
 
 %% butcher5: Butcher's Fifth-Order Runge-Kutta
 function [C_new, rates] = butcher5(C0,ts,dt)
+    global rate_estimator_switch
 
     dt = dt/ts;
     for i = 1:ts
@@ -617,9 +628,13 @@ function [C_new, rates] = butcher5(C0,ts,dt)
         C0 = C_new;
 
         % average rate
-        fields = fieldnames(r_1);
-        for fld_idx = 1:numel(fields)
-          rates.(fields{fld_idx}) = (7*r_1.(fields{fld_idx}) + 32*r_3.(fields{fld_idx}) + 12*r_4.(fields{fld_idx}) + 32*r_5.(fields{fld_idx}) + 7*r_6.(fields{fld_idx}))/90;
+        if rate_estimator_switch
+          fields = fieldnames(r_1);
+          for fld_idx = 1:numel(fields)
+            rates.(fields{fld_idx}) = (7*r_1.(fields{fld_idx}) + 32*r_3.(fields{fld_idx}) + 12*r_4.(fields{fld_idx}) + 32*r_5.(fields{fld_idx}) + 7*r_6.(fields{fld_idx}))/90;
+          end
+        else
+          rates = false;
         end
     end
 end

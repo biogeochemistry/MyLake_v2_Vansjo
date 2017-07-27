@@ -82,7 +82,7 @@ warning off MATLAB:fzero:UndeterminedSyntax %suppressing a warning message
 global ies80
 
 % fast variable passing
-global k_OM_wc_q10 k_OMb_wc_q10 k_DOM1_wc_q10 k_DOM2_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc k_Feox_wc k_Sdis_wc k_Spre_wc k_alum_wc k_pdesorb_c_wc k_pdesorb_a_wc k_pdesorb_b_wc k_rhom_wc k_tS_Fe_wc Ks_FeS_wc k_Fe_dis_wc k_Fe_pre_wc k_apa_wc kapa_wc k_oms_wc k_tsox_wc k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch
+global k_OM_wc_q10 k_OMb_wc_q10 k_DOM1_wc_q10 k_DOM2_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc k_Feox_wc k_Sdis_wc k_Spre_wc k_alum_wc k_pdesorb_c_wc k_pdesorb_a_wc k_pdesorb_b_wc k_rhom_wc k_tS_Fe_wc Ks_FeS_wc k_Fe_dis_wc k_Fe_pre_wc k_apa_wc kapa_wc k_oms_wc k_tsox_wc k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch rate_estimator_switch
 
 
 tic
@@ -103,6 +103,8 @@ wc_int_method = 0;              % WC chemistry module: method: 0 - rk4th, 1 - rk
 photobleaching=0;               %photo bleaching: 0=TSA model, 1=FOKEMA model
 floculation_switch=1;           % floculation according to Wachenfeldt 2008  %% NEW_DOCOMO
 resuspension_enabled=0;         % Resuspension switch
+
+rate_estimator_switch=0;        % estimate rates or not, additional cost of about 20% of computational time;
 % ==============
 
 dt=1.0; %model time step = 1 day (DO NOT CHANGE!)
@@ -1365,7 +1367,7 @@ for i = 1:length(tt)
 
         C0 = [O2z, Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, Sz, POCz];
 
-        [C_new, wc_rates_av] = wc_chemical_reactions_module(C0,dt,ts_during_day, wc_int_method);
+        [C_new, wc_rates_av] = wc_chemical_reactions_module(C0,dt/365,ts_during_day, wc_int_method);
 
         O2z  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,1), 31998.8);
         Chlz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,2), 30973.762);
@@ -1481,14 +1483,19 @@ for i = 1:length(tt)
             sediment_bioirrigation_fluxes_zt.(fields{fd_idx})(:,i) = sediment_bioirrigation_fluxes.(fields{fd_idx});
         end
 
-        fields = fieldnames(sediment_additional_results.rates);
-        for fd_idx = 1:numel(fields)
-            sediment_additional_results_zt.rates.(fields{fd_idx})(:,i) = sediment_additional_results.rates.(fields{fd_idx});
-        end
+        if rate_estimator_switch
 
-        fields = fieldnames(wc_rates_av);
-        for fd_idx = 1:numel(fields)
-            MyLake_results.rates.(fields{fd_idx})(:,i) = wc_rates_av.(fields{fd_idx});
+            fields = fieldnames(sediment_additional_results.rates);
+            for fd_idx = 1:numel(fields)
+                sediment_additional_results_zt.rates.(fields{fd_idx})(:,i) = sediment_additional_results.rates.(fields{fd_idx});
+            end
+
+            fields = fieldnames(wc_rates_av);
+            for fd_idx = 1:numel(fields)
+                MyLake_results.rates.(fields{fd_idx})(:,i) = wc_rates_av.(fields{fd_idx});
+            end
+        else
+            sediment_additional_results_zt.rates = false;
         end
 
     end
@@ -1655,6 +1662,7 @@ for i = 1:length(tt)
 
 end; %for i = 1:length(tt)
 
+stamp = datetime('now');
 
 %Saving sediment values
 if matsedlab_sediment_module           % MATSEDLAB sediment module
@@ -1668,7 +1676,7 @@ if matsedlab_sediment_module           % MATSEDLAB sediment module
     sediment_results.m_start = M_start;
     sediment_results.m_stop = M_stop;
     sediment_results.rates = sediment_additional_results_zt.rates;
-
+    sediment_results.date_of_run = stamp;
 else
 
     sediment_results = {};
@@ -1754,6 +1762,7 @@ MyLake_results.Inflw = Inflw;
 MyLake_results.Wt = Wt;
 MyLake_results.m_start = M_start;
 MyLake_results.m_stop = M_stop;
+MyLake_results.date_of_run = stamp;
 
 runtime=toc;
 
@@ -1908,7 +1917,10 @@ function [C_new, rates] = wc_chemical_reactions_module(C0, dt, ts, method)
 %% rk4: Runge-Kutta 4th order integration
 function [C_new, rates_av] = rk4(C0,dt,ts)
     % ts - how many time steps during 1 day
-    dt = dt/ts/365;
+
+    global rate_estimator_switch
+
+    dt = dt/ts;
     for i = 1:ts
         [dcdt_1, r_1] = wc_rates(C0, dt);
         k_1 = dt.*dcdt_1;
@@ -1922,27 +1934,35 @@ function [C_new, rates_av] = rk4(C0,dt,ts)
         C0 = C_new;
 
         % average rate
-        fields = fieldnames(r_1);
-        for fld_idx = 1:numel(fields)
-          r.(fields{fld_idx}) = (r_1.(fields{fld_idx}) + 2*r_2.(fields{fld_idx}) + 2*r_3.(fields{fld_idx}) + r_4.(fields{fld_idx}))/6;
-        end
+        if rate_estimator_switch
+            fields = fieldnames(r_1);
+            for fld_idx = 1:numel(fields)
+              r.(fields{fld_idx}) = (r_1.(fields{fld_idx}) + 2*r_2.(fields{fld_idx}) + 2*r_3.(fields{fld_idx}) + r_4.(fields{fld_idx}))/6;
+            end
 
-        rates(i) = r;
+            rates(i) = r;
+        end
     end
 
-    fields = fieldnames(rates);
-    for i = 1:numel(fields)
-      rates_av.(fields{i}) = 0;
-      for j=1:ts-1
-          rates_av.(fields{i}) = rates_av.(fields{i}) + rates(j).(fields{i});
-      end
-      rates_av.(fields{i}) = rates_av.(fields{i})/(ts-1);
+    if rate_estimator_switch
+        fields = fieldnames(rates);
+        for i = 1:numel(fields)
+          rates_av.(fields{i}) = 0;
+          for j=1:ts-1
+              rates_av.(fields{i}) = rates_av.(fields{i}) + rates(j).(fields{i});
+          end
+          rates_av.(fields{i}) = rates_av.(fields{i})/(ts-1);
+        end
+    else
+        rates_av = false;
     end
 
 %% butcher5: Butcher's Fifth-Order Runge-Kutta
-function [C_new, rates] = butcher5(C0,dt,ts)
+function [C_new, rates_av] = butcher5(C0,dt,ts)
 
-    dt = dt/ts/365;
+    global rate_estimator_switch
+
+    dt = dt/ts;
     for i = 1:ts
         [dcdt_1, r_1] = wc_rates(C0, dt);
         k_1 = dt.*dcdt_1;
@@ -1959,12 +1979,28 @@ function [C_new, rates] = butcher5(C0,dt,ts)
         C_new = C0 + (7.*k_1 + 32.*k_3 + 12.*k_4 + 32.*k_5 + 7.*k_6)/90;
         C0 = C_new;
 
-        % average rate
-        fields = fieldnames(r_1);
-        for fld_idx = 1:numel(fields)
-          rates.(fields{fld_idx}) = (7*r_1.(fields{fld_idx}) + 32*r_3.(fields{fld_idx}) + 12*r_4.(fields{fld_idx}) + 32*r_5.(fields{fld_idx}) + 7*r_6.(fields{fld_idx}))/90;
+        if rate_estimator_switch
+            fields = fieldnames(r_1);
+            for fld_idx = 1:numel(fields)
+              r.(fields{fld_idx}) = (7*r_1.(fields{fld_idx}) + 32*r_3.(fields{fld_idx}) + 12*r_4.(fields{fld_idx}) + 32*r_5.(fields{fld_idx}) + 7*r_6.(fields{fld_idx}))/90;
+            end
+            rates(i) = r;
         end
     end
+
+    if rate_estimator_switch
+        fields = fieldnames(rates);
+        for i = 1:numel(fields)
+          rates_av.(fields{i}) = 0;
+          for j=1:ts-1
+              rates_av.(fields{i}) = rates_av.(fields{i}) + rates(j).(fields{i});
+          end
+          rates_av.(fields{i}) = rates_av.(fields{i})/(ts-1);
+        end
+    else
+        rates_av = false;
+    end
+
 
 function [int_rate] = integrate_over_depth(R, dz)
 %% integrate_over_depth: integrates the rates of reaction over the depth
