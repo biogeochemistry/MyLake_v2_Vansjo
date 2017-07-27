@@ -5,7 +5,7 @@ global sed_par_file lake_par_file Eevapor
 
 Eevapor=0;    disp('init ...');
 
-calibration_k_values = [(1:52)',cell2mat(K_sediments(:,1)) ]; % writing sediments parameters file
+calibration_k_values = [(1:length(K_sediments))',cell2mat(K_sediments(:,1)) ]; % writing sediments parameters file
 
 %% generates unique files
 
@@ -18,18 +18,18 @@ dlmwrite(sed_par_file, calibration_k_values,'delimiter','\t');
 f = fopen('IO/vansjo_para.txt');
 garbage = fgetl(f); % file get line
 garbage = fgetl(f); % file get line
-data_lake = textscan(f, '%s%f%f%f%s', 64, 'Delimiter', '\t');
+data_lake = textscan(f, '%s%f%f%f%s', length(K_lake), 'Delimiter', '\t');
 fclose(f); % the parameter line (xx,1) + 2 lines gives the location of the paramter in the input txt file.
 % array position + 2 = input file line
 
-for i=1:64
+for i=1:length(K_lake)
     data_lake{1, 2}(i,1) = K_lake{i}; % I_scDOC
 end
 
 
 fid=fopen(lake_par_file,'wt');
 fprintf(fid,'\n\n');
-dlmwrite(lake_par_file, [[1:64]',data_lake{2},data_lake{3},data_lake{4},(1:64)'],'delimiter','\t','-append'); % 1:64 is the length of the parameter file.
+dlmwrite(lake_par_file, [[1:length(K_lake)]',data_lake{2},data_lake{3},data_lake{4},(1:length(K_lake))'],'delimiter','\t','-append'); % 1:length(K_lake) is the length of the parameter file.
 fclose(fid);
 
 %% Specific MyLake application

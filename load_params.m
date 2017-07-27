@@ -26,11 +26,23 @@ lake_params = {
     1, 'I_scDOP',              % 21    scaling factor for inflow concentration of diss. organic P (-)
     1, 'I_scChl',              % 22    scaling factor for inflow concentration of Chl a (-)
     1, 'I_scDOC',              % 23    scaling factor for inflow concentration of DOC  (-)
-    1, 'I_scPOC',              % 23    scaling factor for inflow concentration of POC  (-)
-
-    % BioPar
+    1, 'I_scPOC',              % 24    scaling factor for inflow concentration of POC  (-)
+    1, 'I_scO',                % 25    Scaling factor for inflow concentration of O2 (-)
+    1 , 'I_scDIC',             % 26    Scaling factor for inflow concentration of DOC  (-)
+    1,  'I_scNO3',             % 27    Scaling factor for inflow concentration of NO3 (-)
+    1,  'I_scNH4',             % 28    Scaling factor for inflow concentration of NH4 (-)
+    1,  'I_scSO4',             % 29    Scaling factor for inflow concentration of SO4 (-)
+    1,  'I_scFe2',             % 30    Scaling factor for inflow concentration of Fe2 (-)
+    1,  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
+    1,  'I_scpH',              % 32    Scaling factor for inflow concentration of pH (-)
+    1,  'I_scCH4',             % 33    Scaling factor for inflow concentration of CH4 (-)
+    1,  'I_scFe3',             % 34    Scaling factor for inflow concentration of Fe3 (-)
+    1,  'I_scAl3',             % 35    Scaling factor for inflow concentration of Al3 (-)
+    1,  'I_scSiO4',            % 36    Scaling factor for inflow concentration of SiO4 (-)
+    1,  'I_scSiO2',            % 37    Scaling factor for inflow concentration of SiO2 (-)
+    1,  'I_scdiatom',          % 38    Scaling factor for inflow concentration of diatom (-)
     2.5, 'swa_b0',             % 1     non-PAR light attenuation coeff. (m-1)
-    1.05, 'swa_b1',               % 2     PAR light attenuation coeff. (m-1)
+    1.05, 'swa_b1',            % 2     PAR light attenuation coeff. (m-1)
     3.30E-07, 'S_res_epi',     % 3     Particle resuspension mass transfer coefficient, epilimnion (m day-1, dry)
     3.30E-08, 'S_res_hypo',    % 4     Particle resuspension mass transfer coefficient, hypolimnion (m day-1, dry)
     0.03, 'H_sed',             % 5     height of active sediment layer (m, wet mass)
@@ -60,15 +72,9 @@ lake_params = {
     1, 'theta_sod_ice',        % 29    NOT USED: Temperature adjustment coefficient for SOD, T < 10 °C
     4, 'BOD_temp_switch',      % 30    NOT USED: Threshold for bod or bod_ice °C
     7.5, 'pH',                 % 31    Lake water pH
-    2, 'Mass_Ratio_C_Chl',     % 32    NOT USED: Fixed empirical ratio C:Chl (mass/mass)
-    100, 'I_scDIC',            % 33    Scaling factor for inflow concentration of DOC  (-)
-    0.25, 'SS_C',              % 34    Carbon fraction in H_netsed_catch
-    1.95, 'density_org_H_nc',  % 35    Density of organic fraction in H_netsed_catch [g cm-3]
-    2.65, 'density_inorg_H_nc',% 36    Density of inorganic fraction in H_netsed_catch [g cm-3]
-    1, 'I_scO',                % 37    Scaling factor for inflow concentration
-    2, 'Q10_wc',               % 38    Q10 for reactions of respiration
-    1, 'wc_factor',            % 39    Scaling factor for rates in WC
-    4.8497, 'T_ref_wc'};       % 40    Reference Temperature for rates
+    2, 'Q10_wc',               % 32    Q10 for reactions of respiration
+    1, 'wc_factor',            % 33    Scaling factor for rates in WC
+    4.8497, 'T_ref_wc'};       % 34    Reference Temperature for rates
 
 sediment_params = {
     1,     'k_OM1';  % 1

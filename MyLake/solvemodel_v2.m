@@ -152,22 +152,20 @@ I_scDOP = Phys_par(21); %scaling factor for inflow concentration of diss. organi
 I_scChl = Phys_par(22); %scaling factor for inflow concentration of Chl a (-)
 I_scDOC = Phys_par(23); %scaling factor for inflow concentration of DOC  (-)
 I_scPOC = Phys_par(24); %scaling factor for inflow concentration of POC  (-)
-
-I_scDIC = Bio_par(32);   %Scaling factor for inflow concentration of DOC  (-)
-
-I_scO = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scNO3 =Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scNH4 = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scSO4 = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scFe2 = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scCa2 = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scpH = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scCH4 = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scFe3 = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scAl3 = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scSiO4 = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scSiO2 = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
-I_scdiatom = Bio_par(37); %scaling factor for inflow concentration of O2  (-)
+I_scO = Phys_par(25); %scaling factor for inflow concentration of O2  (-)
+I_scDIC = Phys_par(26);   %Scaling factor for inflow concentration of DIC  (-)
+I_scNO3 = Phys_par(27);   %scaling factor for inflow concentration   (-)
+I_scNH4 = Phys_par(28);    %scaling factor for inflow concentration   (-)
+I_scSO4 = Phys_par(29);    %scaling factor for inflow concentration   (-)
+I_scFe2 = Phys_par(30);    %scaling factor for inflow concentration   (-)
+I_scCa2 = Phys_par(31);    %scaling factor for inflow concentration   (-)
+I_scpH = Phys_par(32);    %scaling factor for inflow concentration   (-)
+I_scCH4 = Phys_par(33);    %scaling factor for inflow concentration   (-)
+I_scFe3 = Phys_par(34);    %scaling factor for inflow concentration   (-)
+I_scAl3 = Phys_par(35);    %scaling factor for inflow concentration   (-)
+I_scSiO4 = Phys_par(36);    %scaling factor for inflow concentration   (-)
+I_scSiO2 = Phys_par(37);    %scaling factor for inflow concentration   (-)
+I_scdiatom = Phys_par(38);    %scaling factor for inflow concentration   (-)
 
 % Unpack the more site specific parameter values from input array "Bio_par"
 
@@ -209,20 +207,11 @@ theta_bod_ice = Bio_par(27);    %Temperature adjustment coefficient for BOD, T <
 theta_sod = Bio_par(28);        %Temperature adjustment coefficient for SOD, T ? 10 °C
 theta_sod_ice = Bio_par(29);    %Temperature adjustment coefficient for SOD, T < 10 °C
 BOD_temp_switch = Bio_par(30);             %Threshold for bod or bod_ice °C
-
-% Parameters for dissolved inorganic carbon
-
 pH = Bio_par(31);               %Lake water pH
-Mass_Ratio_C_Chl = Bio_par(33); % Fixed empirical ratio C:Chl (mass/mass)
-I_scDIC = Bio_par(32);          %Scaling factor for inflow concentration of DOC  (-)
-SS_C = Bio_par(34);             % Carbon fraction in H_netsed_catch
-density_org_H_nc = Bio_par(35); % Density of organic fraction in H_netsed_catch [g cm-3]
-density_inorg_H_nc = Bio_par(36);% Density of inorganic fraction in H_netsed_catch [g cm-3]
-
 % WC chemistry:
-Q10_wc = Bio_par(38);
-wc_factor = Bio_par(39);
-T_ref_wc = Bio_par(40);
+Q10_wc = Bio_par(32);
+wc_factor = Bio_par(33);
+T_ref_wc = Bio_par(34);
 
 
 
@@ -415,8 +404,8 @@ SiO4z = SiO40;
 SiO2z = SiO20;
 diatomz = diatom0;
 POCz = POC0;
-Pz = (TP0-DOP0-Chlz-Cz) / 2;
-PPz = (TP0-DOP0-Chlz-Cz) / 2; % (mg m-3) NEW!!!
+Pz = (TP0-DOP0) / 2;
+PPz = (TP0-DOP0) / 2; % (mg m-3) NEW!!!
 
 
 
@@ -858,11 +847,13 @@ for i = 1:length(tt)
         Iflw_SiO2 = I_scSiO2 * Inflw(i,21);
         Iflw_diatom = I_scdiatom * Inflw(i,22);
         Iflw_POC = Inflw(i,23);
-        Iflw_Pz = Iflw_TP - Iflw_DOP - Iflw_Chl- Iflw_Chl;
+        Iflw_Pz = (Iflw_TP - Iflw_DOP)/2;
+        Iflw_Pz = Iflw_Pz .* (Iflw_Pz > 0);
+        Iflw_PP = (Iflw_TP - Iflw_DOP)/2; %;
+        Iflw_PP = Iflw_PP .* (Iflw_PP > 0);
         % Iflw_PP = (Iflw_TP - Iflw_DOP - Iflw_Chl - Iflw_Chl)/2;
         % Iflw_Pz = (Iflw_TP - Iflw_DOP - Iflw_Chl - Iflw_Chl)/2;
-        Iflw_PP = 0; Iflw_PP .* (Iflw_PP > 0);
-        Iflw_Pz = Iflw_Pz .* (Iflw_Pz > 0);
+
 
         %Added suspended solids correction: minimum allowed P bioavailability factor is 0.1
         if any((1-(Iflw_DOP+(Iflw_Chl+Iflw_C)./Y_cp)./Iflw_TP-(Iflw_S*Fstable)./Iflw_TP)<0.1); % NEW!!!!
@@ -1420,13 +1411,9 @@ for i = 1:length(tt)
             MyLake_concentrations.PPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(PPz, 30973.762);
             MyLake_concentrations.Sz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
 
-
-            MyLake_params.SS_C = SS_C;
-            MyLake_params.density_org_H_nc = density_org_H_nc;
             MyLake_params.w_chl = w_chl;
             MyLake_params.w_chl_2 = w_chl_2;
             MyLake_params.w_s = w_s;
-            MyLake_params.Mass_Ratio_C_Chl = Mass_Ratio_C_Chl;
             MyLake_params.Az = Az;
             MyLake_params.Vz = Vz;
             MyLake_params.dz = dz;
