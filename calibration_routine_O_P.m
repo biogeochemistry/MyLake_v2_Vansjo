@@ -1,0 +1,148 @@
+function x = calibration_routine()
+tic
+format shortEng
+format compact
+% parpool
+% gaoptions = optimoptions('ga','UseParallel',true);
+
+% x = [0.032; 0.3627];
+% lb = x0*0.1;
+% ub = x0*10;
+
+x = [0.1, 0.1368, 1.4647, 0.5293, 0.1, 0.1000, 1.3339, 0.8793, 0.5, 100, 25, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+
+
+lb = [0.05, 0.1, 1, 0.2, 0.05, 0.1, 1, 0.2, 0.01, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ub = [0.5, 0.3, 1.5, 2, 0.5, 0.3, 1.5, 2, 1, 1e5, 100, 10, 10, 10, 10, 10, 10, 10, 10, 100];
+
+
+fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
+
+population_size = 72;  % Populations size for each generation of the genetic algorithm
+max_generations = 7;  % How many generations to run the genetic algorithm for
+parallelize     = true; % 15 generation takes 12 hours on 24 cores
+
+% options = gaoptimset('Display','iter','UseParallel', true, 'TolFun', 1e-2, 'PlotFcns', fcns);
+options = optimoptions('ga', 'MaxGenerations', max_generations, 'PopulationSize', population_size, 'UseParallel', parallelize);
+
+x = ga(@opt_fun,length(x),[],[],[],[],lb,ub, @nonlcon, options)
+
+%% opt_fun: function which we are going to minimize
+function [res] = opt_fun(x)
+
+[lake_params, sediment_params] = load_params();
+
+
+run_INCA = 0; % 1- MyLake will run INCA, 0- No run
+use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
+is_save_results = false;
+
+lake_params{40 -7} = x(1); % 9     settling velocity for Chl1 a (m day-1)
+lake_params{42 -7} = x(2); % 11    loss rate (1/day) at 20 deg C
+lake_params{43 -7} = x(3); % 12    specific growth rate (1/day) at 20 deg C
+lake_params{46 -7} = x(4); % 15    Half saturation growth P level (mg/m3)
+lake_params{49 -7} = x(5); % 18    Settling velocity for Chl2 a (m day-1)
+lake_params{50 -7} = x(6);  % 19    Loss rate (1/day) at 20 deg C
+lake_params{51 -7} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
+lake_params{52 -7} = x(8);  % 21    Half saturation growth P level (mg/m3)
+lake_params{39 -7} = x(9);  %   settling velocity for S (m day-1)
+sediment_params{37-7} = x(10);  %    R16 sorption of P on Fe k
+sediment_params{34} = x(11);  %    accel
+
+lake_params{21 -7} = x(12); % 16    scaling factor for inflow volume (-)
+lake_params{22 -7} = x(13); % 17    adjusting delta for inflow temperature (-)
+lake_params{23 -7} = x(14); % 18    scaling factor for inflow concentration of C (-)
+lake_params{24 -7} = x(15); % 19    scaling factor for inflow concentration of S (-)
+lake_params{25 -7} = x(16); % 20    scaling factor for inflow concentration of total P (-)
+lake_params{26 -7} = x(17); % 21    scaling factor for inflow concentration of diss. organic P (-)
+lake_params{27 -7} = x(18); % 22    scaling factor for inflow concentration of Chl a (-)
+lake_params{28 -7} = x(19); % 23    scaling factor for inflow concentration of DOC  (-)
+lake_params{29 -7} = x(20); % 23    scaling factor for inflow concentration of POC  (-)
+
+
+
+run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
+clim_ID = run_ID
+m_start=[2004, 1, 1]; %
+m_stop=[2013, 12, 31]; %
+
+
+disp(datetime('now'));
+
+try
+
+    [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
+
+
+    load('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
+
+    depths = [5;10;15;20;25;30;35;40];
+    rmsd_O2 = 0;
+
+
+    for i=1:size(depths,1)
+        d = depths(i);
+        zinx=find(MyLake_results.basin1.z == d);
+        O2_measured = res.T(res.depth1 == d);
+        day_measured = res.date(res.depth1 == d);
+        day_measured = day_measured(~isnan(O2_measured));
+        O2_measured = O2_measured(~isnan(O2_measured));
+
+        O2_mod = MyLake_results.basin1.concentrations.O2(zinx,:)'/1000;
+        [T_date,loc_sim, loc_obs] = intersect(MyLake_results.basin1.days, day_measured);
+
+        rmsd_O2 = rmsd_O2 + RMSE(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
+        % rmsd_O2 = rmsd_O2 + sqrt(mean((O2_mod(loc_sim, 1)-O2_measured(loc_obs, 1)).^2));
+    end
+
+    zinx=find(MyLake_results.basin1.z<4);
+    TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:)+MyLake_results.basin1.concentrations.DOP(zinx,:))', 2);
+    Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
+    P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
+    PP_mod = mean((MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
+
+    load 'obs/store_obs/TOTP.dat' % measured
+    % load 'obs/store_obs/Cha.dat' % measured
+    load 'obs/store_obs/Cha_aquaM_march_2017.dat' % measured
+    load 'obs/store_obs/PO4.dat' % measured
+    load 'obs/store_obs/Part.dat' % measured
+
+
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, TOTP(:,1)));
+    rmsd_TOTP = RMSE(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
+
+
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha_aquaM_march_2017(:,1)));
+    rmsd_Chl = RMSE(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
+
+
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
+    rmsd_PO4 = RMSE(P_mod(loc_sim, 1), PO4(loc_obs, 2));
+
+
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Part(:,1)));
+    rmsd_PP = RMSE(PP_mod(loc_sim, 1), Part(loc_obs, 2));
+
+
+    x'
+
+    res = sum([rmsd_TOTP, rmsd_Chl, rmsd_PO4, rmsd_O2]) ; % + rmsd_PP
+
+catch ME
+    fprintf('Process crashed: %s\n', num2str(current_run))
+    fprintf('\tID: %s\n', ME.identifier)
+    fprintf('\tMessage: %s\n', ME.message)
+    fprintf('\tStack::\n')
+    for k=1:length(ME.stack)
+        disp(ME.stack(k))
+    end
+    res = NaN
+end
+
+
+function r = RMSE(y, yhat)
+    r = sqrt(mean((y-yhat).^2));
+
+function [c,ceq] = nonlcon(x)
+c = [-x(1); -x(2)]; % -x(3); -x(4); -x(5); -x(6); -x(7); -x(8); -x(9); -x(10); -x(11)];
+ceq = [];

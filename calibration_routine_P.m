@@ -54,6 +54,8 @@ clim_ID = run_ID
 m_start=[2000, 1, 1]; %
 m_stop=[2011, 12, 31]; %
 
+disp(datetime('now'));
+
 [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
 
 zinx=find(MyLake_results.basin1.z<4);
@@ -86,7 +88,7 @@ r_PP = RMSE(PP_mod(loc_sim, 1), Part(loc_obs, 2));
 
 
 x'
-res = sum([r_TOTP, 2*r_Chl, r_PO4, r_PP])
+res = sum([r_TOTP, 2*r_Chl, r_PO4]) ; % + r_PP
 
 
 function r = RMSE(y, yhat)

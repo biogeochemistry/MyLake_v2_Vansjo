@@ -98,7 +98,7 @@ sediment_params = {
     0.1,   'k_tS_Fe';
     9600,  'Ks_FeS';    % Canavan, R. W (2006)
     0.001, 'k_Fe_dis';  % reformulated as R = k*FeS if (sigma < 1)
-    1e5,   'k_Fe_pre';  % reformulated as R = k*Fe2*HS if (sigma > 1)
+    1.5e-3,'k_Fe_pre';  % reformulated as R = k*Fe2*HS if (sigma > 1)
     0.37,  'k_apa';
     3e-6,  'kapa';
     0.3134,'k_oms';

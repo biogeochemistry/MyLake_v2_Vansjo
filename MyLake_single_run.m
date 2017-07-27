@@ -8,12 +8,15 @@ run_INCA = 0; % 1- MyLake will run INCA, 0- No run
 use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
 
 no_runs = 1; % 26/7/2016 ... did not find no_run so I added it again
+is_metrics = true; % print metrics in the end
 
 big_results = cell(1,no_runs);  % collects the results
 big_inputs = cell(1,no_runs);   % collects the inputs
 
 % Initial calibration for P:
 x = [0.0643, 0.1368, 1.4647, 0.5293, 0.0570, 0.1000, 1.3339, 0.8793, 0.0590, 101.1213, 68.1137]; % ecomac-2 final result, RMSD 44.0151
+% x = [0.3050, 0.2560, 1.1311, 0.4697, 0.1633, 0.1002, 1.4969, 1.5477, 0.5041, 6.754e+5, 94.3578]; % 27.07.2017 RMSD 56
+
 
 lake_params{40 -7} = x(1); % 9     settling velocity for Chl1 a (m day-1)
 lake_params{42 -7} = x(2); % 11    loss rate (1/day) at 20 deg C
@@ -38,6 +41,10 @@ lake_params{5} = 500.0000e-003;
 % lake_params{5} = 0.3;
 
 
+
+
+
+
 % parfor
 for current_run = 1:no_runs
     if current_run == 1;
@@ -47,8 +54,8 @@ for current_run = 1:no_runs
             m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         else
-            m_start=[2000, 1, 1]; %
-            m_stop=[2013, 12, 31]; %
+            m_start=[2005, 1, 1]; %
+            m_stop=[2005, 12, 31]; %
         end
 
     elseif current_run == 2;
@@ -153,5 +160,45 @@ disp('Saving results...')
 save('IO/MyLakeResults.mat', 'MyLake_results', 'Sediment_results')
 disp('Finished at:')
 disp(datetime('now'));
+
+% if is_metrics == true
+
+%     zinx=find(MyLake_results.basin1.z<4);
+%     TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:)+MyLake_results.basin1.concentrations.DOP(zinx,:))', 2);
+%     Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
+%     P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
+%     PP_mod = mean((MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
+
+%     load 'obs/store_obs/TOTP.dat' % measured
+%     % load 'obs/store_obs/Cha.dat' % measured
+%     load 'obs/store_obs/Cha_aquaM_march_2017.dat' % measured
+%     load 'obs/store_obs/PO4.dat' % measured
+%     load 'obs/store_obs/Part.dat' % measured
+
+
+%     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, TOTP(:,1)));
+%     r_TOTP = RMSE(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
+
+
+%     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha_aquaM_march_2017(:,1)));
+%     r_Chl = RMSE(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
+
+
+%     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
+%     r_PO4 = RMSE(P_mod(loc_sim, 1), PO4(loc_obs, 2));
+
+
+%     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Part(:,1)));
+%     r_PP = RMSE(PP_mod(loc_sim, 1), Part(loc_obs, 2));
+
+%     disp('RMSD P:')
+%     disp(sum([r_TOTP, r_Chl, r_PO4, r_PP]))
+% end
+
+
 toc
+
+
+
+
 end

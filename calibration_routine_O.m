@@ -61,31 +61,34 @@ clim_ID = run_ID
 m_start=[2004, 1, 1]; %
 m_stop=[2013, 12, 31]; %
 
+
+disp(datetime('now'));
 [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
 
 
 load('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
 
 depths = [5;10;15;20;25;30;35;40];
-r_Temp = 0;
+rmsd_O2 = 0;
 
 
 for i=1:size(depths,1)
     d = depths(i);
     zinx=find(MyLake_results.basin1.z == d);
-    T_measured = res.T(res.depth1 == d);
+    O2_measured = res.T(res.depth1 == d);
     day_measured = res.date(res.depth1 == d);
-    day_measured = day_measured(~isnan(T_measured));
-    T_measured = T_measured(~isnan(T_measured));
+    day_measured = day_measured(~isnan(O2_measured));
+    O2_measured = O2_measured(~isnan(O2_measured));
 
-    Temp_mod = MyLake_results.basin1.T(zinx,:)';
+    O2_mod = MyLake_results.basin1.concentrations.O2(zinx,:)'/1000;
     [T_date,loc_sim, loc_obs] = intersect(MyLake_results.basin1.days, day_measured);
 
-    r_Temp = r_Temp + RMSE(Temp_mod(loc_sim, 1), T_measured(loc_obs, 1));
+    rmsd_O2 = rmsd_O2 + RMSE(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
+    % rmsd_O2 = rmsd_O2 + sqrt(mean((O2_mod(loc_sim, 1)-O2_measured(loc_obs, 1)).^2));
 end
 
 x'
-res = r_Temp
+res = rmsd_O2
 
 % sqrt(mean((Temp_mod(loc_sim, 1)-T_measured(loc_obs, 1)).^2));
 

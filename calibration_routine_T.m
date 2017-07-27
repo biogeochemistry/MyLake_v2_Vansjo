@@ -9,10 +9,10 @@ format compact
 % lb = x0*0.1;
 % ub = x0*10;
 
-x(1) = 0.0164; %, 'Kz_K1',           % 2     open water diffusion parameter (-)
+x(1) = 44.2401e-003;; %, 'Kz_K1',           % 2     open water diffusion parameter (-)
 x(2) = 0.000898; %, 'Kz_K1_ice',     % 3     under ice diffusion parameter (-)
 x(3) = 7E-05; %, 'Kz_N0',         % 4     min. stability frequency (s-2)
-x(4) = 0.74; %, 'C_shelter',       % 5     wind shelter parameter (-)
+x(4) = 0.5; %, 'C_shelter',       % 5     wind shelter parameter (-)
 x(5) = 0.3; %, 'alb_melt_ice',       % 8     albedo of melting ice (-)
 x(6) = 0.77; %, 'alb_melt_snow',     % 9     albedo of melting snow (-)
 
@@ -61,6 +61,7 @@ clim_ID = run_ID
 m_start=[2004, 1, 1]; %
 m_stop=[2013, 12, 31]; %
 
+disp(datetime('now'));
 [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
 
 
