@@ -88,39 +88,6 @@ end
 x'
 res = r_Temp
 
-% sqrt(mean((Temp_mod(loc_sim, 1)-T_measured(loc_obs, 1)).^2));
-
-% zinx=find(MyLake_results.z<4);
-% TP_mod = mean((MyLake_results.Pzt(zinx,:)+MyLake_results.PPzt(zinx,:) + MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:)+MyLake_results.DOPzt(zinx,:))', 2);
-% Chl_mod = mean((MyLake_results.Chlzt(zinx,:)+MyLake_results.Czt(zinx,:))', 2);
-% Pzt_mod = mean((MyLake_results.Pzt(zinx,:))', 2);
-% PPzt_mod = mean((MyLake_results.PPzt(zinx,:))', 2);
-
-% load 'obs/store_obs/TOTP.dat' % measured
-% % load 'obs/store_obs/Cha.dat' % measured
-% load 'obs/store_obs/Cha_aquaM_march_2017.dat' % measured
-% load 'obs/store_obs/PO4.dat' % measured
-% load 'obs/store_obs/Part.dat' % measured
-
-
-% [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, TOTP(:,1)));
-% r_TOTP = RMSE(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
-
-
-% [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, Cha_aquaM_march_2017(:,1)));
-% r_Chl = RMSE(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
-
-
-% [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, PO4(:,1)));
-% r_PO4 = RMSE(Pzt_mod(loc_sim, 1), PO4(loc_obs, 2));
-
-
-% [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.days, Part(:,1)));
-% r_PP = RMSE(PPzt_mod(loc_sim, 1), Part(loc_obs, 2));
-
-
-
-% res = sum([r_TOTP, 2*r_Chl, r_PO4, r_PP])
 
 
 function r = RMSE(y, yhat)

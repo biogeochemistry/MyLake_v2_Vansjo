@@ -35,17 +35,22 @@ run_INCA = 0; % 1- MyLake will run INCA, 0- No run
 use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
 is_save_results = false;
 
-lake_params{40 -7} = x(1); % 9     settling velocity for Chl1 a (m day-1)
-lake_params{42 -7} = x(2); % 11    loss rate (1/day) at 20 deg C
-lake_params{43 -7} = x(3); % 12    specific growth rate (1/day) at 20 deg C
-lake_params{46 -7} = x(4); % 15    Half saturation growth P level (mg/m3)
-lake_params{49 -7} = x(5); % 18    Settling velocity for Chl2 a (m day-1)
-lake_params{50 -7} = x(6);  % 19    Loss rate (1/day) at 20 deg C
-lake_params{51 -7} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
-lake_params{52 -7} = x(8);  % 21    Half saturation growth P level (mg/m3)
-lake_params{39 -7} = x(9);  %   settling velocity for S (m day-1)
-sediment_params{37-7} = x(10);  %    R16 sorption of P on Fe k
+lake_params{52 -5} = x(1); % 9     settling velocity for Chl1 a (m day-1)
+lake_params{54 -5} = x(2); % 11    loss rate (1/day) at 20 deg C
+lake_params{55 -5} = x(3); % 12    specific growth rate (1/day) at 20 deg C
+lake_params{58 -5} = x(4); % 15    Half saturation growth P level (mg/m3)
+lake_params{61 -5} = x(5); % 18    Settling velocity for Chl2 a (m day-1)
+lake_params{62 -5} = x(6);  % 19    Loss rate (1/day) at 20 deg C
+lake_params{63 -5} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
+lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
+lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
+sediment_params{22} = x(10);  % 38 R16 sorption of P on Fe k
 sediment_params{34} = x(11);  %    accel
+
+lake_params{21 -5} = x(12); % 16    scaling factor for inflow volume (-)
+lake_params{25 -5} = x(13); % 20    scaling factor for inflow concentration of total P (-)
+lake_params{26 -5} = x(14); % 21    scaling factor for inflow concentration of diss. organic P (-)
+lake_params{39 -5} = x(15); % 34    Scaling factor for inflow concentration of Fe3 (-)
 
 
 
@@ -59,7 +64,7 @@ disp(datetime('now'));
 [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
 
 zinx=find(MyLake_results.basin1.z<4);
-TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:)+MyLake_results.basin1.concentrations.DOP(zinx,:))', 2);
+TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.DOP(zinx,:))', 2);
 Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
 P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
 PP_mod = mean((MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
@@ -88,7 +93,7 @@ r_PP = RMSE(PP_mod(loc_sim, 1), Part(loc_obs, 2));
 
 
 x'
-res = sum([r_TOTP, 2*r_Chl, r_PO4]) ; % + r_PP
+res = sum([r_TOTP, 2*r_Chl, r_PO4, r_PP])
 
 
 function r = RMSE(y, yhat)

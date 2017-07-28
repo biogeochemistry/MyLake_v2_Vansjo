@@ -321,7 +321,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
 % Estimate flux
   sediment_transport_fluxes.O2           = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.O2), 31998);
   sediment_transport_fluxes.OM1          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.OM1), 30973.762);
-  sediment_transport_fluxes.OM2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.OM2), 12010.7);
+  sediment_transport_fluxes.OM2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.OM2), 30973.762);
   sediment_transport_fluxes.PO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.PO4), 30973.762);
   sediment_transport_fluxes.NO3          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.NO3), 62004);
   sediment_transport_fluxes.FeOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.FeOH3), 106867.0);
@@ -332,7 +332,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_transport_fluxes.PO4adsb      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.PO4adsb), 30973.762);
   sediment_transport_fluxes.SO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.SO4), 96062);
   sediment_transport_fluxes.DOM1         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.DOM1), 30973.762);
-  sediment_transport_fluxes.DOM2         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.DOM2), 12010.7);
+  sediment_transport_fluxes.DOM2         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.DOM2), 30973.762);
 
   sediment_bioirrigation_fluxes.O2   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.O2), 31998);
   sediment_bioirrigation_fluxes.PO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.PO4), 30973.762);
@@ -341,7 +341,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_bioirrigation_fluxes.NH4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.NH4), 18038);
   sediment_bioirrigation_fluxes.SO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.SO4), 96062);
   sediment_bioirrigation_fluxes.DOM1 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOM1), 30973.762);
-  sediment_bioirrigation_fluxes.DOM2 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOM2), 12010.7);
+  sediment_bioirrigation_fluxes.DOM2 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOM2), 30973.762);
 
 
 

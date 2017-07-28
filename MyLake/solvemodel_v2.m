@@ -404,10 +404,10 @@ SiO4z = SiO40;
 SiO2z = SiO20;
 diatomz = diatom0;
 POCz = POC0;
-Pz = (TP0-DOP0) / 2;
-PPz = (TP0-DOP0) / 2; % (mg m-3) NEW!!!
-
-
+Pz = (TP0-DOP0-DOC0-POC0) / 2;
+PPz = (TP0-DOP0-DOC0-POC0) / 2; % (mg m-3) NEW!!!
+Pz = Pz .* (Pz>0);
+PPz = PPz .* (PPz>0);
 
 % assume linear initial temperature profile in sediment (4 deg C at the bottom)
 clear Tzy_sed
@@ -834,6 +834,8 @@ for i = 1:length(tt)
 
         % inflow HS and H2S are neglected
 
+        % Where inflow POCC???
+
         Iflw_NO3 = I_scNO3 * Inflw(i,11);
         Iflw_NH4 = I_scNH4 * Inflw(i,12);
         Iflw_SO4 = I_scSO4 * Inflw(i,13);
@@ -846,10 +848,10 @@ for i = 1:length(tt)
         Iflw_SiO4 = I_scSiO4 * Inflw(i,20);
         Iflw_SiO2 = I_scSiO2 * Inflw(i,21);
         Iflw_diatom = I_scdiatom * Inflw(i,22);
-        Iflw_POC = Inflw(i,23);
-        Iflw_Pz = (Iflw_TP - Iflw_DOP)/2;
+        Iflw_POC = I_scPOC * Inflw(i,23);
+        Iflw_Pz = (Iflw_TP - Iflw_DOP - Iflw_DOC - Iflw_POC)/2;
         Iflw_Pz = Iflw_Pz .* (Iflw_Pz > 0);
-        Iflw_PP = (Iflw_TP - Iflw_DOP)/2; %;
+        Iflw_PP = (Iflw_TP - Iflw_DOP - Iflw_DOC - Iflw_POC)/2; %;
         Iflw_PP = Iflw_PP .* (Iflw_PP > 0);
         % Iflw_PP = (Iflw_TP - Iflw_DOP - Iflw_Chl - Iflw_Chl)/2;
         % Iflw_Pz = (Iflw_TP - Iflw_DOP - Iflw_Chl - Iflw_Chl)/2;
@@ -1336,7 +1338,7 @@ for i = 1:length(tt)
 
         O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
         Chlz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762);
-        DOCz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 12010.7);
+        DOCz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762);
         NO3z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(NO3z, 62004);
         Fe3z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe3z, 106867.0); %Fe(OH)3
         SO4z    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(SO4z, 96062);
@@ -1352,7 +1354,7 @@ for i = 1:length(tt)
         DOPz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762); %DOPz
         Cz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
         Sz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
-        POCz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz,  12010.7);
+        POCz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz,  30973.762);
 
         % [Fe3z, Pz, PPz] = equilibrium_P_sorption(Fe3z, Pz, PPz, Kads);
 
@@ -1362,7 +1364,7 @@ for i = 1:length(tt)
 
         O2z  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,1), 31998.8);
         Chlz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,2), 30973.762);
-        DOCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,3), 12010.7);
+        DOCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,3), 30973.762);
         NO3z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,4), 62004);
         Fe3z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,5), 106867.0); %Fe(OH)3
         SO4z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,6), 96062);
@@ -1378,7 +1380,7 @@ for i = 1:length(tt)
         DOPz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,16), 30973.762); %DOPz
         Cz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,17), 30973.762);
         Sz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,18), 30973.762);
-        POCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,19), 12010.7);
+        POCz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,19), 30973.762);
     end
 
     if any(isnan(C_new))
@@ -1396,8 +1398,8 @@ for i = 1:length(tt)
 
             MyLake_concentrations.Chlz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762);
             MyLake_concentrations.Cz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
-            MyLake_concentrations.POCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz, 12010.7);
-            MyLake_concentrations.DOCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 12010.7);
+            MyLake_concentrations.POCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz, 30973.762);
+            MyLake_concentrations.DOCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762);
             MyLake_concentrations.DOPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762);
             MyLake_concentrations.O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
             MyLake_concentrations.Pz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Pz, 30973.762);
