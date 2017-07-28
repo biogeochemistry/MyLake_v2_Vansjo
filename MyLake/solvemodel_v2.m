@@ -81,9 +81,6 @@ warning off MATLAB:fzero:UndeterminedSyntax %suppressing a warning message
 % These variables are still global and not transferred by functions
 global ies80
 
-% fast variable passing
-global k_OM_wc_q10 k_OMb_wc_q10 k_DOM1_wc_q10 k_DOM2_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc k_Feox_wc k_Sdis_wc k_Spre_wc k_alum_wc k_pdesorb_c_wc k_pdesorb_a_wc k_pdesorb_b_wc k_rhom_wc k_tS_Fe_wc Ks_FeS_wc k_Fe_dis_wc k_Fe_pre_wc k_apa_wc kapa_wc k_oms_wc k_tsox_wc k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch rate_estimator_switch
-
 
 tic
 disp(['Running MyLake-Sediment from ' datestr(datenum(M_start)) ' to ' datestr(datenum(M_stop)) ' ...']);
@@ -209,9 +206,9 @@ theta_sod_ice = Bio_par(29);    %Temperature adjustment coefficient for SOD, T <
 BOD_temp_switch = Bio_par(30);             %Threshold for bod or bod_ice °C
 pH = Bio_par(31);               %Lake water pH
 % WC chemistry:
-Q10_wc = Bio_par(32);
+Q10 = Bio_par(32);
 wc_factor = Bio_par(33);
-T_ref_wc = Bio_par(34);
+T_ref = Bio_par(34);
 
 
 
@@ -447,50 +444,9 @@ DoM=[]; %initialize
 % ============ sediment module ============
 % Allocation and initial sediment profiles concentrations and reading initial concentrations for sediment from file
 [sediment_concentrations, sediment_params, sediment_matrix_templates]  = sediment_init( pH, zm, In_Tz(end) );
-% ==========================================
 
-% ============ water-column module ============
-k_OM_wc          = sediment_params.k_OM  * wc_factor;
-k_OMb_wc         = sediment_params.k_OMb * wc_factor;
-k_DOM1_wc        = sediment_params.k_DOM1 * wc_factor;
-k_DOM2_wc        = sediment_params.k_DOM2 * wc_factor;
-Km_O2_wc         = sediment_params.Km_O2;
-Km_NO3_wc        = sediment_params.Km_NO3;
-Km_FeOH3_wc      = sediment_params.Km_FeOH3;
-Km_FeOOH_wc      = sediment_params.Km_FeOOH;
-Km_SO4_wc        = sediment_params.Km_SO4;
-Km_oxao_wc       = sediment_params.Km_oxao;
-Km_amao_wc       = sediment_params.Km_amao;
-Kin_O2_wc        = sediment_params.Kin_O2;
-Kin_NO3_wc       = sediment_params.Kin_NO3;
-Kin_FeOH3_wc     = sediment_params.Kin_FeOH3;
-k_amox_wc        = sediment_params.k_amox;
-k_Feox_wc        = sediment_params.k_Feox;
-k_Sdis_wc        = sediment_params.k_Sdis;
-k_Spre_wc        = sediment_params.k_Spre;
-k_alum_wc        = sediment_params.k_alum;
-k_pdesorb_c_wc   = sediment_params.k_pdesorb_c;
-k_pdesorb_a_wc   = sediment_params.k_pdesorb_a;
-k_pdesorb_b_wc   = sediment_params.k_pdesorb_b;
-k_rhom_wc        = sediment_params.k_rhom;
-k_tS_Fe_wc       = sediment_params.k_tS_Fe;
-Ks_FeS_wc        = sediment_params.Ks_FeS;
-k_Fe_dis_wc      = sediment_params.k_Fe_dis;
-k_Fe_pre_wc      = sediment_params.k_Fe_pre;
-k_apa_wc         = sediment_params.k_apa;
-kapa_wc          = sediment_params.kapa;
-k_oms_wc         = sediment_params.k_oms;
-k_tsox_wc        = sediment_params.k_tsox;
-k_FeSpre_wc      = sediment_params.k_FeSpre;
-accel_wc         = sediment_params.accel;
-f_pfe_wc         = sediment_params.f_pfe;
-Cx1_wc           = sediment_params.Cx1;
-Ny1_wc           = sediment_params.Ny1;
-Pz1_wc           = sediment_params.Pz1;
-Cx2_wc           = sediment_params.Cx2;
-Ny2_wc           = sediment_params.Ny2;
-Pz2_wc           = sediment_params.Pz2;
-% ==========================================
+% Passing MyLake parameters in Chemical module
+mylake_params.dz = dz; mylake_params.zm = zm; mylake_params.zz = zz; mylake_params.Kz_K1 = Kz_K1; mylake_params.Kz_K1_ice = Kz_K1_ice; mylake_params.Kz_N0 = Kz_N0; mylake_params.C_shelter = C_shelter; mylake_params.lat = lat; mylake_params.lon = lon; mylake_params.alb_melt_ice = alb_melt_ice; mylake_params.alb_melt_snow = alb_melt_snow; mylake_params.PAR_sat = PAR_sat; mylake_params.f_par = f_par; mylake_params.beta_chl = beta_chl; mylake_params.lambda_i = lambda_i; mylake_params.lambda_s = lambda_s; mylake_params.F_sed_sld = F_sed_sld; mylake_params.I_scV = I_scV; mylake_params.I_scT = I_scT; mylake_params.I_scC = I_scC; mylake_params.I_scS = I_scS; mylake_params.I_scTP = I_scTP; mylake_params.I_scDOP = I_scDOP; mylake_params.I_scChl = I_scChl; mylake_params.I_scDOC = I_scDOC; mylake_params.I_scPOC = I_scPOC; mylake_params.I_scO = I_scO; mylake_params.I_scDIC = I_scDIC; mylake_params.I_scNO3 = I_scNO3; mylake_params.I_scNH4 = I_scNH4; mylake_params.I_scSO4 = I_scSO4; mylake_params.I_scFe2 = I_scFe2; mylake_params.I_scCa2 = I_scCa2; mylake_params.I_scpH = I_scpH; mylake_params.I_scCH4 = I_scCH4; mylake_params.I_scFe3 = I_scFe3; mylake_params.I_scAl3 = I_scAl3; mylake_params.I_scSiO4 = I_scSiO4; mylake_params.I_scSiO2 = I_scSiO2; mylake_params.I_scdiatom = I_scdiatom; mylake_params.swa_b0 = swa_b0; mylake_params.swa_b1 = swa_b1; mylake_params.S_res_epi = S_res_epi; mylake_params.S_res_hypo = S_res_hypo; mylake_params.H_sed = H_sed; mylake_params.Psat_L = Psat_L; mylake_params.Fmax_L = Fmax_L; mylake_params.w_s = w_s; mylake_params.w_chl = w_chl; mylake_params.Y_cp = Y_cp; mylake_params.m_twty = m_twty; mylake_params.g_twty = g_twty; mylake_params.k_twty = k_twty; mylake_params.dop_twty = dop_twty; mylake_params.P_half = P_half; mylake_params.PAR_sat_2 = PAR_sat_2; mylake_params.beta_chl_2 = beta_chl_2; mylake_params.w_chl_2 = w_chl_2; mylake_params.m_twty_2 = m_twty_2; mylake_params.g_twty_2 = g_twty_2; mylake_params.P_half_2 = P_half_2; mylake_params.oc_DOC = oc_DOC; mylake_params.qy_DOC = qy_DOC; mylake_params.k_BOD = k_BOD; mylake_params.k_SOD = k_SOD; mylake_params.theta_bod = theta_bod; mylake_params.theta_bod_ice = theta_bod_ice; mylake_params.theta_sod = theta_sod; mylake_params.theta_sod_ice = theta_sod_ice; mylake_params.BOD_temp_switch = BOD_temp_switch; mylake_params.pH = pH; mylake_params.Q10 = Q10; mylake_params.wc_factor = wc_factor; mylake_params.T_ref = T_ref; mylake_params.theta_m = theta_m;  mylake_params.floculation_switch = floculation_switch; mylake_params.rate_estimator_switch = rate_estimator_switch; mylake_params.Az = Az; mylake_params.Vz = Vz; mylake_params.dt = dt;
 
 
 % >>>>>> Start of the time loop >>>>>>
@@ -1331,11 +1287,6 @@ for i = 1:length(tt)
 
     if wc_chemistry_module
 
-        k_OM_wc_q10        = k_OM_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-        k_OMb_wc_q10       = k_OMb_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-        k_DOM1_wc_q10       = k_DOM1_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-        k_DOM2_wc_q10       = k_DOM2_wc .* Q10_wc.^((Tz-T_ref_wc)/10);
-
         O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
         Chlz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762);
         DOCz    = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762);
@@ -1358,9 +1309,16 @@ for i = 1:length(tt)
 
         % [Fe3z, Pz, PPz] = equilibrium_P_sorption(Fe3z, Pz, PPz, Kads);
 
+        % Passing some MyLake results for chem module
+        mylake_temp_results.Tz = Tz;
+        mylake_temp_results.DayFrac = DayFrac;
+        mylake_temp_results.lambdaz_wtot = lambdaz_wtot;
+        mylake_temp_results.H_sw_z = H_sw_z;
+        mylake_temp_results.H_sw_z_2 = H_sw_z_2;
+
         C0 = [O2z, Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, Sz, POCz];
 
-        [C_new, wc_rates_av] = wc_chemical_reactions_module(C0,dt/365,ts_during_day, wc_int_method);
+        [C_new, wc_rates_av] = wc_chemical_reactions_module(mylake_params, sediment_params, mylake_temp_results, C0, dt/365,ts_during_day, wc_int_method);
 
         O2z  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,1), 31998.8);
         Chlz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,2), 30973.762);
@@ -1396,65 +1354,54 @@ for i = 1:length(tt)
     if matsedlab_sediment_module
             % Making cells of params for using during coupling
 
-            MyLake_concentrations.Chlz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762);
-            MyLake_concentrations.Cz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
-            MyLake_concentrations.POCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz, 30973.762);
-            MyLake_concentrations.DOCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762);
-            MyLake_concentrations.DOPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762);
-            MyLake_concentrations.O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
-            MyLake_concentrations.Pz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Pz, 30973.762);
-            MyLake_concentrations.Fe2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe2z, 55845);
-            MyLake_concentrations.NO3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(NO3z, 62004);
-            MyLake_concentrations.NH4z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(NH4z, 18038);
-            MyLake_concentrations.SO4z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(SO4z, 96062);
-            MyLake_concentrations.Fe3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe3z, 106867.0);
-            MyLake_concentrations.Ca2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Ca2z, 80156.0);
-            MyLake_concentrations.Al3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Al3z, 78003.6);
-            MyLake_concentrations.PPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(PPz, 30973.762);
-            MyLake_concentrations.Sz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
-
-            MyLake_params.w_chl = w_chl;
-            MyLake_params.w_chl_2 = w_chl_2;
-            MyLake_params.w_s = w_s;
-            MyLake_params.Az = Az;
-            MyLake_params.Vz = Vz;
-            MyLake_params.dz = dz;
-            MyLake_params.Tz = Tz;
-            MyLake_params.dt = dt;
-            MyLake_params.pH = pH;
-            MyLake_params.M_start = M_start;
-            MyLake_params.M_stop = M_stop;
+            mylake_temp_results.Chlz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Chlz, 30973.762);
+            mylake_temp_results.Cz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Cz,  30973.762);
+            mylake_temp_results.POCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz, 30973.762);
+            mylake_temp_results.DOCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOCz, 30973.762);
+            mylake_temp_results.DOPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(DOPz, 30973.762);
+            mylake_temp_results.O2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(O2z, 31998.8);
+            mylake_temp_results.Pz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Pz, 30973.762);
+            mylake_temp_results.Fe2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe2z, 55845);
+            mylake_temp_results.NO3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(NO3z, 62004);
+            mylake_temp_results.NH4z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(NH4z, 18038);
+            mylake_temp_results.SO4z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(SO4z, 96062);
+            mylake_temp_results.Fe3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe3z, 106867.0);
+            mylake_temp_results.Ca2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Ca2z, 80156.0);
+            mylake_temp_results.Al3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Al3z, 78003.6);
+            mylake_temp_results.PPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(PPz, 30973.762);
+            mylake_temp_results.Sz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Sz,  30973.762);
 
 
         % Preparing units and estimate flux from [WC] ----> [Sediments]
-        sediment_bc = update_sediment(MyLake_concentrations, MyLake_params, sediment_params);
+        sediment_bc = update_sediment(mylake_temp_results, mylake_params, sediment_params);
 
         % Running sediment module
         [sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_concentrations, sediment_additional_results] = sediment_v2(...
             sediment_concentrations, sediment_params, sediment_matrix_templates, sediment_bc);
 
-        MyLakeOldConcentrations.O2z = O2z;
-        MyLakeOldConcentrations.Pz = Pz;
-        MyLakeOldConcentrations.Fe2z = Fe2z;
-        MyLakeOldConcentrations.NO3z = NO3z;
-        MyLakeOldConcentrations.NH4z = NH4z;
-        MyLakeOldConcentrations.DOPz = DOPz;
-        MyLakeOldConcentrations.DOCz = DOCz;
+        mylake_prev_results.Tz = Tz;
+        mylake_prev_results.O2z = O2z;
+        mylake_prev_results.Pz = Pz;
+        mylake_prev_results.Fe2z = Fe2z;
+        mylake_prev_results.NO3z = NO3z;
+        mylake_prev_results.NH4z = NH4z;
+        mylake_prev_results.DOPz = DOPz;
+        mylake_prev_results.DOCz = DOCz;
 
         if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
             error('NaN')
         end
 
         % Update WC:  [sediment] ----> [WC]
-        [MyLakeNewConcentrations] = update_wc(MyLakeOldConcentrations, sediment_concentrations, sediment_transport_fluxes, sediment_bioirrigation_fluxes, MyLake_params, sediment_params);
+        [mylake_new_resutls] = update_wc(mylake_prev_results, sediment_concentrations, sediment_transport_fluxes, sediment_bioirrigation_fluxes, mylake_params, sediment_params);
 
-        O2z = MyLakeNewConcentrations.O2z;
-        Pz = MyLakeNewConcentrations.Pz;
-        Fe2z = MyLakeNewConcentrations.Fe2z;
-        NO3z = MyLakeNewConcentrations.NO3z;
-        NH4z = MyLakeNewConcentrations.NH4z;
-        DOPz = MyLakeNewConcentrations.DOPz;
-        DOCz = MyLakeNewConcentrations.DOCz;
+        O2z = mylake_new_resutls.O2z;
+        Pz = mylake_new_resutls.Pz;
+        Fe2z = mylake_new_resutls.Fe2z;
+        NO3z = mylake_new_resutls.NO3z;
+        NH4z = mylake_new_resutls.NH4z;
+        DOPz = mylake_new_resutls.DOPz;
+        DOCz = mylake_new_resutls.DOCz;
 
 
         fields = fieldnames(sediment_concentrations);
@@ -1472,7 +1419,7 @@ for i = 1:length(tt)
             sediment_bioirrigation_fluxes_zt.(fields{fd_idx})(:,i) = sediment_bioirrigation_fluxes.(fields{fd_idx});
         end
 
-        if rate_estimator_switch
+        if mylake_params.rate_estimator_switch
 
             fields = fieldnames(sediment_additional_results.rates);
             for fd_idx = 1:numel(fields)
@@ -1658,7 +1605,7 @@ if matsedlab_sediment_module           % MATSEDLAB sediment module
     sediment_results.concentrations = sediment_concentrations_zt;
     sediment_results.z = sediment_params.x';
     sediment_results.Bioirrigation_fx_zt = sediment_bioirrigation_fluxes_zt;
-    sediment_results.MyLake_params = MyLake_params;
+    sediment_results.mylake_params = mylake_params;
     sediment_results.params = sediment_params;
     sediment_results.sediment_transport_fluxes = sediment_transport_fluxes_zt;
     sediment_results.days = datenum(M_start):datenum(M_stop);
@@ -1744,7 +1691,7 @@ MyLake_results.testi1t = testi1t;
 MyLake_results.testi2t = testi2t;
 MyLake_results.z = zz;
 MyLake_results.days = datenum(M_start):datenum(M_stop);
-MyLake_results.params = MyLake_params;
+MyLake_results.params = mylake_params;
 MyLake_results.params.Phys_par = Phys_par;
 MyLake_results.params.Bio_par = Bio_par;
 MyLake_results.Inflw = Inflw;
@@ -1891,12 +1838,12 @@ Pfpart = (TIP - (1-vf).*Pdiss)./(rho_sed*vf); %inorg. P conc. in sediment partic
 %% rates: rates of chemical equations in water column
 
 
-function [C_new, rates] = wc_chemical_reactions_module(C0, dt, ts, method)
+function [C_new, rates] = wc_chemical_reactions_module(mylake_params, sediment_params, mylake_temp_results, C0, dt, ts, method)
     % ts - how many time steps during 1 day
     if method == 0
-        [C_new, rates] = rk4(C0,dt,ts);
+        [C_new, rates] = rk4(mylake_params, sediment_params, mylake_temp_results, C0, dt,ts);
     elseif method == 1
-        [C_new, rates] = butcher5(C0,dt,ts);
+        [C_new, rates] = butcher5(mylake_params, sediment_params, mylake_temp_results, C0, dt,ts);
     end
     C_new = (C_new>0).*C_new;
 
@@ -1904,26 +1851,24 @@ function [C_new, rates] = wc_chemical_reactions_module(C0, dt, ts, method)
 
 
 %% rk4: Runge-Kutta 4th order integration
-function [C_new, rates_av] = rk4(C0,dt,ts)
+function [C_new, rates_av] = rk4(mylake_params, sediment_params, mylake_temp_results, C0, dt,ts)
     % ts - how many time steps during 1 day
-
-    global rate_estimator_switch
 
     dt = dt/ts;
     for i = 1:ts
-        [dcdt_1, r_1] = wc_rates(C0, dt);
+        [dcdt_1, r_1] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0, dt);
         k_1 = dt.*dcdt_1;
-        [dcdt_2, r_2] = wc_rates(C0+0.5.*k_1, dt);
+        [dcdt_2, r_2] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0+0.5.*k_1, dt);
         k_2 = dt.*dcdt_2;
-        [dcdt_3, r_3] = wc_rates(C0+0.5.*k_2, dt);
+        [dcdt_3, r_3] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0+0.5.*k_2, dt);
         k_3 = dt.*dcdt_3;
-        [dcdt_4, r_4] = wc_rates(C0+k_3, dt);
+        [dcdt_4, r_4] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0+k_3, dt);
         k_4 = dt.*dcdt_4;
         C_new = C0 + (k_1+2.*k_2+2.*k_3+k_4)/6;
         C0 = C_new;
 
         % average rate
-        if rate_estimator_switch
+        if mylake_params.rate_estimator_switch
             fields = fieldnames(r_1);
             for fld_idx = 1:numel(fields)
               r.(fields{fld_idx}) = (r_1.(fields{fld_idx}) + 2*r_2.(fields{fld_idx}) + 2*r_3.(fields{fld_idx}) + r_4.(fields{fld_idx}))/6;
@@ -1933,7 +1878,7 @@ function [C_new, rates_av] = rk4(C0,dt,ts)
         end
     end
 
-    if rate_estimator_switch
+    if mylake_params.rate_estimator_switch
         fields = fieldnames(rates);
         for i = 1:numel(fields)
           rates_av.(fields{i}) = 0;
@@ -1947,28 +1892,27 @@ function [C_new, rates_av] = rk4(C0,dt,ts)
     end
 
 %% butcher5: Butcher's Fifth-Order Runge-Kutta
-function [C_new, rates_av] = butcher5(C0,dt,ts)
+function [C_new, rates_av] = butcher5(mylake_params, sediment_params, mylake_temp_results, C0, dt,ts)
 
-    global rate_estimator_switch
 
     dt = dt/ts;
     for i = 1:ts
-        [dcdt_1, r_1] = wc_rates(C0, dt);
+        [dcdt_1, r_1] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0, dt);
         k_1 = dt.*dcdt_1;
-        [dcdt_2, r_2] = wc_rates(C0 + 1/4.*k_1, dt);
+        [dcdt_2, r_2] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0 + 1/4.*k_1, dt);
         k_2 = dt.*dcdt_2;
-        [dcdt_3, r_3] = wc_rates(C0 + 1/8.*k_1 + 1/8.*k_2, dt);
+        [dcdt_3, r_3] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0 + 1/8.*k_1 + 1/8.*k_2, dt);
         k_3 = dt.*dcdt_3;
-        [dcdt_4, r_4] = wc_rates(C0 - 1/2.*k_2 + k_3, dt);
+        [dcdt_4, r_4] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0 - 1/2.*k_2 + k_3, dt);
         k_4 = dt.*dcdt_4;
-        [dcdt_5, r_5] = wc_rates(C0 + 3/16.*k_1 + 9/16.*k_4, dt);
+        [dcdt_5, r_5] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0 + 3/16.*k_1 + 9/16.*k_4, dt);
         k_5 = dt.*dcdt_5;
-        [dcdt_6, r_6] = wc_rates(C0 - 3/7.*k_1 + 2/7.*k_2 + 12/7.*k_3 - 12/7.*k_4 + 8/7.*k_5, dt);
+        [dcdt_6, r_6] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0 - 3/7.*k_1 + 2/7.*k_2 + 12/7.*k_3 - 12/7.*k_4 + 8/7.*k_5, dt);
         k_6 = dt.*dcdt_6;
         C_new = C0 + (7.*k_1 + 32.*k_3 + 12.*k_4 + 32.*k_5 + 7.*k_6)/90;
         C0 = C_new;
 
-        if rate_estimator_switch
+        if mylake_params.rate_estimator_switch
             fields = fieldnames(r_1);
             for fld_idx = 1:numel(fields)
               r.(fields{fld_idx}) = (7*r_1.(fields{fld_idx}) + 32*r_3.(fields{fld_idx}) + 12*r_4.(fields{fld_idx}) + 32*r_5.(fields{fld_idx}) + 7*r_6.(fields{fld_idx}))/90;
@@ -1977,7 +1921,7 @@ function [C_new, rates_av] = butcher5(C0,dt,ts)
         end
     end
 
-    if rate_estimator_switch
+    if mylake_params.rate_estimator_switch
         fields = fieldnames(rates);
         for i = 1:numel(fields)
           rates_av.(fields{i}) = 0;
@@ -2040,11 +1984,9 @@ function F = P_equlibrium_logK(x, param, Sum_Fe, Sum_P)
     F(4) = Fe3_P + Fe3_HP + Fe3_H2P + Fe3 - Sum_Fe;
     F(5) = Fe3_P + Fe3_HP + Fe3_H2P + P - Sum_P;
 
-function [dcdt, r] = wc_rates(C, dt)
+function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C, dt)
 % parameters for water-column chemistry
 % NOTE: the rates are the same as in sediments (per year!! not day) except microbial which are factorized due to lower concertation of bacteria in WC then in sediments. Units are per "year" due to time step is in year units too;
-
-    global k_OM_wc_q10 k_OMb_wc_q10 k_DOM1_wc_q10 k_DOM2_wc_q10 Km_O2_wc Km_NO3_wc Km_FeOH3_wc Km_FeOOH_wc Km_SO4_wc Km_oxao_wc Km_amao_wc Kin_O2_wc Kin_NO3_wc Kin_FeOH3_wc k_amox_wc k_Feox_wc k_Sdis_wc k_Spre_wc k_alum_wc k_pdesorb_c_wc k_pdesorb_a_wc k_pdesorb_b_wc k_rhom_wc k_tS_Fe_wc Ks_FeS_wc k_Fe_dis_wc k_Fe_pre_wc k_apa_wc kapa_wc k_oms_wc k_tsox_wc k_FeSpre_wc accel_wc f_pfe_wc Cx1_wc Ny1_wc Pz1_wc Cx2_wc Ny2_wc Pz2_wc Pz1_wc Pz2_wc Ny1_wc Ny2_wc dop_twty theta_m Tz g_twty H_sw_z lambdaz_wtot P_half DayFrac dz m_twty H_sw_z_2 Y_cp P_half_2 m_twty_2 g_twty_2 floculation_switch
 
     if any(isnan(C))
         error('NaN')
@@ -2071,6 +2013,74 @@ function [dcdt, r] = wc_rates(C, dt)
     Cz = C(:,17) .* (C(:,17)>0);
     Sz = C(:,18) .* (C(:,18)>0);
     POCz = C(:,19) .* (C(:,19)>0);
+
+    % ============ water-column module ============
+    Km_O2         = sediment_params.Km_O2;
+    Km_NO3        = sediment_params.Km_NO3;
+    Km_FeOH3      = sediment_params.Km_FeOH3;
+    Km_FeOOH      = sediment_params.Km_FeOOH;
+    Km_SO4        = sediment_params.Km_SO4;
+    Km_oxao       = sediment_params.Km_oxao;
+    Km_amao       = sediment_params.Km_amao;
+    Kin_O2        = sediment_params.Kin_O2;
+    Kin_NO3       = sediment_params.Kin_NO3;
+    Kin_FeOH3     = sediment_params.Kin_FeOH3;
+    k_amox        = sediment_params.k_amox;
+    k_Feox        = sediment_params.k_Feox;
+    k_Sdis        = sediment_params.k_Sdis;
+    k_Spre        = sediment_params.k_Spre;
+    k_alum        = sediment_params.k_alum;
+    k_pdesorb_c   = sediment_params.k_pdesorb_c;
+    k_pdesorb_a   = sediment_params.k_pdesorb_a;
+    k_pdesorb_b   = sediment_params.k_pdesorb_b;
+    k_rhom        = sediment_params.k_rhom;
+    k_tS_Fe       = sediment_params.k_tS_Fe;
+    Ks_FeS        = sediment_params.Ks_FeS;
+    k_Fe_dis      = sediment_params.k_Fe_dis;
+    k_Fe_pre      = sediment_params.k_Fe_pre;
+    k_apa         = sediment_params.k_apa;
+    kapa          = sediment_params.kapa;
+    k_oms         = sediment_params.k_oms;
+    k_tsox        = sediment_params.k_tsox;
+    k_FeSpre      = sediment_params.k_FeSpre;
+    accel         = sediment_params.accel;
+    f_pfe         = sediment_params.f_pfe;
+    Cx1           = sediment_params.Cx1;
+    Ny1           = sediment_params.Ny1;
+    Pz1           = sediment_params.Pz1;
+    Cx2           = sediment_params.Cx2;
+    Ny2           = sediment_params.Ny2;
+    Pz2           = sediment_params.Pz2;
+
+    T_ref = mylake_params.T_ref;
+    Q10 = mylake_params.Q10;
+    dop_twty = mylake_params.dop_twty;
+    g_twty = mylake_params.g_twty;
+    m_twty = mylake_params.m_twty;
+    g_twty_2 = mylake_params.g_twty_2;
+    m_twty_2 = mylake_params.m_twty_2;
+    P_half = mylake_params.P_half;
+    P_half_2 = mylake_params.P_half_2;
+    theta_m = mylake_params.theta_m;
+    dz = mylake_params.dz;
+    floculation_switch = mylake_params.floculation_switch;
+
+    Tz = mylake_temp_results.Tz;
+    DayFrac = mylake_temp_results.DayFrac;
+    lambdaz_wtot = mylake_temp_results.lambdaz_wtot;
+    H_sw_z = mylake_temp_results.H_sw_z;
+    H_sw_z_2 = mylake_temp_results.H_sw_z_2;
+
+
+    k_OM          = sediment_params.k_OM  * mylake_params.wc_factor;
+    k_OMb         = sediment_params.k_OMb * mylake_params.wc_factor;
+    k_DOM1        = sediment_params.k_DOM1 * mylake_params.wc_factor;
+    k_DOM2        = sediment_params.k_DOM2 * mylake_params.wc_factor;
+    k_OM_q10        = k_OM .* Q10.^((Tz-T_ref)/10);
+    k_OMb_q10       = k_OMb .* Q10.^((Tz-T_ref)/10);
+    k_DOM1_q10       = k_DOM1 .* Q10.^((Tz-T_ref)/10);
+    k_DOM2_q10       = k_DOM2 .* Q10.^((Tz-T_ref)/10);
+
 
     % MyLake "old" chemistry:
     % Conversion of units to "per year" and umoles
@@ -2115,48 +2125,48 @@ function [dcdt, r] = wc_rates(C, dt)
 
     tot_FeOH3 = PPz + Fe3z;
 
-    f_O2    = O2z ./  (Km_O2_wc + O2z) ;
-    f_NO3   = NO3z ./  (Km_NO3_wc + NO3z) .* Kin_O2_wc ./ (Kin_O2_wc + O2z) ;
-    f_FeOH3 = tot_FeOH3 ./  (Km_FeOH3_wc + tot_FeOH3) .* Kin_NO3_wc ./ (Kin_NO3_wc + NO3z) .* Kin_O2_wc ./ (Kin_O2_wc + O2z) ;
-    f_SO4 = SO4z ./ (Km_SO4_wc + SO4z) .* Kin_FeOH3_wc ./ (Kin_FeOH3_wc + tot_FeOH3) .* Kin_NO3_wc ./ (Kin_NO3_wc + NO3z) .* Kin_O2_wc ./ (Kin_O2_wc + O2z);
+    f_O2    = O2z ./  (Km_O2 + O2z) ;
+    f_NO3   = NO3z ./  (Km_NO3 + NO3z) .* Kin_O2 ./ (Kin_O2 + O2z) ;
+    f_FeOH3 = tot_FeOH3 ./  (Km_FeOH3 + tot_FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3z) .* Kin_O2 ./ (Kin_O2 + O2z) ;
+    f_SO4 = SO4z ./ (Km_SO4 + SO4z) .* Kin_FeOH3 ./ (Kin_FeOH3 + tot_FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3z) .* Kin_O2 ./ (Kin_O2 + O2z);
 
     Sum_H2S = H2Sz + HSz;
 
     part_PO4ads_tot_Fe = PPz ./ (tot_FeOH3+1e-16); % Avoid division by zero
 
-    R1a =  0; % k_OM_wc_q10  .* Chlz .* f_O2 * accel_wc;
-    R1b =  0; % k_OM_wc_q10  .* Cz .* f_O2 * accel_wc;
-    R1c =  k_DOM1_wc_q10  .* DOPz .* f_O2 .* accel_wc;
-    R1d =  k_DOM2_wc_q10 .* DOCz .* f_O2 .* accel_wc;
-    R1e =  k_OMb_wc_q10 .* POCz .* f_O2 .* accel_wc;
+    R1a =  0; % k_OM_q10  .* Chlz .* f_O2 * accel;
+    R1b =  0; % k_OM_q10  .* Cz .* f_O2 * accel;
+    R1c =  k_DOM1_q10  .* DOPz .* f_O2 .* accel;
+    R1d =  k_DOM2_q10 .* DOCz .* f_O2 .* accel;
+    R1e =  k_OMb_q10 .* POCz .* f_O2 .* accel;
 
-    R2a =  0; % k_OM_wc_q10  .* Chlz .* f_NO3 .* accel_wc;
-    R2b =  0; % k_OM_wc_q10  .* Cz .* f_NO3 .* accel_wc;
-    R2c =  k_DOM1_wc_q10  .* DOPz .* f_NO3 .* accel_wc;
-    R2d =  k_DOM2_wc_q10 .* DOCz .* f_NO3 .* accel_wc;
-    R2e =  k_OMb_wc_q10 .* POCz .* f_NO3 .* accel_wc;
+    R2a =  0; % k_OM_q10  .* Chlz .* f_NO3 .* accel;
+    R2b =  0; % k_OM_q10  .* Cz .* f_NO3 .* accel;
+    R2c =  k_DOM1_q10  .* DOPz .* f_NO3 .* accel;
+    R2d =  k_DOM2_q10 .* DOCz .* f_NO3 .* accel;
+    R2e =  k_OMb_q10 .* POCz .* f_NO3 .* accel;
 
-    R3a_Fe =  (1 - part_PO4ads_tot_Fe) .* 0; % k_OM_wc_q10  .* Chlz .* f_FeOH3;
-    R3b_Fe =  (1 - part_PO4ads_tot_Fe) .* 0; % k_OM_wc_q10  .* Cz .* f_FeOH3;
-    R3c_Fe =  (1 - part_PO4ads_tot_Fe) .* k_DOM1_wc_q10  .* DOPz .* f_FeOH3;
-    R3d_Fe =  (1 - part_PO4ads_tot_Fe) .* k_DOM2_wc_q10 .* DOCz .* f_FeOH3;
-    R3e_Fe =  (1 - part_PO4ads_tot_Fe) .* k_OMb_wc_q10 .* POCz .* f_FeOH3;
-    R3a_P =  part_PO4ads_tot_Fe .* 0; % k_OM_wc_q10  .* Chlz .* f_FeOH3;
-    R3b_P =  part_PO4ads_tot_Fe .* 0; % k_OM_wc_q10  .* Cz .* f_FeOH3;
-    R3c_P =  part_PO4ads_tot_Fe .* k_DOM1_wc_q10  .* DOPz .* f_FeOH3;
-    R3d_P =  part_PO4ads_tot_Fe .* k_DOM2_wc_q10 .* DOCz .* f_FeOH3;
-    R3e_P =  part_PO4ads_tot_Fe .* k_OMb_wc_q10 .* POCz .* f_FeOH3;
+    R3a_Fe =  (1 - part_PO4ads_tot_Fe) .* 0; % k_OM_q10  .* Chlz .* f_FeOH3;
+    R3b_Fe =  (1 - part_PO4ads_tot_Fe) .* 0; % k_OM_q10  .* Cz .* f_FeOH3;
+    R3c_Fe =  (1 - part_PO4ads_tot_Fe) .* k_DOM1_q10  .* DOPz .* f_FeOH3;
+    R3d_Fe =  (1 - part_PO4ads_tot_Fe) .* k_DOM2_q10 .* DOCz .* f_FeOH3;
+    R3e_Fe =  (1 - part_PO4ads_tot_Fe) .* k_OMb_q10 .* POCz .* f_FeOH3;
+    R3a_P =  part_PO4ads_tot_Fe .* 0; % k_OM_q10  .* Chlz .* f_FeOH3;
+    R3b_P =  part_PO4ads_tot_Fe .* 0; % k_OM_q10  .* Cz .* f_FeOH3;
+    R3c_P =  part_PO4ads_tot_Fe .* k_DOM1_q10  .* DOPz .* f_FeOH3;
+    R3d_P =  part_PO4ads_tot_Fe .* k_DOM2_q10 .* DOCz .* f_FeOH3;
+    R3e_P =  part_PO4ads_tot_Fe .* k_OMb_q10 .* POCz .* f_FeOH3;
     R3a = R3a_P + R3a_Fe;
     R3b = R3b_P + R3b_Fe;
     R3c = R3c_P + R3c_Fe;
     R3d = R3d_P + R3d_Fe;
     R3e = R3e_P + R3e_Fe;
 
-    R5a =  0; % k_OM_wc_q10  .* Chlz .* f_SO4;
-    R5b =  0; % k_OM_wc_q10  .* Cz .* f_SO4;
-    R5c =  k_DOM1_wc_q10  .* DOPz .* f_SO4;
-    R5d =  k_DOM2_wc_q10 .* DOCz .* f_SO4;
-    R5e =  k_OMb_wc_q10 .* POCz .* f_SO4;
+    R5a =  0; % k_OM_q10  .* Chlz .* f_SO4;
+    R5b =  0; % k_OM_q10  .* Cz .* f_SO4;
+    R5c =  k_DOM1_q10  .* DOPz .* f_SO4;
+    R5d =  k_DOM2_q10 .* DOCz .* f_SO4;
+    R5e =  k_OMb_q10 .* POCz .* f_SO4;
 
     Ra  = R1a+R2a+R3a+R5a;
     Rb  = R1b+R2b+R3b+R5b;
@@ -2168,41 +2178,41 @@ function [dcdt, r] = wc_rates(C, dt)
     R2  = R2a+R2b+R2c+R2d+R2e;
     R3  = R3a+R3b+R3c+R3d+R3e;
     R5  = R5a+R5b+R5c+R5d+R5e;
-    R6  = k_tsox_wc .* O2z .* Sum_H2S;
-    R7  = k_tS_Fe_wc .* Fe3z .* Sum_H2S;
-    R8  = k_Feox_wc .* Fe2z .* O2z;
+    R6  = k_tsox .* O2z .* Sum_H2S;
+    R7  = k_tS_Fe .* Fe3z .* Sum_H2S;
+    R8  = k_Feox .* Fe2z .* O2z;
     % NOTE: Due to the reaction is too fast and could cause overshooting:
     % we need to make this check if R*dt > Conc of source:
     % R8 = (R8.*dt < Fe2z).*R8 + (R8.*dt > Fe2z).* Fe2z ./ (dt) * 0.5;
     % R8 = (R8.*dt < O2z).*R8 + (R8.*dt > O2z).* O2z ./ (dt) * 0.5;
 
-    % R9  = k_amox_wc .* O2z ./ (Km_oxao_wc + O2z) .* NH4z ./ (Km_amao_wc + NH4z);   % NOTE: Doesnt work - Highly unstable.
-    R9 = k_amox_wc  .* O2z .* NH4z;
+    % R9  = k_amox .* O2z ./ (Km_oxao + O2z) .* NH4z ./ (Km_amao + NH4z);   % NOTE: Doesnt work - Highly unstable.
+    R9 = k_amox  .* O2z .* NH4z;
     % R9 = (R9.*dt < NH4z).*R9 + (R9.*dt > NH4z).* NH4z ./ (dt) * 0.5;
     % R9 = (R9.*dt < O2z).*R9 + (R9.*dt > O2z).* O2z ./ (dt) * 0.5;
 
-    R10a = 0; %k_oms_wc .* Sum_H2S .* Chlz;
-    R10b = 0; %k_oms_wc .* Sum_H2S .* Cz;
-    R10c = k_oms_wc .* Sum_H2S .* DOPz;
-    R10d = k_oms_wc .* Sum_H2S .* DOCz;
+    R10a = 0; %k_oms .* Sum_H2S .* Chlz;
+    R10b = 0; %k_oms .* Sum_H2S .* Cz;
+    R10c = k_oms .* Sum_H2S .* DOPz;
+    R10d = k_oms .* Sum_H2S .* DOCz;
 
     R12  = 0; % NOTE: no FeS
     R13  = 0; % NOTE: no FeS
     R14a = 0; % NOTE: no FeS
     R14b = 0; % NOTE: no FeS
 
-    R16a = k_pdesorb_a_wc .* Fe3z .* Pz;
-    % R16b = f_pfe_wc .* (4 * R3 + 2 * R7);
-    R16b = 4*(Cx1_wc*R3a_P + Cx1_wc*R3b_P + Cx1_wc*R3c_P + Cx2_wc*R3d_P+ Cx2_wc*R3e_P);
+    R16a = k_pdesorb_a .* Fe3z .* Pz;
+    % R16b = f_pfe .* (4 * R3 + 2 * R7);
+    R16b = 4*(Cx1*R3a_P + Cx1*R3b_P + Cx1*R3c_P + Cx2*R3d_P+ Cx2*R3e_P);
 
     % R16b = (R16b.*dt < PPz).*R16b + (R16b.*dt > PPz).* PPz ./ (dt) * 0.5;
 
     R17a = 0; % No FeOOH in WC
     R17b = 0; % No FeOOH in WC
-    R18a = k_pdesorb_c_wc .* Pz .* Al3z; % NOTE: No separate pool for sorbed P on aluminum in WC
+    R18a = k_pdesorb_c .* Pz .* Al3z; % NOTE: No separate pool for sorbed P on aluminum in WC
     R18a = 0; % NOTE: No separate pool for sorbed P on aluminum in WC
     R18b = 0; % NOTE: the rate is unknown
-    R19  = k_apa_wc .* (Pz - kapa_wc); % NOTE: no Ca3PO42 pool in WC
+    R19  = k_apa .* (Pz - kapa); % NOTE: no Ca3PO42 pool in WC
     R19  = (R19 >= 0) .* R19;
 
 
@@ -2212,17 +2222,17 @@ function [dcdt, r] = wc_rates(C, dt)
     r.R1a = R1a; r.R1b = R1b; r.R1c = R1c; r.R1d = R1d; r.R1e = R1e; r.R2a = R2a; r.R2b = R2b; r.R2c = R2c; r.R2d = R2d; r.R2e = R2e; r.R3a = R3a; r.R3b = R3b; r.R3c = R3c; r.R3d = R3d; r.R3e = R3e; r.R5a = R5a; r.R5b = R5b; r.R5c = R5c; r.R5d = R5d; r.R5e = R5e; r.Ra = Ra; r.Rb = Rb; r.Rc = Rc; r.Rd = Rd; r.Re = Re; r.R1 = R1; r.R2 = R2; r.R3 = R3; r.R5 = R5; r.R6 = R6; r.R7 = R7; r.R8  = R8; r.R9 = R9; r.R10a = R10a; r.R10b = R10b; r.R10c = R10c; r.R10d = R10d; r.R12 = R12; r.R13 = R13; r.R14a = R14a; r.R14b  = R14b; r.R16a = R16a; r.R16b  = R16b; r.R17a = R17a; r.R17b = R17b; r.R18a = R18a; r.R18b = R18b; r.R19 = R19;
 
 
-    dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1_wc*R1a + Cx1_wc*R1b + Cx1_wc*R1c + Cx2_wc*R1d+ Cx2_wc*R1e) - 3*R12 + Cx1_wc * R_dO2_Chl; % O2z
+    dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1*R1a + Cx1*R1b + Cx1*R1c + Cx2*R1d+ Cx2*R1e) - 3*R12 + Cx1 * R_dO2_Chl; % O2z
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R10d - dfloc;% DOCz
-    dcdt(:,4)  = - 0.8*(Cx1_wc*R2a + Cx1_wc*R2b + Cx1_wc*R2c + Cx2_wc*R2d+ Cx2_wc*R2e) + R9 - Ny1_wc * (R_dChl_growth + R_dCz_growth); % NO3z
-    dcdt(:,5)  = - 4*(Cx1_wc*R3a_Fe + Cx1_wc*R3b_Fe + Cx1_wc*R3c_Fe + Cx2_wc*R3d_Fe+ Cx2_wc*R3e_Fe) - 2*R7  + R8 - R16a; % Fe3z
-    dcdt(:,6)  = - 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx1_wc*R5c + Cx2_wc*R5d+ Cx2_wc*R5e) + R6 ; % SO4z
-    dcdt(:,7)  =  (Ny1_wc * Ra + Ny1_wc * Rb + Ny1_wc * Rc + Ny2_wc * Rd+ Ny2_wc * Re) - R9 ;% NH4z
-    dcdt(:,8)  = 4*(Cx1_wc*R3a + Cx1_wc*R3b + Cx1_wc*R3c + Cx2_wc*R3d + Cx2_wc*R3e) + 2*R7 - R8 + R14b - R14a; % Fe2z
+    dcdt(:,4)  = - 0.8*(Cx1*R2a + Cx1*R2b + Cx1*R2c + Cx2*R2d+ Cx2*R2e) + R9 - Ny1 * (R_dChl_growth + R_dCz_growth); % NO3z
+    dcdt(:,5)  = - 4*(Cx1*R3a_Fe + Cx1*R3b_Fe + Cx1*R3c_Fe + Cx2*R3d_Fe+ Cx2*R3e_Fe) - 2*R7  + R8 - R16a; % Fe3z
+    dcdt(:,6)  = - 0.5*(Cx1*R5a + Cx1*R5b + Cx1*R5c + Cx2*R5d+ Cx2*R5e) + R6 ; % SO4z
+    dcdt(:,7)  =  (Ny1 * Ra + Ny1 * Rb + Ny1 * Rc + Ny2 * Rd+ Ny2 * Re) - R9 ;% NH4z
+    dcdt(:,8)  = 4*(Cx1*R3a + Cx1*R3b + Cx1*R3c + Cx2*R3d + Cx2*R3e) + 2*R7 - R8 + R14b - R14a; % Fe2z
     dcdt(:,9)  =  0;% H2Sz
-    dcdt(:,10) = 0.5*(Cx1_wc*R5a + Cx1_wc*R5b + Cx1_wc*R5c + Cx2_wc*R5d+ Cx2_wc*R5e) - R6 - R7  - R10a - R10b - R10c - R10d + R14b - R14a - R13 ;% HSz
-    dcdt(:,11) = (Pz1_wc * Ra + Pz1_wc * Rb + Pz1_wc * Rc + Pz2_wc * Rd+ Pz2_wc * Re) - R18a + R18b - R16a - R17a + R16b + R17b - 2*R19 + R_dDOP - Pz1_wc * (R_dChl_growth + R_dCz_growth);% Pz
+    dcdt(:,10) = 0.5*(Cx1*R5a + Cx1*R5b + Cx1*R5c + Cx2*R5d+ Cx2*R5e) - R6 - R7  - R10a - R10b - R10c - R10d + R14b - R14a - R13 ;% HSz
+    dcdt(:,11) = (Pz1 * Ra + Pz1 * Rb + Pz1 * Rc + Pz2 * Rd+ Pz2 * Re) - R18a + R18b - R16a - R17a + R16b + R17b - 2*R19 + R_dDOP - Pz1 * (R_dChl_growth + R_dCz_growth);% Pz
     dcdt(:,12) = -R18a ;% Al3z
     dcdt(:,13) = R16a - R16b;% PPz
     dcdt(:,14) = -3*R19 ;% Ca2z

@@ -1,32 +1,32 @@
-function [sediment_bc] = update_sediment(MyLake_concentrations, MyLake_params, sediment_params)
+function [sediment_bc] = update_sediment(mylake_temp_results, mylake_params, sediment_params)
 %update_sedimets function convert BC values for sediment module (different Units)
     %   [Water-column units] ------>  [Sediments units]
     % for dissolved species - concentration BC
     % for solid - Neumann (flux) BC
-    pH = MyLake_params.pH;
+    pH = mylake_params.pH;
     % pH = 6.47;
-    w_s = MyLake_params.w_s * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
-    w_chl = MyLake_params.w_chl * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
-    w_chl_2 = MyLake_params.w_chl_2 * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
+    w_s = mylake_params.w_s * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
+    w_chl = mylake_params.w_chl * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
+    w_chl_2 = mylake_params.w_chl_2 * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
     phi = sediment_params.phi;
 
-    sediment_bc.O2_c = dissolved_bc(MyLake_concentrations.O2z, phi);
-    sediment_bc.OM1_fx = solid_bc(MyLake_concentrations.Chlz, w_chl, phi) + solid_bc(MyLake_concentrations.Cz, w_chl_2, phi);
-    sediment_bc.OM2_fx = solid_bc(MyLake_concentrations.POCz, w_s, phi);
-    sediment_bc.PO4_c = dissolved_bc(MyLake_concentrations.Pz, phi);
-    sediment_bc.NO3_c = dissolved_bc(MyLake_concentrations.NO3z, phi);
-    sediment_bc.FeOH3_fx = solid_bc(MyLake_concentrations.Fe3z, w_s, phi);
-    sediment_bc.SO4_c = dissolved_bc(MyLake_concentrations.SO4z, phi);
-    sediment_bc.Fe2_c = dissolved_bc(MyLake_concentrations.Fe2z, phi);
+    sediment_bc.O2_c = dissolved_bc(mylake_temp_results.O2z, phi);
+    sediment_bc.OM1_fx = solid_bc(mylake_temp_results.Chlz, w_chl, phi) + solid_bc(mylake_temp_results.Cz, w_chl_2, phi);
+    sediment_bc.OM2_fx = solid_bc(mylake_temp_results.POCz, w_s, phi);
+    sediment_bc.PO4_c = dissolved_bc(mylake_temp_results.Pz, phi);
+    sediment_bc.NO3_c = dissolved_bc(mylake_temp_results.NO3z, phi);
+    sediment_bc.FeOH3_fx = solid_bc(mylake_temp_results.Fe3z, w_s, phi);
+    sediment_bc.SO4_c = dissolved_bc(mylake_temp_results.SO4z, phi);
+    sediment_bc.Fe2_c = dissolved_bc(mylake_temp_results.Fe2z, phi);
     sediment_bc.FeOOH_fx = 0;
     sediment_bc.FeS_fx = 0;
     sediment_bc.S0_c = 0;
     sediment_bc.S8_fx = 0;
     sediment_bc.FeS2_fx = 0;
-    sediment_bc.AlOH3_fx = solid_bc(MyLake_concentrations.Al3z, w_s, phi);
-    sediment_bc.PO4adsa_fx = solid_bc(MyLake_concentrations.PPz, w_s, phi);
+    sediment_bc.AlOH3_fx = solid_bc(mylake_temp_results.Al3z, w_s, phi);
+    sediment_bc.PO4adsa_fx = solid_bc(mylake_temp_results.PPz, w_s, phi);
     sediment_bc.PO4adsb_fx = 0;
-    sediment_bc.Ca2_c = dissolved_bc(MyLake_concentrations.Ca2z, phi);
+    sediment_bc.Ca2_c = dissolved_bc(mylake_temp_results.Ca2z, phi);
     sediment_bc.Ca3PO42_fx = 0;
     sediment_bc.OMS_fx = 0;
     sediment_bc.H_c = 10^-pH*10^3;
@@ -35,13 +35,13 @@ function [sediment_bc] = update_sediment(MyLake_concentrations, MyLake_params, s
     sediment_bc.CO3_c = 2.19E-05;
     sediment_bc.HCO3_c = 0.62387047;
     sediment_bc.NH3_c = 3.68E-09;
-    sediment_bc.NH4_c = dissolved_bc(MyLake_concentrations.NH4z, phi);
+    sediment_bc.NH4_c = dissolved_bc(mylake_temp_results.NH4z, phi);
     sediment_bc.HS_c = 1.01E-10;
     sediment_bc.H2S_c = 1.06E-10;
     sediment_bc.H2CO3_c = 1.06E-15;
-    sediment_bc.DOM1_c = dissolved_bc(MyLake_concentrations.DOPz, phi);
-    sediment_bc.DOM2_c = dissolved_bc(MyLake_concentrations.DOCz, phi);
-    sediment_bc.T = MyLake_params.Tz(end);
+    sediment_bc.DOM1_c = dissolved_bc(mylake_temp_results.DOPz, phi);
+    sediment_bc.DOM2_c = dissolved_bc(mylake_temp_results.DOCz, phi);
+    sediment_bc.T = mylake_temp_results.Tz(end);
 
 end
 

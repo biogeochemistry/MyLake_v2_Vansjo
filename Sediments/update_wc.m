@@ -1,13 +1,13 @@
-function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, sediment_concentrations, sediment_transport_fluxes, sediment_bioirrigation_fluxes, MyLake_params, sediment_params)
+function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concentrations, sediment_transport_fluxes, sediment_bioirrigation_fluxes, MyLake_params, sediment_params)
     %UPDATE_WC Summary of this function goes here
 
-    O2z = MyLakeOldConcentrations.O2z;
-    Pz = MyLakeOldConcentrations.Pz;
-    Fe2z = MyLakeOldConcentrations.Fe2z;
-    NO3z = MyLakeOldConcentrations.NO3z;
-    NH4z = MyLakeOldConcentrations.NH4z;
-    DOCz = MyLakeOldConcentrations.DOCz;
-    DOPz = MyLakeOldConcentrations.DOPz;
+    O2z = mylake_prev_results.O2z;
+    Pz = mylake_prev_results.Pz;
+    Fe2z = mylake_prev_results.Fe2z;
+    NO3z = mylake_prev_results.NO3z;
+    NH4z = mylake_prev_results.NH4z;
+    DOCz = mylake_prev_results.DOCz;
+    DOPz = mylake_prev_results.DOPz;
 
     % Diffusion Fluxes:
     O2z = update_C_as_neumann(O2z, sediment_transport_fluxes.O2, MyLake_params, sediment_params);
@@ -29,13 +29,13 @@ function [MyLakeNewConcentrations] = update_wc( MyLakeOldConcentrations, sedimen
     DOPz = update_C_as_neumann(DOPz, sediment_bioirrigation_fluxes.DOM1, MyLake_params, sediment_params);
     DOCz = update_C_as_neumann(DOCz, sediment_bioirrigation_fluxes.DOM2, MyLake_params, sediment_params);
 
-    MyLakeNewConcentrations.O2z = O2z;
-    MyLakeNewConcentrations.Pz = Pz;
-    MyLakeNewConcentrations.Fe2z = Fe2z;
-    MyLakeNewConcentrations.NO3z = NO3z;
-    MyLakeNewConcentrations.NH4z = NH4z;
-    MyLakeNewConcentrations.DOPz = DOPz;
-    MyLakeNewConcentrations.DOCz = DOCz;
+    mylake_new_resutls.O2z = O2z;
+    mylake_new_resutls.Pz = Pz;
+    mylake_new_resutls.Fe2z = Fe2z;
+    mylake_new_resutls.NO3z = NO3z;
+    mylake_new_resutls.NH4z = NH4z;
+    mylake_new_resutls.DOPz = DOPz;
+    mylake_new_resutls.DOCz = DOCz;
 
     if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
         error('NaN')
