@@ -47,7 +47,7 @@ function [C] = update_C_as_neumann(C, flux, MyLake_params, sediment_params)
     Az_end = MyLake_params.Az(end);
     Vz_end = MyLake_params.Vz(end);
     dt     = MyLake_params.dt;
-    fi = sediment_params.fi;
+    phi = sediment_params.phi;
 
     dC = flux * dt * Az_end / Vz_end;
     C(end) = C(end) + dC;
