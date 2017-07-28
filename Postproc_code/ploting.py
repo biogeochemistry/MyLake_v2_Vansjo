@@ -377,20 +377,22 @@ class ResultsPlotter:
         TOTP = np.mean(results['concentrations'][0, 0]['P'][0, 0][0:inx, :], axis=0) + \
             np.mean(results['concentrations'][0, 0]['PP'][0, 0][0:inx, :], axis=0) + \
             np.mean(results['concentrations'][0, 0]['DOP'][0, 0][0:inx, :], axis=0) + \
-            np.mean(results['concentrations'][0, 0]['Chl'][0, 0][0:inx, :], axis=0) + \
-            np.mean(results['concentrations'][0, 0]['C'][0, 0][0:inx, :], axis=0)
-        # np.mean(results['concentrations'][0, 0]['DOC'][0, 0][0:inx, :], axis=0) + \
-        # np.mean(results['concentrations'][0, 0]['POC'][0, 0][0:inx, :], axis=0) + \
+            np.mean(results['concentrations'][0, 0]['DOC'][0, 0][0:inx, :], axis=0) + \
+            np.mean(results['concentrations'][0, 0]['POC'][0, 0][0:inx, :], axis=0)
+        # np.mean(results['concentrations'][0, 0]['Chl'][0, 0][0:inx, :], axis=0) + \
+        # np.mean(results['concentrations'][0, 0]['C'][0, 0][0:inx, :], axis=0)
         Chl = np.mean(results['concentrations'][0, 0]['C'][0, 0][0:inx, :], axis=0) + np.mean(results['concentrations'][0, 0]['Chl']
                                                                                               [0, 0][0:inx, :], axis=0)
         PO4 = np.mean(results['concentrations'][0, 0]['P'][0, 0][0:inx, :], axis=0)
-        Part = np.mean(results['concentrations'][0, 0]['PP'][0, 0][0:inx, :], axis=0)
+
+        Part = np.mean(results['concentrations'][0, 0]['POC'][0, 0][0:inx, :], axis=0)
+
         # + np.mean(results['concentrations'][0, 0]['POC'][0, 0][0:inx, :], axis=0)
 
         axes[0].plot(-366 + results['days'][0, 0][0], TOTP, c=sns.xkcd_rgb["denim blue"], lw=3, label='Total P')
         axes[1].plot(-366 + results['days'][0, 0][0], Chl, c=sns.xkcd_rgb["denim blue"], lw=3, label='Chl-a')
         axes[2].plot(-366 + results['days'][0, 0][0], PO4, c=sns.xkcd_rgb["denim blue"], lw=3, label='PO_4')
-        axes[3].plot(-366 + results['days'][0, 0][0], Part, c=sns.xkcd_rgb["denim blue"], lw=3, label='Solid P')
+        axes[3].plot(-366 + results['days'][0, 0][0], Part, c=sns.xkcd_rgb["denim blue"], lw=3, label='POP')
         # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['DOP'][0, 0][0:inx, :], axis=0), lw=3, label='DOP')
         # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['P'][0, 0][0:inx, :], axis=0), lw=3, label='P')
         # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['POC'][0, 0][0:inx, :], axis=0), lw=3, label='POC')

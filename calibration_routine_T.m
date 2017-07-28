@@ -65,7 +65,7 @@ disp(datetime('now'));
 [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
 
 
-load('/Users/MarkelovIgor/git/biogeochemistry/MyLake_v2_Vansjo/Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
+load('Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
 
 depths = [5;10;15;20;25;30;35;40];
 r_Temp = 0;

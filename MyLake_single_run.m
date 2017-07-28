@@ -68,6 +68,30 @@ lake_params{42 -5} = 1; % 37    Scaling factor for inflow concentration of SiO2 
 lake_params{43 -5} = 1; % 38    Scaling factor for inflow concentration of diatom (-)
 
 
+% O&P calibration:
+x = [316.9331e-003, 212.4112e-003, 1.3954e+000, 964.7451e-003, 500.0000e-003, 112.2803e-003, 1.4675e+000, 1.4823e+000, 757.5944e-003, 1.0000e+000, 1.0000e+000, 901.6600e-003, 8.1686e+000, 1.2091e+000, 221.2731e-003, 2.7304e+000, 0.0000e+000];
+
+
+lake_params{52 -5} = x(1); % 9     settling velocity for Chl1 a (m day-1)
+lake_params{54 -5} = x(2); % 11    loss rate (1/day) at 20 deg C
+lake_params{55 -5} = x(3); % 12    specific growth rate (1/day) at 20 deg C
+lake_params{58 -5} = x(4); % 15    Half saturation growth P level (mg/m3)
+lake_params{61 -5} = x(5); % 18    Settling velocity for Chl2 a (m day-1)
+lake_params{62 -5} = x(6);  % 19    Loss rate (1/day) at 20 deg C
+lake_params{63 -5} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
+lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
+lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
+sediment_params{22} = x(10);  % 38 R16 sorption of P on Fe k
+sediment_params{34} = x(11);  %    accel
+lake_params{21 -5} = x(12); % 16    scaling factor for inflow volume (-)
+lake_params{25 -5} = x(13); % 20    scaling factor for inflow concentration of total P (-)
+lake_params{26 -5} = x(14); % 21    scaling factor for inflow concentration of diss. organic P (-)
+lake_params{28 -5} = x(15); % 23    scaling factor for inflow concentration of DOC  (-)
+lake_params{29 -5} = x(16); % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{39 -5} = x(17); % 34    Scaling factor for inflow concentration of Fe3 (-)
+
+
+
 % parfor
 for current_run = 1:no_runs
     if current_run == 1;
