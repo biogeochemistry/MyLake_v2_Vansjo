@@ -15,5 +15,5 @@ def plot_depth(df, y, depth, ax=None):
     x = 'SampleDate'
     if not ax:
         ax = plt.gca()
-    ax.plot_date(df[(np.isfinite(df[y])) & (df['Depth1'] == depth)][x], df[(np.isfinite(df[y])) & (df.Depth1 == depth)][y], label=str(depth) + ' m')
+    ax.plot_date(df[(np.isfinite(df[y])) & (df['Depth1'] == depth)][x], df[(np.isfinite(df[y])) & (df.Depth1 == depth)][y], label=y + ' at ' + str(depth) + ' m')
     return ax
