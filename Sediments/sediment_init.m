@@ -7,11 +7,12 @@ function [ sediment_concentrations, sediment_params, sediment_matrix_templates] 
   % sediment_params - all sediment params
   % sediment_matrix_templates - all matrix templates for sediment module
   % species_sediment - which species to simulate
-    global sed_par_file sediment_params
+    global sed_par_file sediment_params rate_estimator_switch
 
     sediment_params = params(max_depth, temperature);
     sediment_concentrations = init_concentrations(pH);
     sediment_matrix_templates = templates();
+    sediment_params.rate_estimator_switch = rate_estimator_switch;
 end
 
 function [sediment_params] = params(max_depth, temperature)
@@ -79,13 +80,13 @@ function [sediment_params] = params(max_depth, temperature)
 
     % Porosity modeling according to Rabouille, C. & Gaillard, J.-F., 1991:
     % NOTE: the experimental function. Checking the result of non-constant profile.
-    fi_in = data{2}(37);
-    fi_f  = data{2}(38);
+    phi_in = data{2}(37);
+    phi_f  = data{2}(38);
     X_b   = data{2}(39);
     tortuosity = data{2}(40);
 
     % NOTE:  const porosity for test
-    sediment_params.fi =  ( fi_in - fi_f ) * exp( -x' / X_b ) + fi_f;;      % porosity
+    sediment_params.phi =  ( phi_in - phi_f ) * exp( -x' / X_b ) + phi_f;;      % porosity
     sediment_params.tortuosity = tortuosity;  % tortuosity
 
     % Bio properties:
@@ -315,35 +316,35 @@ function [sediment_matrix_templates] = templates()
     t = 0:sediment_params.ts:sediment_params.years;
     dt    = t(2)-t(1);
     v = sediment_params.w;
-    fi  = sediment_params.fi;
+    phi  = sediment_params.phi;
     tortuosity = sediment_params.tortuosity;
     Db    = sediment_params.Db;
 
     % formation of templates:
     % Solid template the same for all solid species due to diffusion and advection coef the same for all.
-    [Solid_AL, Solid_AR, solid_flux_coef] = cn_template_neumann(Db, v, fi, dx, dt, n);
+    [Solid_AL, Solid_AR, solid_flux_coef] = cn_template_neumann(Db, v, phi, dx, dt, n);
     sediment_params.solid_flux_coef = solid_flux_coef;
 
     % solute templates:
-    [O2_AL, O2_AR]        = cn_template_dirichlet(sediment_params.D_O2 + Db, tortuosity, v, fi, dx, dt, n);
-    [NO3_AL, NO3_AR]        = cn_template_dirichlet(sediment_params.D_NO3 + Db, tortuosity, v, fi, dx, dt, n);
-    [SO4_AL, SO4_AR]        = cn_template_dirichlet(sediment_params.D_SO4 + Db, tortuosity, v, fi, dx, dt, n);
-    [NH4_AL, NH4_AR]        = cn_template_dirichlet(sediment_params.D_NH4 + Db, tortuosity, v, fi, dx, dt, n);
-    [Fe2_AL, Fe2_AR]        = cn_template_dirichlet(sediment_params.D_Fe2 + Db, tortuosity, v, fi, dx, dt, n);
-    [H2S_AL, H2S_AR]        = cn_template_dirichlet(sediment_params.D_H2S + Db, tortuosity, v, fi, dx, dt, n);
-    [S0_AL, S0_AR]        = cn_template_dirichlet(sediment_params.D_S0 + Db, tortuosity, v, fi, dx, dt, n);
-    [PO4_AL, PO4_AR]        = cn_template_dirichlet(sediment_params.D_PO4 + Db, tortuosity, v, fi, dx, dt, n);
-    [Ca2_AL, Ca2_AR]        = cn_template_dirichlet(sediment_params.D_Ca2 + Db, tortuosity, v, fi, dx, dt, n);
-    [HS_AL, HS_AR]        = cn_template_dirichlet(sediment_params.D_HS + Db, tortuosity, v, fi, dx, dt, n);
-    [H_AL, H_AR]        = cn_template_dirichlet(sediment_params.D_H + Db, tortuosity, v, fi, dx, dt, n);
-    [OH_AL, OH_AR]        = cn_template_dirichlet(sediment_params.D_OH + Db, tortuosity, v, fi, dx, dt, n);
-    [CO2_AL, CO2_AR]        = cn_template_dirichlet(sediment_params.D_CO2 + Db, tortuosity, v, fi, dx, dt, n);
-    [CO3_AL, CO3_AR]        = cn_template_dirichlet(sediment_params.D_CO3 + Db, tortuosity, v, fi, dx, dt, n);
-    [HCO3_AL, HCO3_AR]        = cn_template_dirichlet(sediment_params.D_HCO3 + Db, tortuosity, v, fi, dx, dt, n);
-    [NH3_AL, NH3_AR]        = cn_template_dirichlet(sediment_params.D_NH3 + Db, tortuosity, v, fi, dx, dt, n);
-    [H2CO3_AL, H2CO3_AR]        = cn_template_dirichlet(sediment_params.D_H2CO3 + Db, tortuosity, v, fi, dx, dt, n);
-    [DOM1_AL, DOM1_AR]        = cn_template_dirichlet(sediment_params.D_DOM1 + Db, tortuosity, v, fi, dx, dt, n);
-    [DOM2_AL, DOM2_AR]        = cn_template_dirichlet(sediment_params.D_DOM2 + Db, tortuosity, v, fi, dx, dt, n);
+    [O2_AL, O2_AR]        = cn_template_dirichlet(sediment_params.D_O2 + Db, tortuosity, v, phi, dx, dt, n);
+    [NO3_AL, NO3_AR]        = cn_template_dirichlet(sediment_params.D_NO3 + Db, tortuosity, v, phi, dx, dt, n);
+    [SO4_AL, SO4_AR]        = cn_template_dirichlet(sediment_params.D_SO4 + Db, tortuosity, v, phi, dx, dt, n);
+    [NH4_AL, NH4_AR]        = cn_template_dirichlet(sediment_params.D_NH4 + Db, tortuosity, v, phi, dx, dt, n);
+    [Fe2_AL, Fe2_AR]        = cn_template_dirichlet(sediment_params.D_Fe2 + Db, tortuosity, v, phi, dx, dt, n);
+    [H2S_AL, H2S_AR]        = cn_template_dirichlet(sediment_params.D_H2S + Db, tortuosity, v, phi, dx, dt, n);
+    [S0_AL, S0_AR]        = cn_template_dirichlet(sediment_params.D_S0 + Db, tortuosity, v, phi, dx, dt, n);
+    [PO4_AL, PO4_AR]        = cn_template_dirichlet(sediment_params.D_PO4 + Db, tortuosity, v, phi, dx, dt, n);
+    [Ca2_AL, Ca2_AR]        = cn_template_dirichlet(sediment_params.D_Ca2 + Db, tortuosity, v, phi, dx, dt, n);
+    [HS_AL, HS_AR]        = cn_template_dirichlet(sediment_params.D_HS + Db, tortuosity, v, phi, dx, dt, n);
+    [H_AL, H_AR]        = cn_template_dirichlet(sediment_params.D_H + Db, tortuosity, v, phi, dx, dt, n);
+    [OH_AL, OH_AR]        = cn_template_dirichlet(sediment_params.D_OH + Db, tortuosity, v, phi, dx, dt, n);
+    [CO2_AL, CO2_AR]        = cn_template_dirichlet(sediment_params.D_CO2 + Db, tortuosity, v, phi, dx, dt, n);
+    [CO3_AL, CO3_AR]        = cn_template_dirichlet(sediment_params.D_CO3 + Db, tortuosity, v, phi, dx, dt, n);
+    [HCO3_AL, HCO3_AR]        = cn_template_dirichlet(sediment_params.D_HCO3 + Db, tortuosity, v, phi, dx, dt, n);
+    [NH3_AL, NH3_AR]        = cn_template_dirichlet(sediment_params.D_NH3 + Db, tortuosity, v, phi, dx, dt, n);
+    [H2CO3_AL, H2CO3_AR]        = cn_template_dirichlet(sediment_params.D_H2CO3 + Db, tortuosity, v, phi, dx, dt, n);
+    [DOM1_AL, DOM1_AR]        = cn_template_dirichlet(sediment_params.D_DOM1 + Db, tortuosity, v, phi, dx, dt, n);
+    [DOM2_AL, DOM2_AR]        = cn_template_dirichlet(sediment_params.D_DOM2 + Db, tortuosity, v, phi, dx, dt, n);
 
 
     sediment_matrix_templates = {...
@@ -373,47 +374,47 @@ function [sediment_matrix_templates] = templates()
 end
 
 
-function [AL, AR] = cn_template_dirichlet(D_m, tortuosity, v, fi, dx, dt, n)
+function [AL, AR] = cn_template_dirichlet(D_m, tortuosity, v, phi, dx, dt, n)
   %MATRICES Formation of matrices for species
   % ======================================================================
 
     D = D_m / tortuosity^2;
-    s = fi * D * dt / dx / dx;
-    q = fi * v * dt / dx;
+    s = phi * D * dt / dx / dx;
+    q = phi * v * dt / dx;
 
 
-    AL      = spdiags([-s/2+q/4 fi+s -s/2-q/4],[-1 0 1],n,n);
-    AL(1,1) = fi(1);
+    AL      = spdiags([-s/2+q/4 phi+s -s/2-q/4],[-1 0 1],n,n);
+    AL(1,1) = phi(1);
     AL(1,2) = 0;
-    AL(n,n) = fi(n)+s(n);
+    AL(n,n) = phi(n)+s(n);
     AL(n,n-1) = -s(n);
 
-    AR      = spdiags([ s/2-q/4 fi-s s/2+q/4],[-1 0 1],n,n);
-    AR(1,1) = fi(1);
+    AR      = spdiags([ s/2-q/4 phi-s s/2+q/4],[-1 0 1],n,n);
+    AR(1,1) = phi(1);
     AR(1,2) = 0;
-    AR(n,n) = fi(n)-s(n);
+    AR(n,n) = phi(n)-s(n);
     AR(n,n-1) = s(n);
 end
 
-function [AL, AR, flux_coef] = cn_template_neumann(D, v, fi, dx, dt, n)
+function [AL, AR, flux_coef] = cn_template_neumann(D, v, phi, dx, dt, n)
   %MATRICES Formation of matrices for species
   % ======================================================================
 
-    s = (1-fi) * D * dt / dx / dx;
-    q = (1-fi) * v * dt / dx;
+    s = (1-phi) * D * dt / dx / dx;
+    q = (1-phi) * v * dt / dx;
 
-    AL      = spdiags([-s/2+q/4 (1-fi+s) -s/2-q/4],[-1 0 1],n,n);
-    AL(1,1) = 1-fi(1)+s(1) + dx*v*s(1)/D - dx*q(1)*v/2/D;
+    AL      = spdiags([-s/2+q/4 (1-phi+s) -s/2-q/4],[-1 0 1],n,n);
+    AL(1,1) = 1-phi(1)+s(1) + dx*v*s(1)/D - dx*q(1)*v/2/D;
     AL(1,2) = -s(1);
-    AL(n,n) = 1-fi(n)+s(n);
+    AL(n,n) = 1-phi(n)+s(n);
     AL(n,n-1) = -s(n);
 
-    AR      = spdiags([ s/2-q/4 (1-fi-s)  s/2+q/4],[-1 0 1],n,n);
-    AR(1,1) = 1-fi(1)-s(1) - dx*v*s(1)/D + dx*q(1)*v/2/D ;
+    AR      = spdiags([ s/2-q/4 (1-phi-s)  s/2+q/4],[-1 0 1],n,n);
+    AR(1,1) = 1-phi(1)-s(1) - dx*v*s(1)/D + dx*q(1)*v/2/D ;
     AR(1,2) = +s(1);
-    AR(n,n) = 1-fi(n)-s(n);
+    AR(n,n) = 1-phi(n)-s(n);
     AR(n,n-1) = s(n);
 
-    flux_coef = 2 * dx / D * (2*s(1) - q(1)) / (1-fi(1)) ;
+    flux_coef = 2 * dx / D * (2*s(1) - q(1)) / (1-phi(1)) ;
 end
 
