@@ -116,6 +116,7 @@ class ResultsPlotter:
             lines['D'], = plt.plot(x, spl(x), sns.xkcd_rgb["denim blue"], lw=3, label='Transport')
         else:
             lines['D'], = plt.plot(x, y, sns.xkcd_rgb["denim blue"], lw=3, label='Transport')
+
         try:
             b = results['Bioirrigation_fx_zt'][0, 0][elem][0, 0][0][start:end]
             if convert_units:

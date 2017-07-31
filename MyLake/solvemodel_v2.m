@@ -94,7 +94,7 @@ selfshading_switch=1;           %light attenuation by chlorophyll a: 0=no, 1=yes
 tracer_switch=1;                %simulate tracers:  0=no, 1=yes
 matsedlab_sediment_module = 1;  %MATSEDLAB sediment module  %% NEW_DOCOMO
 wc_chemistry_module = 1;        % WC chemistry module: on/off
-ts_during_day = 5;             % WC chemistry module: time steps during the day: >= 25; NOTE: Testing 5
+ts_during_day = 25;             % WC chemistry module: time steps during the day: >= 25; NOTE: Testing 5
 wc_int_method = 0;              % WC chemistry module: method: 0 = Runge-Kutta 4th order; 1 = Buthcer's 5th Order;
 %fokema
 photobleaching=0;               %photo bleaching: 0=TSA model, 1=FOKEMA model

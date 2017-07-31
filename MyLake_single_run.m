@@ -12,6 +12,8 @@ is_metrics = true; % print metrics in the end
 
 big_results = cell(1,no_runs);  % collects the results
 big_inputs = cell(1,no_runs);   % collects the inputs
+is_save_results = false;
+
 
 % Initial calibration for P:
 x = [0.0643, 0.1368, 1.4647, 0.5293, 0.0570, 0.1000, 1.3339, 0.8793, 0.0590, 101.1213, 68.1137]; % ecomac-2 final result, RMSD 44.0151
@@ -71,6 +73,7 @@ lake_params{43 -5} = 1; % 38    Scaling factor for inflow concentration of diato
 % O&P calibration:
 x = [316.9331e-003, 212.4112e-003, 1.3954e+000, 964.7451e-003, 500.0000e-003, 112.2803e-003, 1.4675e+000, 1.4823e+000, 757.5944e-003, 1.0000e+000, 1.0000e+000, 901.6600e-003, 8.1686e+000, 1.2091e+000, 221.2731e-003, 2.7304e+000, 0.0000e+000];
 
+x = [500.0000e-003,   101.0838e-003,     1.0000e+000,     1.6996e+000,   188.6713e-003,   100.0000e-003,     1.4400e+000,     1.6311e+000,    10.0000e-003,     1.0000e+000,     2.0000e+000,     2.7065e+000,    62.1176e-003,    85.8779e-003]; % RMSD 137.82
 
 lake_params{52 -5} = x(1); % 9     settling velocity for Chl1 a (m day-1)
 lake_params{54 -5} = x(2); % 11    loss rate (1/day) at 20 deg C
@@ -83,14 +86,28 @@ lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
 lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
 sediment_params{22} = x(10);  % 38 R16 sorption of P on Fe k
 sediment_params{34} = x(11);  %    accel
-lake_params{21 -5} = x(12); % 16    scaling factor for inflow volume (-)
-lake_params{25 -5} = x(13); % 20    scaling factor for inflow concentration of total P (-)
-lake_params{26 -5} = x(14); % 21    scaling factor for inflow concentration of diss. organic P (-)
-lake_params{28 -5} = x(15); % 23    scaling factor for inflow concentration of DOC  (-)
-lake_params{29 -5} = x(16); % 23    scaling factor for inflow concentration of POC  (-)
-lake_params{39 -5} = x(17); % 34    Scaling factor for inflow concentration of Fe3 (-)
+% lake_params{21 -5} = x(12); % 16    scaling factor for inflow volume (-)
+% lake_params{25 -5} = x(13); % 20    scaling factor for inflow concentration of total P (-)
+% lake_params{26 -5} = x(14); % 21    scaling factor for inflow concentration of diss. organic P (-)
+lake_params{28 -5} = x(12); % 23    scaling factor for inflow concentration of DOC  (-)
+lake_params{29 -5} = x(13); % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{39 -5} = x(14); % 34    Scaling factor for inflow concentration of Fe3 (-)
 
 
+% Trials:
+lake_params{29 -5} = 10; % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{39 -5} = 1; % 34    Scaling factor for inflow concentration of Fe3 (-)
+lake_params{51 -5} = 1.5;  % % 8  settling velocity for S (m day-1)
+lake_params{15 -5} = 2e-4; % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{59 -5} = 1e-5; % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{17 -5} = 0.015; % 12    Optical cross_section of chlorophyll (m2 mg-1)
+lake_params{60 -5} = 0.015; % 17    Optical cross_section of chlorophyll (m2 mg-1)
+sediment_params{34} = 15;  %    accel
+
+lake_params{61 -5} = 0.2; % 18    Settling velocity for Chl2 a (m day-1)
+lake_params{62 -5} = 0.1;  % 19    Loss rate (1/day) at 20 deg C
+lake_params{63 -5} = 2;  % 20    Specific growth rate (1/day) at 20 deg C
+lake_params{64 -5} = 6;  % 21    Half saturation growth P level (mg/m3)
 
 % parfor
 for current_run = 1:no_runs
@@ -101,8 +118,8 @@ for current_run = 1:no_runs
             m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         else
-            m_start=[2005, 1, 1]; %
-            m_stop=[2005, 12, 31]; %
+            m_start=[2004, 1, 1]; %
+            m_stop=[2007, 12, 31]; %
         end
 
     elseif current_run == 2;
@@ -185,7 +202,6 @@ for current_run = 1:no_runs
 
     end
 
-    is_save_results = true;
 
     % try
         [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
