@@ -190,7 +190,7 @@ class ResultsPlotter:
         plt.tight_layout()
         date = results['days'][0, 0][0][-1 + end]
         date = datetime.datetime.fromordinal(date - 365)
-        plt.title('Profiles on ' + date.strftime('%d of %B, %Y'))
+        plt.title('Profiles on ' + date.strftime('%B %d, %Y'))
         plt.show()
 
     def rate_profile(self, env, elem, years_ago=0.):
@@ -309,7 +309,7 @@ class ResultsPlotter:
         z = results['z'][0, 0][:, -1]
         mass_per_area = {}
         lines = {}
-        fi = results['params'][0, 0]['fi'][0, 0][:, -1]
+        fi = results['params'][0, 0]['phi'][0, 0][:, -1]
         for e in elem:
             coef, units = self.unit_converter(convert_units, 'sediment', e)
             if e in disolved:
@@ -335,7 +335,7 @@ class ResultsPlotter:
         plt.tight_layout()
         date = results['days'][0, 0][0][-1 + end]
         date = datetime.datetime.fromordinal(date - 365)
-        plt.title('Profiles on ' + date.strftime('%d of %B, %Y'))
+        plt.title('Profiles on ' + date.strftime('%B %d, %Y'))
         plt.show()
 
     def temperature_fit(self):
