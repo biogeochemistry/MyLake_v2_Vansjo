@@ -9,11 +9,11 @@ format compact
 % lb = x0*0.1;
 % ub = x0*10;
 
-x = [0.1, 0.1368, 1.4647, 0.5293, 0.1, 0.1000, 1.3339, 0.8793, 0.5, 100, 25, 1, 1, 1];
+x = [0.1, 0.1368, 1.4647, 0.5293, 0.1, 0.1000, 1.3339, 0.8793, 0.5, 100, 25, 1, 1, 1, 2.00E-04, 3.00E-05, 0.015, 0.015];
 
 
-lb = [0.05, 0.1, 1, 0.2, 0.05, 0.1, 1, 0.2, 0.01, 1, 1,  0, 0, 0];
-ub = [0.5, 0.3, 1.5, 2, 0.5, 0.3, 1.5, 2, 1, 1e5, 100,  10, 10, 100];
+lb = [0.05, 0.1, 1, 0.2, 0.05, 0.1, 1, 0.2, 0.01, 1, 1,  0, 0, 0, 1e-5, 1e-5, 0.005, 0.005];
+ub = [0.5, 0.3, 1.5, 2, 0.5, 0.3, 1.5, 2, 1, 1e5, 100,  10, 10, 100, 1e-4, 1e-4, 0.045, 0.045];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
@@ -56,6 +56,11 @@ sediment_params{34} = x(11);  %    accel
 lake_params{28 -5} = x(12); % 23    scaling factor for inflow concentration of DOC  (-)
 lake_params{29 -5} = x(13); % 23    scaling factor for inflow concentration of POC  (-)
 lake_params{39 -5} = x(14); % 34    Scaling factor for inflow concentration of Fe3 (-)
+
+lake_params{15 -5} = x(15); % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{59 -5} = x(16); % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{17 -5} = x(17); % 12    Optical cross_section of chlorophyll (m2 mg-1)
+lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-1)
 
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
