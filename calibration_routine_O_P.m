@@ -65,8 +65,8 @@ lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
 clim_ID = run_ID
-m_start=[2000, 1, 1]; %
-m_stop=[2013, 12, 31]; %
+m_start=[2002, 1, 1]; %
+m_stop=[2008, 12, 31]; %
 run_INCA = 0; % 1- MyLake will run INCA, 0- No run
 use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
 is_save_results = false;
