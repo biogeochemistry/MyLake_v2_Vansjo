@@ -9,11 +9,10 @@ format compact
 % lb = x0*0.1;
 % ub = x0*10;
 
-x = [0.1, 0.1368, 1.4647, 0.5293, 0.1, 0.1000, 1.3339, 0.8793, 0.5, 100, 25, 1, 1, 1, 2.00E-04, 3.00E-05, 0.015, 0.015];
-
+x = [500.0000e-003,   101.0838e-003,     1.0000e+000,     1.6996e+000,   188.6713e-003,   100.0000e-003,     1.4400e+000,     1.6311e+000,    10.0000e-003,     1.0000e+000,     2.0000e+000,     2.7065e+000,    4*62.1176e-003,    85.8779e-003, 2.00E-04, 3.00E-05, 0.015, 0.015]; % RMSD 137.82
 
 lb = [0.05, 0.1, 1, 0.2, 0.05, 0.1, 1, 0.2, 0.01, 1, 1,  0, 0, 0, 1e-5, 1e-5, 0.005, 0.005];
-ub = [0.5, 0.3, 1.5, 2, 0.5, 0.3, 1.5, 2, 1, 1e5, 100,  10, 10, 100, 1e-4, 1e-4, 0.045, 0.045];
+ub = [0.5, 0.3, 1.5, 2, 0.5, 0.3, 1.5, 2, 1, 1e5, 100,  10, 100, 100, 1e-4, 1e-4, 0.045, 0.045];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
@@ -47,20 +46,20 @@ lake_params{62 -5} = x(6);  % 19    Loss rate (1/day) at 20 deg C
 lake_params{63 -5} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
 lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
 lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
-sediment_params{22} = x(10);  % 38 R16 sorption of P on Fe k
-sediment_params{34} = x(11);  %    accel
+sediment_params{23} = x(10);  % 38 R16 sorption of P on Fe k
+sediment_params{35} = x(11);  %    accel
 
-% lake_params{21 -5} = x(12); % 16    scaling factor for inflow volume (-)
-% lake_params{25 -5} = x(13); % 20    scaling factor for inflow concentration of total P (-)
-% lake_params{26 -5} = x(14); % 21    scaling factor for inflow concentration of diss. organic P (-)
+
 lake_params{28 -5} = x(12); % 23    scaling factor for inflow concentration of DOC  (-)
-lake_params{29 -5} = x(13); % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{24 -5} = x(13); % 19    scaling factor for inflow concentration of POC (-)
 lake_params{39 -5} = x(14); % 34    Scaling factor for inflow concentration of Fe3 (-)
 
 lake_params{15 -5} = x(15); % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 lake_params{59 -5} = x(16); % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 lake_params{17 -5} = x(17); % 12    Optical cross_section of chlorophyll (m2 mg-1)
 lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-1)
+
+
 
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
@@ -100,10 +99,10 @@ try
     end
 
     zinx=find(MyLake_results.basin1.z<4);
-    TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.DOP(zinx,:) + MyLake_results.basin1.concentrations.DOC(zinx,:) + MyLake_results.basin1.concentrations.POC(zinx,:))', 2);
+    TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.DOP(zinx,:) + MyLake_results.basin1.concentrations.POP(zinx,:))', 2);
     Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
     P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
-    POP_mod = mean((MyLake_results.basin1.concentrations.POC(zinx,:))', 2);
+    POP_mod = mean((MyLake_results.basin1.concentrations.POP(zinx,:) + MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
 
     load 'obs/store_obs/TOTP.dat' % measured
     % load 'obs/store_obs/Cha.dat' % measured

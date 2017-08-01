@@ -374,19 +374,18 @@ class ResultsPlotter:
 
         results = self.env_getter('water-column', basin=1)
 
-        inx = sum(results['z'][0, 0] < 4)[0]
+        inx = sum(results['z'][0, 0] == 4)[0]
         TOTP = np.mean(results['concentrations'][0, 0]['P'][0, 0][0:inx, :], axis=0) + \
             np.mean(results['concentrations'][0, 0]['PP'][0, 0][0:inx, :], axis=0) + \
             np.mean(results['concentrations'][0, 0]['DOP'][0, 0][0:inx, :], axis=0) + \
-            np.mean(results['concentrations'][0, 0]['DOC'][0, 0][0:inx, :], axis=0) + \
-            np.mean(results['concentrations'][0, 0]['POC'][0, 0][0:inx, :], axis=0)
+            np.mean(results['concentrations'][0, 0]['POP'][0, 0][0:inx, :], axis=0)
         # np.mean(results['concentrations'][0, 0]['Chl'][0, 0][0:inx, :], axis=0) + \
         # np.mean(results['concentrations'][0, 0]['C'][0, 0][0:inx, :], axis=0)
         Chl = np.mean(results['concentrations'][0, 0]['C'][0, 0][0:inx, :], axis=0) + np.mean(results['concentrations'][0, 0]['Chl']
                                                                                               [0, 0][0:inx, :], axis=0)
         PO4 = np.mean(results['concentrations'][0, 0]['P'][0, 0][0:inx, :], axis=0)
 
-        Part = np.mean(results['concentrations'][0, 0]['POC'][0, 0][0:inx, :], axis=0)
+        Part = np.mean(results['concentrations'][0, 0]['POP'][0, 0][0:inx, :], axis=0)
 
         # + np.mean(results['concentrations'][0, 0]['POC'][0, 0][0:inx, :], axis=0)
 
@@ -437,20 +436,24 @@ class ResultsPlotter:
         plt.show()
 
     def oxygen_fit_wc(self, depth, ax=None, dstart='2005-03-07', dend='2011-03-07'):
-        self.plot_fit_wc('O2', depth, ax=None, dstart=dstart, dend=dend, factor=1e-3)
+        self.plot_fit_wc(['O2'], depth, ax=None, dstart=dstart, dend=dend, factor=1e-3)
 
-    def plot_fit_wc(self, elem, depth, ax=None, dstart='2005-03-07', dend='2011-03-07', factor=1):
+    def plot_fit_wc(self, elements, depth, ax=None, dstart='2005-03-07', dend='2011-03-07', factor=1):
         env = 'water-column'
         results = self.env_getter(env)
 
         inx = np.where(results['z'][0, 0] == depth)[0][0]
 
-        if elem == 'T':
+        y = 0
+
+        if elements == ['T']:
             y = results['T'][0, 0][inx, :]
             lbl = 'Temperature, C'
         else:
-            y = results['concentrations'][0, 0][elem][0, 0][inx, :] * factor
-            lbl = elem + ' concentration'
+            for e in elements:
+                y += results['concentrations'][0, 0][e][0, 0][inx, :] * factor
+            lbl = ", ".join(elements) + ' concentration'
+
         if not ax:
             ax = plt.gca()
 

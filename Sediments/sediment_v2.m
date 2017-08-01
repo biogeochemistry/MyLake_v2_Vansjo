@@ -3,8 +3,8 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
 
 
   O2_prev = sediment_concentrations.O2;
-  OM_prev = sediment_concentrations.OM1;
-  OMb_prev = sediment_concentrations.OM2;
+  POP_prev = sediment_concentrations.POP;
+  POC_prev = sediment_concentrations.POC;
   NO3_prev = sediment_concentrations.NO3;
   FeOH3_prev = sediment_concentrations.FeOH3;
   SO4_prev = sediment_concentrations.SO4;
@@ -31,16 +31,14 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   NH3_prev = sediment_concentrations.NH3;
   H_prev = sediment_concentrations.H;
   H2CO3_prev = sediment_concentrations.H2CO3;
-  DOM1_prev = sediment_concentrations.DOM1;
-  DOM2_prev = sediment_concentrations.DOM2;
+  DOP_prev = sediment_concentrations.DOP;
+  DOC_prev = sediment_concentrations.DOC;
+  Chl_prev = sediment_concentrations.Chl;
 
 
   % model domain:
-  % n  = sediment_params.n; %points in spatial grid
-  % depth = sediment_params.depth; %sediment depth
   years = sediment_params.years; %1 day
   ts    = sediment_params.ts; % time step
-  % Db    = sediment_params.Db; % is effective diffusion due to bioturbation, Canavan et al D_bio between 0-5, 5 in the top layers
   alfax = sediment_params.alfax;
   D_O2  = sediment_params.D_O2;
   D_NO3 = sediment_params.D_NO3;
@@ -52,55 +50,9 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   D_PO4 = sediment_params.D_PO4;
   D_Ca2 = sediment_params.D_Ca2;
   D_HS  = sediment_params.D_HS;
-  D_DOM1= sediment_params.D_DOM1;
-  D_DOM2= sediment_params.D_DOM2;
-  % Cx1   = sediment_params.Cx1;
-  % Ny1   = sediment_params.Ny1;
-  % Pz1   = sediment_params.Pz1;
-  % Cx2   = sediment_params.Cx2;
-  % Ny2   = sediment_params.Ny2;
-  % Pz2   = sediment_params.Pz2;
+  D_DOP= sediment_params.D_DOP;
+  D_DOC= sediment_params.D_DOC;
   phi    = sediment_params.phi;
-
-
-
-
-  % k_OM =  sediment_params.k_OM;
-  % k_OMb = sediment_params.k_OMb;
-  % k_DOM1 = sediment_params.k_DOM1;
-  % k_DOM2 = sediment_params.k_DOM2;
-  % Km_O2 = sediment_params.Km_O2;
-  % Km_NO3 = sediment_params.Km_NO3;
-  % Km_FeOH3 = sediment_params.Km_FeOH3;
-  % Km_FeOOH = sediment_params.Km_FeOOH;
-  % Km_SO4 = sediment_params.Km_SO4;
-  % Km_oxao = sediment_params.Km_oxao;
-  % Km_amao = sediment_params.Km_amao;
-  % Kin_O2 = sediment_params.Kin_O2;
-  % Kin_NO3  = sediment_params.Kin_NO3;
-  % Kin_FeOH3 = sediment_params.Kin_FeOH3;
-  % Kin_FeOOH = sediment_params.Kin_FeOOH;
-  % k_amox = sediment_params.k_amox;
-  % k_Feox = sediment_params.k_Feox;
-  % k_Sdis = sediment_params.k_Sdis;
-  % k_Spre = sediment_params.k_Spre;
-  % k_FeS2pre = sediment_params.k_FeS2pre;
-  % k_pdesorb_c = sediment_params.k_pdesorb_c;
-  % k_pdesorb_a = sediment_params.k_pdesorb_a;
-  % k_pdesorb_b = sediment_params.k_pdesorb_b;
-  % % k_alum = sediment_params.k_alum;
-  % k_rhom   = sediment_params.k_rhom;
-  % k_tS_Fe = sediment_params.k_tS_Fe;
-  % Ks_FeS = sediment_params.Ks_FeS;
-  % k_Fe_dis = sediment_params.k_Fe_dis;
-  % k_Fe_pre = sediment_params.k_Fe_pre;
-  % k_apa  = sediment_params.k_apa;
-  % kapa = sediment_params.kapa;
-  % k_oms = sediment_params.k_oms;
-  % k_tsox = sediment_params.k_tsox;
-  % k_FeSpre = sediment_params.k_FeSpre;
-  % f_pfe = sediment_params.f_pfe;
-  % accel = sediment_params.accel;
   x  = sediment_params.x;
 
   dx = x(2)-x(1);
@@ -116,8 +68,8 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   % =======================================================================================================
 
   % Solid species: row #1 of the cell "sediment_matrix_templates" is the solid template matrix
-  [OM_AL, OM_AR]= sediment_matrix_templates{1,1:2};
-  [OMb_AL, OMb_AR]= sediment_matrix_templates{1,1:2};
+  [POP_AL, POP_AR]= sediment_matrix_templates{1,1:2};
+  [POC_AL, POC_AR]= sediment_matrix_templates{1,1:2};
   [FeOOH_AL, FeOOH_AR]= sediment_matrix_templates{1,1:2};
   [FeS_AL, FeS_AR]= sediment_matrix_templates{1,1:2};
   [S8_AL, S8_AR]= sediment_matrix_templates{1,1:2};
@@ -128,6 +80,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   [PO4adsb_AL, PO4adsb_AR]= sediment_matrix_templates{1,1:2};
   [OMS_AL, OMS_AR]= sediment_matrix_templates{1,1:2};
   [FeOH3_AL, FeOH3_AR]= sediment_matrix_templates{1,1:2};
+  [Chl_AL, Chl_AR]= sediment_matrix_templates{1,1:2};
 
   % Solute species:
   [O2_AL, O2_AR] = sediment_matrix_templates{2,1:2};
@@ -147,16 +100,16 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   [HCO3_AL, HCO3_AR] = sediment_matrix_templates{16,1:2};
   [NH3_AL, NH3_AR] = sediment_matrix_templates{17,1:2};
   [H2CO3_AL, H2CO3_AR] = sediment_matrix_templates{18,1:2};
-  [DOM1_AL, DOM1_AR] = sediment_matrix_templates{19,1:2};
-  [DOM2_AL, DOM2_AR] = sediment_matrix_templates{20,1:2};
+  [DOP_AL, DOP_AR] = sediment_matrix_templates{19,1:2};
+  [DOC_AL, DOC_AR] = sediment_matrix_templates{20,1:2};
 
 
 
   % Allocation of the memory for concentration with initial condition: (umol/cm3(aq)) or (umol/cm3(solid))
 
   O2(:,1) = O2_prev;
-  OM(:,1) = OM_prev;
-  OMb(:,1) = OMb_prev;
+  POP(:,1) = POP_prev;
+  POC(:,1) = POC_prev;
   NO3(:,1) = NO3_prev;
   FeOH3(:,1) = FeOH3_prev;
   SO4(:,1) = SO4_prev;
@@ -183,14 +136,15 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   HS(:,1) = HS_prev;
   H2S(:,1) = H2S_prev;
   H2CO3(:,1) = H2CO3_prev;
-  DOM1(:,1) = DOM1_prev;
-  DOM2(:,1) = DOM2_prev;
+  DOP(:,1) = DOP_prev;
+  DOC(:,1) = DOC_prev;
+  Chl(:,1) = Chl_prev;
 
   % Solving equations!!!
   % =========================================================================================================
 
   for i=2:m
-    C0 = [O2(:,i-1), OM(:,i-1), OMb(:,i-1), NO3(:,i-1), FeOH3(:,i-1), SO4(:,i-1), NH4(:,i-1), Fe2(:,i-1), FeOOH(:,i-1), H2S(:,i-1), HS(:,i-1), FeS(:,i-1), S0(:,i-1), PO4(:,i-1), S8(:,i-1), FeS2(:,i-1), AlOH3(:,i-1), PO4adsa(:,i-1), PO4adsb(:,i-1), Ca2(:,i-1), Ca3PO42(:,i-1), OMS(:,i-1), H(:,i-1), OH(:,i-1), CO2(:,i-1), CO3(:,i-1), HCO3(:,i-1), NH3(:,i-1), H2CO3(:,i-1), DOM1(:,i-1), DOM2(:,i-1)];
+    C0 = [O2(:,i-1), POP(:,i-1), POC(:,i-1), NO3(:,i-1), FeOH3(:,i-1), SO4(:,i-1), NH4(:,i-1), Fe2(:,i-1), FeOOH(:,i-1), H2S(:,i-1), HS(:,i-1), FeS(:,i-1), S0(:,i-1), PO4(:,i-1), S8(:,i-1), FeS2(:,i-1), AlOH3(:,i-1), PO4adsa(:,i-1), PO4adsb(:,i-1), Ca2(:,i-1), Ca3PO42(:,i-1), OMS(:,i-1), H(:,i-1), OH(:,i-1), CO2(:,i-1), CO3(:,i-1), HCO3(:,i-1), NH3(:,i-1), H2CO3(:,i-1), DOP(:,i-1), DOC(:,i-1), Chl(:,i-1)];
 
       if any(any(isnan(C0)))
           error('NaN')
@@ -203,8 +157,8 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       [C_new, rates(i-1)] = sediments_chemical_reactions_module(sediment_params, C0,dt,ts_during_one_dt, int_method);
 
       O2(:,i-1)      = C_new(:,1);
-      OM(:,i-1)      = C_new(:,2);
-      OMb(:,i-1)     = C_new(:,3);
+      POP(:,i-1)      = C_new(:,2);
+      POC(:,i-1)     = C_new(:,3);
       NO3(:,i-1)     = C_new(:,4);
       FeOH3(:,i-1)   = C_new(:,5);
       SO4(:,i-1)     = C_new(:,6);
@@ -231,8 +185,9 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       HCO3(:,i-1)    = C_new(:,27);
       NH3(:,i-1)     = C_new(:,28);
       H2CO3(:,i-1)   = C_new(:,29);
-      DOM1(:,i-1)   = C_new(:,30);
-      DOM2(:,i-1)   = C_new(:,31);
+      DOP(:,i-1)   = C_new(:,30);
+      DOC(:,i-1)   = C_new(:,31);
+      Chl(:,i-1)   = C_new(:,32);
 
       sediment_bioirrigation_fluxes.O2(i-1)   = integrate_over_depth_2( bioirrigation(O2(:, i-1), alfax, phi), x);
       sediment_bioirrigation_fluxes.PO4(i-1)  = integrate_over_depth_2( bioirrigation(PO4(:, i-1),  alfax,  phi), x);
@@ -240,13 +195,14 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       sediment_bioirrigation_fluxes.NO3(i-1)  = integrate_over_depth_2( bioirrigation(NO3(:, i-1),  alfax,  phi), x);
       sediment_bioirrigation_fluxes.NH4(i-1)  = integrate_over_depth_2( bioirrigation(NH4(:, i-1),  alfax,  phi), x);
       sediment_bioirrigation_fluxes.SO4(i-1)  = integrate_over_depth_2( bioirrigation(SO4(:, i-1),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.DOM1(i-1) = integrate_over_depth_2( bioirrigation(DOM1(:, i-1),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.DOM2(i-1) = integrate_over_depth_2( bioirrigation(DOM2(:, i-1),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.DOP(i-1) = integrate_over_depth_2( bioirrigation(DOP(:, i-1),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.DOC(i-1) = integrate_over_depth_2( bioirrigation(DOC(:, i-1),  alfax,  phi), x);
 
 
 
-      sediment_transport_fluxes.OM1(i-1)          = -sediment_bc.OM1_fx;
-      sediment_transport_fluxes.OM2(i-1)          = -sediment_bc.OM2_fx;
+      sediment_transport_fluxes.POP(i-1)          = -sediment_bc.POP_fx;
+      sediment_transport_fluxes.Chl(i-1)          = -sediment_bc.Chl_fx;
+      sediment_transport_fluxes.POC(i-1)          = -sediment_bc.POC_fx;
       sediment_transport_fluxes.FeOH3(i-1)        = -sediment_bc.FeOH3_fx;
       sediment_transport_fluxes.AlOH3(i-1)        = -sediment_bc.AlOH3_fx;
       sediment_transport_fluxes.PO4adsa(i-1)      = -sediment_bc.PO4adsa_fx;
@@ -257,8 +213,8 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       sediment_transport_fluxes.Fe2(i-1)          = top_sediment_diffusion_flux(Fe2(:, i-1), D_Fe2, dx, phi);
       sediment_transport_fluxes.NH4(i-1)          = top_sediment_diffusion_flux(NH4(:, i-1), D_NH4, dx, phi);
       sediment_transport_fluxes.SO4(i-1)          = top_sediment_diffusion_flux(SO4(:, i-1), D_SO4, dx, phi);
-      sediment_transport_fluxes.DOM1(i-1)         = top_sediment_diffusion_flux(DOM1(:, i-1), D_DOM1, dx, phi);
-      sediment_transport_fluxes.DOM2(i-1)         = top_sediment_diffusion_flux(DOM2(:, i-1), D_DOM2, dx, phi);
+      sediment_transport_fluxes.DOP(i-1)         = top_sediment_diffusion_flux(DOP(:, i-1), D_DOP, dx, phi);
+      sediment_transport_fluxes.DOC(i-1)         = top_sediment_diffusion_flux(DOC(:, i-1), D_DOC, dx, phi);
 
 
 
@@ -270,8 +226,8 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
     % =======================================================================================================
 
       O2(:,i) = pde_solver_dirichlet(O2_AL, O2_AR, O2(:,i-1), sediment_bc.O2_c);
-      OM(:,i) = pde_solver_neumann(OM_AL, OM_AR, OM(:,i-1), sediment_bc.OM1_fx, sediment_params.solid_flux_coef);
-      OMb(:,i) = pde_solver_neumann(OMb_AL, OMb_AR, OMb(:,i-1), sediment_bc.OM2_fx, sediment_params.solid_flux_coef);
+      POP(:,i) = pde_solver_neumann(POP_AL, POP_AR, POP(:,i-1), sediment_bc.POP_fx, sediment_params.solid_flux_coef);
+      POC(:,i) = pde_solver_neumann(POC_AL, POC_AR, POC(:,i-1), sediment_bc.POC_fx, sediment_params.solid_flux_coef);
       NO3(:,i) = pde_solver_dirichlet(NO3_AL, NO3_AR, NO3(:,i-1), sediment_bc.NO3_c);
       FeOH3(:,i) = pde_solver_neumann(FeOH3_AL, FeOH3_AR, FeOH3(:,i-1), sediment_bc.FeOH3_fx, sediment_params.solid_flux_coef);
       SO4(:,i) = pde_solver_dirichlet(SO4_AL, SO4_AR, SO4(:,i-1), sediment_bc.SO4_c);
@@ -298,8 +254,9 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       HCO3(:,i) = pde_solver_dirichlet(HCO3_AL, HCO3_AR, HCO3(:,i-1), sediment_bc.HCO3_c);
       NH3(:,i) = pde_solver_dirichlet(NH3_AL, NH3_AR, NH3(:,i-1), sediment_bc.NH3_c);
       H2CO3(:,i) = pde_solver_dirichlet(H2CO3_AL, H2CO3_AR, H2CO3(:,i-1), sediment_bc.H2CO3_c);
-      DOM1(:,i) = pde_solver_dirichlet(DOM1_AL, DOM1_AR, DOM1(:,i-1), sediment_bc.DOM1_c);
-      DOM2(:,i) = pde_solver_dirichlet(DOM2_AL, DOM2_AR, DOM2(:,i-1), sediment_bc.DOM2_c);
+      DOP(:,i) = pde_solver_dirichlet(DOP_AL, DOP_AR, DOP(:,i-1), sediment_bc.DOP_c);
+      DOC(:,i) = pde_solver_dirichlet(DOC_AL, DOC_AR, DOC(:,i-1), sediment_bc.DOC_c);
+      Chl(:,i) = pde_solver_neumann(Chl_AL, Chl_AR, Chl(:,i-1), sediment_bc.Chl_fx, sediment_params.solid_flux_coef);
 
 
 
@@ -309,15 +266,15 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
 
     % pH Module
     if sediment_params.pH_algorithm ~= 0
-      [H(:,i), OH(:,i), DOM2(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i)] = pH_module(sediment_params.pH_algorithm, H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i), Fe2(:,i), Ca2(:,i), NO3(:,i), SO4(:,i), PO4(:,i), FeS(:,i), FeS2(:,i), FeOH3(:,i), FeOOH(:,i), Ca3PO42(:,i), PO4adsa(:,i), PO4adsb(:,i), sediment_bc.T);
+      [H(:,i), OH(:,i), DOC(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i)] = pH_module(sediment_params.pH_algorithm, H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i), Fe2(:,i), Ca2(:,i), NO3(:,i), SO4(:,i), PO4(:,i), FeS(:,i), FeS2(:,i), FeOH3(:,i), FeOOH(:,i), Ca3PO42(:,i), PO4adsa(:,i), PO4adsb(:,i), sediment_bc.T);
     end
 
   end
 
 % Estimate flux
   sediment_transport_fluxes.O2           = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.O2), 31998);
-  sediment_transport_fluxes.OM1          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.OM1), 30973.762);
-  sediment_transport_fluxes.OM2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.OM2), 30973.762);
+  sediment_transport_fluxes.POP          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.POP), 30973.762);
+  sediment_transport_fluxes.POC          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.POC), 12010.7);
   sediment_transport_fluxes.PO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.PO4), 30973.762);
   sediment_transport_fluxes.NO3          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.NO3), 62004);
   sediment_transport_fluxes.FeOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.FeOH3), 106867.0);
@@ -327,8 +284,9 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_transport_fluxes.PO4adsa      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.PO4adsa), 30973.762);
   sediment_transport_fluxes.PO4adsb      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.PO4adsb), 30973.762);
   sediment_transport_fluxes.SO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.SO4), 96062);
-  sediment_transport_fluxes.DOM1         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.DOM1), 30973.762);
-  sediment_transport_fluxes.DOM2         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.DOM2), 30973.762);
+  sediment_transport_fluxes.DOP         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.DOP), 30973.762);
+  sediment_transport_fluxes.DOC         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.DOC), 12010.7);
+  sediment_transport_fluxes.Chl          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.Chl), 30973.762);
 
   sediment_bioirrigation_fluxes.O2   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.O2), 31998);
   sediment_bioirrigation_fluxes.PO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.PO4), 30973.762);
@@ -336,14 +294,14 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_bioirrigation_fluxes.NO3  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.NO3), 62004);
   sediment_bioirrigation_fluxes.NH4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.NH4), 18038);
   sediment_bioirrigation_fluxes.SO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.SO4), 96062);
-  sediment_bioirrigation_fluxes.DOM1 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOM1), 30973.762);
-  sediment_bioirrigation_fluxes.DOM2 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOM2), 30973.762);
+  sediment_bioirrigation_fluxes.DOP = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOP), 30973.762);
+  sediment_bioirrigation_fluxes.DOC = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOC), 12010.7);
 
 
 
   sediment_concentrations.O2 = O2(:,end);
-  sediment_concentrations.OM1 = OM(:,end);
-  sediment_concentrations.OM2 = OMb(:,end);
+  sediment_concentrations.POP = POP(:,end);
+  sediment_concentrations.POC = POC(:,end);
   sediment_concentrations.NO3 = NO3(:,end);
   sediment_concentrations.FeOH3 = FeOH3(:,end);
   sediment_concentrations.SO4 = SO4(:,end);
@@ -370,8 +328,9 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_concentrations.HCO3 = HCO3(:,end);
   sediment_concentrations.NH3 = NH3(:,end);
   sediment_concentrations.H2CO3 = H2CO3(:,end);
-  sediment_concentrations.DOM1 = DOM1(:,end);
-  sediment_concentrations.DOM2 = DOM2(:,end);
+  sediment_concentrations.DOP = DOP(:,end);
+  sediment_concentrations.DOC = DOC(:,end);
+  sediment_concentrations.Chl = Chl(:,end);
   sediment_concentrations.pH = -log10(H(:,end)*10^-3);
 
 
@@ -392,7 +351,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
     sediment_additional_results.rates = false;
   end
 
-    if any(isnan(sediment_transport_fluxes.O2))| any(isnan(sediment_bc.OM1_fx))| any(isnan(sediment_bc.OM2_fx))| any(isnan(sediment_bc.FeOH3_fx))| any(isnan(O2)) | any(isnan(OM)) | any(isnan(OMb)) | any(isnan(NO3)) | any(isnan(FeOH3)) | any(isnan(SO4)) | any(isnan(NH4)) | any(isnan(Fe2)) | any(isnan(FeOOH)) | any(isnan(H2S)) | any(isnan(HS)) | any(isnan(FeS)) | any(isnan(S0)) | any(isnan(PO4)) | any(isnan(S8)) | any(isnan(FeS2)) | any(isnan(AlOH3)) | any(isnan(PO4adsa)) | any(isnan(PO4adsb)) | any(isnan(H)) | any(isnan(Ca2)) | any(isnan(Ca3PO42)) | any(isnan(OMS)) | any(isnan(OH)) | any(isnan(HCO3)) | any(isnan(CO2)) | any(isnan(CO3)) | any(isnan(NH3)) | any(isnan(H2CO3))
+    if any(isnan(sediment_transport_fluxes.O2))| any(isnan(sediment_bc.POP_fx))| any(isnan(sediment_bc.POC_fx))| any(isnan(sediment_bc.FeOH3_fx))| any(isnan(O2)) | any(isnan(POP)) | any(isnan(POC)) | any(isnan(NO3)) | any(isnan(FeOH3)) | any(isnan(SO4)) | any(isnan(NH4)) | any(isnan(Fe2)) | any(isnan(FeOOH)) | any(isnan(H2S)) | any(isnan(HS)) | any(isnan(FeS)) | any(isnan(S0)) | any(isnan(PO4)) | any(isnan(S8)) | any(isnan(FeS2)) | any(isnan(AlOH3)) | any(isnan(PO4adsa)) | any(isnan(PO4adsb)) | any(isnan(H)) | any(isnan(Ca2)) | any(isnan(Ca3PO42)) | any(isnan(OMS)) | any(isnan(OH)) | any(isnan(HCO3)) | any(isnan(CO2)) | any(isnan(CO3)) | any(isnan(NH3)) | any(isnan(H2CO3)) | any(isnan(Chl))
       error('Breaking out of Sediments function: NaN values');
     end
 
@@ -720,8 +679,8 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     end
 
     Ox      = C(:,1) .* (C(:,1)>0) ;
-    OM      = C(:,2) .* (C(:,2)>0) ;
-    OMb     = C(:,3) .* (C(:,3)>0) ;
+    POP      = C(:,2) .* (C(:,2)>0) ;
+    POC     = C(:,3) .* (C(:,3)>0) ;
     NO3     = C(:,4) .* (C(:,4)>0) ;
     FeOH3   = C(:,5) .* (C(:,5)>0) ;
     SO4     = C(:,6) .* (C(:,6)>0) ;
@@ -748,13 +707,15 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     HCO3    = C(:,27) .* (C(:,27)>0) ;
     NH3     = C(:,28) .* (C(:,28)>0) ;
     H2CO3   = C(:,29) .* (C(:,29)>0) ;
-    DOM1    = C(:,30) .* (C(:,30)>0) ;
-    DOM2    = C(:,31) .* (C(:,31)>0) ;
+    DOP    = C(:,30) .* (C(:,30)>0) ;
+    DOC    = C(:,31) .* (C(:,31)>0) ;
+    Chl    = C(:,32) .* (C(:,32)>0) ;
 
-    k_OM =  sediment_params.k_OM;
-    k_OMb = sediment_params.k_OMb;
-    k_DOM1 = sediment_params.k_DOM1;
-    k_DOM2 = sediment_params.k_DOM2;
+    k_Chl =  sediment_params.k_Chl;
+    k_POP =  sediment_params.k_POP;
+    k_POC = sediment_params.k_POC;
+    k_DOP = sediment_params.k_DOP;
+    k_DOC = sediment_params.k_DOC;
     Km_O2 = sediment_params.Km_O2;
     Km_NO3 = sediment_params.Km_NO3;
     Km_FeOH3 = sediment_params.Km_FeOH3;
@@ -793,6 +754,9 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     Cx2   = sediment_params.Cx2;
     Ny2   = sediment_params.Ny2;
     Pz2   = sediment_params.Pz2;
+    Cx3   = sediment_params.Cx3;
+    Ny3   = sediment_params.Ny3;
+    Pz3   = sediment_params.Pz3;
     alfax = sediment_params.alfax;
     phi    = sediment_params.phi;
 
@@ -809,48 +773,57 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
 
     part_PO4ads_tot_Fe_a = PO4adsa ./ (tot_FeOH3+1e-16); % ratio of ads P to total Fe(III)
 
-    R1a = k_OM.*OM .* f_O2 * accel;
-    R1b = k_OMb.*OMb .* f_O2 * accel;
-    R1c = k_DOM1.* DOM1 .* f_O2 * accel;
-    R1d = k_DOM2.*DOM2 .* f_O2 * accel;
+    R1a = k_POP.*POP .* f_O2 * accel;
+    R1b = k_POC.*POC .* f_O2 * accel;
+    R1c = k_DOP.* DOP .* f_O2 * accel;
+    R1d = k_DOC.*DOC .* f_O2 * accel;
+    R1f = k_Chl.*Chl .* f_O2 * accel;
 
-    R2a = k_OM.*OM .* f_NO3 * accel;
-    R2b = k_OMb.*OMb .* f_NO3 * accel;
-    R2c = k_DOM1.*DOM1 .* f_NO3 * accel;
-    R2d = k_DOM2.*DOM2 .* f_NO3 * accel;
+    R2a = k_POP.*POP .* f_NO3 * accel;
+    R2b = k_POC.*POC .* f_NO3 * accel;
+    R2c = k_DOP.*DOP .* f_NO3 * accel;
+    R2d = k_DOC.*DOC .* f_NO3 * accel;
+    R2f = k_Chl.*Chl .* f_NO3 * accel;
 
-    R3a_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_OM.*OM .* f_FeOH3;
-    R3b_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_OMb .*OMb .* f_FeOH3;
-    R3c_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_DOM1 .*DOM1 .* f_FeOH3;
-    R3d_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_DOM2 .*DOM2 .* f_FeOH3;
-    R3a_P = part_PO4ads_tot_Fe_a .* k_OM.*OM .* f_FeOH3;
-    R3b_P = part_PO4ads_tot_Fe_a .* k_OMb .*OMb .* f_FeOH3;
-    R3c_P = part_PO4ads_tot_Fe_a .* k_DOM1 .*DOM1 .* f_FeOH3;
-    R3d_P = part_PO4ads_tot_Fe_a .* k_DOM2 .*DOM2 .* f_FeOH3;
+    R3a_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_POP.*POP .* f_FeOH3;
+    R3b_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_POC .*POC .* f_FeOH3;
+    R3c_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_DOP .*DOP .* f_FeOH3;
+    R3d_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_DOC .*DOC .* f_FeOH3;
+    R3f_Fe = (1 - part_PO4ads_tot_Fe_a) .* k_Chl .*Chl .* f_FeOH3;
+    R3a_P = part_PO4ads_tot_Fe_a .* k_POP.*POP .* f_FeOH3;
+    R3b_P = part_PO4ads_tot_Fe_a .* k_POC .*POC .* f_FeOH3;
+    R3c_P = part_PO4ads_tot_Fe_a .* k_DOP .*DOP .* f_FeOH3;
+    R3d_P = part_PO4ads_tot_Fe_a .* k_DOC .*DOC .* f_FeOH3;
+    R3f_P = part_PO4ads_tot_Fe_a .* k_Chl .*Chl .* f_FeOH3;
     R3a = R3a_Fe + R3a_P;
     R3b = R3b_Fe + R3b_P;
     R3c = R3c_Fe + R3c_P;
     R3d = R3d_Fe + R3d_P;
+    R3f = R3f_Fe + R3f_P;
 
-    R4a = k_OM.*OM .* f_FeOOH;
-    R4b = k_OMb.*OMb .* f_FeOOH;
-    R4c = k_DOM1.*DOM1 .* f_FeOOH;
-    R4d = k_DOM2.*DOM2 .* f_FeOOH;
+    R4a = k_POP.*POP .* f_FeOOH;
+    R4b = k_POC.*POC .* f_FeOOH;
+    R4c = k_DOP.*DOP .* f_FeOOH;
+    R4d = k_DOC.*DOC .* f_FeOOH;
+    R4f = k_Chl.*Chl .* f_FeOOH;
 
-    R5a = k_OM.*OM .* f_SO4  ;
-    R5b = k_OMb.*OMb .* f_SO4 ;
-    R5c = k_DOM1.*DOM1 .* f_SO4 ;
-    R5d = k_DOM2.*DOM2 .* f_SO4 ;
+    R5a = k_POP.*POP .* f_SO4  ;
+    R5b = k_POC.*POC .* f_SO4 ;
+    R5c = k_DOP.*DOP .* f_SO4 ;
+    R5d = k_DOC.*DOC .* f_SO4 ;
+    R5f = k_Chl.*Chl .* f_SO4 ;
 
     Ra = R1a+R2a+R3a+R4a+R5a;
     Rb = R1b+R2b+R3b+R4b+R5b;
     Rc = R1c+R2c+R3c+R4c+R5c;
     Rd = R1d+R2d+R3d+R4d+R5d;
-    R1 = R1a+R1b+R1c+R1d;
-    R2 = R2a+R2b+R2c+R2d;
-    R3 = R3a+R3b+R3c+R3d;
-    R4 = R4a+R4b+R4c+R4d;
-    R5 = R5a+R5b+R5c+R5d;
+    Rf = R1f+R2f+R3f+R4f+R5f;
+
+    R1 = R1a+R1b+R1c+R1d+R1f;
+    R2 = R2a+R2b+R2c+R2d+R2f;
+    R3 = R3a+R3b+R3c+R3d+R3f;
+    R4 = R4a+R4b+R4c+R4d+R4f;
+    R5 = R5a+R5b+R5c+R5d+R5f;
 
     R6 = k_tsox * Ox .* Sum_H2S;
     R7 = k_tS_Fe * FeOH3 .*  Sum_H2S;
@@ -869,10 +842,12 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     % R9 = (R9.*dt < NH4).*R9 + (R9.*dt > NH4).* NH4 ./ (dt) * 0.5;
     % R9 = (R9.*dt < Ox).*R9 + (R9.*dt > Ox).* Ox ./ (dt) * 0.5;
 
-    R10a = k_oms * Sum_H2S .* OM;
-    R10b = k_oms * Sum_H2S .* OMb;
-    R10c = k_oms * Sum_H2S .* DOM1;
-    R10d = k_oms * Sum_H2S .* DOM2;
+    R10a = k_oms * Sum_H2S .* POP;
+    R10b = k_oms * Sum_H2S .* POC;
+    R10c = k_oms * Sum_H2S .* DOP;
+    R10d = k_oms * Sum_H2S .* DOC;
+    R10f = k_oms * Sum_H2S .* Chl;
+
     R11 = k_FeSpre .* FeS .* S0;
     R12 = k_rhom * Ox .* FeS;
     R13 = k_FeS2pre .* FeS .* Sum_H2S;
@@ -887,7 +862,7 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     R15b = k_Sdis .* S8;
 
     R16a = k_pdesorb_a * FeOH3 .* PO4;
-    R16b = 4 * (Cx1*R3a_P + Cx2*R3b_P + Cx1*R3c_P + Cx2*R3d_P); % f_pfe .* (4 * R3 + 2 * R7);
+    R16b = 4 * (Cx2*R3a_P + Cx3*R3b_P + Cx2*R3c_P + Cx3*R3d_P + Cx1*R3f_P); % f_pfe .* (4 * R3 + 2 * R7);
     % R16b = (R16b.*dt < PO4adsa).*R16b + (R16b.*dt > PO4adsa).* PO4adsa ./ (dt) * 0.5;
     R17a = k_pdesorb_b * (FeOOH - PO4adsb) .* PO4;
     R17b = f_pfe .* (4 * R4);
@@ -902,7 +877,7 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
 
     % saving rates
     if sediment_params.rate_estimator_switch
-      r.R1a = R1a; r.R1b = R1b; r.R1c = R1c; r.R1d = R1d; r.R2a = R2a; r.R2b = R2b; r.R2c = R2c; r.R2d = R2d; r.R3a = R3a; r.R3b = R3b; r.R3c = R3c; r.R3d = R3d; r.R4a = R4a; r.R4b = R4b; r.R4c = R4c; r.R4d = R4d; r.R5a = R5a; r.R5b = R5b; r.R5c = R5c; r.R5d = R5d; r.Ra = Ra; r.Rb = Rb; r.Rc = Rc; r.Rd = Rd; r.R1 = R1; r.R2 = R2; r.R3 = R3; r.R4 = R4; r.R5 = R5; r.R6 = R6; r.R7 = R7; r.R8  = R8; r.R9 = R9; r.R10a = R10a; r.R10b = R10b; r.R10c = R10c; r.R10d = R10d; r.R11 = R11; r.R12 = R12; r.R13 = R13; r.R14a = R14a; r.R14b  = R14b; r.R15a = R15a; r.R15b = R15b; r.R16a = R16a; r.R16b  = R16b; r.R17a = R17a; r.R17b = R17b; r.R18a = R18a; r.R18b = R18b; r.R19 = R19;
+      r.R1a = R1a; r.R1b = R1b; r.R1c = R1c; r.R1d = R1d; ; r.R1f = R1f; r.R2a = R2a; r.R2b = R2b; r.R2c = R2c; r.R2d = R2d; ; r.R2f = R2f; r.R3a = R3a; r.R3b = R3b; r.R3c = R3c; r.R3d = R3d; ; r.R3f = R3f; r.R4a = R4a; r.R4b = R4b; r.R4c = R4c; r.R4d = R4d; ; r.R4f = R4f; r.R5a = R5a; r.R5b = R5b; r.R5c = R5c; r.R5d = R5d; ; r.R5f = R5f; r.Ra = Ra; r.Rb = Rb; r.Rc = Rc; r.Rd = Rd; ; r.Rf = Rf; r.R1 = R1; r.R2 = R2; r.R3 = R3; r.R4 = R4; r.R5 = R5; r.R6 = R6; r.R7 = R7; r.R8  = R8; r.R9 = R9; r.R10a = R10a; r.R10b = R10b; r.R10c = R10c; r.R10d = R10d; ; r.R10f = R10f; r.R10f = R10f; r.R11 = R11; r.R12 = R12; r.R13 = R13; r.R14a = R14a; r.R14b  = R14b; r.R15a = R15a; r.R15b = R15b; r.R16a = R16a; r.R16b  = R16b; r.R17a = R17a; r.R17b = R17b; r.R18a = R18a; r.R18b = R18b; r.R19 = R19;
     else
       r = 0;
     end
@@ -914,20 +889,20 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     % F = 1./phi;
     F = (1-phi) ./ phi;
 
-    dcdt(:,1)  = - bioirrigation(Ox, alfax, phi) +  -0.25 * R8  - 2 * R9  - (Cx1*R1a + Cx2*R1b) .* F - (Cx1*R1c + Cx2*R1d) - 3 * R12; % Ox
-    dcdt(:,2)  = -Ra - R10a; % POC1
-    dcdt(:,3)  = -Rb - R10b; % POC2
-    dcdt(:,4)  = - bioirrigation(NO3, alfax, phi) +  - 0.8*(Cx1*R2a+Cx1*R2b) .* F - 0.8*(Cx1*R2c+Cx1*R2d)+ R9; % NO3
-    dcdt(:,5)  = -4 * (Cx1*R3a_Fe + Cx2*R3b_Fe + Cx1*R3c_Fe + Cx2*R3d_Fe) - 2*R7 + R8./ F - R16a; % FeOH3
-    dcdt(:,6)  = - bioirrigation(SO4, alfax, phi) +  - 0.5*(Cx1*R5a + Cx2*R5b) .* F -0.5*(Cx1*R5c + Cx2*R5d)+ R6; % SO4
-    dcdt(:,7)  = - bioirrigation(NH4, alfax, phi) +  (Ny1 * Ra + Ny2 * Rb) .* F + (Ny1 * Rc + Ny2 * Rd) - R9; % NH4
-    dcdt(:,8)  = - bioirrigation(Fe2, alfax, phi) +  4*(Cx1*R3a + Cx2*R3b) .* F + 4* (Cx1*R3c + Cx2*R3d) + 4*(Cx1*R4a + Cx2*R4b) .* F + 4 * (Cx1*R4c + Cx2*R4d) + 2*R7 - R8 + R14b - R14a; % Fe2
-    dcdt(:,9)  = -4*(Cx1*R4a + Cx2*R4b + Cx1*R4c + Cx2*R4d) + R12; % FeOOH
+    dcdt(:,1)  = - bioirrigation(Ox, alfax, phi) +  -0.25 * R8  - 2 * R9  - (Cx2*R1a + Cx3*R1b+Cx1*R1f) .* F - (Cx2*R1c + Cx3*R1d) - 3 * R12; % Ox
+    dcdt(:,2)  = -Ra - R10a; % POP
+    dcdt(:,3)  = -Rb - R10b; % POC
+    dcdt(:,4)  = - bioirrigation(NO3, alfax, phi) +  - 0.8*(Cx2*R2a+Cx2*R2b++Cx1*R2f) .* F - 0.8*(Cx2*R2c+Cx2*R2d)+ R9; % NO3
+    dcdt(:,5)  = -4 * (Cx2*R3a_Fe + Cx3*R3b_Fe + Cx2*R3c_Fe + Cx3*R3d_Fe+ Cx1*R3f_Fe) - 2*R7 + R8./ F - R16a; % FeOH3
+    dcdt(:,6)  = - bioirrigation(SO4, alfax, phi) +  - 0.5*(Cx2*R5a + Cx3*R5b+ Cx1*R5f) .* F -0.5*(Cx2*R5c + Cx3*R5d)+ R6; % SO4
+    dcdt(:,7)  = - bioirrigation(NH4, alfax, phi) +  (Ny2 * Ra + Ny3 * Rb+ Ny1 * Rf) .* F + (Ny2 * Rc + Ny3 * Rd) - R9; % NH4
+    dcdt(:,8)  = - bioirrigation(Fe2, alfax, phi) +  4*(Cx2*R3a + Cx3*R3b+ Cx1*R3f) .* F + 4* (Cx2*R3c + Cx3*R3d) + 4*(Cx2*R4a + Cx3*R4b+ Cx1*R4f) .* F + 4 * (Cx2*R4c + Cx3*R4d) + 2*R7 - R8 + R14b - R14a; % Fe2
+    dcdt(:,9)  = -4*(Cx2*R4a + Cx3*R4b + Cx2*R4c + Cx3*R4d+ Cx1*R4f) + R12; % FeOOH
     dcdt(:,10) = - bioirrigation(H2S, alfax, phi); % H2S
-    dcdt(:,11) = - bioirrigation(HS, alfax, phi) +  0.5*(Cx1*R5a + Cx2*R5b) .* F + 0.5 * (Cx1*R5c + Cx2*R5d) - R6 - R7 + R14b - R14a - R10a - R10b - R10c - R10d -R13; % HS
+    dcdt(:,11) = - bioirrigation(HS, alfax, phi) +  0.5*(Cx2*R5a + Cx3*R5b + Cx1*R5f) .* F + 0.5 * (Cx2*R5c + Cx3*R5d) - R6 - R7 + R14b - R14a - R10a - R10b - R10c - R10d - R10f -R13; % HS
     dcdt(:,12) =  - R11 - 4*R12 -R13 + R14a - R14b ; % FeS
     dcdt(:,13) = - R11 - R15a + R7 + R15b; % S0
-    dcdt(:,14) = - bioirrigation(PO4, alfax, phi) +  (Pz1 * Ra + Pz2 * Rb) .* F + (Pz1 * Rc + Pz2 * Rd) + R16b + R17b - 2 * R19 - R18a - R16a - R17a; % PO4
+    dcdt(:,14) = - bioirrigation(PO4, alfax, phi) +  (Pz2 * Ra + Pz3 * Rb + Pz1 * Rf) .* F + (Pz2 * Rc + Pz3 * Rd) + R16b + R17b - 2 * R19 - R18a - R16a - R17a; % PO4
     dcdt(:,15) = 4*R12 - R15b + R15a; % S8
     dcdt(:,16) = + R11 + R13; % FeS2
     dcdt(:,17) = -R18a; % AlOH3
@@ -935,15 +910,16 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     dcdt(:,19) = R17a - R17b; % PO4adsb
     dcdt(:,20) = - bioirrigation(Ca2, alfax, phi) -3*R19; % Ca2
     dcdt(:,21) = R19; % Ca3PO42
-    dcdt(:,22) = R10a + R10b + R10c + R10d; % OMS
+    dcdt(:,22) = R10a + R10b + R10c + R10d + R10f; % OMS
     dcdt(:,23) = 0; % H
     dcdt(:,24) = 0; % OH
-    dcdt(:,25) = - bioirrigation(CO2, alfax, phi) +  ((Cx1 - Ny1 + 2*Pz1)*R1a + (Cx2 - Ny2 + 2*Pz2)*R1b  + (0.2*Cx1 - Ny1 + 2*Pz1)*R2a +  (0.2*Cx2 - Ny2 + 2*Pz2)*R2b - (7*Cx1 + Ny1 + 2*Pz1)*(R3a+R4a) - (7*Cx2 + Ny2 + 2*Pz2)*(R3b+R4b)  - (Ny1 - 2*Pz1)*R5a + (Ny2 - 2*Pz2)*R5b) .* F  +  (Cx1 - Ny1 + 2*Pz1)*R1c + (Cx2 - Ny2 + 2*Pz2)*R1d + (0.2*Cx1 - Ny1 + 2*Pz1)*R2c +  (0.2*Cx2 - Ny2 + 2*Pz2)*R2d - (7*Cx1 + Ny1 + 2*Pz1)*(R3c+R4c) - (7*Cx2 + Ny2 + 2*Pz2)*(R3d+R4d)  - (Ny1 - 2*Pz1)*R5c + (Ny2 - 2*Pz2)*R5d + 2*R8 + 2*R9;  % CO2
+    dcdt(:,25) = - bioirrigation(CO2, alfax, phi)  +  ((Cx2 - Ny2 + 2*Pz2)*R1a + (Cx3 - Ny3 + 2*Pz3)*R1b + (Cx1 - Ny1 + 2*Pz1)*R1f + (0.2*Cx2 - Ny2 + 2*Pz2)*R2a +  (0.2*Cx3 - Ny3 + 2*Pz3)*R2b +  (0.2*Cx1 - Ny1 + 2*Pz1)*R2f - (7*Cx2 + Ny2 + 2*Pz2)*(R3a+R4a) - (7*Cx3 + Ny3 + 2*Pz3)*(R3b+R4b) - (7*Cx1 + Ny1 + 2*Pz1)*(R3f+R4f)  - (Ny2 - 2*Pz2)*R5a + (Ny3 - 2*Pz3)*R5b + (Ny1 - 2*Pz1)*R5f) .* F  +  (Cx2 - Ny2 + 2*Pz2)*R1c + (Cx3 - Ny3 + 2*Pz3)*R1d + (0.2*Cx2 - Ny2 + 2*Pz2)*R2c +  (0.2*Cx3 - Ny3 + 2*Pz3)*R2d - (7*Cx2 + Ny2 + 2*Pz2)*(R3c+R4c) - (7*Cx3 + Ny3 + 2*Pz3)*(R3d+R4d)  - (Ny2 - 2*Pz2)*R5c + (Ny3 - 2*Pz3)*R5d + 2*R8 + 2*R9;  % CO2
     dcdt(:,26) = - bioirrigation(CO3, alfax, phi) ; % CO3
-    dcdt(:,27) = - bioirrigation(HCO3, alfax, phi) +  ((0.8*Cx1 + Ny1 - 2*Pz1)*R2a + (0.8*Cx2 + Ny2 - 2*Pz2)*R2b  + (8*Cx1+Ny1-2*Pz1)*(R3a + R4a) +(8*Cx2+Ny2-2*Pz2)*(R3b + R4b)  + (Cx1+Ny1-2*Pz1)*R5a + (1*Cx2+Ny2-2*Pz2)*R5b ) .* F + (0.8*Cx1 + Ny1 - 2*Pz1)*R2c + (0.8*Cx2 + Ny2 - 2*Pz2)*R2d + (8*Cx1+Ny1-2*Pz1)*(R3c + R4c) +(8*Cx2+Ny2-2*Pz2)*(R3d + R4d) + (Cx1+Ny1-2*Pz1)*R5c + (1*Cx2+Ny2-2*Pz2)*R5d -  2*R8 - 2*R9; % HCO3
+    dcdt(:,27) = - bioirrigation(HCO3, alfax, phi) +  ((0.8*Cx2 + Ny2 - 2*Pz2)*R2a + (0.8*Cx3 + Ny3 - 2*Pz3)*R2b + (0.8*Cx1 + Ny1 - 2*Pz1)*R2f  + (8*Cx2+Ny2-2*Pz2)*(R3a + R4a) +(8*Cx3+Ny3-2*Pz3)*(R3b + R4b) +(8*Cx1+Ny1-2*Pz1)*(R3f + R4f)  + (Cx2+Ny2-2*Pz2)*R5a + (1*Cx3+Ny3-2*Pz3)*R5b + (1*Cx1+Ny1-2*Pz1)*R5f ) .* F + (0.8*Cx2 + Ny2 - 2*Pz2)*R2c + (0.8*Cx3 + Ny3 - 2*Pz3)*R2d + (8*Cx2+Ny2-2*Pz2)*(R3c + R4c) +(8*Cx3+Ny3-2*Pz3)*(R3d + R4d) + (Cx2+Ny2-2*Pz2)*R5c + (1*Cx3+Ny3-2*Pz3)*R5d -  2*R8 - 2*R9; % HCO3
     dcdt(:,28) = - bioirrigation(NH3, alfax, phi) ; % NH3
     dcdt(:,29) = - bioirrigation(H2CO3, alfax, phi) ; % H2CO3
-    dcdt(:,30) = - bioirrigation(DOM1, alfax, phi)  - Rc - R10c; % DOM1
-    dcdt(:,31) = - bioirrigation(DOM2, alfax, phi)  - Rd - R10d; % DOM2
+    dcdt(:,30) = - bioirrigation(DOP, alfax, phi)  - Rc - R10c; % DOP
+    dcdt(:,31) = - bioirrigation(DOC, alfax, phi)  - Rd - R10d; % DOC
+    dcdt(:,32) = -Rf - R10f; ; % Chl
 end
 

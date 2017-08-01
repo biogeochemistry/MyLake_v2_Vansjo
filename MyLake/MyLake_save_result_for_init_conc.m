@@ -7,7 +7,7 @@ else
 end
 
 fid = fopen(file_name,'wt');
-fprintf(fid, 'skip \n Z (m)\t  Az (m2)\t Tz (deg C)\t  Cz(mg/m3)\t  Sz (kg/m3)\t  TPz (mg/m3)\t DOPz (mg/m3)\t    Chlaz (mg/m3)\t   DOCz (mg/m3)\t    TPz_sed (mg/m3)\t Chlaz_sed (mg/m3)\t   Fvol_IM (m3/m3, dry w.)\t Hice (m)\t Hsnow (m)\t O2z (mg/m3)\t DICz (mg/m3)\t NO3z (mg/m3)\t NH4z (mg/m3)\t SO4z (mg/m3)\t HSz (mg/m3)\t H2Sz (mg/m3)\t Fe2z (mg/m3)\t Ca2z (mg/m3)\t pHz (mg/m3)\t CH4z (mg/m3)\t Fe3z (mg/m3)\t Al3z (mg/m3)\t SiO4z (mg/m3)\t SiO2z (mg/m3)\t diatomz (mg/m3)\t POCz (mg/m3)\n');
+fprintf(fid, 'skip \n Z (m)\t  Az (m2)\t Tz (deg C)\t  Cz(mg/m3)\t  POCz (mg/m3)\t  TPz (mg/m3)\t DOPz (mg/m3)\t    Chlaz (mg/m3)\t   DOCz (mg/m3)\t    TPz_sed (mg/m3)\t Chlaz_sed (mg/m3)\t   Fvol_IM (m3/m3, dry w.)\t Hice (m)\t Hsnow (m)\t O2z (mg/m3)\t DICz (mg/m3)\t NO3z (mg/m3)\t NH4z (mg/m3)\t SO4z (mg/m3)\t HSz (mg/m3)\t H2Sz (mg/m3)\t Fe2z (mg/m3)\t Ca2z (mg/m3)\t pHz (mg/m3)\t CH4z (mg/m3)\t Fe3z (mg/m3)\t Al3z (mg/m3)\t SiO4z (mg/m3)\t SiO2z (mg/m3)\t diatomz (mg/m3)\t POCz (mg/m3)\n');
 fclose(fid);
 
 

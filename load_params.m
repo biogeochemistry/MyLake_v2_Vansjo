@@ -3,7 +3,7 @@ function [lake_params, sediment_params] = load_params()
 
 lake_params = {
     % PhysPar
-    0.5, 'dz',                   % 1
+    0.5, 'dz',                 % 1
     0.0164, 'Kz_K1',           % 2     open water diffusion parameter (-)
     0.000898, 'Kz_K1_ice',     % 3     under ice diffusion parameter (-)
     7E-05, 'Kz_N0',            % 4     min. stability frequency (s-2)
@@ -21,12 +21,12 @@ lake_params = {
     1, 'I_scV',                % 16    scaling factor for inflow volume (-)
     0, 'I_scT',                % 17    adjusting delta for inflow temperature (-)
     1, 'I_scC',                % 18    scaling factor for inflow concentration of C (-)
-    1, 'I_scS',                % 19    scaling factor for inflow concentration of S (-)
+    1, 'I_scPOC',              % 19    scaling factor for inflow concentration of POC (-)
     1, 'I_scTP',               % 20    scaling factor for inflow concentration of total P (-)
     1, 'I_scDOP',              % 21    scaling factor for inflow concentration of diss. organic P (-)
     1, 'I_scChl',              % 22    scaling factor for inflow concentration of Chl a (-)
     1, 'I_scDOC',              % 23    scaling factor for inflow concentration of DOC  (-)
-    1, 'I_scPOC',              % 24    scaling factor for inflow concentration of POC  (-)
+    1, 'I_scPOP',              % 24    scaling factor for inflow concentration of POP  (-)
     1, 'I_scO',                % 25    Scaling factor for inflow concentration of O2 (-)
     1 , 'I_scDIC',             % 26    Scaling factor for inflow concentration of DOC  (-)
     1,  'I_scNO3',             % 27    Scaling factor for inflow concentration of NO3 (-)
@@ -41,46 +41,47 @@ lake_params = {
     1,  'I_scSiO4',            % 36    Scaling factor for inflow concentration of SiO4 (-)
     1,  'I_scSiO2',            % 37    Scaling factor for inflow concentration of SiO2 (-)
     1,  'I_scdiatom',          % 38    Scaling factor for inflow concentration of diatom (-)
-    2.5, 'swa_b0',             % 1     non-PAR light attenuation coeff. (m-1)
-    1.05, 'swa_b1',            % 2     PAR light attenuation coeff. (m-1)
-    3.30E-07, 'S_res_epi',     % 3     Particle resuspension mass transfer coefficient, epilimnion (m day-1, dry)
-    3.30E-08, 'S_res_hypo',    % 4     Particle resuspension mass transfer coefficient, hypolimnion (m day-1, dry)
-    0.03, 'H_sed',             % 5     height of active sediment layer (m, wet mass)
-    15, 'Psat_L',              % 6     NOT USED: Half saturation parameter for Langmuir isotherm
-    30, 'Fmax_L',              % 7     NOT USED: Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
-    0.05, 'w_s',               % 8     settling velocity for S (m day-1)
-    0.01, 'w_chl',             % 9     settling velocity for Chl a (m day-1)
-    1, 'Y_cp',                 % 10    yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   1/55*112/1 = 1
-    0.2, 'm_twty',             % 11    loss rate (1/day) at 20 deg C
-    1.5, 'g_twty',             % 12    specific growth rate (1/day) at 20 deg C
-    2.00E-04, 'k_twty',        % 13    NOT USED: specific Chl a to P transformation rate (1/day) at 20 deg C
-    0, 'dop_twty',             % 14    NOT USED: specific DOP to P transformation rate (day-1) at 20 deg C
-    0.2, 'P_half',             % 15    Half saturation growth P level (mg/m3)
-    3.00E-05, 'PAR_sat_2',     % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-    0.015, 'beta_chl_2',       % 17    Optical cross_section of chlorophyll (m2 mg-1)
-    0.01, 'w_chl_2',           % 18    Settling velocity for Chl a (m day-1)
-    0.2, 'm_twty_2',           % 19    Loss rate (1/day) at 20 deg C
-    1.5, 'g_twty_2',           % 20    Specific growth rate (1/day) at 20 deg C
-    0.2, 'P_half_2',           % 21    Half saturation growth P level (mg/m3)
-    0.01, 'oc_DOC',            % 22    Optical cross-section of DOC (m2/mg DOC)
-    0.1, 'qy_DOC',             % 23    Quantum yield (mg DOC degraded/mol quanta)
-    0.1, 'k_BOD',              % 24    NOT USED: Organic decomposition rate (1/d)
-    500, 'k_SOD',              % 25    NOT USED: Sedimentary oxygen demand (mg m-2 d-1)
-    1.047, 'theta_bod',        % 26    NOT USED: Temperature adjustment coefficient for BOD, T ? 10 °C
-    1.13, 'theta_bod_ice',     % 27    NOT USED: Temperature adjustment coefficient for BOD, T < 10 °C
-    1, 'theta_sod',            % 28    NOT USED: Temperature adjustment coefficient for SOD, T ? 10 °C
-    1, 'theta_sod_ice',        % 29    NOT USED: Temperature adjustment coefficient for SOD, T < 10 °C
-    4, 'BOD_temp_switch',      % 30    NOT USED: Threshold for bod or bod_ice °C
-    7.5, 'pH',                 % 31    Lake water pH
-    2, 'Q10_wc',               % 32    Q10 for reactions of respiration
-    1, 'wc_factor',            % 33    Scaling factor for rates in WC
-    4.8497, 'T_ref_wc'};       % 34    Reference Temperature for rates
+    2.5, 'swa_b0',             % 39     non-PAR light attenuation coeff. (m-1)
+    1.05, 'swa_b1',            % 40     PAR light attenuation coeff. (m-1)
+    3.30E-07, 'S_res_epi',     % 41     Particle resuspension mass transfer coefficient, epilimnion (m day-1, dry)
+    3.30E-08, 'S_res_hypo',    % 42     Particle resuspension mass transfer coefficient, hypolimnion (m day-1, dry)
+    0.03, 'H_sed',             % 43     height of active sediment layer (m, wet mass)
+    15, 'Psat_L',              % 44     NOT USED: Half saturation parameter for Langmuir isotherm
+    30, 'Fmax_L',              % 45     NOT USED: Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
+    0.05, 'w_s',               % 46     settling velocity for S (m day-1)
+    0.01, 'w_chl',             % 47     settling velocity for Chl a (m day-1)
+    1, 'Y_cp',                 % 48    yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   1/55*112/1 = 1
+    0.2, 'm_twty',             % 49    loss rate (1/day) at 20 deg C
+    1.5, 'g_twty',             % 50    specific growth rate (1/day) at 20 deg C
+    2.00E-04, 'k_twty',        % 51    NOT USED: specific Chl a to P transformation rate (1/day) at 20 deg C
+    0, 'dop_twty',             % 52    NOT USED: specific DOP to P transformation rate (day-1) at 20 deg C
+    0.2, 'P_half',             % 53    Half saturation growth P level (mg/m3)
+    3.00E-05, 'PAR_sat_2',     % 54    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+    0.015, 'beta_chl_2',       % 55    Optical cross_section of chlorophyll (m2 mg-1)
+    0.01, 'w_chl_2',           % 56    Settling velocity for Chl a (m day-1)
+    0.2, 'm_twty_2',           % 57    Loss rate (1/day) at 20 deg C
+    1.5, 'g_twty_2',           % 58    Specific growth rate (1/day) at 20 deg C
+    0.2, 'P_half_2',           % 59    Half saturation growth P level (mg/m3)
+    0.01, 'oc_DOC',            % 60    Optical cross-section of DOC (m2/mg DOC)
+    0.1, 'qy_DOC',             % 61    Quantum yield (mg DOC degraded/mol quanta)
+    0.1, 'k_BOD',              % 62    NOT USED: Organic decomposition rate (1/d)
+    500, 'k_SOD',              % 63    NOT USED: Sedimentary oxygen demand (mg m-2 d-1)
+    1.047, 'theta_bod',        % 64    NOT USED: Temperature adjustment coefficient for BOD, T ? 10 °C
+    1.13, 'theta_bod_ice',     % 65    NOT USED: Temperature adjustment coefficient for BOD, T < 10 °C
+    1, 'theta_sod',            % 66    NOT USED: Temperature adjustment coefficient for SOD, T ? 10 °C
+    1, 'theta_sod_ice',        % 67    NOT USED: Temperature adjustment coefficient for SOD, T < 10 °C
+    4, 'BOD_temp_switch',      % 68    NOT USED: Threshold for bod or bod_ice °C
+    7.5, 'pH',                 % 69    Lake water pH
+    2, 'Q10_wc',               % 70    Q10 for reactions of respiration
+    1, 'wc_factor',            % 71    Scaling factor for rates in WC
+    4.8497, 'T_ref_wc'};       % 72    Reference Temperature for rates
 
 sediment_params = {
-    1,     'k_OM1';  % 1
-    0.1,   'k_OM2';  % 0.01
-    1,     'k_DOM1';  % 1
-    1,     'k_DOM2';  % 1
+    10,    'k_Chl';  % 1
+    1,     'k_POP';  % 1
+    0.1,   'k_POC';  % 0.01
+    1,     'k_DOP';  % 1
+    0.1,   'k_DOC';  % 1
     0.008, 'Km_O2';     % Canavan, R. W (2006)
     0.01,  'Km_NO3';    % Canavan, R. W (2006)
     0.2,   'Km_Fe(OH)3';  % Canavan, R. W (2006)
@@ -127,13 +128,18 @@ sediment_params = {
     1,      'F'; % we are not using this value as a parameter. It is estimated as (1-fi) ./ fi;
     14.4,   'alfa0';
 
-    % OM composition
+    % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     106,    'Cx1';
     16,     'Ny1';
     1,      'Pz1';
     200,    'Cx2';
     20,     'Ny2';
     1,      'Pz2';
+    10,     'Cx3';
+    1,      'Ny3';
+    0,      'Pz3';
 
-    1/365/25,  'ts';
+
+
+    1/365/5,  'ts';
     };

@@ -5,7 +5,7 @@
 % Code checked by TSA, xx.03.2005
 % Last modified by TSA, 15.08.2006 (Az replaced by In_Az 10.03.06; Possibility to have NaN in Global rad. series, 15.08.06)
 
-function [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_POCz,In_FIM,Ice0,Wt,Inflw,...
+function [In_Z,In_Az,tt,In_Tz,In_Cz,In_POCz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_POPz,In_FIM,Ice0,Wt,Inflw,...
          Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
             = modelinputs_v2(M_start,M_stop,init_filename,init_sheet,...
             input_filename,input_sheet,param_filename,param_sheet,dt);
@@ -21,7 +21,7 @@ function [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz
 %       In_Az   : Areas read from initial profiles file (m2)
 %       In_Tz   : Initial temperature profile read from initial profiles file (deg C)
 %       In_Cz   : Initial tracer profile read from initial profiles file (-)
-%       In_Sz   : Initial sedimenting tracer (or suspended inorganic matter) profile read from initial profiles file (kg m-3)
+%       In_POCz   : Initial POC (mg m-3)
 %       In_TPz  : Initial total P profile read from initial profiles file (mg m-3)
 %       In_DOPz  : Initial dissolved organic P profile read from initial profiles file (mg m-3)
 %       In_Chlz : Initial chlorophyll a profile read from initial profiles file (mg m-3)
@@ -98,7 +98,7 @@ InitMx = dlmread(init_filename, '\t', 2, 0);
  In_Az=InitMx(1:end,2);
  In_Tz=InitMx(1:end,3);
  In_Cz=InitMx(1:end,4);
- In_Sz=InitMx(1:end,5);
+ In_POCz=InitMx(1:end,5);
  In_TPz=InitMx(1:end,6);
  In_DOPz=InitMx(1:end,7);
  In_Chlz=InitMx(1:end,8);
@@ -124,7 +124,7 @@ InitMx = dlmread(init_filename, '\t', 2, 0);
  In_SiO4z=InitMx(1:end,28);
  In_SiO2z=InitMx(1:end,29);
  In_diatomz=InitMx(1:end,30);
- In_POCz=InitMx(1:end,31);
+ In_POPz=InitMx(1:end,31);
 
 
  tt = [datenum(M_start):dt:datenum(M_stop)]';		% Solution time domain

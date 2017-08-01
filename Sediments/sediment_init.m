@@ -19,7 +19,7 @@ function [sediment_params] = params(max_depth, temperature)
     global sed_par_file
     f=fopen(sed_par_file);
     % f=fopen('calibration_k_values.txt');
-    data = textscan(f,'%s%f', 52,'Delimiter', '\t');
+    data = textscan(f,'%s%f', 56,'Delimiter', '\t');
     fclose(f);
 
     % Estimation of params:
@@ -56,22 +56,22 @@ function [sediment_params] = params(max_depth, temperature)
     D_H2S = 284;
     D_HS  = 284;
     D_S0  = 100;
-    D_DOM1  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
-    D_DOM2  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
+    D_DOP  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
+    D_DOC  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
     Db    = 5;
 
     % Spatial domain:
-    sediment_params.n = data{2}(42);;  % points in spatial grid
-    sediment_params.depth = data{2}(43);  % sediment depth
+    sediment_params.n = data{2}(43);;  % points in spatial grid
+    sediment_params.depth = data{2}(44);  % sediment depth
     sediment_params.years = 1/365;  % 1 day #35
-    sediment_params.ts = data{2}(52);;  % time step
+    sediment_params.ts = data{2}(56);;  % time step
     x = linspace(0, sediment_params.depth, sediment_params.n);
     sediment_params.x = x;      % x-axis
 
 
     % Physical properties:
-    sediment_params.w = data{2}(41);      % time-dependent burial rate w = 0.1
-    sediment_params.F = data{2}(44);;      % conversion factor = rhob * (1-fi) / fi ; where fi = porosity and rhob = solid phase density
+    sediment_params.w = data{2}(42);      % time-dependent burial rate w = 0.1
+    sediment_params.F = data{2}(45);;      % conversion factor = rhob * (1-fi) / fi ; where fi = porosity and rhob = solid phase density
     sediment_params.viscosity = viscosity;
     sediment_params.temperature = temperature;
     sediment_params.pressure = pressure;
@@ -80,10 +80,10 @@ function [sediment_params] = params(max_depth, temperature)
 
     % Porosity modeling according to Rabouille, C. & Gaillard, J.-F., 1991:
     % NOTE: the experimental function. Checking the result of non-constant profile.
-    phi_in = data{2}(37);
-    phi_f  = data{2}(38);
-    X_b   = data{2}(39);
-    tortuosity = data{2}(40);
+    phi_in = data{2}(38);
+    phi_f  = data{2}(39);
+    X_b   = data{2}(40);
+    tortuosity = data{2}(41);
 
     % NOTE:  const porosity for test
     sediment_params.phi =  ( phi_in - phi_f ) * exp( -x' / X_b ) + phi_f;;      % porosity
@@ -91,7 +91,7 @@ function [sediment_params] = params(max_depth, temperature)
 
     % Bio properties:
     sediment_params.Db = Db;     %'effective diffusion due to bioturbation; Canavan et al D_bio between 0-5; 5 in the '; % #41
-    alfax = data{2}(45)*exp(-0.25*x);
+    alfax = data{2}(46)*exp(-0.25*x);
     sediment_params.alfax = alfax';   % bioirrigation
 
     % effective molecular diffusion
@@ -112,16 +112,19 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.D_HCO3 = D_HCO3;
     sediment_params.D_NH3 = D_NH3;
     sediment_params.D_H2CO3 = D_H2CO3;
-    sediment_params.D_DOM1 = D_DOM1;
-    sediment_params.D_DOM2 = D_DOM2;
+    sediment_params.D_DOP = D_DOP;
+    sediment_params.D_DOC = D_DOC;
 
     % OM composition
-    sediment_params.Cx1 = data{2}(46);
-    sediment_params.Ny1 = data{2}(47);
-    sediment_params.Pz1 = data{2}(48);
-    sediment_params.Cx2 = data{2}(49);
-    sediment_params.Ny2 = data{2}(50);
-    sediment_params.Pz2 = data{2}(51);
+    sediment_params.Cx1 = data{2}(47);
+    sediment_params.Ny1 = data{2}(48);
+    sediment_params.Pz1 = data{2}(49);
+    sediment_params.Cx2 = data{2}(50);
+    sediment_params.Ny2 = data{2}(51);
+    sediment_params.Pz2 = data{2}(52);
+    sediment_params.Cx3 = data{2}(53);
+    sediment_params.Ny3 = data{2}(54);
+    sediment_params.Pz3 = data{2}(55);
 
     % pH module. NOTE: experimental feature
     % !!!!!!! Recommend to use #3 Phreeqc
@@ -134,42 +137,43 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.pH_algorithm = 0;
 
     % chemical constants from file
-    sediment_params.k_OM = data{2}(1);
-    sediment_params.k_OMb = data{2}(2);
-    sediment_params.k_DOM1 = data{2}(3);
-    sediment_params.k_DOM2 = data{2}(4);
-    sediment_params.Km_O2 = data{2}(5);
-    sediment_params.Km_NO3 = data{2}(6);
-    sediment_params.Km_FeOH3 = data{2}(7);
-    sediment_params.Km_FeOOH = data{2}(8);
-    sediment_params.Km_SO4 = data{2}(9);
-    sediment_params.Km_oxao = data{2}(10);
-    sediment_params.Km_amao = data{2}(11);
-    sediment_params.Kin_O2 = data{2}(12);
-    sediment_params.Kin_NO3 = data{2}(13);
-    sediment_params.Kin_FeOH3 = data{2}(14);
-    sediment_params.Kin_FeOOH = data{2}(15);
-    sediment_params.k_amox = data{2}(16);
-    sediment_params.k_Feox = data{2}(17);
-    sediment_params.k_Sdis = data{2}(18);
-    sediment_params.k_Spre = data{2}(19);
-    sediment_params.k_FeS2pre = data{2}(20);
-    sediment_params.k_alum = data{2}(21);
-    sediment_params.k_pdesorb_a = data{2}(22);
-    sediment_params.k_pdesorb_b = data{2}(23);
-    sediment_params.k_rhom = data{2}(24);
-    sediment_params.k_tS_Fe = data{2}(25);
-    sediment_params.Ks_FeS = data{2}(26);
-    sediment_params.k_Fe_dis = data{2}(27);
-    sediment_params.k_Fe_pre = data{2}(28);
-    sediment_params.k_apa = data{2}(29);
-    sediment_params.kapa = data{2}(30);
-    sediment_params.k_oms = data{2}(31);
-    sediment_params.k_tsox = data{2}(32);
-    sediment_params.k_FeSpre = data{2}(33);
-    sediment_params.accel = data{2}(34);
-    sediment_params.f_pfe = data{2}(35);
-    sediment_params.k_pdesorb_c = data{2}(36);
+    sediment_params.k_Chl = data{2}(1);
+    sediment_params.k_POP = data{2}(2);
+    sediment_params.k_POC = data{2}(3);
+    sediment_params.k_DOP = data{2}(4);
+    sediment_params.k_DOC = data{2}(5);
+    sediment_params.Km_O2 = data{2}(6);
+    sediment_params.Km_NO3 = data{2}(7);
+    sediment_params.Km_FeOH3 = data{2}(8);
+    sediment_params.Km_FeOOH = data{2}(9);
+    sediment_params.Km_SO4 = data{2}(10);
+    sediment_params.Km_oxao = data{2}(11);
+    sediment_params.Km_amao = data{2}(12);
+    sediment_params.Kin_O2 = data{2}(13);
+    sediment_params.Kin_NO3 = data{2}(14);
+    sediment_params.Kin_FeOH3 = data{2}(15);
+    sediment_params.Kin_FeOOH = data{2}(16);
+    sediment_params.k_amox = data{2}(17);
+    sediment_params.k_Feox = data{2}(18);
+    sediment_params.k_Sdis = data{2}(19);
+    sediment_params.k_Spre = data{2}(20);
+    sediment_params.k_FeS2pre = data{2}(21);
+    sediment_params.k_alum = data{2}(22);
+    sediment_params.k_pdesorb_a = data{2}(23);
+    sediment_params.k_pdesorb_b = data{2}(24);
+    sediment_params.k_rhom = data{2}(25);
+    sediment_params.k_tS_Fe = data{2}(26);
+    sediment_params.Ks_FeS = data{2}(27);
+    sediment_params.k_Fe_dis = data{2}(28);
+    sediment_params.k_Fe_pre = data{2}(29);
+    sediment_params.k_apa = data{2}(30);
+    sediment_params.kapa = data{2}(31);
+    sediment_params.k_oms = data{2}(32);
+    sediment_params.k_tsox = data{2}(33);
+    sediment_params.k_FeSpre = data{2}(34);
+    sediment_params.accel = data{2}(35);
+    sediment_params.f_pfe = data{2}(36);
+    sediment_params.k_pdesorb_c = data{2}(37);
 end
 
 function [sediment_concentrations ] = init_concentrations(pH)
@@ -184,10 +188,10 @@ function [sediment_concentrations ] = init_concentrations(pH)
         Init = dlmread('IO/sediment_initial_concentrations.txt', '\t', 1, 0);
         zz = [0:dz:z_max]'; %solution depth domain
         in_z = Init(1:end, 1);
-        sediment_concentrations.OM1 = interp1(in_z, Init(1:end, 2), zz);
-        sediment_concentrations.OM2 = interp1(in_z, Init(1:end, 3), zz);
-        sediment_concentrations.DOM1 = interp1(in_z, Init(1:end, 4), zz);
-        sediment_concentrations.DOM2 = interp1(in_z, Init(1:end, 5), zz);
+        sediment_concentrations.POP = interp1(in_z, Init(1:end, 2), zz);
+        sediment_concentrations.POC = interp1(in_z, Init(1:end, 3), zz);
+        sediment_concentrations.DOP = interp1(in_z, Init(1:end, 4), zz);
+        sediment_concentrations.DOC = interp1(in_z, Init(1:end, 5), zz);
         sediment_concentrations.O2 = interp1(in_z, Init(1:end, 6), zz);
         sediment_concentrations.NO3 = interp1(in_z, Init(1:end, 7), zz);
         sediment_concentrations.NH4 = interp1(in_z, Init(1:end, 8), zz);
@@ -215,11 +219,12 @@ function [sediment_concentrations ] = init_concentrations(pH)
         sediment_concentrations.CO3 = interp1(in_z, Init(1:end, 30), zz);
         sediment_concentrations.HCO3 = interp1(in_z, Init(1:end, 31), zz);
         sediment_concentrations.H2CO3 = interp1(in_z, Init(1:end, 32), zz);
+        sediment_concentrations.Chl = interp1(in_z, Init(1:end, 33), zz);
     else
-        sediment_concentrations.OM1     = ones(n,1) * 0;
-        sediment_concentrations.OM2     = ones(n,1) * 0;
-        sediment_concentrations.DOM1    = ones(n,1) * 0;
-        sediment_concentrations.DOM2    = ones(n,1) * 0;
+        sediment_concentrations.POP     = ones(n,1) * 0;
+        sediment_concentrations.POC     = ones(n,1) * 0;
+        sediment_concentrations.DOP    = ones(n,1) * 0;
+        sediment_concentrations.DOC    = ones(n,1) * 0;
         sediment_concentrations.O2      = ones(n,1) * 0;
         sediment_concentrations.NO3     = ones(n,1) * 0;
         sediment_concentrations.NH4     = ones(n,1) * 0;
@@ -247,6 +252,7 @@ function [sediment_concentrations ] = init_concentrations(pH)
         sediment_concentrations.CO3     = ones(n,1) * 0;
         sediment_concentrations.HCO3    = ones(n,1) * 0;
         sediment_concentrations.H2CO3   = ones(n,1) * 0;
+        sediment_concentrations.Chl   = ones(n,1) * 0;
 
     end
 end
@@ -343,8 +349,8 @@ function [sediment_matrix_templates] = templates()
     [HCO3_AL, HCO3_AR]        = cn_template_dirichlet(sediment_params.D_HCO3 + Db, tortuosity, v, phi, dx, dt, n);
     [NH3_AL, NH3_AR]        = cn_template_dirichlet(sediment_params.D_NH3 + Db, tortuosity, v, phi, dx, dt, n);
     [H2CO3_AL, H2CO3_AR]        = cn_template_dirichlet(sediment_params.D_H2CO3 + Db, tortuosity, v, phi, dx, dt, n);
-    [DOM1_AL, DOM1_AR]        = cn_template_dirichlet(sediment_params.D_DOM1 + Db, tortuosity, v, phi, dx, dt, n);
-    [DOM2_AL, DOM2_AR]        = cn_template_dirichlet(sediment_params.D_DOM2 + Db, tortuosity, v, phi, dx, dt, n);
+    [DOP_AL, DOP_AR]        = cn_template_dirichlet(sediment_params.D_DOP + Db, tortuosity, v, phi, dx, dt, n);
+    [DOC_AL, DOC_AR]        = cn_template_dirichlet(sediment_params.D_DOC + Db, tortuosity, v, phi, dx, dt, n);
 
 
     sediment_matrix_templates = {...
@@ -367,8 +373,8 @@ function [sediment_matrix_templates] = templates()
         HCO3_AL, HCO3_AR, 'HCO3'; % 16
         NH3_AL, NH3_AR, 'NH3'; % 17
         H2CO3_AL, H2CO3_AR, 'H2CO3'; %18
-        DOM1_AL, DOM1_AR, 'DOM1'; %19
-        DOM2_AL, DOM2_AR, 'DOM2'; %20
+        DOP_AL, DOP_AR, 'DOP'; %19
+        DOC_AL, DOC_AR, 'DOC'; %20
     };
 
 end

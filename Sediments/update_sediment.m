@@ -11,8 +11,11 @@ function [sediment_bc] = update_sediment(mylake_temp_results, mylake_params, sed
     phi = sediment_params.phi;
 
     sediment_bc.O2_c = dissolved_bc(mylake_temp_results.O2z, phi);
-    sediment_bc.OM1_fx = solid_bc(mylake_temp_results.Chlz, w_chl, phi) + solid_bc(mylake_temp_results.Cz, w_chl_2, phi);
-    sediment_bc.OM2_fx = solid_bc(mylake_temp_results.POCz, w_s, phi);
+
+    % Change here::::
+    sediment_bc.Chl_fx = solid_bc(mylake_temp_results.Chlz, w_chl, phi) + solid_bc(mylake_temp_results.Cz, w_chl_2, phi);
+    sediment_bc.POP_fx = solid_bc(mylake_temp_results.POPz, w_s, phi);
+    sediment_bc.POC_fx = solid_bc(mylake_temp_results.POCz, w_s, phi);
     sediment_bc.PO4_c = dissolved_bc(mylake_temp_results.Pz, phi);
     sediment_bc.NO3_c = dissolved_bc(mylake_temp_results.NO3z, phi);
     sediment_bc.FeOH3_fx = solid_bc(mylake_temp_results.Fe3z, w_s, phi);
@@ -39,8 +42,8 @@ function [sediment_bc] = update_sediment(mylake_temp_results, mylake_params, sed
     sediment_bc.HS_c = 1.01E-10;
     sediment_bc.H2S_c = 1.06E-10;
     sediment_bc.H2CO3_c = 1.06E-15;
-    sediment_bc.DOM1_c = dissolved_bc(mylake_temp_results.DOPz, phi);
-    sediment_bc.DOM2_c = dissolved_bc(mylake_temp_results.DOCz, phi);
+    sediment_bc.DOP_c = dissolved_bc(mylake_temp_results.DOPz, phi);
+    sediment_bc.DOC_c = dissolved_bc(mylake_temp_results.DOCz, phi);
     sediment_bc.T = mylake_temp_results.Tz(end);
 
 end

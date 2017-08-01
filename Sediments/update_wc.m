@@ -15,8 +15,8 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     Fe2z = update_C_as_neumann(Fe2z, sediment_transport_fluxes.Fe2, MyLake_params, sediment_params);
     NO3z = update_C_as_neumann(NO3z, sediment_transport_fluxes.NO3, MyLake_params, sediment_params);
     NH4z = update_C_as_neumann(NH4z, sediment_transport_fluxes.NH4, MyLake_params, sediment_params);
-    DOPz = update_C_as_neumann(DOPz, sediment_transport_fluxes.DOM1, MyLake_params, sediment_params);
-    DOCz = update_C_as_neumann(DOCz, sediment_transport_fluxes.DOM2, MyLake_params, sediment_params);
+    DOPz = update_C_as_neumann(DOPz, sediment_transport_fluxes.DOP, MyLake_params, sediment_params);
+    DOCz = update_C_as_neumann(DOCz, sediment_transport_fluxes.DOC, MyLake_params, sediment_params);
 
     % % Boudreau, B.P., 1999. Metals and models : Diagenetic modelling in freshwater lacustrine sediments *. , pp.227–251.
 
@@ -26,8 +26,8 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     Fe2z = update_C_as_neumann(Fe2z, sediment_bioirrigation_fluxes.Fe2, MyLake_params, sediment_params);
     NO3z = update_C_as_neumann(NO3z, sediment_bioirrigation_fluxes.NO3, MyLake_params, sediment_params);
     NH4z = update_C_as_neumann(NH4z, sediment_bioirrigation_fluxes.NH4, MyLake_params, sediment_params);
-    DOPz = update_C_as_neumann(DOPz, sediment_bioirrigation_fluxes.DOM1, MyLake_params, sediment_params);
-    DOCz = update_C_as_neumann(DOCz, sediment_bioirrigation_fluxes.DOM2, MyLake_params, sediment_params);
+    DOPz = update_C_as_neumann(DOPz, sediment_bioirrigation_fluxes.DOP, MyLake_params, sediment_params);
+    DOCz = update_C_as_neumann(DOCz, sediment_bioirrigation_fluxes.DOC, MyLake_params, sediment_params);
 
     mylake_new_resutls.O2z = O2z;
     mylake_new_resutls.Pz = Pz;
