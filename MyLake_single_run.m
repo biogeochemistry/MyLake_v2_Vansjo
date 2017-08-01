@@ -90,12 +90,12 @@ sediment_params{35} = x(11);  %    accel
 % lake_params{25 -5} = x(13); % 20    scaling factor for inflow concentration of total P (-)
 % lake_params{26 -5} = x(14); % 21    scaling factor for inflow concentration of diss. organic P (-)
 lake_params{28 -5} = x(12); % 23    scaling factor for inflow concentration of DOC  (-)
-lake_params{29 -5} = x(13); % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{24 -5} = x(13); % 23    scaling factor for inflow concentration of POC  (-)
 lake_params{39 -5} = x(14); % 34    Scaling factor for inflow concentration of Fe3 (-)
 
 
 % % Trials:
-lake_params{24 -5} = 100; % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{24 -5} = 1; % 23    scaling factor for inflow concentration of POC  (-)
 lake_params{51 -5} = 0.01;  % % 8  settling velocity for S (m day-1)
 % lake_params{15 -5} = 2e-4; % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 % lake_params{59 -5} = 1e-5; % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
