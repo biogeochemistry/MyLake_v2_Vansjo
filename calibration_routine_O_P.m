@@ -129,7 +129,7 @@ try
 
     x'
 
-    res = sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2])
+    res = sum([rmsd_TOTP, rmsd_Chl, rmsd_PO4, rmsd_PP, rmsd_O2])
 
 catch ME
     fprintf('\tID: %s\n', ME.identifier)

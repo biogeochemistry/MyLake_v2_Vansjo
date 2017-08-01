@@ -75,6 +75,10 @@ x = [316.9331e-003, 212.4112e-003, 1.3954e+000, 964.7451e-003, 500.0000e-003, 11
 
 x = [500.0000e-003,   101.0838e-003,     1.0000e+000,     1.6996e+000,   188.6713e-003,   100.0000e-003,     1.4400e+000,     1.6311e+000,    10.0000e-003,     1.0000e+000,     2.0000e+000,     2.7065e+000,    4*62.1176e-003,    85.8779e-003]; % RMSD 137.82
 
+x = [472.4167e-003,   192.8083e-003,     1.0000e+000,   806.4479e-003,    59.1485e-003,   100.0000e-003,     1.0000e+000,     1.8765e+000,    10.0000e-003,     2.0000e+000,     2.1591e+000,     0.0000e+000,     0.0000e+000,   148.5501e-003,   100.0000e-006,    10.0000e-006,     5.0771e-003,    38.0006e-003];
+
+
+
 lake_params{52 -5} = x(1); % 9     settling velocity for Chl1 a (m day-1)
 lake_params{54 -5} = x(2); % 11    loss rate (1/day) at 20 deg C
 lake_params{55 -5} = x(3); % 12    specific growth rate (1/day) at 20 deg C
@@ -86,24 +90,28 @@ lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
 lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
 sediment_params{23} = x(10);  % 38 R16 sorption of P on Fe k
 sediment_params{35} = x(11);  %    accel
-% lake_params{21 -5} = x(12); % 16    scaling factor for inflow volume (-)
-% lake_params{25 -5} = x(13); % 20    scaling factor for inflow concentration of total P (-)
-% lake_params{26 -5} = x(14); % 21    scaling factor for inflow concentration of diss. organic P (-)
+
+
 lake_params{28 -5} = x(12); % 23    scaling factor for inflow concentration of DOC  (-)
-lake_params{24 -5} = x(13); % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{24 -5} = x(13); % 19    scaling factor for inflow concentration of POC (-)
 lake_params{39 -5} = x(14); % 34    Scaling factor for inflow concentration of Fe3 (-)
+
+lake_params{15 -5} = x(15); % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{59 -5} = x(16); % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{17 -5} = x(17); % 12    Optical cross_section of chlorophyll (m2 mg-1)
+lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-1)
 
 
 % % Trials:
-lake_params{24 -5} = 1; % 23    scaling factor for inflow concentration of POC  (-)
-lake_params{51 -5} = 0.01;  % % 8  settling velocity for S (m day-1)
+% lake_params{24 -5} = 1; % 23    scaling factor for inflow concentration of POC  (-)
+% lake_params{51 -5} = 0.01;  % % 8  settling velocity for S (m day-1)
 % lake_params{15 -5} = 2e-4; % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 % lake_params{59 -5} = 1e-5; % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 % lake_params{17 -5} = 0.015; % 12    Optical cross_section of chlorophyll (m2 mg-1)
 % lake_params{60 -5} = 0.015; % 17    Optical cross_section of chlorophyll (m2 mg-1)
 % sediment_params{35} = 50;  %    accel
 
-lake_params{61 -5} = 0.01; % 18    Settling velocity for Chl2 a (m day-1)
+% lake_params{61 -5} = 0.01; % 18    Settling velocity for Chl2 a (m day-1)
 % lake_params{62 -5} = 0.1;  % 19    Loss rate (1/day) at 20 deg C
 % lake_params{63 -5} = 2;  % 20    Specific growth rate (1/day) at 20 deg C
 % lake_params{64 -5} = 6;  % 21    Half saturation growth P level (mg/m3)
@@ -223,39 +231,63 @@ save('IO/MyLakeResults.mat', 'MyLake_results', 'Sediment_results')
 disp('Finished at:')
 disp(datetime('now'));
 
-% if is_metrics == true
+if is_metrics == true
 
-%     zinx=find(MyLake_results.basin1.z<4);
-%     TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:)+MyLake_results.basin1.concentrations.DOP(zinx,:))', 2);
-%     Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
-%     P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
-%     PP_mod = mean((MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
+    load('Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
 
-%     load 'obs/store_obs/TOTP.dat' % measured
-%     % load 'obs/store_obs/Cha.dat' % measured
-%     load 'obs/store_obs/Cha_aquaM_march_2017.dat' % measured
-%     load 'obs/store_obs/PO4.dat' % measured
-%     load 'obs/store_obs/Part.dat' % measured
+    depths = [5;10;15;20;25;30;35;40];
+    rmsd_O2 = 0;
 
 
-%     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, TOTP(:,1)));
-%     r_TOTP = RMSE(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
+    for i=1:size(depths,1)
+        d = depths(i);
+        zinx=find(MyLake_results.basin1.z == d);
+        O2_measured = res.T(res.depth1 == d);
+        day_measured = res.date(res.depth1 == d);
+        day_measured = day_measured(~isnan(O2_measured));
+        O2_measured = O2_measured(~isnan(O2_measured));
+
+        O2_mod = MyLake_results.basin1.concentrations.O2(zinx,:)'/1000;
+        [T_date,loc_sim, loc_obs] = intersect(MyLake_results.basin1.days, day_measured);
+
+        % rmsd_O2 = rmsd_O2 + RMSE(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
+        rmsd_O2 = rmsd_O2 + sqrt(mean((O2_mod(loc_sim, 1)-O2_measured(loc_obs, 1)).^2));
+    end
+
+    zinx=find(MyLake_results.basin1.z<4);
+    TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.DOP(zinx,:) + MyLake_results.basin1.concentrations.POP(zinx,:))', 2);
+    Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
+    P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
+    POP_mod = mean((MyLake_results.basin1.concentrations.POP(zinx,:) + MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
+
+    load 'obs/store_obs/TOTP.dat' % measured
+    % load 'obs/store_obs/Cha.dat' % measured
+    load 'obs/store_obs/Cha_aquaM_march_2017.dat' % measured
+    load 'obs/store_obs/PO4.dat' % measured
+    load 'obs/store_obs/Part.dat' % measured
 
 
-%     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha_aquaM_march_2017(:,1)));
-%     r_Chl = RMSE(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, TOTP(:,1)));
+    rmsd_TOTP = sqrt(mean((TP_mod(loc_sim, 1)-TOTP(loc_obs, 2)).^2));
 
 
-%     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
-%     r_PO4 = RMSE(P_mod(loc_sim, 1), PO4(loc_obs, 2));
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha_aquaM_march_2017(:,1)));
+    rmsd_Chl = sqrt(mean((Chl_mod(loc_sim, 1)-Cha_aquaM_march_2017(loc_obs, 2)).^2));
 
 
-%     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Part(:,1)));
-%     r_PP = RMSE(PP_mod(loc_sim, 1), Part(loc_obs, 2));
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
+    rmsd_PO4 = sqrt(mean((P_mod(loc_sim, 1)-PO4(loc_obs, 2)).^2));
 
-%     disp('RMSD P:')
-%     disp(sum([r_TOTP, r_Chl, r_PO4, r_PP]))
-% end
+
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Part(:,1)));
+    rmsd_PP = sqrt(mean((POP_mod(loc_sim, 1)-Part(loc_obs, 2)).^2));
+
+
+    disp('RMSD 3xRMSE(P)+RMSE(O2):')
+    disp(sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2]))
+    disp('RMSD = RMSE(P)+RMSE(O2):')
+    disp(sum([rmsd_TOTP, rmsd_Chl, rmsd_PO4, rmsd_PP, rmsd_O2]))
+end
 
 
 toc
