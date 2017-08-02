@@ -318,7 +318,7 @@ K0_O2t = zeros(1,length(tt));      %O2 solubility coefficient
 dO2Chlt = zeros(Nz,length(tt));    %Oxygen change due to phytoplankton (mg m-3))
 dO2BODt = zeros(Nz,length(tt));    %Oxygen consumption due to BOD (mg m-3))
 % dO2SODt = zeros(Nz,length(tt));    %Oxygen consumption due to SOD (mg m-3))
-dfloc =  zeros(Nz,length(tt));  % floculation rates
+dfloc_DOC =  zeros(Nz,length(tt));  % floculation rates
 testi1t = zeros(Nz,length(tt));
 testi2t = zeros(Nz,length(tt));testi3t = zeros(Nz,length(tt));
 lvlDzt = zeros(1,length(tt));
@@ -1198,7 +1198,7 @@ for i = 1:length(tt)
 
         if(Hi<=0)
             IceIndicator=0;
-            %disp(['Ice-off, ' datestr(datenum(M_start)+i-1)])
+            disp(['Ice-off, ' datestr(datenum(M_start)+i-1)])
             XE_melt=(-Hi-(WEQs*rho_fw/rho_ice))*rho_ice*L_ice/(24*60*60);
             %(W m-2) snow part is in case ice has melted from bottom leaving some snow on top (reducing XE_melt)
             Hi=0;
@@ -1237,7 +1237,7 @@ for i = 1:length(tt)
             Hi=Hi+HFrazil;
             HFrazil=0;
             DoF(qq)=i;
-            %disp(['Ice-on, ' datestr(datenum(M_start)+i-1)])
+            disp(['Ice-on, ' datestr(datenum(M_start)+i-1)])
             qq=qq+1;
         end
 
@@ -1685,7 +1685,7 @@ MyLake_results.O2_eqt = O2_eqt;
 MyLake_results.K0_O2t = K0_O2t;
 MyLake_results.dO2Chlt = dO2Chlt;
 MyLake_results.dO2BODt = dO2BODt;
-MyLake_results.dfloc = dfloc;
+MyLake_results.dfloc_DOC = dfloc_DOC;
 MyLake_results.testi1t = testi1t;
 MyLake_results.testi2t = testi2t;
 MyLake_results.z = zz;
@@ -2074,9 +2074,11 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
 
     %flocculation
     if (floculation_switch==1) %Fokema
-        dfloc = 0.030 .* DOCz;  % NOTE: Why 1000 here?
+        dfloc_DOC = 0.030 .* DOCz;
+        dfloc_DOP = 0.030 .* DOPz;
     else
-        dfloc = 0;
+        dfloc_DOC = 0;
+        dfloc_DOP = 0;
     end
 
 
@@ -2199,7 +2201,7 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
 
     dcdt(:,1)  = -0.25*R8  - R6 - 2*R9 - (Cx1*R1a + Cx1*R1b + Cx2*R1c + Cx3*R1d+ Cx2*R1e+ Cx3*R1f) - 3*R12 + Cx1 * R_dO2_Chl; % O2z
     dcdt(:,2)  = -Ra - R10a + R_dChl_growth;% Chlz
-    dcdt(:,3)  = -Rd - R10d - dfloc;% DOCz
+    dcdt(:,3)  = -Rd - R10d - dfloc_DOC;% DOCz
     dcdt(:,4)  = - 0.8*(Cx1*R2a + Cx1*R2b + Cx2*R2c + Cx3*R2d+ Cx2*R2e + Cx3*R2f) + R9 - Ny1 * (R_dChl_growth + R_dCz_growth); % NO3z
     dcdt(:,5)  = - 4*(Cx1*R3a_Fe + Cx1*R3b_Fe + Cx2*R3c_Fe + Cx3*R3d_Fe+ Cx2*R3e_Fe+ Cx3*R3f_Fe) - 2*R7  + R8 - R16a; % Fe3z
     dcdt(:,6)  = - 0.5*(Cx1*R5a + Cx1*R5b + Cx2*R5c + Cx3*R5d+ Cx2*R5e+ Cx3*R5f) + R6 ; % SO4z
@@ -2212,8 +2214,8 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
     dcdt(:,13) = R16a - R16b;% PPz
     dcdt(:,14) = -3*R19 ;% Ca2z
     dcdt(:,15) = -Rf - R10f;% CO2z
-    dcdt(:,16) = -Rc - R10c - R_dDOP;% DOPz
+    dcdt(:,16) = -Rc - R10c - R_dDOP - dfloc_DOP;% DOPz
     dcdt(:,17) = -Rb - R10b + R_dCz_growth;% Cz
-    dcdt(:,18) = dfloc - Rf; % POCz
-    dcdt(:,19) = - Re;% POPz
+    dcdt(:,18) = dfloc_DOC - Rf; % POCz
+    dcdt(:,19) = - Re + dfloc_DOP;% POPz
 %end of function
