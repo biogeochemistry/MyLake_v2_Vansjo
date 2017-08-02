@@ -132,5 +132,5 @@ sediment_params = {
     10,     'Cx3';         % 53           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     1,      'Ny3';         % 54           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0,      'Pz3';         % 55           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    5,      'n_ts';        % 56           % number of time steps during 1 day for chemical and sediment module (the modules should be in sync)
+    10,      'n_ts';        % 56           % number of time steps during 1 day for chemical and sediment module (the modules should be in sync)
     };

@@ -112,7 +112,7 @@ lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-
 
 % % Trials:
 lake_params{28 -5} = 1; % 23    scaling factor for inflow concentration of DOC  (-)
-lake_params{24 -5} = 10; % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{24 -5} = 5; % 23    scaling factor for inflow concentration of POC  (-)
 % lake_params{51 -5} = 0.01;  % % 8  settling velocity for S (m day-1)
 % lake_params{15 -5} = 2e-4; % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 % lake_params{59 -5} = 1e-5; % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
