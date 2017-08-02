@@ -75,9 +75,17 @@ x = [316.9331e-003, 212.4112e-003, 1.3954e+000, 964.7451e-003, 500.0000e-003, 11
 
 x = [500.0000e-003,   101.0838e-003,     1.0000e+000,     1.6996e+000,   188.6713e-003,   100.0000e-003,     1.4400e+000,     1.6311e+000,    10.0000e-003,     1.0000e+000,     2.0000e+000,     2.7065e+000,    4*62.1176e-003,    85.8779e-003]; % RMSD 137.82
 
-x = [472.4167e-003,   192.8083e-003,     1.0000e+000,   806.4479e-003,    59.1485e-003,   100.0000e-003,     1.0000e+000,     1.8765e+000,    10.0000e-003,     2.0000e+000,     2.1591e+000,     0.0000e+000,     0.0000e+000,   148.5501e-003,   100.0000e-006,    10.0000e-006,     5.0771e-003,    38.0006e-003];
+
+% One of the best with ++++++++++++++++++++++++++++++
+x = [472.4167e-003,   192.8083e-003,     1.0000e+000,   806.4479e-003,    59.1485e-003,   100.0000e-003,     1.0000e+000,     1.8765e+000,    10.0000e-003,     2.0000e+000,     2.1591e+000,     0.0000e+000,     0.0000e+000,   148.5501e-003,   100.0000e-006,    10.0000e-006,     5.0771e-003,    38.0006e-003]; % RMSD 135.6022
+
+x(12) = 1; % 23    scaling factor for inflow concentration of POC  (-)
+x(9) = 0.01;  % % 8  settling velocity for S (m day-1)
+x(5) = 0.01; % 18    Settling velocity for Chl2 a (m day-1)
+% ++++++++++++++++++++++++++++++
 
 
+% x = [0.0643, 0.28, 1.0077, 1.7957, 0.0688, 0.2460, 1.3924, 0.3426, 0.0644, 1.7694, 1.25, 0.3723, 0.2254, 0, 1.4055e-5, 2.9596e-5, 0.0230, 0.0289]; % RMSD 148.29 NIva24core
 
 lake_params{52 -5} = x(1); % 9     settling velocity for Chl1 a (m day-1)
 lake_params{54 -5} = x(2); % 11    loss rate (1/day) at 20 deg C
@@ -103,7 +111,8 @@ lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-
 
 
 % % Trials:
-% lake_params{24 -5} = 1; % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{28 -5} = 1; % 23    scaling factor for inflow concentration of DOC  (-)
+lake_params{24 -5} = 10; % 23    scaling factor for inflow concentration of POC  (-)
 % lake_params{51 -5} = 0.01;  % % 8  settling velocity for S (m day-1)
 % lake_params{15 -5} = 2e-4; % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 % lake_params{59 -5} = 1e-5; % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
@@ -116,9 +125,12 @@ lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-
 % lake_params{63 -5} = 2;  % 20    Specific growth rate (1/day) at 20 deg C
 % lake_params{64 -5} = 6;  % 21    Half saturation growth P level (mg/m3)
 
+
+% sediment_params{56} = 1;  %    ts during the day
+
 % parfor
 for current_run = 1:no_runs
-    if current_run == 1;
+    if current_run == 1
         run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
         clim_ID = run_ID
         if use_INCA == 1

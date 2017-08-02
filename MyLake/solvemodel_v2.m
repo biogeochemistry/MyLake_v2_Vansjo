@@ -94,7 +94,6 @@ selfshading_switch=1;           %light attenuation by chlorophyll a: 0=no, 1=yes
 tracer_switch=1;                %simulate tracers:  0=no, 1=yes
 matsedlab_sediment_module = 1;  %MATSEDLAB sediment module  %% NEW_DOCOMO
 wc_chemistry_module = 1;        % WC chemistry module: on/off
-ts_during_day = 5;             % WC chemistry module: time steps during the day: >= 25; NOTE: Testing 5
 wc_int_method = 0;              % WC chemistry module: method: 0 = Runge-Kutta 4th order; 1 = Buthcer's 5th Order;
 %fokema
 photobleaching=0;               %photo bleaching: 0=TSA model, 1=FOKEMA model
@@ -1318,7 +1317,7 @@ for i = 1:length(tt)
 
         C0 = [O2z, Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, POCz, POPz];
 
-        [C_new, wc_rates_av] = wc_chemical_reactions_module(mylake_params, sediment_params, mylake_temp_results, C0, dt/365,ts_during_day, wc_int_method);
+        [C_new, wc_rates_av] = wc_chemical_reactions_module(mylake_params, sediment_params, mylake_temp_results, C0, dt, sediment_params.n_of_time_steps_during_1_dt_of_myLake, wc_int_method);
 
         O2z  = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,1), 31998.8);
         Chlz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,2), 30973.762);
@@ -1793,57 +1792,20 @@ Fi = spdiags(Gi,-1:1,Nz,Nz)';
 %end of function
 
 
-function [Pdiss, Pfpart]=Ppart(vf,TIP,Psat,Fmax,rho_sed,Fstable)
-% Function for calculating the partitioning between
-% dissolved and inorganic particle bound phosphorus.
-% Based on Langmuir isotherm approach
-%vf:    volume fraction of suspended inorganic matter (m3 m-3); S/rho_sed OR (1-porosity)
-%TIP:   Total inorganic phosphorus (mg m-3)
-%Psat, mg m-3 - Langmuir half-saturation parameter
-%Fmax, mg kg-1  - Langmuir scaling parameter
-%rho_sed, kg m-3 - Density of dry inorganic sediment mass
-%Fstable, mg kg-1 - Inactive P conc. in inorg. particles
 
-N=length(TIP);
-Pdiss=NaN*ones(N,1);
-
-for w=1:N
-    a = vf(w)-1;
-    b = TIP(w) + (vf(w)-1)*Psat - vf(w)*rho_sed*(Fmax+Fstable);
-    c = Psat*TIP(w) - vf(w)*rho_sed*Fstable*Psat ;
-    Pdiss(w) = max(real(roots([a b c])));
-end
-
-
-%NEW!!!! Threshold value for numerical stability (added 020707):
-%truncate negative values
-cutinx=find(Pdiss < 0);
-if (isempty(cutinx)==0)
-    Pdiss(cutinx)=0;
-    %disp('NOTE: Pdiss < 0, values truncated')
-end
-
-%truncate too high values
-cutinx=find(Pdiss > (TIP - Fstable*rho_sed*vf));
-if (isempty(cutinx)==0)
-    Pdiss(cutinx)=(TIP(cutinx) - Fstable*rho_sed*vf(cutinx));
-    %disp('NOTE: Pdiss > (TIP - Fstable*rho_sed*vf), values truncated')
-end
-
-Pfpart = (TIP - (1-vf).*Pdiss)./(rho_sed*vf); %inorg. P conc. in sediment particles(mg kg-1 dry w.)
-%end of function
-
-
-
-%% rates: rates of chemical equations in water column
-
-
-function [C_new, rates] = wc_chemical_reactions_module(mylake_params, sediment_params, mylake_temp_results, C0, dt, ts, method)
+function [C_new, rates] = wc_chemical_reactions_module(mylake_params, sediment_params, mylake_temp_results, C0, dt_mylake, n_of_time_steps_during_1_dt_of_myLake, method)
     % ts - how many time steps during 1 day
+    % dt - time step in chemical module [years]
+    % dt_mylake - time step in MyLake [days]
+    % n_of_time_steps_during_1_dt_of_myLake - amount of steps during of 1 dt of MyLake;
+
+
+    dt = (dt_mylake/365) / n_of_time_steps_during_1_dt_of_myLake;
+
     if method == 0
-        [C_new, rates] = rk4(mylake_params, sediment_params, mylake_temp_results, C0, dt,ts);
+        [C_new, rates] = rk4(mylake_params, sediment_params, mylake_temp_results, C0, dt, n_of_time_steps_during_1_dt_of_myLake);
     elseif method == 1
-        [C_new, rates] = butcher5(mylake_params, sediment_params, mylake_temp_results, C0, dt,ts);
+        [C_new, rates] = butcher5(mylake_params, sediment_params, mylake_temp_results, C0, dt, n_of_time_steps_during_1_dt_of_myLake);
     end
     C_new = (C_new>0).*C_new;
 
@@ -1851,11 +1813,13 @@ function [C_new, rates] = wc_chemical_reactions_module(mylake_params, sediment_p
 
 
 %% rk4: Runge-Kutta 4th order integration
-function [C_new, rates_av] = rk4(mylake_params, sediment_params, mylake_temp_results, C0, dt,ts)
-    % ts - how many time steps during 1 day
+function [C_new, rates_av] = rk4(mylake_params, sediment_params, mylake_temp_results, C0, dt,n)
+    % ts - time step in chemical module [years]
+    % dt - time step in MyLake [days]
+    % (1/365/ts) = is how many steps during 1 dt of Mylake
+    % (dt/365) = is conversion of [days] to [years]
 
-    dt = dt/ts;
-    for i = 1:ts
+    for i = 1:n
         [dcdt_1, r_1] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0, dt);
         k_1 = dt.*dcdt_1;
         [dcdt_2, r_2] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0+0.5.*k_1, dt);
@@ -1892,11 +1856,9 @@ function [C_new, rates_av] = rk4(mylake_params, sediment_params, mylake_temp_res
     end
 
 %% butcher5: Butcher's Fifth-Order Runge-Kutta
-function [C_new, rates_av] = butcher5(mylake_params, sediment_params, mylake_temp_results, C0, dt,ts)
+function [C_new, rates_av] = butcher5(mylake_params, sediment_params, mylake_temp_results, C0, dt,n)
 
-
-    dt = dt/ts;
-    for i = 1:ts
+    for i = 1:n
         [dcdt_1, r_1] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0, dt);
         k_1 = dt.*dcdt_1;
         [dcdt_2, r_2] = wc_rates(mylake_params, sediment_params, mylake_temp_results, C0 + 1/4.*k_1, dt);

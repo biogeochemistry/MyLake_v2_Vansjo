@@ -64,7 +64,8 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.n = data{2}(43);;  % points in spatial grid
     sediment_params.depth = data{2}(44);  % sediment depth
     sediment_params.years = 1/365;  % 1 day #35
-    sediment_params.ts = data{2}(56);;  % time step
+    sediment_params.n_of_time_steps_during_1_dt_of_myLake = data{2}(56);  % time step
+    sediment_params.ts = 1/365/data{2}(56);  % time step
     x = linspace(0, sediment_params.depth, sediment_params.n);
     sediment_params.x = x;      % x-axis
 

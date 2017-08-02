@@ -9,7 +9,11 @@ format compact
 % lb = x0*0.1;
 % ub = x0*10;
 
-x = [500.0000e-003,   101.0838e-003,     1.0000e+000,     1.6996e+000,   188.6713e-003,   100.0000e-003,     1.4400e+000,     1.6311e+000,    10.0000e-003,     1.0000e+000,     2.0000e+000,     2.7065e+000,    4*62.1176e-003,    85.8779e-003, 2.00E-04, 3.00E-05, 0.015, 0.015]; % RMSD 137.82
+x = [472.4167e-003,   192.8083e-003,     1.0000e+000,   806.4479e-003,    59.1485e-003,   100.0000e-003,     1.0000e+000,     1.8765e+000,    10.0000e-003,     2.0000e+000,     2.1591e+000,     0.0000e+000,     0.0000e+000,   148.5501e-003,   100.0000e-006,    10.0000e-006,     5.0771e-003,    38.0006e-003]; % RMSD 135.6022
+
+x(12) = 1; % 23    scaling factor for inflow concentration of POC  (-)
+x(9) = 0.01;  % % 8  settling velocity for S (m day-1)
+x(5) = 0.01; % 18    Settling velocity for Chl2 a (m day-1)
 
 lb = [0.05, 0.1, 1, 0.2, 0.05, 0.1, 1, 0.2, 0.01, 1, 1,  0, 0, 0, 1e-5, 1e-5, 0.005, 0.005];
 ub = [0.5, 0.3, 1.5, 2, 0.5, 0.3, 1.5, 2, 1, 1e5, 100,  10, 100, 100, 1e-4, 1e-4, 0.045, 0.045];
@@ -70,6 +74,9 @@ run_INCA = 0; % 1- MyLake will run INCA, 0- No run
 use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
 is_save_results = false;
 
+% sediment_params{56} = 1; % Only for preliminary calibration: coarse time step for chemical and sediment modules
+
+
 disp(datetime('now'));
 
 try
@@ -129,7 +136,7 @@ try
 
     x'
 
-    res = sum([rmsd_TOTP, rmsd_Chl, rmsd_PO4, rmsd_PP, rmsd_O2])
+    res = sum([3*rmsd_TOTP, 5*rmsd_Chl, 5*rmsd_PO4, 3*rmsd_PP, rmsd_O2])
 
 catch ME
     fprintf('\tID: %s\n', ME.identifier)

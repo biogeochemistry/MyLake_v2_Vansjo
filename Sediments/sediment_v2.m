@@ -152,9 +152,8 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
 
 
 
-      ts_during_one_dt = 1;
       int_method = 0;
-      [C_new, rates(i-1)] = sediments_chemical_reactions_module(sediment_params, C0,dt,ts_during_one_dt, int_method);
+      [C_new, rates(i-1)] = sediments_chemical_reactions_module(sediment_params, C0,dt, int_method);
 
       O2(:,i-1)      = C_new(:,1);
       POP(:,i-1)      = C_new(:,2);
@@ -521,75 +520,67 @@ function C_new = pde_solver_neumann(AL, AR, C_old, flux_bc, coef)
       C_new = (C_new>0).*C_new;
 end
 
-function [C_new, rates] = sediments_chemical_reactions_module(sediment_params, C0,dt,ts, method)
-    % ts - how many time steps during 1 day
+function [C_new, rates] = sediments_chemical_reactions_module(sediment_params, C0,dt, method)
     if method == 0
-        [C_new, rates] = rk4(sediment_params, C0,ts,dt);
+        [C_new, rates] = rk4(sediment_params, C0,dt);
     elseif method == 1
-        [C_new, rates] = butcher5(sediment_params, C0,ts,dt);
+        [C_new, rates] = butcher5(sediment_params, C0,dt);
     end
     C_new = (C_new>0).*C_new;
 end
 
 %% rk4: Runge-Kutta 4th order integration
-function [C_new, rates] = rk4(sediment_params, C0,ts, dt)
+function [C_new, rates] = rk4(sediment_params, C0, dt)
     % ts - how many time steps during 1 day
 
-    dt = dt/ts;
-    for i = 1:ts
-        [dcdt_1, r_1] = sediment_rates(sediment_params, C0, dt);
-        k_1 = dt.*dcdt_1;
-        [dcdt_2, r_2] = sediment_rates(sediment_params, C0+0.5.*k_1, dt);
-        k_2 = dt.*dcdt_2;
-        [dcdt_3, r_3] = sediment_rates(sediment_params, C0+0.5.*k_2, dt);
-        k_3 = dt.*dcdt_3;
-        [dcdt_4, r_4] = sediment_rates(sediment_params, C0+k_3, dt);
-        k_4 = dt.*dcdt_4;
-        C_new = C0 + (k_1+2.*k_2+2.*k_3+k_4)/6;
-        C0 = C_new;
+    [dcdt_1, r_1] = sediment_rates(sediment_params, C0, dt);
+    k_1 = dt.*dcdt_1;
+    [dcdt_2, r_2] = sediment_rates(sediment_params, C0+0.5.*k_1, dt);
+    k_2 = dt.*dcdt_2;
+    [dcdt_3, r_3] = sediment_rates(sediment_params, C0+0.5.*k_2, dt);
+    k_3 = dt.*dcdt_3;
+    [dcdt_4, r_4] = sediment_rates(sediment_params, C0+k_3, dt);
+    k_4 = dt.*dcdt_4;
+    C_new = C0 + (k_1+2.*k_2+2.*k_3+k_4)/6;
+    C0 = C_new;
 
-        if sediment_params.rate_estimator_switch
-          % average rate
-          fields = fieldnames(r_1);
-          for fld_idx = 1:numel(fields)
-            rates.(fields{fld_idx}) = (r_1.(fields{fld_idx}) + 2*r_2.(fields{fld_idx}) + 2*r_3.(fields{fld_idx}) + r_4.(fields{fld_idx}))/6;
-          end
-        else
-          rates = false;
-        end
+    if sediment_params.rate_estimator_switch
+      % average rate
+      fields = fieldnames(r_1);
+      for fld_idx = 1:numel(fields)
+        rates.(fields{fld_idx}) = (r_1.(fields{fld_idx}) + 2*r_2.(fields{fld_idx}) + 2*r_3.(fields{fld_idx}) + r_4.(fields{fld_idx}))/6;
+      end
+    else
+      rates = false;
     end
 end
 
 %% butcher5: Butcher's Fifth-Order Runge-Kutta
-function [C_new, rates] = butcher5(sediment_params, C0,ts,dt)
+function [C_new, rates] = butcher5(sediment_params, C0,dt)
 
-    dt = dt/ts;
+    [dcdt_1, r_1] = sediment_rates(sediment_params, C0, dt);
+    k_1 = dt.*dcdt_1;
+    [dcdt_2, r_2] = sediment_rates(sediment_params, C0 + 1/4.*k_1, dt);
+    k_2 = dt.*dcdt_2;
+    [dcdt_3, r_3] = sediment_rates(sediment_params, C0 + 1/8.*k_1 + 1/8.*k_2, dt);
+    k_3 = dt.*dcdt_3;
+    [dcdt_4, r_4] = sediment_rates(sediment_params, C0 - 1/2.*k_2 + k_3, dt);
+    k_4 = dt.*dcdt_4;
+    [dcdt_5, r_5] = sediment_rates(sediment_params, C0 + 3/16.*k_1 + 9/16.*k_4, dt);
+    k_5 = dt.*dcdt_5;
+    [dcdt_6, r_6] = sediment_rates(sediment_params, C0 - 3/7.*k_1 + 2/7.*k_2 + 12/7.*k_3 - 12/7.*k_4 + 8/7.*k_5, dt);
+    k_6 = dt.*dcdt_6;
+    C_new = C0 + (7.*k_1 + 32.*k_3 + 12.*k_4 + 32.*k_5 + 7.*k_6)/90;
+    C0 = C_new;
 
-    for i = 1:ts
-        [dcdt_1, r_1] = sediment_rates(sediment_params, C0, dt);
-        k_1 = dt.*dcdt_1;
-        [dcdt_2, r_2] = sediment_rates(sediment_params, C0 + 1/4.*k_1, dt);
-        k_2 = dt.*dcdt_2;
-        [dcdt_3, r_3] = sediment_rates(sediment_params, C0 + 1/8.*k_1 + 1/8.*k_2, dt);
-        k_3 = dt.*dcdt_3;
-        [dcdt_4, r_4] = sediment_rates(sediment_params, C0 - 1/2.*k_2 + k_3, dt);
-        k_4 = dt.*dcdt_4;
-        [dcdt_5, r_5] = sediment_rates(sediment_params, C0 + 3/16.*k_1 + 9/16.*k_4, dt);
-        k_5 = dt.*dcdt_5;
-        [dcdt_6, r_6] = sediment_rates(sediment_params, C0 - 3/7.*k_1 + 2/7.*k_2 + 12/7.*k_3 - 12/7.*k_4 + 8/7.*k_5, dt);
-        k_6 = dt.*dcdt_6;
-        C_new = C0 + (7.*k_1 + 32.*k_3 + 12.*k_4 + 32.*k_5 + 7.*k_6)/90;
-        C0 = C_new;
-
-        % average rate
-        if sediment_params.rate_estimator_switch
-          fields = fieldnames(r_1);
-          for fld_idx = 1:numel(fields)
-            rates.(fields{fld_idx}) = (7*r_1.(fields{fld_idx}) + 32*r_3.(fields{fld_idx}) + 12*r_4.(fields{fld_idx}) + 32*r_5.(fields{fld_idx}) + 7*r_6.(fields{fld_idx}))/90;
-          end
-        else
-          rates = false;
-        end
+    % average rate
+    if sediment_params.rate_estimator_switch
+      fields = fieldnames(r_1);
+      for fld_idx = 1:numel(fields)
+        rates.(fields{fld_idx}) = (7*r_1.(fields{fld_idx}) + 32*r_3.(fields{fld_idx}) + 12*r_4.(fields{fld_idx}) + 32*r_5.(fields{fld_idx}) + 7*r_6.(fields{fld_idx}))/90;
+      end
+    else
+      rates = false;
     end
 end
 

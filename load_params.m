@@ -77,69 +77,60 @@ lake_params = {
     4.8497, 'T_ref_wc'};       % 72    Reference Temperature for rates
 
 sediment_params = {
-    10,    'k_Chl';  % 1
-    1,     'k_POP';  % 1
-    0.1,   'k_POC';  % 0.01
-    1,     'k_DOP';  % 1
-    0.1,   'k_DOC';  % 1
-    0.008, 'Km_O2';     % Canavan, R. W (2006)
-    0.01,  'Km_NO3';    % Canavan, R. W (2006)
-    0.2,   'Km_Fe(OH)3';  % Canavan, R. W (2006)
-    0.2,   'Km_FeOOH';
-    0.1,   'Km_SO4';   % Canavan, R. W (2006
-    0.001, 'Km_oxao';
-    0.1,   'Km_amao';
-    0.008, 'Kin_O2';     % the same as Km
-    0.01,  'Kin_NO3';    % the same as Km
-    0.2,   'Kin_FeOH3';  % the same as Km
-    0.2,   'Kin_FeOOH';  % the same as Km
-    20,    'k_amox';     % Canavan, R. W (2006)
-    5000,  'k_Feox';     % Canavan, R. W (2006)
-    0.1,   'k_Sdis';
-    2500,  'k_Spre';
-    3.17,  'k_FeS2pre';
-    0.1,   'k_alum';
-    1.35,  'k_pdesorb_a';;
-    1.35,  'k_pdesorb_b';
-    6500,  'k_rhom';
-    0.1,   'k_tS_Fe';
-    9600,  'Ks_FeS';    % Canavan, R. W (2006)
-    0.001, 'k_Fe_dis';  % reformulated as R = k*FeS if (sigma < 1)
-    1.5e-3,'k_Fe_pre';  % reformulated as R = k*Fe2*HS if (sigma > 1)
-    0.37,  'k_apa';
-    3e-6,  'kapa';
-    0.3134,'k_oms';
-    1000,  'k_tsox';   % Canavan, R. W (2006)
-    3.3e-3,'k_FeSpre'; % Canavan, R. W (2006)
-    30,    'accel';
-
-    1e-6,   'f_pfe';
-    1.35,   'k_pdesorb_c';
-
-    % Added porosity modeling parameters:
-    0.98,   'fi_in';
-    0.85,   'fi_f';
-    0.5,    'X_b';
-    1,      'tortuosity';
-
-    0.1,    'w';
-    256,    'n';
-    30,     'depth';
-    1,      'F'; % we are not using this value as a parameter. It is estimated as (1-fi) ./ fi;
-    14.4,   'alfa0';
-
-    % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    106,    'Cx1';
-    16,     'Ny1';
-    1,      'Pz1';
-    200,    'Cx2';
-    20,     'Ny2';
-    1,      'Pz2';
-    10,     'Cx3';
-    1,      'Ny3';
-    0,      'Pz3';
-
-
-
-    1/365/5,  'ts';
+    10,    'k_Chl';        % 1       % 1
+    1,     'k_POP';        % 2       % 1
+    0.1,   'k_POC';        % 3       % 0.01
+    1,     'k_DOP';        % 4       % 1
+    0.1,   'k_DOC';        % 5       % 1
+    0.008, 'Km_O2';        % 6       % Canavan, R. W (2006)
+    0.01,  'Km_NO3';       % 7       % Canavan, R. W (2006)
+    0.2,   'Km_Fe(OH)3';   % 8       % Canavan, R. W (2006)
+    0.2,   'Km_FeOOH';     % 9       %
+    0.1,   'Km_SO4';       % 10       % Canavan, R. W (2006
+    0.001, 'Km_oxao';      % 11       %
+    0.1,   'Km_amao';      % 12       %
+    0.008, 'Kin_O2';       % 13       % the same as Km
+    0.01,  'Kin_NO3';      % 14       % the same as Km
+    0.2,   'Kin_FeOH3';    % 15       % the same as Km
+    0.2,   'Kin_FeOOH';    % 16       % the same as Km
+    20,    'k_amox';       % 17       % Canavan, R. W (2006)
+    5000,  'k_Feox';       % 18       % Canavan, R. W (2006)
+    0.1,   'k_Sdis';       % 19       %
+    2500,  'k_Spre';       % 20       %
+    3.17,  'k_FeS2pre';    % 21
+    0.1,   'k_alum';       % 22
+    1.35,  'k_pdesorb_a';; % 23
+    1.35,  'k_pdesorb_b';  % 24
+    6500,  'k_rhom';       % 25
+    0.1,   'k_tS_Fe';      % 26
+    9600,  'Ks_FeS';       % 27      % Canavan, R. W (2006)
+    0.001, 'k_Fe_dis';     % 28      % reformulated as R = k*FeS if (sigma < 1)
+    1.5e-3,'k_Fe_pre';     % 29      % reformulated as R = k*Fe2*HS if (sigma > 1)
+    0.37,  'k_apa';        % 30
+    3e-6,  'kapa';         % 31
+    0.3134,'k_oms';        % 32
+    1000,  'k_tsox';       % 33     % Canavan, R. W (2006)
+    3.3e-3,'k_FeSpre';     % 34     % Canavan, R. W (2006)
+    30,    'accel';        % 35
+    1e-6,   'f_pfe';       % 36
+    1.35,   'k_pdesorb_c'; % 37
+    0.98,   'fi_in';       % 38
+    0.85,   'fi_f';        % 39
+    0.5,    'X_b';         % 40
+    1,      'tortuosity';  % 41
+    0.1,    'w';           % 42
+    256,    'n';           % 43
+    30,     'depth';       % 44
+    1,      'F';           % 45           % NOT used in the model. It is estimated as (1-fi) ./ fi;
+    14.4,   'alfa0';       % 46
+    106,    'Cx1';         % 47           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    16,     'Ny1';         % 48           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Pz1';         % 49           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    200,    'Cx2';         % 50           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    20,     'Ny2';         % 51           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Pz2';         % 52           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    10,     'Cx3';         % 53           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Ny3';         % 54           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    0,      'Pz3';         % 55           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    5,      'n_ts';        % 56           % number of time steps during 1 day for chemical and sediment module (the modules should be in sync)
     };
