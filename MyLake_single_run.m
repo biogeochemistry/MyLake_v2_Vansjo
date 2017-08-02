@@ -79,8 +79,10 @@ x = [500.0000e-003,   101.0838e-003,     1.0000e+000,     1.6996e+000,   188.671
 % One of the best with ++++++++++++++++++++++++++++++
 x = [472.4167e-003,   192.8083e-003,     1.0000e+000,   806.4479e-003,    59.1485e-003,   100.0000e-003,     1.0000e+000,     1.8765e+000,    10.0000e-003,     2.0000e+000,     2.1591e+000,     0.0000e+000,     0.0000e+000,   148.5501e-003,   100.0000e-006,    10.0000e-006,     5.0771e-003,    38.0006e-003]; % RMSD 135.6022
 
-x(12) = 1; % 23    scaling factor for inflow concentration of POC  (-)
-x(9) = 0.01;  % % 8  settling velocity for S (m day-1)
+x(11) = 1.;  %    accel
+x(12) = 1; % 23    scaling factor for inflow concentration of DOC  (-)
+x(13) = 15; % 23    scaling factor for inflow concentration of POC  (-)
+x(9) = 0.03;  % % 8  settling velocity for S (m day-1)
 x(5) = 0.01; % 18    Settling velocity for Chl2 a (m day-1)
 % ++++++++++++++++++++++++++++++
 
@@ -112,8 +114,9 @@ lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-
 
 % % Trials:
 lake_params{28 -5} = 1; % 23    scaling factor for inflow concentration of DOC  (-)
-lake_params{24 -5} = 5; % 23    scaling factor for inflow concentration of POC  (-)
-% lake_params{51 -5} = 0.01;  % % 8  settling velocity for S (m day-1)
+lake_params{24 -5} = 15; % 23    scaling factor for inflow concentration of POC  (-)
+sediment_params{35} = 1.;  %    accel
+lake_params{51 -5} = 0.03;  % % 8  settling velocity for S (m day-1)
 % lake_params{15 -5} = 2e-4; % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 % lake_params{59 -5} = 1e-5; % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 % lake_params{17 -5} = 0.015; % 12    Optical cross_section of chlorophyll (m2 mg-1)
@@ -137,8 +140,8 @@ for current_run = 1:no_runs
             m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         else
-            m_start=[2004, 1, 1]; %
-            m_stop=[2010, 12, 31]; %
+            m_start=[1984, 1, 1]; %
+            m_stop=[2013, 12, 31]; %
         end
 
     elseif current_run == 2;

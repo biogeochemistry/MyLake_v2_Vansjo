@@ -370,7 +370,7 @@ class ResultsPlotter:
 
         results = self.env_getter('water-column', basin=1)
 
-        inx = sum(results['z'][0, 0] == 4)[0]
+        inx = np.where(results['z'][0, 0] == 4)[0][0]
         TOTP = np.mean(results['concentrations'][0, 0]['P'][0, 0][0:inx, :], axis=0) + \
             np.mean(results['concentrations'][0, 0]['PP'][0, 0][0:inx, :], axis=0) + \
             np.mean(results['concentrations'][0, 0]['DOP'][0, 0][0:inx, :], axis=0) + \
