@@ -148,6 +148,7 @@ class ResultsPlotter:
     def profile(self, env, elem, convert_units=False, years_ago=0., log_scale=False):
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
+        
         end = int(-365 * years_ago - 1)
         z = results['z'][0, 0][:, -1]
         mass_per_area = {}
