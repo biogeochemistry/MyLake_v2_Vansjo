@@ -61,7 +61,7 @@ function solid_fx = solid_bc(C, w_s, phi)
     % w_s - settling velocity of solids [cm year-1]
     % mmol arriving at SWI interface is
     % solid_fx - flux of solid at SWI [umol cm-2 yr-1]
-    solid_fx = w_s * C(end) * (1 - phi(1));
+    solid_fx = w_s * C(end); % * (1 - phi(1));
 end
 
 

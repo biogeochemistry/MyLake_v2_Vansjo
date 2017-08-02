@@ -79,9 +79,9 @@ lake_params = {
 sediment_params = {
     10,    'k_Chl';        % 1       % 1
     1,     'k_POP';        % 2       % 1
-    0.1,   'k_POC';        % 3       % 0.01
+    1      'k_POC';        % 3       % 0.01
     1,     'k_DOP';        % 4       % 1
-    0.1,   'k_DOC';        % 5       % 1
+    1,     'k_DOC';        % 5       % 1
     0.008, 'Km_O2';        % 6       % Canavan, R. W (2006)
     0.01,  'Km_NO3';       % 7       % Canavan, R. W (2006)
     0.2,   'Km_Fe(OH)3';   % 8       % Canavan, R. W (2006)
@@ -129,8 +129,8 @@ sediment_params = {
     200,    'Cx2';         % 50           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     20,     'Ny2';         % 51           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     1,      'Pz2';         % 52           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    10,     'Cx3';         % 53           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Ny3';         % 54           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Cx3';         % 53           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    0.1,    'Ny3';         % 54           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0,      'Pz3';         % 55           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    10,      'n_ts';        % 56           % number of time steps during 1 day for chemical and sediment module (the modules should be in sync)
+    10,      'n_ts';       % 56           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
     };
