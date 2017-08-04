@@ -454,7 +454,7 @@ class ResultsPlotter:
             ax = plt.gca()
 
         ax.plot(-366 + results['days'][0, 0][0], y, lw=5, label='model')
-        ax.ticklabel_format(useOffset=False)
+        # ax.ticklabel_format(useOffset=False)
         ax.grid(linestyle='-', linewidth=0.2)
         plt.tight_layout()
         dend = datetime.datetime.strptime(dend, '%Y-%m-%d')
