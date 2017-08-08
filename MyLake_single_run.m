@@ -127,9 +127,33 @@ lake_params{51 -5} = 0.03;  % % 8  settling velocity for S (m day-1)
 % lake_params{62 -5} = 0.1;  % 19    Loss rate (1/day) at 20 deg C
 % lake_params{63 -5} = 2;  % 20    Specific growth rate (1/day) at 20 deg C
 % lake_params{64 -5} = 6;  % 21    Half saturation growth P level (mg/m3)
-
-
 % sediment_params{56} = 1;  %    ts during the day
+
+
+% % Latest from NIVA x5 RMSD: res = sum([3*rmsd_TOTP, 5*rmsd_Chl, 5*rmsd_PO4, 3*rmsd_PP, rmsd_O2])
+% x = [0.05, 0.1, 1.1849, 1.0685, 0.4473, 0.3, 1.1159, 1.1015, 0.0470, 3, 2, 0.3020, 0, 5.5476, 4.9636e-5, 3.7240e-5, 0.0450, 0.0316];
+
+% lake_params{52 -5} = x(1); % 9     settling velocity for Chl1 a (m day-1)
+% lake_params{54 -5} = x(2); % 11    loss rate (1/day) at 20 deg C
+% lake_params{55 -5} = x(3); % 12    specific growth rate (1/day) at 20 deg C
+% lake_params{58 -5} = x(4); % 15    Half saturation growth P level (mg/m3)
+% lake_params{61 -5} = x(5); % 18    Settling velocity for Chl2 a (m day-1)
+% lake_params{62 -5} = x(6);  % 19    Loss rate (1/day) at 20 deg C
+% lake_params{63 -5} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
+% lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
+% lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
+% sediment_params{23} = x(10);  % 38 R16 sorption of P on Fe k
+% sediment_params{35} = x(11);  %    accel
+
+
+% lake_params{28 -5} = x(12); % 23    scaling factor for inflow concentration of DOC  (-)
+% lake_params{24 -5} = x(13); % 19    scaling factor for inflow concentration of POC (-)
+% lake_params{39 -5} = x(14); % 34    Scaling factor for inflow concentration of Fe3 (-)
+
+% lake_params{15 -5} = x(15); % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{59 -5} = x(16); % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{17 -5} = x(17); % 12    Optical cross_section of chlorophyll (m2 mg-1)
+% lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-1)
 
 % parfor
 for current_run = 1:no_runs
@@ -140,7 +164,7 @@ for current_run = 1:no_runs
             m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         else
-            m_start=[1984, 1, 1]; %
+            m_start=[2000, 1, 1]; %
             m_stop=[2013, 12, 31]; %
         end
 
