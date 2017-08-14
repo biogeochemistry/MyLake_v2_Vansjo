@@ -46,15 +46,15 @@ lake_params = {
     3.30E-07, 'S_res_epi',     % 41     Particle resuspension mass transfer coefficient, epilimnion (m day-1, dry)
     3.30E-08, 'S_res_hypo',    % 42     Particle resuspension mass transfer coefficient, hypolimnion (m day-1, dry)
     0.03, 'H_sed',             % 43     height of active sediment layer (m, wet mass)
-    15, 'Psat_L',              % 44     NOT USED: Half saturation parameter for Langmuir isotherm
-    30, 'Fmax_L',              % 45     NOT USED: Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
+    15, 'Psat_L',              % 44     NOTE: NOT USED: Half saturation parameter for Langmuir isotherm
+    30, 'Fmax_L',              % 45     NOTE: NOT USED: Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
     0.05, 'w_s',               % 46     settling velocity for S (m day-1)
     0.01, 'w_chl',             % 47     settling velocity for Chl a (m day-1)
-    1, 'Y_cp',                 % 48    yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   1/55*112/1 = 1
+    1, 'Y_cp',                 % 48     NOTE: NOT USED:  yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   1/55*112/1 = 1
     0.2, 'm_twty',             % 49    loss rate (1/day) at 20 deg C
     1.5, 'g_twty',             % 50    specific growth rate (1/day) at 20 deg C
-    2.00E-04, 'k_twty',        % 51    NOT USED: specific Chl a to P transformation rate (1/day) at 20 deg C
-    0, 'dop_twty',             % 52    NOT USED: specific DOP to P transformation rate (day-1) at 20 deg C
+    2.00E-04, 'k_twty',        % 51    NOTE: NOT USED: specific Chl a to P transformation rate (1/day) at 20 deg C
+    0, 'dop_twty',             % 52    NOTE: NOT USED: specific DOP to P transformation rate (day-1) at 20 deg C
     0.2, 'P_half',             % 53    Half saturation growth P level (mg/m3)
     3.00E-05, 'PAR_sat_2',     % 54    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
     0.015, 'beta_chl_2',       % 55    Optical cross_section of chlorophyll (m2 mg-1)
@@ -64,13 +64,13 @@ lake_params = {
     0.2, 'P_half_2',           % 59    Half saturation growth P level (mg/m3)
     0.01, 'oc_DOC',            % 60    Optical cross-section of DOC (m2/mg DOC)
     0.1, 'qy_DOC',             % 61    Quantum yield (mg DOC degraded/mol quanta)
-    0.1, 'k_BOD',              % 62    NOT USED: Organic decomposition rate (1/d)
-    500, 'k_SOD',              % 63    NOT USED: Sedimentary oxygen demand (mg m-2 d-1)
-    1.047, 'theta_bod',        % 64    NOT USED: Temperature adjustment coefficient for BOD, T ? 10 °C
-    1.13, 'theta_bod_ice',     % 65    NOT USED: Temperature adjustment coefficient for BOD, T < 10 °C
-    1, 'theta_sod',            % 66    NOT USED: Temperature adjustment coefficient for SOD, T ? 10 °C
-    1, 'theta_sod_ice',        % 67    NOT USED: Temperature adjustment coefficient for SOD, T < 10 °C
-    4, 'BOD_temp_switch',      % 68    NOT USED: Threshold for bod or bod_ice °C
+    0.1, 'k_BOD',              % 62    NOTE: NOT USED: Organic decomposition rate (1/d)
+    500, 'k_SOD',              % 63    NOTE: NOT USED: Sedimentary oxygen demand (mg m-2 d-1)
+    1.047, 'theta_bod',        % 64    NOTE: NOT USED: Temperature adjustment coefficient for BOD, T ? 10 °C
+    1.13, 'theta_bod_ice',     % 65    NOTE: NOT USED: Temperature adjustment coefficient for BOD, T < 10 °C
+    1, 'theta_sod',            % 66    NOTE: NOT USED: Temperature adjustment coefficient for SOD, T ? 10 °C
+    1, 'theta_sod_ice',        % 67    NOTE: NOT USED: Temperature adjustment coefficient for SOD, T < 10 °C
+    4, 'BOD_temp_switch',      % 68    NOTE: NOT USED: Threshold for bod or bod_ice °C
     7.5, 'pH',                 % 69    Lake water pH
     2, 'Q10_wc',               % 70    Q10 for reactions of respiration
     1, 'wc_factor',            % 71    Scaling factor for rates in WC
@@ -121,7 +121,7 @@ sediment_params = {
     0.1,    'w';           % 42
     256,    'n';           % 43
     30,     'depth';       % 44
-    1,      'F';           % 45           % NOT used in the model. It is estimated as (1-fi) ./ fi;
+    1,      'F';           % 45           % NOTE: NOT used in the model. It is estimated as (1-fi) ./ fi;
     14.4,   'alfa0';       % 46
     106,    'Cx1';         % 47           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     16,     'Ny1';         % 48           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
