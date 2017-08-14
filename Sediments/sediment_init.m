@@ -394,13 +394,13 @@ function [AL, AR] = cn_template_dirichlet(D_m, tortuosity, v, phi, dx, dt, n)
     AL(1,1) = phi(1);
     AL(1,2) = 0;
     AL(n,n) = phi(n)+s(n);
-    AL(n,n-1) = -s(n);
+    AL(n,n-1) = -s(n-1);
 
     AR      = spdiags([ s/2-q/4 phi-s s/2+q/4],[-1 0 1],n,n);
     AR(1,1) = phi(1);
     AR(1,2) = 0;
     AR(n,n) = phi(n)-s(n);
-    AR(n,n-1) = s(n);
+    AR(n,n-1) = s(n-1);
 end
 
 function [AL, AR, flux_coef] = cn_template_neumann(D, v, phi, dx, dt, n)
@@ -412,15 +412,15 @@ function [AL, AR, flux_coef] = cn_template_neumann(D, v, phi, dx, dt, n)
 
     AL      = spdiags([-s/2+q/4 (1-phi+s) -s/2-q/4],[-1 0 1],n,n);
     AL(1,1) = 1-phi(1)+s(1) + dx*v*s(1)/D - dx*q(1)*v/2/D;
-    AL(1,2) = -s(1);
+    AL(1,2) = -s(2);
     AL(n,n) = 1-phi(n)+s(n);
-    AL(n,n-1) = -s(n);
+    AL(n,n-1) = -s(n-1);
 
     AR      = spdiags([ s/2-q/4 (1-phi-s)  s/2+q/4],[-1 0 1],n,n);
     AR(1,1) = 1-phi(1)-s(1) - dx*v*s(1)/D + dx*q(1)*v/2/D ;
-    AR(1,2) = +s(1);
+    AR(1,2) = +s(2);
     AR(n,n) = 1-phi(n)-s(n);
-    AR(n,n-1) = s(n);
+    AR(n,n-1) = s(n-1);
 
     flux_coef = 2 * dx / D * (2*s(1) - q(1)) / (1-phi(1)) ;
 end
