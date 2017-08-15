@@ -1,4 +1,3 @@
-import h5py
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.dates as mdates
@@ -25,6 +24,7 @@ molar_masses = {
     'Ox': 31998.8,
     'OM1': 30973.762,
     'POP': 30973.762,
+    'Chl': 30973.762,
     'DOP': 30973.762,
     'NO3': 62004,
     'FeOH3': 106867.0,
@@ -148,7 +148,7 @@ class ResultsPlotter:
     def profile(self, env, elem, convert_units=False, years_ago=0., log_scale=False):
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
-        
+
         end = int(-365 * years_ago - 1)
         z = results['z'][0, 0][:, -1]
         mass_per_area = {}

@@ -144,6 +144,9 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   % =========================================================================================================
 
   for i=2:m
+    % =======================================================================================================
+    % Solving Reaction eq-s
+    % =======================================================================================================
     C0 = [O2(:,i-1), POP(:,i-1), POC(:,i-1), NO3(:,i-1), FeOH3(:,i-1), SO4(:,i-1), NH4(:,i-1), Fe2(:,i-1), FeOOH(:,i-1), H2S(:,i-1), HS(:,i-1), FeS(:,i-1), S0(:,i-1), PO4(:,i-1), S8(:,i-1), FeS2(:,i-1), AlOH3(:,i-1), PO4adsa(:,i-1), PO4adsb(:,i-1), Ca2(:,i-1), Ca3PO42(:,i-1), OMS(:,i-1), H(:,i-1), OH(:,i-1), CO2(:,i-1), CO3(:,i-1), HCO3(:,i-1), NH3(:,i-1), H2CO3(:,i-1), DOP(:,i-1), DOC(:,i-1), Chl(:,i-1)];
 
       if any(any(isnan(C0)))
@@ -188,40 +191,9 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       DOC(:,i-1)   = C_new(:,31);
       Chl(:,i-1)   = C_new(:,32);
 
-      sediment_bioirrigation_fluxes.O2(i-1)   = integrate_over_depth_2( bioirrigation(O2(:, i-1), alfax, phi), x);
-      sediment_bioirrigation_fluxes.PO4(i-1)  = integrate_over_depth_2( bioirrigation(PO4(:, i-1),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.Fe2(i-1)  = integrate_over_depth_2( bioirrigation(Fe2(:, i-1),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.NO3(i-1)  = integrate_over_depth_2( bioirrigation(NO3(:, i-1),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.NH4(i-1)  = integrate_over_depth_2( bioirrigation(NH4(:, i-1),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.SO4(i-1)  = integrate_over_depth_2( bioirrigation(SO4(:, i-1),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.DOP(i-1) = integrate_over_depth_2( bioirrigation(DOP(:, i-1),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.DOC(i-1) = integrate_over_depth_2( bioirrigation(DOC(:, i-1),  alfax,  phi), x);
-
-
-
-      sediment_transport_fluxes.POP(i-1)          = -sediment_bc.POP_fx;
-      sediment_transport_fluxes.Chl(i-1)          = -sediment_bc.Chl_fx;
-      sediment_transport_fluxes.POC(i-1)          = -sediment_bc.POC_fx;
-      sediment_transport_fluxes.FeOH3(i-1)        = -sediment_bc.FeOH3_fx;
-      sediment_transport_fluxes.AlOH3(i-1)        = -sediment_bc.AlOH3_fx;
-      sediment_transport_fluxes.PO4adsa(i-1)      = -sediment_bc.PO4adsa_fx;
-      sediment_transport_fluxes.PO4adsb(i-1)      = -sediment_bc.PO4adsb_fx;
-      sediment_transport_fluxes.O2(i-1)           = top_sediment_diffusion_flux(O2(:, i-1), D_O2, dx, phi);
-      sediment_transport_fluxes.PO4(i-1)          = top_sediment_diffusion_flux(PO4(:, i-1), D_PO4, dx, phi);
-      sediment_transport_fluxes.NO3(i-1)          = top_sediment_diffusion_flux(NO3(:, i-1), D_NO3, dx, phi);
-      sediment_transport_fluxes.Fe2(i-1)          = top_sediment_diffusion_flux(Fe2(:, i-1), D_Fe2, dx, phi);
-      sediment_transport_fluxes.NH4(i-1)          = top_sediment_diffusion_flux(NH4(:, i-1), D_NH4, dx, phi);
-      sediment_transport_fluxes.SO4(i-1)          = top_sediment_diffusion_flux(SO4(:, i-1), D_SO4, dx, phi);
-      sediment_transport_fluxes.DOP(i-1)         = top_sediment_diffusion_flux(DOP(:, i-1), D_DOP, dx, phi);
-      sediment_transport_fluxes.DOC(i-1)         = top_sediment_diffusion_flux(DOC(:, i-1), D_DOC, dx, phi);
-
-
-
-
-
 
     % =======================================================================================================
-    % Updating matrices and Solving eq-s
+    % Solving Transport eq-s
     % =======================================================================================================
 
       O2(:,i) = pde_solver_dissolved(O2_AL, O2_AR, O2(:,i-1), sediment_bc.O2_c);
@@ -257,10 +229,32 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       DOC(:,i) = pde_solver_dissolved(DOC_AL, DOC_AR, DOC(:,i-1), sediment_bc.DOC_c);
       Chl(:,i) = pde_solver_solid(Chl_AL, Chl_AR, Chl(:,i-1), sediment_bc.Chl_fx, sediment_params.solid_flux_coef);
 
+      % Estimate fluxes:
 
+      sediment_bioirrigation_fluxes.O2(i-1)   = integrate_over_depth_2( bioirrigation(O2(:, i), alfax, phi), x);
+      sediment_bioirrigation_fluxes.PO4(i-1)  = integrate_over_depth_2( bioirrigation(PO4(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.Fe2(i-1)  = integrate_over_depth_2( bioirrigation(Fe2(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.NO3(i-1)  = integrate_over_depth_2( bioirrigation(NO3(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.NH4(i-1)  = integrate_over_depth_2( bioirrigation(NH4(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.SO4(i-1)  = integrate_over_depth_2( bioirrigation(SO4(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.DOP(i-1) = integrate_over_depth_2( bioirrigation(DOP(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.DOC(i-1) = integrate_over_depth_2( bioirrigation(DOC(:, i),  alfax,  phi), x);
 
-    % Add new species before this line.
-    % =======================================================================================================
+      sediment_transport_fluxes.POP(i-1)          = -sediment_bc.POP_fx;
+      sediment_transport_fluxes.Chl(i-1)          = -sediment_bc.Chl_fx;
+      sediment_transport_fluxes.POC(i-1)          = -sediment_bc.POC_fx;
+      sediment_transport_fluxes.FeOH3(i-1)        = -sediment_bc.FeOH3_fx;
+      sediment_transport_fluxes.AlOH3(i-1)        = -sediment_bc.AlOH3_fx;
+      sediment_transport_fluxes.PO4adsa(i-1)      = -sediment_bc.PO4adsa_fx;
+      sediment_transport_fluxes.PO4adsb(i-1)      = -sediment_bc.PO4adsb_fx;
+      sediment_transport_fluxes.O2(i-1)           = top_sediment_diffusion_flux(O2(:, i), D_O2, dx, phi);
+      sediment_transport_fluxes.PO4(i-1)          = top_sediment_diffusion_flux(PO4(:, i), D_PO4, dx, phi);
+      sediment_transport_fluxes.NO3(i-1)          = top_sediment_diffusion_flux(NO3(:, i), D_NO3, dx, phi);
+      sediment_transport_fluxes.Fe2(i-1)          = top_sediment_diffusion_flux(Fe2(:, i), D_Fe2, dx, phi);
+      sediment_transport_fluxes.NH4(i-1)          = top_sediment_diffusion_flux(NH4(:, i), D_NH4, dx, phi);
+      sediment_transport_fluxes.SO4(i-1)          = top_sediment_diffusion_flux(SO4(:, i), D_SO4, dx, phi);
+      sediment_transport_fluxes.DOP(i-1)         = top_sediment_diffusion_flux(DOP(:, i), D_DOP, dx, phi);
+      sediment_transport_fluxes.DOC(i-1)         = top_sediment_diffusion_flux(DOC(:, i), D_DOC, dx, phi);
 
 
     % pH Module
@@ -295,7 +289,6 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_bioirrigation_fluxes.SO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.SO4), 96062);
   sediment_bioirrigation_fluxes.DOP = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOP), 30973.762);
   sediment_bioirrigation_fluxes.DOC = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOC), 12010.7);
-
 
 
   sediment_concentrations.O2 = O2(:,end);

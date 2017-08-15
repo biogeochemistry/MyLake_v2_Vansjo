@@ -1,4 +1,4 @@
-% for i=1:1000
+for i=1:1000
 tic
 disp('Started at:')
 disp(datetime('now'));
@@ -12,7 +12,7 @@ is_metrics = true; % print metrics in the end
 
 big_results = cell(1,no_runs);  % collects the results
 big_inputs = cell(1,no_runs);   % collects the inputs
-is_save_results = false; % save final concentrations as initial for the next run
+is_save_results = true; % save final concentrations as initial for the next run
 
 
 % Initial calibration for P:
@@ -124,6 +124,14 @@ lake_params{51 -5} = 0.03;  % % 8  settling velocity for S (m day-1)
 % sediment_params{35} = 50;  %    accel
 
 
+% To much POC:
+lake_params{24 -5} = 1; % 23    scaling factor for inflow concentration of POC  (-)
+sediment_params{35} = 1.5*50/2;  %    accel
+sediment_params{1} = 10/50*2;
+sediment_params{2} = 1/50*2;
+sediment_params{3} = 1/50*2;
+sediment_params{4} = 1/50*2;
+sediment_params{5} = 1/50*2;
 
 
 % lake_params{61 -5} = 0.01; % 18    Settling velocity for Chl2 a (m day-1)
@@ -363,4 +371,4 @@ toc
 
 
 
-% end
+end
