@@ -224,38 +224,38 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
     % Updating matrices and Solving eq-s
     % =======================================================================================================
 
-      O2(:,i) = pde_solver_dirichlet(O2_AL, O2_AR, O2(:,i-1), sediment_bc.O2_c);
-      POP(:,i) = pde_solver_neumann(POP_AL, POP_AR, POP(:,i-1), sediment_bc.POP_fx, sediment_params.solid_flux_coef);
-      POC(:,i) = pde_solver_neumann(POC_AL, POC_AR, POC(:,i-1), sediment_bc.POC_fx, sediment_params.solid_flux_coef);
-      NO3(:,i) = pde_solver_dirichlet(NO3_AL, NO3_AR, NO3(:,i-1), sediment_bc.NO3_c);
-      FeOH3(:,i) = pde_solver_neumann(FeOH3_AL, FeOH3_AR, FeOH3(:,i-1), sediment_bc.FeOH3_fx, sediment_params.solid_flux_coef);
-      SO4(:,i) = pde_solver_dirichlet(SO4_AL, SO4_AR, SO4(:,i-1), sediment_bc.SO4_c);
-      NH4(:,i) = pde_solver_dirichlet(NH4_AL, NH4_AR, NH4(:,i-1), sediment_bc.NH4_c);
-      Fe2(:,i) = pde_solver_dirichlet(Fe2_AL, Fe2_AR, Fe2(:,i-1), sediment_bc.Fe2_c);
-      FeOOH(:,i) = pde_solver_neumann(FeOOH_AL, FeOOH_AR, FeOOH(:,i-1), sediment_bc.FeOOH_fx, sediment_params.solid_flux_coef);
-      H2S(:,i) = pde_solver_dirichlet(H2S_AL, H2S_AR, H2S(:,i-1), sediment_bc.H2S_c);
-      HS(:,i) = pde_solver_dirichlet(HS_AL, HS_AR, HS(:,i-1), sediment_bc.HS_c);
-      FeS(:,i) = pde_solver_neumann(FeS_AL, FeS_AR, FeS(:,i-1), sediment_bc.FeS_fx, sediment_params.solid_flux_coef);
-      S0(:,i) = pde_solver_dirichlet(S0_AL, S0_AR, S0(:,i-1), sediment_bc.S0_c);
-      PO4(:,i) = pde_solver_dirichlet(PO4_AL, PO4_AR, PO4(:,i-1), sediment_bc.PO4_c);
-      S8(:,i) = pde_solver_neumann(S8_AL, S8_AR, S8(:,i-1), sediment_bc.S8_fx, sediment_params.solid_flux_coef);
-      FeS2(:,i) = pde_solver_neumann(FeS2_AL, FeS2_AR, FeS2(:,i-1), sediment_bc.FeS2_fx, sediment_params.solid_flux_coef);
-      AlOH3(:,i) = pde_solver_neumann(AlOH3_AL, AlOH3_AR, AlOH3(:,i-1), sediment_bc.AlOH3_fx, sediment_params.solid_flux_coef);
-      PO4adsa(:,i) = pde_solver_neumann(PO4adsa_AL, PO4adsa_AR, PO4adsa(:,i-1), sediment_bc.PO4adsa_fx, sediment_params.solid_flux_coef);
-      PO4adsb(:,i) = pde_solver_neumann(PO4adsb_AL, PO4adsb_AR, PO4adsb(:,i-1), sediment_bc.PO4adsb_fx, sediment_params.solid_flux_coef);
-      Ca2(:,i) = pde_solver_dirichlet(Ca2_AL, Ca2_AR, Ca2(:,i-1), sediment_bc.Ca2_c);
-      Ca3PO42(:,i) = pde_solver_neumann(Ca3PO42_AL, Ca3PO42_AR, Ca3PO42(:,i-1), sediment_bc.Ca3PO42_fx, sediment_params.solid_flux_coef);
-      OMS(:,i) = pde_solver_neumann(OMS_AL, OMS_AR, OMS(:,i-1), sediment_bc.OMS_fx, sediment_params.solid_flux_coef);
-      H(:,i) = pde_solver_dirichlet(H_AL, H_AR, H(:,i-1), sediment_bc.H_c);
-      OH(:,i) = pde_solver_dirichlet(OH_AL, OH_AR, OH(:,i-1), sediment_bc.OH_c);
-      CO2(:,i) = pde_solver_dirichlet(CO2_AL, CO2_AR, CO2(:,i-1), sediment_bc.CO2_c);
-      CO3(:,i) = pde_solver_dirichlet(CO3_AL, CO3_AR, CO3(:,i-1), sediment_bc.CO3_c);
-      HCO3(:,i) = pde_solver_dirichlet(HCO3_AL, HCO3_AR, HCO3(:,i-1), sediment_bc.HCO3_c);
-      NH3(:,i) = pde_solver_dirichlet(NH3_AL, NH3_AR, NH3(:,i-1), sediment_bc.NH3_c);
-      H2CO3(:,i) = pde_solver_dirichlet(H2CO3_AL, H2CO3_AR, H2CO3(:,i-1), sediment_bc.H2CO3_c);
-      DOP(:,i) = pde_solver_dirichlet(DOP_AL, DOP_AR, DOP(:,i-1), sediment_bc.DOP_c);
-      DOC(:,i) = pde_solver_dirichlet(DOC_AL, DOC_AR, DOC(:,i-1), sediment_bc.DOC_c);
-      Chl(:,i) = pde_solver_neumann(Chl_AL, Chl_AR, Chl(:,i-1), sediment_bc.Chl_fx, sediment_params.solid_flux_coef);
+      O2(:,i) = pde_solver_dissolved(O2_AL, O2_AR, O2(:,i-1), sediment_bc.O2_c);
+      POP(:,i) = pde_solver_solid(POP_AL, POP_AR, POP(:,i-1), sediment_bc.POP_fx, sediment_params.solid_flux_coef);
+      POC(:,i) = pde_solver_solid(POC_AL, POC_AR, POC(:,i-1), sediment_bc.POC_fx, sediment_params.solid_flux_coef);
+      NO3(:,i) = pde_solver_dissolved(NO3_AL, NO3_AR, NO3(:,i-1), sediment_bc.NO3_c);
+      FeOH3(:,i) = pde_solver_solid(FeOH3_AL, FeOH3_AR, FeOH3(:,i-1), sediment_bc.FeOH3_fx, sediment_params.solid_flux_coef);
+      SO4(:,i) = pde_solver_dissolved(SO4_AL, SO4_AR, SO4(:,i-1), sediment_bc.SO4_c);
+      NH4(:,i) = pde_solver_dissolved(NH4_AL, NH4_AR, NH4(:,i-1), sediment_bc.NH4_c);
+      Fe2(:,i) = pde_solver_dissolved(Fe2_AL, Fe2_AR, Fe2(:,i-1), sediment_bc.Fe2_c);
+      FeOOH(:,i) = pde_solver_solid(FeOOH_AL, FeOOH_AR, FeOOH(:,i-1), sediment_bc.FeOOH_fx, sediment_params.solid_flux_coef);
+      H2S(:,i) = pde_solver_dissolved(H2S_AL, H2S_AR, H2S(:,i-1), sediment_bc.H2S_c);
+      HS(:,i) = pde_solver_dissolved(HS_AL, HS_AR, HS(:,i-1), sediment_bc.HS_c);
+      FeS(:,i) = pde_solver_solid(FeS_AL, FeS_AR, FeS(:,i-1), sediment_bc.FeS_fx, sediment_params.solid_flux_coef);
+      S0(:,i) = pde_solver_dissolved(S0_AL, S0_AR, S0(:,i-1), sediment_bc.S0_c);
+      PO4(:,i) = pde_solver_dissolved(PO4_AL, PO4_AR, PO4(:,i-1), sediment_bc.PO4_c);
+      S8(:,i) = pde_solver_solid(S8_AL, S8_AR, S8(:,i-1), sediment_bc.S8_fx, sediment_params.solid_flux_coef);
+      FeS2(:,i) = pde_solver_solid(FeS2_AL, FeS2_AR, FeS2(:,i-1), sediment_bc.FeS2_fx, sediment_params.solid_flux_coef);
+      AlOH3(:,i) = pde_solver_solid(AlOH3_AL, AlOH3_AR, AlOH3(:,i-1), sediment_bc.AlOH3_fx, sediment_params.solid_flux_coef);
+      PO4adsa(:,i) = pde_solver_solid(PO4adsa_AL, PO4adsa_AR, PO4adsa(:,i-1), sediment_bc.PO4adsa_fx, sediment_params.solid_flux_coef);
+      PO4adsb(:,i) = pde_solver_solid(PO4adsb_AL, PO4adsb_AR, PO4adsb(:,i-1), sediment_bc.PO4adsb_fx, sediment_params.solid_flux_coef);
+      Ca2(:,i) = pde_solver_dissolved(Ca2_AL, Ca2_AR, Ca2(:,i-1), sediment_bc.Ca2_c);
+      Ca3PO42(:,i) = pde_solver_solid(Ca3PO42_AL, Ca3PO42_AR, Ca3PO42(:,i-1), sediment_bc.Ca3PO42_fx, sediment_params.solid_flux_coef);
+      OMS(:,i) = pde_solver_solid(OMS_AL, OMS_AR, OMS(:,i-1), sediment_bc.OMS_fx, sediment_params.solid_flux_coef);
+      H(:,i) = pde_solver_dissolved(H_AL, H_AR, H(:,i-1), sediment_bc.H_c);
+      OH(:,i) = pde_solver_dissolved(OH_AL, OH_AR, OH(:,i-1), sediment_bc.OH_c);
+      CO2(:,i) = pde_solver_dissolved(CO2_AL, CO2_AR, CO2(:,i-1), sediment_bc.CO2_c);
+      CO3(:,i) = pde_solver_dissolved(CO3_AL, CO3_AR, CO3(:,i-1), sediment_bc.CO3_c);
+      HCO3(:,i) = pde_solver_dissolved(HCO3_AL, HCO3_AR, HCO3(:,i-1), sediment_bc.HCO3_c);
+      NH3(:,i) = pde_solver_dissolved(NH3_AL, NH3_AR, NH3(:,i-1), sediment_bc.NH3_c);
+      H2CO3(:,i) = pde_solver_dissolved(H2CO3_AL, H2CO3_AR, H2CO3(:,i-1), sediment_bc.H2CO3_c);
+      DOP(:,i) = pde_solver_dissolved(DOP_AL, DOP_AR, DOP(:,i-1), sediment_bc.DOP_c);
+      DOC(:,i) = pde_solver_dissolved(DOC_AL, DOC_AR, DOC(:,i-1), sediment_bc.DOC_c);
+      Chl(:,i) = pde_solver_solid(Chl_AL, Chl_AR, Chl(:,i-1), sediment_bc.Chl_fx, sediment_params.solid_flux_coef);
 
 
 
@@ -503,7 +503,7 @@ function F = delta_eqs(delta, H, OH, HCO3, CO2, CO3, NH3, NH4, HS, H2S)
      ];
 end
 
-function C_new = pde_solver_dirichlet(AL, AR, C_old, const_bc)
+function C_new = pde_solver_dissolved(AL, AR, C_old, const_bc)
     C_old(1) = const_bc;
     temp = AR*C_old;
     % temp(1) = const_bc;
@@ -513,7 +513,7 @@ function C_new = pde_solver_dirichlet(AL, AR, C_old, const_bc)
 end
 
 
-function C_new = pde_solver_neumann(AL, AR, C_old, flux_bc, coef)
+function C_new = pde_solver_solid(AL, AR, C_old, flux_bc, coef)
       temp = AR*C_old;
       temp(1) = temp(1) + flux_bc * coef;
       C_new = AL\ temp;
