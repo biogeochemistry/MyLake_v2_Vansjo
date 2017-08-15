@@ -12,7 +12,7 @@ is_metrics = true; % print metrics in the end
 
 big_results = cell(1,no_runs);  % collects the results
 big_inputs = cell(1,no_runs);   % collects the inputs
-is_save_results = false;
+is_save_results = false; % save final concentrations as initial for the next run
 
 
 % Initial calibration for P:
@@ -123,6 +123,9 @@ lake_params{51 -5} = 0.03;  % % 8  settling velocity for S (m day-1)
 % lake_params{60 -5} = 0.015; % 17    Optical cross_section of chlorophyll (m2 mg-1)
 % sediment_params{35} = 50;  %    accel
 
+
+
+
 % lake_params{61 -5} = 0.01; % 18    Settling velocity for Chl2 a (m day-1)
 % lake_params{62 -5} = 0.1;  % 19    Loss rate (1/day) at 20 deg C
 % lake_params{63 -5} = 2;  % 20    Specific growth rate (1/day) at 20 deg C
@@ -154,6 +157,32 @@ lake_params{51 -5} = 0.03;  % % 8  settling velocity for S (m day-1)
 % lake_params{59 -5} = x(16); % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 % lake_params{17 -5} = x(17); % 12    Optical cross_section of chlorophyll (m2 mg-1)
 % lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-1)
+
+% % % Latest from NIVA Chl in TP:
+% x = [0.1172, 0.2159, 1.3112, 0.8622, 0.1552, 0.1, 1.4580, 0.9041, 0.0268, 2.7694, 43.6497, 2.0349, 0.7254, 80.6140, 1e-4, 2.2379e-5, 0.0401, 0.0426];
+
+% lake_params{52 -5} = x(1); % 9     settling velocity for Chl1 a (m day-1)
+% lake_params{54 -5} = x(2); % 11    loss rate (1/day) at 20 deg C
+% lake_params{55 -5} = x(3); % 12    specific growth rate (1/day) at 20 deg C
+% lake_params{58 -5} = x(4); % 15    Half saturation growth P level (mg/m3)
+% lake_params{61 -5} = x(5); % 18    Settling velocity for Chl2 a (m day-1)
+% lake_params{62 -5} = x(6);  % 19    Loss rate (1/day) at 20 deg C
+% lake_params{63 -5} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
+% lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
+% lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
+% sediment_params{23} = x(10);  % 38 R16 sorption of P on Fe k
+% sediment_params{35} = x(11);  %    accel
+
+
+% lake_params{28 -5} = x(12); % 23    scaling factor for inflow concentration of DOC  (-)
+% lake_params{24 -5} = x(13); % 19    scaling factor for inflow concentration of POC (-)
+% lake_params{39 -5} = x(14); % 34    Scaling factor for inflow concentration of Fe3 (-)
+
+% lake_params{15 -5} = x(15); % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{59 -5} = x(16); % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{17 -5} = x(17); % 12    Optical cross_section of chlorophyll (m2 mg-1)
+% lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-1)
+
 
 % parfor
 for current_run = 1:no_runs
