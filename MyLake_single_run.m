@@ -125,7 +125,7 @@ lake_params{51 -5} = 0.03;  % % 8  settling velocity for S (m day-1)
 
 
 % To much POC:
-lake_params{24 -5} = 1; % 23    scaling factor for inflow concentration of POC  (-)
+% lake_params{24 -5} = 1; % 23    scaling factor for inflow concentration of POC  (-)
 sediment_params{35} = 1.3*50/2;  %    accel
 sediment_params{1} = 10/50*2;
 sediment_params{2} = 1/50*2;
