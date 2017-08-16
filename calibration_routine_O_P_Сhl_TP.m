@@ -51,7 +51,7 @@ lake_params{63 -5} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
 lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
 lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
 sediment_params{23} = x(10);  % 38 R16 sorption of P on Fe k
-sediment_params{35} = x(11);  %    accel
+sediment_params{37} = x(11);  %    accel
 
 
 lake_params{28 -5} = x(12); % 23    scaling factor for inflow concentration of DOC  (-)
