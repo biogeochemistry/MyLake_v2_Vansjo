@@ -8,6 +8,8 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     NH4z = mylake_prev_results.NH4z;
     DOCz = mylake_prev_results.DOCz;
     DOPz = mylake_prev_results.DOPz;
+    CH4aqz = mylake_prev_results.CH4aqz;
+    CH4gz = mylake_prev_results.CH4gz;
 
     % Diffusion Fluxes:
     O2z = update_C_as_neumann(O2z, sediment_transport_fluxes.O2, MyLake_params, sediment_params);
@@ -17,6 +19,8 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     NH4z = update_C_as_neumann(NH4z, sediment_transport_fluxes.NH4, MyLake_params, sediment_params);
     DOPz = update_C_as_neumann(DOPz, sediment_transport_fluxes.DOP, MyLake_params, sediment_params);
     DOCz = update_C_as_neumann(DOCz, sediment_transport_fluxes.DOC, MyLake_params, sediment_params);
+    CH4aqz = update_C_as_neumann(CH4aqz, sediment_transport_fluxes.CH4aq, MyLake_params, sediment_params);
+    CH4gz = update_C_as_neumann(CH4gz, sediment_transport_fluxes.CH4aq, MyLake_params, sediment_params);
 
     % % Boudreau, B.P., 1999. Metals and models : Diagenetic modelling in freshwater lacustrine sediments *. , pp.227–251.
 
@@ -28,6 +32,8 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     NH4z = update_C_as_neumann(NH4z, sediment_bioirrigation_fluxes.NH4, MyLake_params, sediment_params);
     DOPz = update_C_as_neumann(DOPz, sediment_bioirrigation_fluxes.DOP, MyLake_params, sediment_params);
     DOCz = update_C_as_neumann(DOCz, sediment_bioirrigation_fluxes.DOC, MyLake_params, sediment_params);
+    CH4aqz = update_C_as_neumann(CH4aqz, sediment_bioirrigation_fluxes.CH4aq, MyLake_params, sediment_params);
+    CH4gz = update_C_as_neumann(CH4gz, sediment_bioirrigation_fluxes.CH4aq, MyLake_params, sediment_params);
 
     mylake_new_resutls.O2z = O2z;
     mylake_new_resutls.Pz = Pz;
@@ -36,6 +42,8 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     mylake_new_resutls.NH4z = NH4z;
     mylake_new_resutls.DOPz = DOPz;
     mylake_new_resutls.DOCz = DOCz;
+    mylake_new_resutls.CH4aqz = CH4aqz;
+    mylake_new_resutls.CH4gz = CH4gz;
 
     if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
         error('NaN')

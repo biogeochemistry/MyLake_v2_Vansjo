@@ -40,7 +40,7 @@ lake_params = {
     1,  'I_scAl3',             % 35    Scaling factor for inflow concentration of Al3 (-)
     1,  'I_scSiO4',            % 36    Scaling factor for inflow concentration of SiO4 (-)
     1,  'I_scSiO2',            % 37    Scaling factor for inflow concentration of SiO2 (-)
-    1,  'I_scdiatom',          % 38    Scaling factor for inflow concentration of diatom (-)
+    1,  'I_scCH4g',            % 38    Scaling factor for inflow concentration of CH4g (-)
     2.5, 'swa_b0',             % 39     non-PAR light attenuation coeff. (m-1)
     1.05, 'swa_b1',            % 40     PAR light attenuation coeff. (m-1)
     3.30E-07, 'S_res_epi',     % 41     Particle resuspension mass transfer coefficient, epilimnion (m day-1, dry)
@@ -65,7 +65,7 @@ lake_params = {
     0.01, 'oc_DOC',            % 60    Optical cross-section of DOC (m2/mg DOC)
     0.1, 'qy_DOC',             % 61    Quantum yield (mg DOC degraded/mol quanta)
     0.1, 'k_BOD',              % 62    NOTE: NOT USED: Organic decomposition rate (1/d)
-    500, 'k_SOD',              % 63    NOTE: NOT USED: Sedimentary oxygen demand (mg m-2 d-1)
+    5, 'w_CH4',                % 63    Methane gas rising velocity (m/d)
     1.047, 'theta_bod',        % 64    NOTE: NOT USED: Temperature adjustment coefficient for BOD, T ? 10 °C
     1.13, 'theta_bod_ice',     % 65    NOTE: NOT USED: Temperature adjustment coefficient for BOD, T < 10 °C
     1, 'theta_sod',            % 66    NOTE: NOT USED: Temperature adjustment coefficient for SOD, T ? 10 °C
@@ -82,15 +82,15 @@ sediment_params = {
     1      'k_POC';        % 3       % 0.01
     1,     'k_DOP';        % 4       % 1
     1,     'k_DOC';        % 5       % 1
-    0.008*2,'Km_O2';        % 6       % Canavan, R. W (2006) rho=2
-    0.01*2, 'Km_NO3';       % 7       % Canavan, R. W (2006) rho=2
+    0.008, 'Km_O2';        % 6       % Canavan, R. W (2006) rho=2
+    0.01,  'Km_NO3';       % 7       % Canavan, R. W (2006) rho=2
     0.2*2,  'Km_Fe(OH)3';   % 8       % Canavan, R. W (2006) rho=2
     0.2*2,  'Km_FeOOH';     % 9       % Canavan, R. W (2006) rho=2
-    0.1*2,  'Km_SO4';       % 10       % Canavan, R. W (2006 rho=2
-    0.001*2,'Km_oxao';      % 11       % the same as Km rho=2
-    0.1*2,  'Km_amao';      % 12       % the same as Km rho=2
-    0.008*2, 'Kin_O2';       % 13       % the same as Km rho=2
-    0.01*2,  'Kin_NO3';      % 14       % the same as Km rho=2
+    0.1,  'Km_SO4';       % 10       % Canavan, R. W (2006 rho=2
+    0.001,'Km_oxao';      % 11       % the same as Km rho=2
+    0.1,  'Km_amao';      % 12       % the same as Km rho=2
+    0.008, 'Kin_O2';       % 13       % the same as Km rho=2
+    0.01,  'Kin_NO3';      % 14       % the same as Km rho=2
     0.2*2,   'Kin_FeOH3';    % 15       % the same as Km rho=2
     0.2*2,   'Kin_FeOOH';    % 16       % the same as Km rho=2
     20,    'k_amox';       % 17       % Canavan, R. W (2006)
@@ -104,8 +104,8 @@ sediment_params = {
     6500,  'k_rhom';       % 25
     8,   'k_tS_Fe';        % 26      % Cappellen (1996) in Canavan, R. W (2006) the reaction is different
     9600,  'Ks_FeS';       % 27      % Canavan, R. W (2006)
-    0.001, 'k_Fe_dis';     % 28      % reformulated as R = k*FeS if (sigma < 1)
-    1.5e-3,'k_Fe_pre';     % 29      % reformulated as R = k*Fe2*HS if (sigma > 1)
+    0.001, 'k_Fe_dis';     % 28      % Canavan, R. W (2006)
+    1500*2,'k_Fe_pre';     % 29      % Canavan, R. W (2006)
     0.37,  'k_apa';        % 30
     3e-6,  'kapa';         % 31
     0.3134,'k_oms';        % 32
@@ -113,26 +113,29 @@ sediment_params = {
     0.3/2, 'k_FeSpre';     % 34     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
     1e7,   'k_ch4_o2'      % 35     % Canavan, R. W (2006)
     1e-1,  'k_ch4_so4'     % 36     % Canavan, R. W (2006)
-    30,    'accel';        % 37
-    1e-6,   'f_pfe';       % 38
-    1.35,   'k_pdesorb_c'; % 39
-    0.98,   'fi_in';       % 40
-    0.85,   'fi_f';        % 41
-    0.5,    'X_b';         % 42
-    1,      'tortuosity';  % 43
-    0.1,    'w';           % 44
-    256,    'n';           % 45
-    30,     'depth';       % 46
-    1,      'F';           % 47           % NOTE: NOT used in the model. It is estimated as (1-fi) ./ fi;
-    14.4,   'alfa0';       % 48
-    106,    'Cx1';         % 49           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    16,     'Ny1';         % 50           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Pz1';         % 51           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    200,    'Cx2';         % 52           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    20,     'Ny2';         % 53           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Pz2';         % 54           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Cx3';         % 55           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    0.1,    'Ny3';         % 56           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    0,      'Pz3';         % 57           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    10,      'n_ts';       % 58           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
+    2.66,  'CH4_solubility' % 37     % Canavan, R. W (2006)
+    1e3,   'k_ch4_dis'             % 38
+    5,     'CH4_rising_vel' % 39     % Canavan, R. W (2006)
+    30,    'accel';        % 40
+    1e-6,   'f_pfe';       % 41
+    1.35,   'k_pdesorb_c'; % 42
+    0.98,   'fi_in';       % 43
+    0.85,   'fi_f';        % 44
+    0.5,    'X_b';         % 45
+    1,      'tortuosity';  % 46
+    0.1,    'w';           % 47
+    256,    'n';           % 48
+    30,     'depth';       % 49
+    5,      'w_CH4';       % 50     rising velocity of methane gas in the sediment
+    14.4,   'alfa0';       % 51
+    106,    'Cx1';         % 52           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    16,     'Ny1';         % 53           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Pz1';         % 54           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    200,    'Cx2';         % 55           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    20,     'Ny2';         % 56           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Pz2';         % 57           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Cx3';         % 58           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    0.1,    'Ny3';         % 59           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    0,      'Pz3';         % 60           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    10,      'n_ts';       % 61           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
     };

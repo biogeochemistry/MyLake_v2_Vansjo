@@ -21,6 +21,8 @@ rc('text', usetex=True)
 #                   'HSzt', 'Hzt', 'OHzt', 'CO2zt', 'CO3zt', 'HCO3zt', 'NH3zt', 'H2CO3zt', 'DOM1zt', 'DOM2zt']
 molar_masses = {
     'O2': 31998.8,
+    'CH4aq': 16042.5,
+    'CH4g': 16042.5,
     'Ox': 31998.8,
     'OM1': 30973.762,
     'POP': 30973.762,
@@ -46,7 +48,7 @@ molar_masses = {
     'Ca3PO42': 310176.7}
 
 
-solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'OMb', 'Ca3PO42']
+solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42']
 disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S', 'HS', 'PO4', 'Al3', 'Ca2', 'CO2']
 
 

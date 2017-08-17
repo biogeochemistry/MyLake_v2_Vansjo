@@ -19,104 +19,8 @@ function [sediment_params] = params(max_depth, temperature)
     global sed_par_file
     f=fopen(sed_par_file);
     % f=fopen('calibration_k_values.txt');
-    data = textscan(f,'%s%f', 56,'Delimiter', '\t');
+    data = textscan(f,'%s%f', 61,'Delimiter', '\t');
     fclose(f);
-
-    % Estimation of params:
-    temperature = 4.8497; % mean value of observed bottom temp; NOTE: We need to make better estimation of temp for diff coef.
-    abs_temp = temperature+273.15; % [K]
-    P_atm = 1.01; % [Bar]
-    P_water = 998 * 9.8 * max_depth/10^5; % [Bar]
-    pressure = P_atm + P_water; % [Bar]
-    salinity = 0;
-    viscosity = viscosity(temperature,pressure,salinity);
-
-    %===================== % effective molecular diffusion
-    % Linear regression of Diffusion coefficients for cations and anions (Boudreau, 1997):
-    sediment_params.D_H    = lr_ion_diffusion(54.4, 1.555, temperature);
-    sediment_params.D_OH   = lr_ion_diffusion(25.9, 1.094, temperature);
-    sediment_params.D_HCO3 = lr_ion_diffusion(5.06, 0.275, temperature);
-    sediment_params.D_CO3  = lr_ion_diffusion(4.33, 0.199, temperature);
-    sediment_params.D_NO3  = lr_ion_diffusion(9.5,  0.388, temperature);
-    sediment_params.D_SO4  = lr_ion_diffusion(4.88, 0.232, temperature);
-    sediment_params.D_NH4  = lr_ion_diffusion(9.5,  0.413, temperature);
-    sediment_params.D_Fe2  = lr_ion_diffusion(3.31, 0.15,  temperature);
-    sediment_params.D_PO4  = lr_ion_diffusion(2.62, 0.143, temperature);
-    sediment_params.D_Ca2  = lr_ion_diffusion(3.6,  0.179, temperature);
-    sediment_params.D_HS   = lr_ion_diffusion(10.4, 0.273, temperature);
-
-    % Empirical correlation of Wilke and Chang (1955) as corrected by Hayduk and Laudie (1974)
-    sediment_params.D_NH3 = hayduk_laudie_diffusion(viscosity, abs_temp, 24.5);
-    sediment_params.D_O2  = hayduk_laudie_diffusion(viscosity, abs_temp, 27.9);
-    sediment_params.D_CO2 = hayduk_laudie_diffusion(viscosity, abs_temp, 37.3);
-    sediment_params.D_CH4 = hayduk_laudie_diffusion(viscosity, abs_temp, 37.7);
-
-    % Diffusion coefficient based on Einstein relation:
-    sediment_params.D_H2CO3 = einstein_diffusion(410.28, abs_temp, viscosity);
-
-    % User specified diffusion coefficients and other params (if there is no values found above):
-    sediment_params.D_H2S = 284;
-    sediment_params.D_HS  = 284;
-    sediment_params.D_S0  = 100;
-    sediment_params.D_DOP  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
-    sediment_params.D_DOC  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
-    sediment_params.Db    = 5;
-
-    % Spatial domain:
-    sediment_params.n = data{2}(43);;  % points in spatial grid
-    sediment_params.depth = data{2}(44);  % sediment depth
-    sediment_params.years = 1/365;  % 1 day #35
-    sediment_params.n_of_time_steps_during_1_dt_of_myLake = data{2}(56);  % time step
-    sediment_params.ts = 1/365/data{2}(56);  % time step
-    x = linspace(0, sediment_params.depth, sediment_params.n);
-    sediment_params.x = x;      % x-axis
-
-
-    % Physical properties:
-    sediment_params.w = data{2}(42);      % time-dependent burial rate w = 0.1
-    sediment_params.F = data{2}(45);;      % conversion factor = rhob * (1-fi) / fi ; where fi = porosity and rhob = solid phase density
-    sediment_params.viscosity = viscosity;
-    sediment_params.temperature = temperature;
-    sediment_params.pressure = pressure;
-    sediment_params.salinity = salinity;
-
-
-    % Porosity modeling according to Rabouille, C. & Gaillard, J.-F., 1991:
-    % NOTE: the experimental function. Checking the result of non-constant profile.
-    phi_in = data{2}(38);
-    phi_f  = data{2}(39);
-    X_b   = data{2}(40);
-    tortuosity = data{2}(41);
-
-    % NOTE:  const porosity for test
-    sediment_params.phi =  ( phi_in - phi_f ) * exp( -x' / X_b ) + phi_f;;      % porosity
-    sediment_params.tortuosity = tortuosity;  % tortuosity
-
-    % Bio properties:
-    alfax = data{2}(46)*exp(-0.25*x);
-    sediment_params.alfax = alfax';   % bioirrigation
-
-
-    % OM composition
-    sediment_params.Cx1 = data{2}(47);
-    sediment_params.Ny1 = data{2}(48);
-    sediment_params.Pz1 = data{2}(49);
-    sediment_params.Cx2 = data{2}(50);
-    sediment_params.Ny2 = data{2}(51);
-    sediment_params.Pz2 = data{2}(52);
-    sediment_params.Cx3 = data{2}(53);
-    sediment_params.Ny3 = data{2}(54);
-    sediment_params.Pz3 = data{2}(55);
-
-    % pH module. NOTE: experimental feature
-    % !!!!!!! Recommend to use #3 Phreeqc
-    % Specify pH algorithm:
-    % 0. Disabled
-    % 1. Stumm & Morgan; 1995. Aquatic Chemistry. MATLAB -> very long - don't use it.
-    % 2. Stumm & Morgan; 1995. Aquatic Chemistry. C++ (have some bugs in the code)
-    % 3. Phreeqc  adds ~20 sec per year. (tested)
-    % 4. Delta function by Markelov (under test)
-    sediment_params.pH_algorithm = 0;
 
     % chemical constants from file
     sediment_params.k_Chl = data{2}(1);
@@ -153,9 +57,103 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.k_oms = data{2}(32);
     sediment_params.k_tsox = data{2}(33);
     sediment_params.k_FeSpre = data{2}(34);
-    sediment_params.accel = data{2}(35);
-    sediment_params.f_pfe = data{2}(36);
-    sediment_params.k_pdesorb_c = data{2}(37);
+    sediment_params.k_ch4_o2 = data{2}(35);
+    sediment_params.k_ch4_so4 = data{2}(36);
+    sediment_params.CH4_solubility = data{2}(37);
+    sediment_params.k_ch4_dis = data{2}(38);
+    sediment_params.CH4_rising_vel = data{2}(39);
+    sediment_params.accel = data{2}(40);
+    sediment_params.f_pfe = data{2}(41);
+    sediment_params.k_pdesorb_c = data{2}(42);
+    phi_in = data{2}(43);
+    phi_f  = data{2}(44);
+    X_b   = data{2}(45);
+    tortuosity = data{2}(46);
+    sediment_params.w = data{2}(47);      % time-dependent burial rate w = 0.1
+    sediment_params.n = data{2}(48);;  % points in spatial grid
+    sediment_params.depth = data{2}(49);  % sediment depth
+    sediment_params.w_CH4 = data{2}(50);
+    alpha0 = data{2}(51);
+    sediment_params.Cx1 = data{2}(52);
+    sediment_params.Ny1 = data{2}(53);
+    sediment_params.Pz1 = data{2}(54);
+    sediment_params.Cx2 = data{2}(55);
+    sediment_params.Ny2 = data{2}(56);
+    sediment_params.Pz2 = data{2}(57);
+    sediment_params.Cx3 = data{2}(58);
+    sediment_params.Ny3 = data{2}(59);
+    sediment_params.Pz3 = data{2}(60);
+    sediment_params.n_of_time_steps_during_1_dt_of_myLake = data{2}(61);  % time step
+
+
+    % Estimation of params:
+    temperature = 4.8497; % mean value of observed bottom temp; NOTE: We need to make better estimation of temp for diff coef.
+    abs_temp = temperature+273.15; % [K]
+    P_atm = 1.01; % [Bar]
+    P_water = 998 * 9.8 * max_depth/10^5; % [Bar]
+    pressure = P_atm + P_water; % [Bar]
+    salinity = 0;
+    viscosity = viscosity(temperature,pressure,salinity);
+
+
+    % pH module. NOTE: experimental feature
+    % !!!!!!! Recommend to use #3 Phreeqc
+    % Specify pH algorithm:
+    % 0. Disabled
+    % 1. Stumm & Morgan; 1995. Aquatic Chemistry. MATLAB -> very long - don't use it.
+    % 2. Stumm & Morgan; 1995. Aquatic Chemistry. C++ (have some bugs in the code)
+    % 3. Phreeqc  adds ~20 sec per year. (tested)
+    % 4. Delta function by Markelov (under test)
+    sediment_params.pH_algorithm = 0;
+
+
+    sediment_params.years = 1/365;  % 1 day #35
+    sediment_params.ts = 1/365/sediment_params.n_of_time_steps_during_1_dt_of_myLake;  % time step
+    x = linspace(0, sediment_params.depth, sediment_params.n);
+    sediment_params.x = x;      % x-axis
+    sediment_params.phi =  ( phi_in - phi_f ) * exp( -x' / X_b ) + phi_f;;      % porosity
+    sediment_params.tortuosity = tortuosity;  % tortuosity
+    alfax = alpha0*exp(-0.25*x);
+    sediment_params.alfax = alfax';   % bioirrigation
+    sediment_params.viscosity = viscosity;
+    sediment_params.temperature = temperature;
+    sediment_params.pressure = pressure;
+    sediment_params.salinity = salinity;
+
+    %===================== % effective molecular diffusion
+    % Linear regression of Diffusion coefficients for cations and anions (Boudreau, 1997):
+    sediment_params.D_H    = lr_ion_diffusion(54.4, 1.555, temperature);
+    sediment_params.D_OH   = lr_ion_diffusion(25.9, 1.094, temperature);
+    sediment_params.D_HCO3 = lr_ion_diffusion(5.06, 0.275, temperature);
+    sediment_params.D_CO3  = lr_ion_diffusion(4.33, 0.199, temperature);
+    sediment_params.D_NO3  = lr_ion_diffusion(9.5,  0.388, temperature);
+    sediment_params.D_SO4  = lr_ion_diffusion(4.88, 0.232, temperature);
+    sediment_params.D_NH4  = lr_ion_diffusion(9.5,  0.413, temperature);
+    sediment_params.D_Fe2  = lr_ion_diffusion(3.31, 0.15,  temperature);
+    sediment_params.D_PO4  = lr_ion_diffusion(2.62, 0.143, temperature);
+    sediment_params.D_Ca2  = lr_ion_diffusion(3.6,  0.179, temperature);
+    sediment_params.D_HS   = lr_ion_diffusion(10.4, 0.273, temperature);
+
+    % Empirical correlation of Wilke and Chang (1955) as corrected by Hayduk and Laudie (1974)
+    sediment_params.D_NH3 = hayduk_laudie_diffusion(viscosity, abs_temp, 24.5);
+    sediment_params.D_O2  = hayduk_laudie_diffusion(viscosity, abs_temp, 27.9);
+    sediment_params.D_CO2 = hayduk_laudie_diffusion(viscosity, abs_temp, 37.3);
+    sediment_params.D_CH4aq = hayduk_laudie_diffusion(viscosity, abs_temp, 37.7);
+    sediment_params.D_CH4g = hayduk_laudie_diffusion(viscosity, abs_temp, 37.7);
+
+    % Diffusion coefficient based on Einstein relation:
+    sediment_params.D_H2CO3 = einstein_diffusion(410.28, abs_temp, viscosity);
+
+    % User specified diffusion coefficients and other params (if there is no values found above):
+    sediment_params.D_H2S = 284;
+    sediment_params.D_HS  = 284;
+    sediment_params.D_S0  = 100;
+    sediment_params.D_DOP  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
+    sediment_params.D_DOC  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
+    sediment_params.Db    = 5;
+
+
+
 end
 
 function [sediment_concentrations ] = init_concentrations(pH)
@@ -202,7 +200,8 @@ function [sediment_concentrations ] = init_concentrations(pH)
         sediment_concentrations.HCO3 = interp1(in_z, Init(1:end, 31), zz);
         sediment_concentrations.H2CO3 = interp1(in_z, Init(1:end, 32), zz);
         sediment_concentrations.Chl = interp1(in_z, Init(1:end, 33), zz);
-        sediment_concentrations.CH4 = interp1(in_z, Init(1:end, 34), zz);
+        sediment_concentrations.CH4aq = interp1(in_z, Init(1:end, 34), zz);
+        sediment_concentrations.CH4g = interp1(in_z, Init(1:end, 35), zz);
     else
         sediment_concentrations.POP     = ones(n,1) * 0;
         sediment_concentrations.POC     = ones(n,1) * 0;
@@ -236,7 +235,8 @@ function [sediment_concentrations ] = init_concentrations(pH)
         sediment_concentrations.HCO3    = ones(n,1) * 0;
         sediment_concentrations.H2CO3   = ones(n,1) * 0;
         sediment_concentrations.Chl   = ones(n,1) * 0;
-        sediment_concentrations.CH4   = ones(n,1) * 0;
+        sediment_concentrations.CH4aq   = ones(n,1) * 0;
+        sediment_concentrations.CH4g   = ones(n,1) * 0;
 
     end
 end
@@ -335,7 +335,8 @@ function [sediment_matrix_templates] = templates()
     [H2CO3_AL, H2CO3_AR]        = cn_template_dissolved(sediment_params.D_H2CO3 + Db, tortuosity, v, phi, dx, dt, n);
     [DOP_AL, DOP_AR]        = cn_template_dissolved(sediment_params.D_DOP + Db, tortuosity, v, phi, dx, dt, n);
     [DOC_AL, DOC_AR]        = cn_template_dissolved(sediment_params.D_DOC + Db, tortuosity, v, phi, dx, dt, n);
-    [CH4_AL, CH4_AR]        = cn_template_dissolved(sediment_params.D_CH4 + Db, tortuosity, v, phi, dx, dt, n);
+    [CH4aq_AL, CH4aq_AR]        = cn_template_dissolved(sediment_params.D_CH4aq + Db, tortuosity, v, phi, dx, dt, n);
+    [CH4g_AL, CH4g_AR]        = cn_template_dissolved(sediment_params.D_CH4g + Db, tortuosity, sediment_params.w_CH4, phi, dx, dt, n);  % NOTE: Rising velocity of the gas
 
 
     sediment_matrix_templates = {...
@@ -360,7 +361,8 @@ function [sediment_matrix_templates] = templates()
         H2CO3_AL, H2CO3_AR, 'H2CO3'; %18
         DOP_AL, DOP_AR, 'DOP'; %19
         DOC_AL, DOC_AR, 'DOC'; %20
-        CH4_AL, CH4_AR, 'DOC'; %21
+        CH4aq_AL, CH4aq_AR, 'DOC'; %21
+        CH4g_AL, CH4g_AR, 'DOC'; %22
     };
 
 end
@@ -384,7 +386,7 @@ function [AL, AR] = cn_template_dissolved(D_m, tortuosity, v, phi, dx, dt, n)
     AR      = spdiags([ s/2+q/4 phi-s s/2-q/4],[-1 0 1],n,n);
     AR(1,1) = phi(1);
     AR(1,2) = 0;
-    AR(n,n) = phi(n)-s(n);
+    AR(n,n) = phi(n)-s(n) - dx*v*s(1)/D + dx*q(1)*v/2/D;
     AR(n,n-1) = s(n);
 end
 
@@ -398,15 +400,15 @@ function [AL, AR, flux_coef] = cn_template_solid(D, v, phi, dx, dt, n)
     AL      = spdiags([-s/2-q/4 (1-phi+s) -s/2+q/4],[-1 0 1],n,n);
     AL(1,1) = 1-phi(1)+s(1) + dx*v*s(1)/D - dx*q(1)*v/2/D;
     AL(1,2) = -s(1);
-    AL(n,n) = 1-phi(n)+s(n);
+    AL(n,n) = 1-phi(n)+s(n) + dx*v*s(1)/D - dx*q(1)*v/2/D;
     AL(n,n-1) = -s(n);
 
     AR      = spdiags([ s/2+q/4 (1-phi-s)  s/2-q/4],[-1 0 1],n,n);
     AR(1,1) = 1-phi(1)-s(1) - dx*v*s(1)/D + dx*q(1)*v/2/D ;
     AR(1,2) = +s(1);
-    AR(n,n) = 1-phi(n)-s(n);
+    AR(n,n) = 1-phi(n)-s(n) - dx*v*s(1)/D + dx*q(1)*v/2/D;
     AR(n,n-1) = s(n);
 
-    flux_coef = 2 * dx / D * (2*s(1) - q(1)) / (1-phi(1)) ;
+    flux_coef = dx / D * (2*s(1) - q(1)) / (1-phi(1));
 end
 

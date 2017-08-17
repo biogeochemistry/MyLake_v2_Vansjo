@@ -30,13 +30,14 @@ lake_params{63 -5} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
 lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
 lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
 sediment_params{23} = x(10);  % 38 R16 sorption of P on Fe k
-sediment_params{37} = x(11);  %    accel
+sediment_params{40} = x(11);  %    accel
 
-sediment_params{37} = 50;  %    accel
+sediment_params{40} = 50;  %    accel
 lake_params{51 -5} = 0.5;  %    % 8   settling velocity for S (m day-1)
 lake_params{61 -5} = 0.2; % 18    Settling velocity for Chl2 a (m day-1)
 lake_params{52 -5} = 0.2; % 9     settling velocity for Chl1 a (m day-1)
-sediment_params{23} = 1e1;  % 38 R16 sorption of P on Fe k
+sediment_params{23} = 1e1;  % 38 R16 sorption of P on Fe(IIIA) k
+sediment_params{24} = 1e1;  % 38 R16 sorption of P on Fe(IIIB) k
 
 % % Temperature calibration results:
 lake_params{2} =   44.2401e-003;
@@ -99,7 +100,7 @@ lake_params{63 -5} = x(7);  % 20    Specific growth rate (1/day) at 20 deg C
 lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
 lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
 sediment_params{23} = x(10);  % 38 R16 sorption of P on Fe k
-sediment_params{37} = x(11);  %    accel
+sediment_params{40} = x(11);  %    accel
 
 
 lake_params{28 -5} = x(12); % 23    scaling factor for inflow concentration of DOC  (-)
@@ -115,23 +116,24 @@ lake_params{60 -5} = x(18); % 17    Optical cross_section of chlorophyll (m2 mg-
 % % Trials:
 lake_params{28 -5} = 1; % 23    scaling factor for inflow concentration of DOC  (-)
 lake_params{24 -5} = 15; % 23    scaling factor for inflow concentration of POC  (-)
-sediment_params{37} = 1.;  %    accel
+sediment_params{40} = 1.;  %    accel
 lake_params{51 -5} = 0.03;  % % 8  settling velocity for S (m day-1)
 % lake_params{15 -5} = 2e-4; % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 % lake_params{59 -5} = 1e-5; % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 % lake_params{17 -5} = 0.015; % 12    Optical cross_section of chlorophyll (m2 mg-1)
 % lake_params{60 -5} = 0.015; % 17    Optical cross_section of chlorophyll (m2 mg-1)
-% sediment_params{37} = 50;  %    accel
+% sediment_params{40} = 50;  %    accel
 
 
 % To much POC:
-lake_params{24 -5} = 1; % 23    scaling factor for inflow concentration of POC  (-)
-sediment_params{37} = 1.3*50/2;  %    accel
-sediment_params{1} = 10/50*2;
-sediment_params{2} = 1/50*2;
-sediment_params{3} = 1/50*2;
-sediment_params{4} = 1/50*2;
-sediment_params{5} = 1/50*2;
+lake_params{24 -5} = 5; % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{39 -5} = 5; % 34    Scaling factor for inflow concentration of Fe3 (-)
+sediment_params{40} = 1.3*50/2;  %    accel
+sediment_params{1} = 10 * 1/50*2;
+sediment_params{2} = 1 * 1/50*2;
+sediment_params{3} = 0.5 * 1 * 1/50*2;
+sediment_params{4} = 1 * 1/50*2;
+sediment_params{5} = 0.5 * 1 * 1/50*2;
 
 
 % lake_params{61 -5} = 0.01; % 18    Settling velocity for Chl2 a (m day-1)
@@ -154,7 +156,7 @@ sediment_params{5} = 1/50*2;
 % lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
 % lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
 % sediment_params{23} = x(10);  % 38 R16 sorption of P on Fe k
-% sediment_params{37} = x(11);  %    accel
+% sediment_params{40} = x(11);  %    accel
 
 
 % lake_params{28 -5} = x(12); % 23    scaling factor for inflow concentration of DOC  (-)
@@ -179,7 +181,7 @@ sediment_params{5} = 1/50*2;
 % lake_params{64 -5} = x(8);  % 21    Half saturation growth P level (mg/m3)
 % lake_params{51 -5} = x(9);  % % 8  settling velocity for S (m day-1)
 % sediment_params{23} = x(10);  % 38 R16 sorption of P on Fe k
-% sediment_params{37} = x(11);  %    accel
+% sediment_params{40} = x(11);  %    accel
 
 
 % lake_params{28 -5} = x(12); % 23    scaling factor for inflow concentration of DOC  (-)
@@ -201,7 +203,7 @@ for current_run = 1:no_runs
             m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         else
-            m_start=[2000, 1, 1]; %
+            m_start=[1986, 1, 1]; %
             m_stop=[2013, 12, 31]; %
         end
 
