@@ -104,7 +104,17 @@ function [sediment_params] = params(max_depth, temperature)
     % 2. Stumm & Morgan; 1995. Aquatic Chemistry. C++ (have some bugs in the code)
     % 3. Phreeqc  adds ~20 sec per year. (tested)
     % 4. Delta function by Markelov (under test)
-    sediment_params.pH_algorithm = 0;
+    % 5. New algorithm by Markelov (under test)
+    sediment_params.pH_algorithm = 5;
+    aq_system.carb_acid = acid([3.6, 10.32], 0, 0);
+    aq_system.amonia = acid([9.2503], 1, 0);
+    aq_system.sulf = acid([6.8861], 0, 0);
+    aq_system.ca = neutral(2, 0);
+    aq_system.fe2 = neutral(2, 0);
+    aq_system.no3 = neutral(-1, 0);
+    aq_system.so4 = neutral(-2, 0);
+    aq_system.p_acid= acid([2.148, 7.198, 12.319], 0, 0);
+    sediment_params.aq_system = aq_system;
 
 
     sediment_params.years = 1/365;  % 1 day #35
@@ -151,6 +161,8 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.D_DOP  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
     sediment_params.D_DOC  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
     sediment_params.Db    = 5;
+
+
 
 
 

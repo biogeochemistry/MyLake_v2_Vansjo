@@ -237,7 +237,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
 
     % pH Module
     if sediment_params.pH_algorithm ~= 0
-      [H(:,i), OH(:,i), DOC(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i)] = pH_module(sediment_params.pH_algorithm, H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i), Fe2(:,i), Ca2(:,i), NO3(:,i), SO4(:,i), PO4(:,i), FeS(:,i), FeS2(:,i), FeOH3(:,i), FeOOH(:,i), Ca3PO42(:,i), PO4adsa(:,i), PO4adsb(:,i), sediment_bc.T);
+      [H(:,i), OH(:,i), DOC(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i)] = pH_module(sediment_params.pH_algorithm, H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i), Fe2(:,i), Ca2(:,i), NO3(:,i), SO4(:,i), PO4(:,i), FeS(:,i), FeS2(:,i), FeOH3(:,i), FeOOH(:,i), Ca3PO42(:,i), PO4adsa(:,i), PO4adsb(:,i), sediment_bc.T, sediment_params.aq_system);
     end
 
   end
@@ -337,7 +337,7 @@ end
 
 
 
-function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm, H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S, Fe2, Ca2, NO3, SO4, PO4, FeS, FeS2, FeOH3, FeOOH, Ca3PO42, PO4adsa, PO4adsb, Temperature)
+function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm, H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S, Fe2, Ca2, NO3, SO4, PO4, FeS, FeS2, FeOH3, FeOOH, Ca3PO42, PO4adsa, PO4adsb, Temperature, aq_system)
   %% pH_module: pH equilibrium function
   % 0. No pH module
   % 1. Stumm, W. & Morgan, J., 1995. Aquatic Chemistry. implemented in MATLAB
@@ -441,7 +441,54 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
         HS(i) = HS(i) + delta(4);
         H2S(i) = H2S(i) - delta(4);
       end
+
+    elseif algorithm == 5
+      % in =[H HCO3 CO2 CO3 NH3 NH4 HS H2S OH H2CO3 Fe2 Ca2 NO3 SO4 PO4 FeS FeS2 FeOH3 FeOOH Ca3PO42 PO4adsa PO4adsb];
+      % aq_system.carb_acid = acid([3.6, 10.32], 0, H2CO3(1)+HCO3(1)+CO3(1));
+      % aq_system.amonia = acid([9.2503], 1, NH4(1)+NH3(1));
+      % aq_system.sulf = acid([6.8861], 0, H2S(1)+HS(1));
+      % aq_system.ca = neutral(2, Ca2(1));
+      % aq_system.fe2 = neutral(2, Fe2(1));
+      % aq_system.no3 = neutral(-1, NO3(1));
+      % aq_system.so4 = neutral(-2, SO4(1));
+      % aq_system.p_acid= acid([2.148, 7.198, 12.319], 0, PO4(1));
+
+
+      for i=1:size(H,1)
+        aq_system.carb_acid.conc = 1e-3*(H2CO3(i)+HCO3(i)+CO3(i));
+        aq_system.amonia.conc = 1e-3*(NH4(i)+NH3(i));
+        aq_system.sulf.conc = 1e-3*(H2S(i)+HS(i));
+        aq_system.ca.conc = 1e-3*(Ca2(i));
+        aq_system.fe2.conc = 1e-3*(Fe2(i));
+        aq_system.no3.conc = 1e-3*(NO3(i));
+        aq_system.so4.conc = 1e-3*(SO4(i));
+        aq_system.p_acid.conc = 1e-3*(PO4(i));
+
+        if i == 1
+          pHs = linspace(0,14,1400)';
+        else
+          pHs = linspace(pH(i-1)-0.5,pH(i-1)+0.5,100)';
+        end
+        pH(i) = new_pH_module(aq_system, pHs);
+
+        % res = bsxfun(@times, aq_system.carb_acid.conc, alpha(pH(i), aq_system.carb_acid.pKs));
+        % H2CO3(i) = 1e3*res(1);
+        % HCO3(i) = 1e3*res(2);
+        % CO3(i) = 1e3*res(3);
+        % res = bsxfun(@times, aq_system.amonia.conc, alpha(pH(i), aq_system.amonia.pKs));
+        % NH4(i) = 1e3*res(1);
+        % NH3(i) = 1e3*res(2);
+        % res = bsxfun(@times, aq_system.sulf.conc, alpha(pH(i), aq_system.sulf.pKs));
+        % H2S(i) = 1e3*res(1);
+        % HS(i) = 1e3*res(2);
+        % H(i) = 10^(-pH(i))*1e3;
+        % OH(i) = 10^(-14+pH(i))*1e3;
+      end
+
     end
+
+
+
 
 end
 
