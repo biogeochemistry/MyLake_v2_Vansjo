@@ -126,7 +126,7 @@ lake_params{51 -5} = 0.03;  % % 8  settling velocity for S (m day-1)
 
 
 % To much POC:
-lake_params{24 -5} = 5; % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{24 -5} = 15; % 23    scaling factor for inflow concentration of POC  (-)
 lake_params{39 -5} = 5; % 34    Scaling factor for inflow concentration of Fe3 (-)
 sediment_params{40} = 1.3*50/2;  %    accel
 sediment_params{1} = 10 * 1/50*2;
@@ -203,8 +203,8 @@ for current_run = 1:no_runs
             m_start=[2000, 1, 1]; %
             m_stop=[2012, 12, 31]; %
         else
-            m_start=[1986, 1, 1]; %
-            m_stop=[2013, 12, 31]; %
+            m_start=[2005, 1, 1]; %
+            m_stop=[2006, 12, 31]; %
         end
 
     elseif current_run == 2;

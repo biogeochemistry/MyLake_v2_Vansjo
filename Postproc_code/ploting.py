@@ -48,7 +48,7 @@ molar_masses = {
     'Ca3PO42': 310176.7}
 
 
-solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42']
+solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42', 'POC', 'POP']
 disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S', 'HS', 'PO4', 'Al3', 'Ca2', 'CO2']
 
 
