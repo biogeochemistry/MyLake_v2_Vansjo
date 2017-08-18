@@ -45,7 +45,7 @@ function [sediment_bc] = update_sediment(mylake_temp_results, mylake_params, sed
     sediment_bc.DOP_c = dissolved_bc(mylake_temp_results.DOPz, phi);
     sediment_bc.DOC_c = dissolved_bc(mylake_temp_results.DOCz, phi);
     sediment_bc.CH4aq_c = dissolved_bc(mylake_temp_results.CH4aqz, phi);
-    sediment_bc.CH4g_c = dissolved_bc(mylake_temp_results.CH4gz, phi);
+    sediment_bc.CH4g_fx = 0; % dissolved_bc(mylake_temp_results.CH4gz, phi);
     sediment_bc.T = mylake_temp_results.Tz(end);
 
 end
