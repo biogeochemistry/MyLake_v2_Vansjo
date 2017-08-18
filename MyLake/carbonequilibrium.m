@@ -1,9 +1,11 @@
-function [CO2aq,CO2frac] = carbonequilibrium(DICz,Tz,pH)
+function [CO2aq, HCO3aq, CO3aq, CO2frac, HCO3frac, CO3frac] = carbonequilibrium(DICz,Tz,pH)
 %Calculates the fractions of dissolved inorganic carbon
 %Inputs
 %pH          pH
 %DICzt       DICzt profile (mg/m^3)
 %Tz          water temperature profile (deg C)
+
+
 
 %Outputs
 %CO2aq       carbon dioxide (mg/m^3)
@@ -57,15 +59,15 @@ M_DIC = CO2mfrac*44.01+HCO3mfrac*61.01+CO3mfrac*60.01; % DIC molar mass g/mol
 DICmz = DICz./M_DIC; %DIC concentration in mmol DIC/l
 
 CO2frac = CO2mfrac*44.01./M_DIC; % mg CO2 / mg DIC
-%HCO3frac = HCO3mfrac*61.01./M_DIC; % mg HCO3 / mg DIC
-%CO3frac = CO3mfrac*60.01./M_DIC; % mg CO3 / mg DIC
+HCO3frac = HCO3mfrac*61.01./M_DIC; % mg HCO3 / mg DIC
+CO3frac = CO3mfrac*60.01./M_DIC; % mg CO3 / mg DIC
 
 %Carbon dioxide partial pressure & concentration mg/m^3
 
 pCO2 = CO2mfrac.*DICmz./(1000.*K0); %mol CO2/mol DIC * mmol DIC/l * l*atm/mmol CO2 = atm
 CO2aq = 1000*1000*44.01.*K0.*pCO2; %mug/mol * mol/l = mug/l = mg/m^3
-%HCO3aq = 1000*HCO3frac.*DICz; %mug/l = mg/m^3
-%CO3aq = 1000*CO3frac.*DICz; %mug/l = mg/m^3
+HCO3aq = 1000*HCO3frac.*DICz; %mug/l = mg/m^3
+CO3aq = 1000*CO3frac.*DICz; %mug/l = mg/m^3
 
 %Alkalinity mmol/l
 

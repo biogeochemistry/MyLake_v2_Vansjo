@@ -19,7 +19,7 @@ function [sediment_params] = params(max_depth, temperature)
     global sed_par_file
     f=fopen(sed_par_file);
     % f=fopen('calibration_k_values.txt');
-    data = textscan(f,'%s%f', 61,'Delimiter', '\t');
+    data = textscan(f,'%s%f', 62,'Delimiter', '\t');
     fclose(f);
 
     % chemical constants from file
@@ -59,31 +59,33 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.k_FeSpre = data{2}(34);
     sediment_params.k_ch4_o2 = data{2}(35);
     sediment_params.k_ch4_so4 = data{2}(36);
-    sediment_params.CH4_solubility = data{2}(37);
-    sediment_params.k_ch4_dis = data{2}(38);
-    sediment_params.CH4_rising_vel = data{2}(39);
-    sediment_params.accel = data{2}(40);
-    sediment_params.f_pfe = data{2}(41);
-    sediment_params.k_pdesorb_c = data{2}(42);
-    phi_in = data{2}(43);
-    phi_f  = data{2}(44);
-    X_b   = data{2}(45);
-    tortuosity = data{2}(46);
-    sediment_params.w = data{2}(47);      % time-dependent burial rate w = 0.1
-    sediment_params.n = data{2}(48);;  % points in spatial grid
-    sediment_params.depth = data{2}(49);  % sediment depth
-    sediment_params.w_CH4 = data{2}(50);
-    alpha0 = data{2}(51);
-    sediment_params.Cx1 = data{2}(52);
-    sediment_params.Ny1 = data{2}(53);
-    sediment_params.Pz1 = data{2}(54);
-    sediment_params.Cx2 = data{2}(55);
-    sediment_params.Ny2 = data{2}(56);
-    sediment_params.Pz2 = data{2}(57);
-    sediment_params.Cx3 = data{2}(58);
-    sediment_params.Ny3 = data{2}(59);
-    sediment_params.Pz3 = data{2}(60);
-    sediment_params.n_of_time_steps_during_1_dt_of_myLake = data{2}(61);  % time step
+    sediment_params.Kh_CH4 = data{2}(37);
+    sediment_params.Kh_CO2 = data{2}(38);
+    sediment_params.k_ch4_dis = data{2}(39);
+    sediment_params.CH4_rising_vel = data{2}(40);
+    sediment_params.accel = data{2}(41);
+    sediment_params.f_pfe = data{2}(42);
+    sediment_params.k_pdesorb_c = data{2}(43);
+    phi_in = data{2}(44);
+    phi_f  = data{2}(45);
+    X_b   = data{2}(46);
+    tortuosity = data{2}(47);
+    sediment_params.w = data{2}(48);      % time-dependent burial rate w = 0.1
+    sediment_params.n = data{2}(49);;  % points in spatial grid
+    sediment_params.depth = data{2}(50);  % sediment depth
+    sediment_params.w_CH4 = data{2}(51);
+    alpha0 = data{2}(52);
+    sediment_params.Cx1 = data{2}(53);
+    sediment_params.Ny1 = data{2}(54);
+    sediment_params.Pz1 = data{2}(55);
+    sediment_params.Cx2 = data{2}(56);
+    sediment_params.Ny2 = data{2}(57);
+    sediment_params.Pz2 = data{2}(58);
+    sediment_params.Cx3 = data{2}(59);
+    sediment_params.Ny3 = data{2}(60);
+    sediment_params.Pz3 = data{2}(61);
+    sediment_params.n_of_time_steps_during_1_dt_of_myLake = data{2}(62);  % time step
+
 
 
     % Estimation of params:
@@ -100,13 +102,10 @@ function [sediment_params] = params(max_depth, temperature)
     % !!!!!!! Recommend to use #3 Phreeqc
     % Specify pH algorithm:
     % 0. Disabled
-    % 1. Stumm & Morgan; 1995. Aquatic Chemistry. MATLAB -> very long - don't use it.
-    % 2. Stumm & Morgan; 1995. Aquatic Chemistry. C++ (have some bugs in the code)
-    % 3. Phreeqc  adds ~20 sec per year. (tested)
-    % 4. Delta function by Markelov (under test)
-    % 5. New algorithm by Markelov (under test)
-    sediment_params.pH_algorithm = 5;
-    aq_system.carb_acid = acid([3.6, 10.32], 0, 0);
+    % 1. Phreeqc  adds computatinal time. (tested)
+    % 2. New algorithm by Markelov (simulation time: ~12m per year) (under test) - produces NaN values
+    sediment_params.pH_algorithm = 0;
+    aq_system.carb_acid = acid([6.52, 10.56], 0, 0);
     aq_system.amonia = acid([9.2503], 1, 0);
     aq_system.sulf = acid([6.8861], 0, 0);
     aq_system.ca = neutral(2, 0);
@@ -162,8 +161,8 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.D_DOC  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
     sediment_params.Db    = 5;
 
-
-
+    sediment_params.CH4_solubility = sediment_params.Kh_CH4 * pressure;
+    sediment_params.CO2_solubility = sediment_params.Kh_CO2 * pressure;
 
 
 end

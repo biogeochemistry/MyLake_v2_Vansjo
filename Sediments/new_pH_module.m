@@ -13,7 +13,6 @@ function [x] = new_pH_module(Aquatic_system, pHs)
             charge = Aquatic_system.(fields{i}).charge;
             alphas = alpha(pH, Aquatic_system.(fields{i}).pKs);
             x = x + sum(bsxfun(@times,bsxfun(@times,conc, charge), alphas), 2);
-
             % x = x + sum(conc .* alphas .* charge);
           % x += sum(Aquatic_system.(fields{i}).conc .* Aquatic_system.(fields{i}).charge .* alpha(pH, Aquatic_system.(fields{i}).pKs)
         end

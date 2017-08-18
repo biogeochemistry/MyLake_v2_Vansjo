@@ -113,29 +113,30 @@ sediment_params = {
     0.3/2, 'k_FeSpre';     % 34     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
     1e7,   'k_ch4_o2'      % 35     % Canavan, R. W (2006)
     1e-1,  'k_ch4_so4'     % 36     % Canavan, R. W (2006)
-    2.66,  'CH4_solubility' % 37     % Canavan, R. W (2006)
-    1e3,   'k_ch4_dis'             % 38
+    0.0015,  'Kh_CH4' %      37     % Henry cobstant M/atm
+    0.034,  'Kh_CO2' %       38     % Henry cobstant M/atm
+    1e3,   'k_ch4_dis'     % 39
     5,     'CH4_rising_vel' % 39     % Canavan, R. W (2006)
-    30,    'accel';        % 40
-    1e-6,   'f_pfe';       % 41
-    1.35,   'k_pdesorb_c'; % 42
-    0.98,   'fi_in';       % 43
-    0.85,   'fi_f';        % 44
-    0.5,    'X_b';         % 45
-    1,      'tortuosity';  % 46
-    0.1,    'w';           % 47
-    256,    'n';           % 48
-    30,     'depth';       % 49
-    5,      'w_CH4';       % 50     rising velocity of methane gas in the sediment
-    14.4,   'alfa0';       % 51
-    106,    'Cx1';         % 52           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    16,     'Ny1';         % 53           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Pz1';         % 54           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    200,    'Cx2';         % 55           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    20,     'Ny2';         % 56           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Pz2';         % 57           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Cx3';         % 58           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    0.1,    'Ny3';         % 59           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    0,      'Pz3';         % 60           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    10,      'n_ts';       % 61           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
+    30,    'accel';        % 41
+    1e-6,   'f_pfe';       % 42
+    1.35,   'k_pdesorb_c'; % 43
+    0.98,   'fi_in';       % 44
+    0.85,   'fi_f';        % 45
+    0.5,    'X_b';         % 46
+    1,      'tortuosity';  % 47
+    0.1,    'w';           % 48
+    256,    'n';           % 49
+    30,     'depth';       % 50
+    5,      'w_CH4';       % 51     rising velocity of methane gas in the sediment
+    14.4,   'alfa0';       % 52
+    106,    'Cx1';         % 53           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    16,     'Ny1';         % 54           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Pz1';         % 55           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    200,    'Cx2';         % 56           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    20,     'Ny2';         % 57           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Pz2';         % 58           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Cx3';         % 59           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    0.1,    'Ny3';         % 60           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    0,      'Pz3';         % 61           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    10,      'n_ts';       % 62           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
     };
