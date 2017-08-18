@@ -262,6 +262,8 @@ DOPzt = zeros(Nz,length(tt));
 DOCzt = zeros(Nz,length(tt));
 DICzt = zeros(Nz,length(tt));
 CO2zt = zeros(Nz,length(tt));
+HCO3zt = zeros(Nz,length(tt));
+CO3zt = zeros(Nz,length(tt));
 O2zt = zeros(Nz,length(tt));
 
 NO3zt  = zeros(Nz,length(tt));
@@ -728,7 +730,7 @@ for i = 1:length(tt)
 
     %Dissolved inorganic carbon
     %DIC partitioning in water
-    [CO2z,CO2frac] = carbonequilibrium(DICz,Tz,pH);
+    [CO2z, HCO3z, CO3z, CO2frac, HCO3frac, CO3frac] = carbonequilibrium(DICz,Tz,pH);
 
 
     % CO2 production by degraded DOC
@@ -751,11 +753,11 @@ for i = 1:length(tt)
     %
     %     pH = 7*ones(1,length(zz));
     %     TC = Tz(1); %For monitoring only
-    %     [CO2z,CO2frac,C_acid,C_basic] = carbonequilibrium(DICz,Tz,pH);
+    %[CO2z, HCO3z, CO3z, CO2frac, HCO3frac, CO3frac] = carbonequilibrium(DICz,Tz,pH);
     %
     %     C_acid = C_acid + 1.375.*(-O2_erotus);
     %     DICz = C_acid+C_basic;
-    %     [CO2z,CO2frac,C_acid,C_basic] = carbonequilibrium(DICz,Tz,pH);
+    %[CO2z, HCO3z, CO3z, CO2frac, HCO3frac, CO3frac] = carbonequilibrium(DICz,Tz,pH);
     %     if(IceIndicator==0)
     %         [CO2z(1),surfflux,CO2_eq,K0,CO2_ppm] = carbondioxideflux(CO2z(1),Wt(i,6),Wt(i,5),Tz(1),dz,tt(i));
     %         DICz(1) = CO2z(1)/CO2frac(1);
@@ -1218,7 +1220,9 @@ for i = 1:length(tt)
 
     %DIC-partitioning in water
 
-    [CO2z,~] = carbonequilibrium(DICz,Tz,pH);
+    [CO2z, HCO3z, CO3z, CO2frac, HCO3frac, CO3frac] = carbonequilibrium(DICz,Tz,pH);
+
+
 
     % Relative dissolved oxygen concentration
 
@@ -1308,6 +1312,8 @@ for i = 1:length(tt)
         POPz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POPz,  30973.762);
         CH4aqz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(CH4aqz,  16042.5);
         CH4gz      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(CH4gz,  16042.5);
+        HCO3z      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(HCO3z,  61016.8);
+        CO3z      = convert_mg_per_qubic_m_to_umol_per_qubic_cm(CO3z,  60008.9);
 
         % [Fe3z, Pz, PPz] = equilibrium_P_sorption(Fe3z, Pz, PPz, Kads);
 
@@ -1318,7 +1324,7 @@ for i = 1:length(tt)
         mylake_temp_results.H_sw_z = H_sw_z;
         mylake_temp_results.H_sw_z_2 = H_sw_z_2;
 
-        C0 = [O2z, Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, POCz, POPz, CH4aqz, CH4gz];
+        C0 = [O2z, Chlz, DOCz, NO3z, Fe3z, SO4z, NH4z, Fe2z, H2Sz, HSz, Pz, Al3z, PPz, Ca2z, CO2z, DOPz, Cz, POCz, POPz, CH4aqz, CH4gz, HCO3z, CO3z];
 
         [C_new, wc_rates_av] = wc_chemical_reactions_module(mylake_params, sediment_params, mylake_temp_results, C0, dt, sediment_params.n_of_time_steps_during_1_dt_of_myLake, wc_int_method);
 
@@ -1343,6 +1349,8 @@ for i = 1:length(tt)
         POPz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,19), 30973.762);
         CH4aqz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,20), 16042.5);
         CH4gz = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,21), 16042.5);
+        HCO3z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,22), 61016.8);
+        CO3z = convert_umol_per_qubic_cm_to_mg_per_qubic_m(C_new(:,23), 60008.9);
     end
 
     if any(isnan(C_new))
@@ -1375,7 +1383,10 @@ for i = 1:length(tt)
             mylake_temp_results.PPz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(PPz, 30973.762);
             mylake_temp_results.POCz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(POCz,  12010.7);
             mylake_temp_results.CH4aqz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(CH4aqz,  16042.5);
-            mylake_temp_results.CH4gz = convert_mg_per_qubic_m_to_umol_per_qubic_cm(CH4gz,  16042.5);
+            mylake_temp_results.CO2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(CO2z,  44009.5);
+            mylake_temp_results.HCO3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(HCO3z,  61016.8);
+            mylake_temp_results.CO3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(CO3z,  60008.9);
+            mylake_temp_results.HSz     = convert_mg_per_qubic_m_to_umol_per_qubic_cm(HSz, 33072.9);
 
 
         % Preparing units and estimate flux from [WC] ----> [Sediments]
@@ -1395,6 +1406,9 @@ for i = 1:length(tt)
         mylake_prev_results.DOCz = DOCz;
         mylake_prev_results.CH4aqz = CH4aqz;
         mylake_prev_results.CH4gz = CH4gz;
+        mylake_prev_results.CO2z = CO2z;
+        mylake_prev_results.HCO3z = HCO3z;
+        mylake_prev_results.CO3z = CO3z;
 
         if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
             error('NaN')
@@ -1412,6 +1426,11 @@ for i = 1:length(tt)
         DOCz = mylake_new_resutls.DOCz;
         CH4aqz = mylake_new_resutls.CH4aqz;
         CH4gz = mylake_new_resutls.CH4gz;
+        CO2z = mylake_new_resutls.CO2z;
+        HCO3z = mylake_new_resutls.HCO3z;
+        CO3z = mylake_new_resutls.CO3z;
+
+        DICz = CO2z + HCO3z + CO3z;
 
 
         fields = fieldnames(sediment_concentrations);
@@ -1458,6 +1477,9 @@ for i = 1:length(tt)
     DOPzt(:,i) = DOPz;
     DOCzt(:,i) = DOCz;
     DICzt(:,i) = DICz;
+    CO2zt(:,i) = CO2z;
+    HCO3zt(:,i) = HCO3z;
+    CO3zt(:,i) = CO3z;
     O2zt(:,i) = O2z;
 
     NO3zt(:,i) = NO3z;
@@ -1483,7 +1505,7 @@ for i = 1:length(tt)
     lvlDzt(:,i) = lvlD;
 
     % O2diffzt(:,i) = O2_diff;
-    CO2zt(:,i) = CO2z;
+
     O2_sat_relt(:,i) = O2_sat_rel;
     O2_sat_abst(:,i) = O2_sat_abs;
     BODzt = 0; %for compatibility with the other code
@@ -1644,7 +1666,9 @@ MyLake_results.concentrations.POP = POPzt;
 MyLake_results.concentrations.DOP = DOPzt;
 MyLake_results.concentrations.DOC = DOCzt;
 MyLake_results.concentrations.DIC = DICzt;
-MyLake_results.concentrations.CO2 = CO2zt;
+MyLake_results.concentrations.CO2aq = CO2zt;
+MyLake_results.concentrations.HCO3 = HCO3zt;
+MyLake_results.concentrations.CO3 = CO3zt;
 MyLake_results.concentrations.O2 = O2zt;
 MyLake_results.concentrations.NO3 = NO3zt;
 MyLake_results.concentrations.NH4 = NH4zt;
@@ -1653,13 +1677,13 @@ MyLake_results.concentrations.Fe2 = Fe2zt;
 MyLake_results.concentrations.SO4 = SO4zt;
 MyLake_results.concentrations.HS = HSzt;
 MyLake_results.concentrations.H2S = H2Szt;
-MyLake_results.concentrations.CH4aq = CH4aqzt;
 MyLake_results.concentrations.Ca2 = Ca2zt;
 MyLake_results.concentrations.pH = pHzt;
 MyLake_results.concentrations.POC = POCzt;
 MyLake_results.concentrations.Al3 = Al3zt;
 MyLake_results.concentrations.SiO4 = SiO4zt;
 MyLake_results.concentrations.SiO2 = SiO2zt;
+MyLake_results.concentrations.CH4aq = CH4aqzt;
 MyLake_results.concentrations.CH4g = CH4gzt;
 MyLake_results.d_O2zt = d_O2zt;
 MyLake_results.int_R_O2dz = int_R_O2dz;
@@ -2103,7 +2127,7 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
     R_dCz_growth =  Cz .* R_bioz_2;
 
     %Oxygen production in phytoplankton growth
-    R_dO2_Chl = R_dChl_growth+R_dCz_growth;
+    R_Alg_tot_growth = R_dChl_growth+R_dCz_growth;
 
 
     % New chemistry
@@ -2242,25 +2266,38 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
     r.R1a = R1a; r.R1b = R1b; r.R1c = R1c; r.R1d = R1d; r.R1e = R1e; r.R1f = R1f; r.R2a = R2a; r.R2b = R2b; r.R2c = R2c; r.R2d = R2d; r.R2e = R2e; r.R2f = R2f; r.R3a = R3a; r.R3b = R3b; r.R3c = R3c; r.R3d = R3d; r.R3e = R3e; r.R3f = R3f; r.R5a = R5a; r.R5b = R5b; r.R5c = R5c; r.R5d = R5d; r.R5e = R5e; r.R5f = R5f; r.R6a = R6a; r.R6b = R6b; r.R6c = R6c; r.R6d = R6d; r.R6e = R6e; r.R6f = R6f;  r.Ra = Ra; r.Rb = Rb; r.Rc = Rc; r.Rd = Rd; r.Re = Re; r.Rf = Rf; r.R1 = R1; r.R2 = R2; r.R3 = R3; r.R5 = R5;  r.R6 = R6; r.R11 = R11; r.R12 = R12; r.R13  = R13; r.R14 = R14; r.R15 = R15; r.R16 = R16; r.R21a = R21a; r.R21b = R21b; r.R21c = R21c; r.R21d = R21d;; r.R21e = R21e;; r.R21f = R21f; r.R23 = R23; r.R24 = R24; r.R25a = R25a; r.R25b  = R25b; r.R31a = R31a; r.R31b  = R31b; r.R32a = R32a; r.R32b = R32b; r.R33a = R33a; r.R33b = R33b; r.R34 = R34;
 
 
-    dcdt(:,1)  = -0.25*R13  - R11 - 2*R14 - (Cx1*R1a + Cx1*R1b + Cx2*R1c + Cx3*R1d+ Cx2*R1e+ Cx3*R1f) - 3*R23 + Cx1 * R_dO2_Chl -R15; % O2z
+    dcdt(:,1)  = -0.25*R13  - R11 - 2*R14 - (Cx1*R1a + Cx1*R1b + Cx2*R1c + Cx3*R1d+ Cx2*R1e+ Cx3*R1f) - 3*R23 + Cx1 * R_Alg_tot_growth -R15; % O2z
     dcdt(:,2)  = -Ra - R21a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R21d - dfloc_DOC;% DOCz
-    dcdt(:,4)  = - 0.8*(Cx1*R2a + Cx1*R2b + Cx2*R2c + Cx3*R2d+ Cx2*R2e + Cx3*R2f) + R14 - Ny1 * (R_dChl_growth + R_dCz_growth); % NO3z
+    dcdt(:,4)  = - 0.8*(Cx1*R2a + Cx1*R2b + Cx2*R2c + Cx3*R2d+ Cx2*R2e + Cx3*R2f) + R14 - Ny1 * R_Alg_tot_growth; % NO3z
     dcdt(:,5)  = - 4*(Cx1*R3a_Fe + Cx1*R3b_Fe + Cx2*R3c_Fe + Cx3*R3d_Fe+ Cx2*R3e_Fe+ Cx3*R3f_Fe) - 2*R12  + R13 - R31a; % Fe3z
     dcdt(:,6)  = - 0.5*(Cx1*R5a + Cx1*R5b + Cx2*R5c + Cx3*R5d+ Cx2*R5e+ Cx3*R5f) + R11 ; % SO4z
-    dcdt(:,7)  =  (Ny1 * Ra + Ny1 * Rb + Ny2 * Rc + Ny3 * Rd+ Ny2 * Re+ Ny3 * Rf) - R14 ;% NH4z
+    dcdt(:,7)  =  (Ny1 * Ra + Ny1 * Rb + Ny2 * Rc + Ny3 * Rd+ Ny2 * Re+ Ny3 * Rf) - R14;% NH4z
     dcdt(:,8)  = 4*(Cx1*R3a + Cx1*R3b + Cx2*R3c + Cx3*R3d + Cx2*R3e+ Cx3*R3f) + 2*R12 - R13 + R25b - R25a; % Fe2z
     dcdt(:,9)  =  0;% H2Sz
     dcdt(:,10) = 0.5*(Cx1*R5a + Cx1*R5b + Cx2*R5c + Cx3*R5d+ Cx2*R5e+ Cx3*R5f) - R11 - R12  - R21a - R21b - R21c - R21d - R21e - R21f + R25b - R25a - R24 + R16;% HSz
-    dcdt(:,11) = (Pz1 * Ra + Pz1 * Rb + Pz2 * Rc + Pz3 * Rd+ Pz2 * Re+ Pz3 * Rf) - R33a + R33b - R31a - R32a + R31b + R32b - 2*R34 + R_dDOP - Pz1 * (R_dChl_growth + R_dCz_growth);% Pz
+    dcdt(:,11) = (Pz1 * Ra + Pz1 * Rb + Pz2 * Rc + Pz3 * Rd+ Pz2 * Re+ Pz3 * Rf) - R33a + R33b - R31a - R32a + R31b + R32b - 2*R34 + R_dDOP - Pz1 * R_Alg_tot_growth;% Pz
     dcdt(:,12) = -R33a ;% Al3z
     dcdt(:,13) = R31a - R31b;% PPz
     dcdt(:,14) = -3*R34 ;% Ca2z
-    dcdt(:,15) = -Rf - R21f + R15 + 2*R16;% CO2z
+    dcdt(:,15) =  -(Ny1-2*Pz1)*R_Alg_tot_growth  + 2*R13 + 2*R14 + R15 - R16 + (Cx1 - Ny1 + 2*Pz1)*R1a + (Cx1 - Ny1 + 2*Pz1)*R1b + (Cx2 - Ny2 + 2*Pz2)*R1c + (Cx3 - Ny3 + 2*Pz3)*R1d + (Cx2 - Ny2 + 2*Pz2)*R1e + (Cx2 - Ny2 + 2*Pz2)*R1f + (0.2*Cx1 - Ny1 + 2*Pz1)*R2a + (0.2*Cx1 - Ny1 + 2*Pz1)*R2b + (0.2*Cx2 - Ny2 + 2*Pz2)*R2c + (0.2*Cx3 - Ny3 + 2*Pz3)*R2d + (0.2*Cx2 - Ny2 + 2*Pz2)*R2e + (0.2*Cx3 - Ny3 + 2*Pz3)*R2f - (7*Cx1 + Ny1 + 2*Pz1)*R3a - (7*Cx1 + Ny1 + 2*Pz1)*R3b - (7*Cx2 + Ny2 + 2*Pz2)*R3c - (7*Cx3 + Ny3 + 2*Pz3)*R3d - (7*Cx2 + Ny2 + 2*Pz2)*R3e - (7*Cx3 + Ny3 + 2*Pz3)*R3f - (Ny1 - 2*Pz1)*R5a - (Ny1 - 2*Pz1)*R5b - (Ny2 - 2*Pz2)*R5c - (Ny3 - 2*Pz3)*R5d - (Ny2 - 2*Pz2)*R5e - (Ny3 - 2*Pz3)*R5f + (0.5 * Cx1 - Ny1 - 2*Pz1)*R6a + (0.5 * Cx1 - Ny1 - 2*Pz1)*R6b + (0.5*Cx2 - Ny2 + 2*Pz2)*R6c + (0.5*Cx3 - Ny3 + 2*Pz3)*R6d + (0.5*Cx2 - Ny2 + 2*Pz2)*R6e + (0.5 * Cx3 - Ny3 - 2*Pz3)*R6f;% CO2z
     dcdt(:,16) = -Rc - R21c - R_dDOP - dfloc_DOP;% DOPz
     dcdt(:,17) = -Rb - R21b + R_dCz_growth;% Cz
-    dcdt(:,18) = dfloc_DOC - Rf; % POCz
+    dcdt(:,18) = -Rf - R21f + dfloc_DOC; % POCz
     dcdt(:,19) = - Re + dfloc_DOP;% POPz
     dcdt(:,20) = 0.5*(Cx1*R6a + Cx1*R6b + Cx2*R6c + Cx3*R6d+ Cx2*R6e + Cx3*R6f).* (CH4_over_sat < 0) -R15 - R16 + R17;% CH4aqz
     dcdt(:,21) = 0.5*(Cx1*R6a + Cx1*R6b + Cx2*R6c + Cx3*R6d+ Cx2*R6e + Cx3*R6f).* (CH4_over_sat > 0) - R17;% CH4aqz
+    dcdt(:,22) = (Ny1+2*Pz1)*R_Alg_tot_growth - (Ny1 - 2*Pz1)*R1a - (Ny1 - 2*Pz1)*R1b - (Ny2 - 2*Pz2)*R1c - (Ny3 - 2*Pz3)*R1d - (Ny2 - 2*Pz2)*R1e - (Ny3 - 2*Pz3)*R1f + (0.8*Cx1 + Ny1 - 2*Pz1)*R2a + (0.8*Cx1 + Ny1 - 2*Pz1)*R2b + (0.8*Cx2 + Ny2 - 2*Pz2)*R2c + (0.8*Cx3 + Ny3 - 2*Pz3)*R2d + (0.8*Cx2 + Ny2 - 2*Pz2)*R2e + (0.8*Cx3 + Ny3 - 2*Pz3)*R2f + (8*Cx1+Ny1-2*Pz1)*R3a + (8*Cx1+Ny1-2*Pz1)*R3b + (8*Cx2+Ny2-2*Pz2)*R3c + (8*Cx3+Ny3-2*Pz3)*R3d + (8*Cx2+Ny2-2*Pz2)*R3e + (8*Cx3+Ny3-2*Pz3)*R3f + (Cx1+Ny1-2*Pz1)*R5a + (Cx1+Ny1-2*Pz1)*R5b + (Cx2+Ny2-2*Pz2)*R5c + (Cx3+Ny3-2*Pz3)*R5d + (Cx2+Ny2-2*Pz2)*R5e + (Cx3+Ny3-2*Pz3)*R5f + (Ny1-2*Pz1)*R6a + (Ny1-2*Pz1)*R6b + (Ny2-2*Pz2)*R6c + (Ny3-2*Pz3)*R6d + (Ny2-2*Pz2)*R6e + (Ny3-2*Pz3)*R6f   - 2*R13 - 2*R14 + 2*R16; % HCO3
+
+
+
+
+
+
+
+
+
+
+
+
 %end of function

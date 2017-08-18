@@ -10,6 +10,9 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     DOPz = mylake_prev_results.DOPz;
     CH4aqz = mylake_prev_results.CH4aqz;
     CH4gz = mylake_prev_results.CH4gz;
+    CO2z = mylake_prev_results.CO2z;
+    HCO3z = mylake_prev_results.HCO3z;
+    CO3z = mylake_prev_results.CO3z;
 
     % Diffusion Fluxes:
     O2z = update_C_as_neumann(O2z, sediment_transport_fluxes.O2, MyLake_params, sediment_params);
@@ -20,7 +23,10 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     DOPz = update_C_as_neumann(DOPz, sediment_transport_fluxes.DOP, MyLake_params, sediment_params);
     DOCz = update_C_as_neumann(DOCz, sediment_transport_fluxes.DOC, MyLake_params, sediment_params);
     CH4aqz = update_C_as_neumann(CH4aqz, sediment_transport_fluxes.CH4aq, MyLake_params, sediment_params);
-    CH4gz = update_C_as_neumann(CH4gz, sediment_transport_fluxes.CH4aq, MyLake_params, sediment_params);
+    CH4gz = update_C_as_neumann(CH4gz, sediment_transport_fluxes.CH4g, MyLake_params, sediment_params);
+    CO2z = update_C_as_neumann(CO2z, sediment_transport_fluxes.CO2, MyLake_params, sediment_params);
+    HCO3z = update_C_as_neumann(HCO3z, sediment_transport_fluxes.HCO3, MyLake_params, sediment_params);
+    CO3z = update_C_as_neumann(CO3z, sediment_transport_fluxes.CO3, MyLake_params, sediment_params);
 
     % % Boudreau, B.P., 1999. Metals and models : Diagenetic modelling in freshwater lacustrine sediments *. , pp.227–251.
 
@@ -33,7 +39,10 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     DOPz = update_C_as_neumann(DOPz, sediment_bioirrigation_fluxes.DOP, MyLake_params, sediment_params);
     DOCz = update_C_as_neumann(DOCz, sediment_bioirrigation_fluxes.DOC, MyLake_params, sediment_params);
     CH4aqz = update_C_as_neumann(CH4aqz, sediment_bioirrigation_fluxes.CH4aq, MyLake_params, sediment_params);
-    CH4gz = update_C_as_neumann(CH4gz, sediment_bioirrigation_fluxes.CH4aq, MyLake_params, sediment_params);
+    CH4gz = update_C_as_neumann(CH4gz, sediment_bioirrigation_fluxes.CH4g, MyLake_params, sediment_params);
+    CO2z = update_C_as_neumann(CO2z, sediment_bioirrigation_fluxes.CO2, MyLake_params, sediment_params);
+    HCO3z = update_C_as_neumann(HCO3z, sediment_bioirrigation_fluxes.HCO3, MyLake_params, sediment_params);
+    CO3z = update_C_as_neumann(CO3z, sediment_bioirrigation_fluxes.CO3, MyLake_params, sediment_params);
 
     mylake_new_resutls.O2z = O2z;
     mylake_new_resutls.Pz = Pz;
@@ -44,6 +53,9 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     mylake_new_resutls.DOCz = DOCz;
     mylake_new_resutls.CH4aqz = CH4aqz;
     mylake_new_resutls.CH4gz = CH4gz;
+    mylake_new_resutls.CO2z = CO2z;
+    mylake_new_resutls.HCO3z = HCO3z;
+    mylake_new_resutls.CO3z = CO3z;
 
     if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
         error('NaN')

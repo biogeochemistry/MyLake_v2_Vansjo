@@ -215,14 +215,17 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       sediment_bioirrigation_fluxes.DOC(i-1) = integrate_over_depth_2( bioirrigation(DOC(:, i),  alfax,  phi), x);
       sediment_bioirrigation_fluxes.CH4aq(i-1) = integrate_over_depth_2( bioirrigation(CH4aq(:, i),  alfax,  phi), x);
       sediment_bioirrigation_fluxes.CH4g(i-1) = integrate_over_depth_2( bioirrigation(CH4g(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.CO2(i-1) = integrate_over_depth_2( bioirrigation(CO2(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.HCO3(i-1) = integrate_over_depth_2( bioirrigation(HCO3(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.CO3(i-1) = integrate_over_depth_2( bioirrigation(CO3(:, i),  alfax,  phi), x);
 
-      sediment_transport_fluxes.POP(i-1)          = -sediment_bc.POP_fx;
-      sediment_transport_fluxes.Chl(i-1)          = -sediment_bc.Chl_fx;
-      sediment_transport_fluxes.POC(i-1)          = -sediment_bc.POC_fx;
-      sediment_transport_fluxes.FeOH3(i-1)        = -sediment_bc.FeOH3_fx;
-      sediment_transport_fluxes.AlOH3(i-1)        = -sediment_bc.AlOH3_fx;
-      sediment_transport_fluxes.PO4adsa(i-1)      = -sediment_bc.PO4adsa_fx;
-      sediment_transport_fluxes.PO4adsb(i-1)      = -sediment_bc.PO4adsb_fx;
+      sediment_transport_fluxes.POP(i-1)          = -sediment_bc.POP_fx; % * (1-phi(1)) ./ phi(i);
+      sediment_transport_fluxes.Chl(i-1)          = -sediment_bc.Chl_fx; % * (1-phi(1)) ./ phi(i);
+      sediment_transport_fluxes.POC(i-1)          = -sediment_bc.POC_fx; % * (1-phi(1)) ./ phi(i);
+      sediment_transport_fluxes.FeOH3(i-1)        = -sediment_bc.FeOH3_fx; % * (1-phi(1)) ./ phi(i);
+      sediment_transport_fluxes.AlOH3(i-1)        = -sediment_bc.AlOH3_fx; % * (1-phi(1)) ./ phi(i);
+      sediment_transport_fluxes.PO4adsa(i-1)      = -sediment_bc.PO4adsa_fx; % * (1-phi(1)) ./ phi(i);
+      sediment_transport_fluxes.PO4adsb(i-1)      = -sediment_bc.PO4adsb_fx; % * (1-phi(1)) ./ phi(i);
       sediment_transport_fluxes.O2(i-1)           = top_sediment_diffusion_flux(O2(:, i), D_O2, dx, phi) + top_sediment_advection_flux(O2(:, i), sediment_params.w, phi);
       sediment_transport_fluxes.PO4(i-1)          = top_sediment_diffusion_flux(PO4(:, i), D_PO4, dx, phi) + top_sediment_advection_flux(PO4(:, i), sediment_params.w, phi);
       sediment_transport_fluxes.NO3(i-1)          = top_sediment_diffusion_flux(NO3(:, i), D_NO3, dx, phi) + top_sediment_advection_flux(NO3(:, i), sediment_params.w, phi);
@@ -233,6 +236,11 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       sediment_transport_fluxes.DOC(i-1)         = top_sediment_diffusion_flux(DOC(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(DOC(:, i), sediment_params.w, phi);
       sediment_transport_fluxes.CH4aq(i-1)         = top_sediment_diffusion_flux(CH4aq(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(CH4aq(:, i), sediment_params.w, phi);
       sediment_transport_fluxes.CH4g(i-1)         = top_sediment_diffusion_flux(CH4g(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(CH4g(:, i), sediment_params.w_CH4, phi);  % NOTE: rising velocity of methane
+      sediment_transport_fluxes.CO2(i-1)         = top_sediment_diffusion_flux(CO2(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(CO2(:, i), sediment_params.w, phi);
+      sediment_transport_fluxes.HCO3(i-1)         = top_sediment_diffusion_flux(HCO3(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(HCO3(:, i), sediment_params.w, phi);
+      sediment_transport_fluxes.CO3(i-1)         = top_sediment_diffusion_flux(CO3(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(CO3(:, i), sediment_params.w, phi);
+
+
 
 
     % pH Module
@@ -260,6 +268,9 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_transport_fluxes.Chl          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.Chl), 30973.762);
   sediment_transport_fluxes.CH4aq          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CH4aq), 16042.5);
   sediment_transport_fluxes.CH4g          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CH4g), 16042.5);
+  sediment_transport_fluxes.CO2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CO2), 44009.5);
+  sediment_transport_fluxes.HCO3          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.HCO3), 61016.8);
+  sediment_transport_fluxes.CO3          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CO3), 60008.9);
 
   sediment_bioirrigation_fluxes.O2   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.O2), 31998);
   sediment_bioirrigation_fluxes.PO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.PO4), 30973.762);
@@ -271,6 +282,9 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_bioirrigation_fluxes.DOC = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOC), 12010.7);
   sediment_bioirrigation_fluxes.CH4aq = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.CH4aq), 16042.5);
   sediment_bioirrigation_fluxes.CH4g = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.CH4g), 16042.5);
+  sediment_bioirrigation_fluxes.CO2 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.CO2), 44009.5);
+  sediment_bioirrigation_fluxes.HCO3 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.HCO3), 61016.8);
+  sediment_bioirrigation_fluxes.CO3 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.CO3), 60008.9);
 
 
   sediment_concentrations.O2 = O2(:,end);
@@ -340,52 +354,11 @@ end
 function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm, H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S, Fe2, Ca2, NO3, SO4, PO4, FeS, FeS2, FeOH3, FeOOH, Ca3PO42, PO4adsa, PO4adsb, Temperature, aq_system)
   %% pH_module: pH equilibrium function
   % 0. No pH module
-  % 1. Stumm, W. & Morgan, J., 1995. Aquatic Chemistry. implemented in MATLAB
-  % 2. Stumm, W. & Morgan, J., 1995. Aquatic Chemistry. implemented in C++
-  % 3. Phreeqc
-  % 4. Delta function (under construction)
-
-  % NOTE: First point is boundary condition therefore start FOR loop from 2:end
-
-    if algorithm == 1 % Stumm, W. & Morgan, J., 1995. Aquatic Chemistry. implemented in MATLAB
-      % The fasted algorithm is Levenberg-Marquardt
-      options = optimoptions('fsolve','Algorithm','levenberg-marquardt','Display','off','TolFun',1e-7, 'TolX',1e-7); % Option to display output
-
-      for i=1:size(H,1)   % Stumm, W. & Morgan, J., 1995. Aquatic Chemistry. implemented in MATLAB
-        % initial guess
-        x = [sqrt(H(i)); sqrt(HCO3(i)); sqrt(CO2(i)); sqrt(CO3(i)); sqrt(NH3(i)); sqrt(NH4(i)); sqrt(HS(i)); sqrt(H2S(i)); sqrt(OH(i)); sqrt(H2CO3(i))];
-        [x,~] = fsolve(@SM_eqs, x, options, sqrt(H(i)), sqrt(OH(i)), sqrt(H2CO3(i)), sqrt(HCO3(i)), sqrt(CO2(i)), sqrt(CO3(i)), sqrt(NH3(i)), sqrt(NH4(i)), sqrt(HS(i)), sqrt(H2S(i)), sqrt(Fe2(i)), sqrt(Ca2(i)), sqrt(NO3(i)), sqrt(SO4(i)), sqrt(PO4(i))); % Call solver
-        H(i) = x(1)^2;
-        HCO3(i) = x(2)^2;
-        CO2(i) = x(3)^2;
-        CO3(i) = x(4)^2;
-        NH3(i) = x(5)^2;
-        NH4(i) = x(6)^2;
-        HS(i) = x(7)^2;
-        H2S(i) = x(8)^2;
-        OH(i) = x(9)^2;
-        H2CO3(i) = x(10)^2;
-      end
+  % 1. Phreeqc
+  % 2. New algorithm by Markelov (under test)
 
 
-    elseif algorithm == 2 % Stumm, W. & Morgan, J., 1995. Aquatic Chemistry. implemented in C++
-      for i=1:size(H,1)
-        % NOTE: We have NaN if start from 1 (with BC).
-        in =[H(i) HCO3(i) CO2(i) CO3(i) NH3(i) NH4(i) HS(i) H2S(i) OH(i) H2CO3(i) Fe2(i) Ca2(i) NO3(i) SO4(i) PO4(i)];
-        [out] = pH(in);
-        H(i) = out(1);
-        HCO3(i) = out(2);
-        CO2(i) = out(3);
-        CO3(i) = out(4);
-        NH3(i) = out(5);
-        NH4(i) = out(6);
-        HS(i) = out(7);
-        H2S(i) = out(8);
-        OH(i) = out(9);
-        H2CO3(i) = out(10);
-      end
-
-    elseif algorithm == 3 %
+    if algorithm == 1 %
         in =[H HCO3 CO2 CO3 NH3 NH4 HS H2S OH H2CO3 Fe2 Ca2 NO3 SO4 PO4 FeS FeS2 FeOH3 FeOOH Ca3PO42 PO4adsa PO4adsb];
         [pH_est] = pH_phreeqc(size(H,1),in);
 
@@ -395,28 +368,6 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
         Nt = NH3 + NH4;
         St = HS + H2S;
         OH = Kw./H;
-
-        % TODO: Carbonate equilibrium doesn't work now. You can  estimate fractions based on pH after model run
-        % Tz = Temperature + 273.15;
-        % K0 = -60.2409+93.4517.*(100./Tz)+23.3585*log(Tz/100); %~mol/(kg*atm)
-        % K0 = exp(K0); %CO2; mol/(kg*atm)
-        % K1 = 290.9097-14554.21./Tz-45.0575*log(Tz); %~mol/kg
-        % K1 = exp(K1); %HCO3; mol/kg
-        % K2 = 207.6548-11843.79./Tz-33.6485*log(Tz); %~mol/kg
-        % K2 = exp(K2); %CO3; mol/kg
-        % Kw = 148.9802-13847.26./Tz-23.6521*log(Tz); %~mol/kg
-        % Kw = exp(Kw); %H2O; (mol/kg)^2
-        % CO2mfrac = H.*H./((H.*H+H.*K1+K1.*K2)); %mol CO2 / mol DIC
-        % HCO3mfrac = H.*K1./((H.*H+H.*K1+K1.*K2)); %-mol HCO3 / mol DIC
-        % CO3mfrac = K1.*K2./((H.*H+H.*K1+K1.*K2)); %-mol CO3 / mol DIC
-        % H2CO3 = CO2mfrac .* Ct;
-        % HCO3 = HCO3mfrac .* Ct;
-        % CO3 = CO3mfrac .* Ct;
-        % H2CO3 = (1 + Kc1./H + Kc1*Kc2./H.^2).^-1 .* Ct;
-        % CO2 = H2CO3./Kc0; % CO2(aq)
-        % HCO3 = (H./Kc1 + 1 + Kc2./H).^-1 .* Ct;
-        % CO3 = (H.^2./Kc1./Kc2 + H./Kc2 + 1).^-1 .* Ct;
-
         NH4 = (H./ (Knh + H)) .* Nt;
         NH3 = Nt - NH4;
         H2S = (H./ (Khs + H)) .* St;
@@ -424,38 +375,9 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
         H = H*1e3;
         OH = OH*1e3;
 
-
-
-    elseif algorithm == 4 % Delta function
-      options = optimoptions('fsolve','Algorithm','levenberg-marquardt','Display','off','TolFun',1e-7, 'TolX',1e-7); % Option to display output
-      delta = [0,0,0,0,0,0,0,0,0];
+    elseif algorithm == 2
       for i=1:size(H,1)
-        [delta,fval] = fsolve(@delta_eqs, delta, options, H(i), OH(i), HCO3(i), CO2(i), CO3(i), NH3(i), NH4(i), HS(i), H2S(i)); % Call solver
-        H(i) = H(i) + delta(1)+delta(2)+delta(3)+delta(4)+delta(5);
-        OH(i) = OH(i) + delta(5);
-        HCO3(i) = HCO3(i) + delta(1) - delta(2);
-        CO3(i) = CO3(i) + delta(2);
-        CO2(i) = CO2(i) - delta(1);
-        NH3(i) = NH3(i) + delta(3);
-        NH4(i) = NH4(i) - delta(3);
-        HS(i) = HS(i) + delta(4);
-        H2S(i) = H2S(i) - delta(4);
-      end
-
-    elseif algorithm == 5
-      % in =[H HCO3 CO2 CO3 NH3 NH4 HS H2S OH H2CO3 Fe2 Ca2 NO3 SO4 PO4 FeS FeS2 FeOH3 FeOOH Ca3PO42 PO4adsa PO4adsb];
-      % aq_system.carb_acid = acid([3.6, 10.32], 0, H2CO3(1)+HCO3(1)+CO3(1));
-      % aq_system.amonia = acid([9.2503], 1, NH4(1)+NH3(1));
-      % aq_system.sulf = acid([6.8861], 0, H2S(1)+HS(1));
-      % aq_system.ca = neutral(2, Ca2(1));
-      % aq_system.fe2 = neutral(2, Fe2(1));
-      % aq_system.no3 = neutral(-1, NO3(1));
-      % aq_system.so4 = neutral(-2, SO4(1));
-      % aq_system.p_acid= acid([2.148, 7.198, 12.319], 0, PO4(1));
-
-
-      for i=1:size(H,1)
-        aq_system.carb_acid.conc = 1e-3*(H2CO3(i)+HCO3(i)+CO3(i));
+        aq_system.carb_acid.conc = 1e-3*(CO2(i)+HCO3(i)+CO3(i));
         aq_system.amonia.conc = 1e-3*(NH4(i)+NH3(i));
         aq_system.sulf.conc = 1e-3*(H2S(i)+HS(i));
         aq_system.ca.conc = 1e-3*(Ca2(i));
@@ -467,22 +389,22 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
         if i == 1
           pHs = linspace(0,14,1400)';
         else
-          pHs = linspace(pH(i-1)-0.5,pH(i-1)+0.5,100)';
+          pHs = linspace(pHz(i-1)-0.5,pHz(i-1)+0.5,100)';
         end
-        pH(i) = new_pH_module(aq_system, pHs);
+        pHz(i) = new_pH_module(aq_system, pHs);
 
-        % res = bsxfun(@times, aq_system.carb_acid.conc, alpha(pH(i), aq_system.carb_acid.pKs));
-        % H2CO3(i) = 1e3*res(1);
-        % HCO3(i) = 1e3*res(2);
-        % CO3(i) = 1e3*res(3);
-        % res = bsxfun(@times, aq_system.amonia.conc, alpha(pH(i), aq_system.amonia.pKs));
-        % NH4(i) = 1e3*res(1);
-        % NH3(i) = 1e3*res(2);
-        % res = bsxfun(@times, aq_system.sulf.conc, alpha(pH(i), aq_system.sulf.pKs));
-        % H2S(i) = 1e3*res(1);
-        % HS(i) = 1e3*res(2);
-        % H(i) = 10^(-pH(i))*1e3;
-        % OH(i) = 10^(-14+pH(i))*1e3;
+        res = bsxfun(@times, aq_system.carb_acid.conc, alpha(pHz(i), aq_system.carb_acid.pKs));
+        CO2(i) = 1e3*res(1);
+        HCO3(i) = 1e3*res(2);
+        CO3(i) = 1e3*res(3);
+        res = bsxfun(@times, aq_system.amonia.conc, alpha(pHz(i), aq_system.amonia.pKs));
+        NH4(i) = 1e3*res(1);
+        NH3(i) = 1e3*res(2);
+        res = bsxfun(@times, aq_system.sulf.conc, alpha(pHz(i), aq_system.sulf.pKs));
+        H2S(i) = 1e3*res(1);
+        HS(i) = 1e3*res(2);
+        H(i) = 10^(-pHz(i))*1e3;
+        OH(i) = 10^(-14+pHz(i))*1e3;
       end
 
     end
@@ -492,41 +414,6 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
 
 end
 
-
-function F = SM_eqs(x, H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S, Fe2, Ca2, NO3, SO4, PO4)
-  %% Equations according to Stumm, W. & Morgan, J., 1995. Aquatic Chemistry implemented in MATLAB.
-
-  % x(1)^2=H;   % x(2)^2=HCO3;  % x(3)^2=CO2;  % x(4)^2=CO3;  % x(5)^2=NH3;  % x(6)^2=NH4;  % x(7)^2=HS;  % x(8)^2=H2S;  % x(9)^2=OH;
-
-  Kc1=5.01*10^(-7).*10^3; Kc2=4.78*10^(-11).*10^3; Knh=5.62*10^(-10).*10^3; Khs=1.3*10^(-7).*10^3; Kw=10^(-14).*10^6; Kc0 = 1.7*10^(-3);
-
-  F = [
-      x(10)^2 - Kc0*x(3)^2;
-      x(1)^2 * x(2)^2 - Kc1*x(10)^2;
-      x(1)^2 * x(4)^2 - Kc2*x(2)^2;
-      x(1)^2 * x(5)^2 - Knh*x(6)^2;
-      x(1)^2 * x(7)^2 - Khs*x(8)^2;
-      x(1)^2 * x(9)^2 - Kw;
-     % mass balance
-     x(5)^2 + x(6)^2 - NH4^2 - NH3^2;
-     x(7)^2 + x(8)^2 - HS^2 - H2S^2;
-     x(4)^2 + x(2)^2 + x(3)^2 + x(10)^2 - CO3^2 - HCO3^2 - CO2^2 - H2CO3^2;
-     % charge balance
-     x(1)^2 + x(6)^2 + 2*Fe2^2 + 2*Ca2^2 - (x(2)^2 + 2*x(4)^2 + x(7)^2 + x(9)^2 + NO3^2 + 2*SO4^2 + 3*PO4^2);
-     ];
-end
-
-function F = delta_eqs(delta, H, OH, HCO3, CO2, CO3, NH3, NH4, HS, H2S)
-  %% equations according to Delta function
-  Kc1=10^(-6.4).*10^3; Kc2=10^(-10.3).*10^3; Knh=10^(-9.3).*10^3; Khs=10^(-7).*10^6; Kw=10^(-14).*10^6;
-
-  F = [(H + delta(1) + delta(2) + delta(3) + delta(4) + delta(5) )* (HCO3 + delta(1) - delta(2) ) - Kc1*(CO2 - delta(1));
-     (H + delta(1) + delta(2) + delta(3) + delta(4) + delta(5) )* (CO3 + delta(2) ) -  Kc2*(HCO3 - delta(2) + delta(1));
-     (H + delta(1) + delta(2) + delta(3) + delta(4) + delta(5) )* (NH3 + delta(3) ) - Knh* (NH4 - delta(3));
-     (H + delta(1) + delta(2) + delta(3) + delta(4) + delta(5) )* (HS + delta(4) ) - Khs* (H2S - delta(4));
-     (H + delta(1) + delta(2) + delta(3) + delta(4) + delta(5) )* (OH + delta(5) ) - Kw;
-     ];
-end
 
 function C_new = pde_solver_dirichlet(AL, AR, C_old, const_bc)
     C_old(1) = const_bc;
@@ -780,6 +667,7 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     k_ch4_o2 = sediment_params.k_ch4_o2;
     k_ch4_so4 = sediment_params.k_ch4_so4;
     CH4_solubility = sediment_params.CH4_solubility;
+    CO2_solubility = sediment_params.CO2_solubility;
     k_ch4_dis = sediment_params.k_ch4_dis;
     f_pfe = sediment_params.f_pfe;
     accel = sediment_params.accel;
@@ -918,6 +806,7 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     CH4_over_sat = CH4aq - CH4_solubility;
     R17 = k_ch4_dis .* CH4_over_sat .* (CH4_over_sat > 0);
 
+    CO2_over_sat = CO2 - CO2_solubility;
 
 
     R21a = k_oms * Sum_H2S .* POP;
@@ -968,33 +857,33 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     % F = 1./phi;
     F = (1-phi) ./ phi;
 
-    dcdt(:,1)  = - bioirrigation(O2, alfax, phi) +  -0.25 * R13  - 2 * R14  - (Cx2*R1a + Cx3*R1b+Cx1*R1f) .* F - (Cx2*R1c + Cx3*R1d) - 3 * R23 - R15; % O2
+    dcdt(:,1)  = - bioirrigation(O2, alfax, phi) +  -0.25 * R13  - R15 - 2 * R14  - (Cx2*R1a + Cx3*R1b+Cx1*R1f) .* F - (Cx2*R1c + Cx3*R1d) - 3 * R23.*F ; % O2
     dcdt(:,2)  = -Ra - R21a; % POP
     dcdt(:,3)  = -Rb - R21b; % POC
     dcdt(:,4)  = - bioirrigation(NO3, alfax, phi) +  - 0.8*(Cx2*R2a+Cx2*R2b+Cx1*R2f) .* F - 0.8*(Cx2*R2c+Cx2*R2d)+ R14; % NO3
     dcdt(:,5)  = -4 * (Cx2*R3a_Fe + Cx3*R3b_Fe + Cx2*R3c_Fe + Cx3*R3d_Fe+ Cx1*R3f_Fe) - 2*R12 + R13./ F - R31a; % FeOH3
     dcdt(:,6)  = - bioirrigation(SO4, alfax, phi) +  - 0.5*(Cx2*R5a + Cx3*R5b+ Cx1*R5f) .* F -0.5*(Cx2*R5c + Cx3*R5d)+ R11 - R16; % SO4
     dcdt(:,7)  = - bioirrigation(NH4, alfax, phi) +  (Ny2 * Ra + Ny3 * Rb+ Ny1 * Rf) .* F + (Ny2 * Rc + Ny3 * Rd) - R14; % NH4
-    dcdt(:,8)  = - bioirrigation(Fe2, alfax, phi) +  4*(Cx2*R3a + Cx3*R3b+ Cx1*R3f) .* F + 4* (Cx2*R3c + Cx3*R3d) + 4*(Cx2*R4a + Cx3*R4b+ Cx1*R4f) .* F + 4 * (Cx2*R4c + Cx3*R4d) + 2*R12 - R13 + R25b - R25a; % Fe2
+    dcdt(:,8)  = - bioirrigation(Fe2, alfax, phi) +  4*(Cx2*R3a + Cx3*R3b+ Cx1*R3f) .* F + 4* (Cx2*R3c + Cx3*R3d) + 4*(Cx2*R4a + Cx3*R4b+ Cx1*R4f) .* F + 4 * (Cx2*R4c + Cx3*R4d) + 2*R12.*F - R13 + R25b.*F - R25a; % Fe2
     dcdt(:,9)  = -4*(Cx2*R4a_Fe + Cx3*R4b_Fe + Cx2*R4c_Fe + Cx3*R4d_Fe+ Cx1*R4f_Fe) + R23; % FeOOH
     dcdt(:,10) = - bioirrigation(H2S, alfax, phi); % H2S
-    dcdt(:,11) = - bioirrigation(HS, alfax, phi) +  0.5*(Cx2*R5a + Cx3*R5b + Cx1*R5f) .* F + 0.5 * (Cx2*R5c + Cx3*R5d) - R11 - R12 + R25b - R25a - R21a - R21b - R21c - R21d - R21f -R24 + R16; % HS
-    dcdt(:,12) =  - R22 - 4*R23 -R24 + R25a - R25b ; % FeS
-    dcdt(:,13) = - R22 - R26a + R12 + R26b; % S0
-    dcdt(:,14) = - bioirrigation(PO4, alfax, phi) +  (Pz2 * Ra + Pz3 * Rb + Pz1 * Rf) .* F + (Pz2 * Rc + Pz3 * Rd) + R31b + R32b - 2 * R34 - R33a - R31a - R32a; % PO4
-    dcdt(:,15) = 4*R23 - R26b + R26a; % S8
+    dcdt(:,11) = - bioirrigation(HS, alfax, phi) +  0.5*(Cx2*R5a + Cx3*R5b + Cx1*R5f) .* F + 0.5 * (Cx2*R5c + Cx3*R5d) - R11 - R12.*F + R25b.*F - R25a + (R21a + R21b + R21c + R21d + R21f)./F -R24.*F + R16; % HS
+    dcdt(:,12) =  - R22 - 4*R23 -R24 + R25a./F - R25b ; % FeS
+    dcdt(:,13) = - R22 - R26a + R12 + R26b.*F; % S0
+    dcdt(:,14) = - bioirrigation(PO4, alfax, phi) +  (Pz2 * Ra + Pz3 * Rb + Pz1 * Rf) .* F + (Pz2 * Rc + Pz3 * Rd) + R31b.*F + R32b.*F + R32b.*F - 2 * R34 - R33a.*F - R31a.*F - R32a.*F; % PO4
+    dcdt(:,15) = 4*R23 - R26b + R26a./F; % S8
     dcdt(:,16) = + R22 + R24; % FeS2
     dcdt(:,17) = -R33a; % AlOH3
     dcdt(:,18) = R31a - R31b; % PO4adsa
     dcdt(:,19) = R32a - R32b; % PO4adsb
     dcdt(:,20) = - bioirrigation(Ca2, alfax, phi) -3*R34; % Ca2
-    dcdt(:,21) = R34; % Ca3PO42
+    dcdt(:,21) = R34./F; % Ca3PO42
     dcdt(:,22) = R21a + R21b + R21c + R21d + R21f; % OMS
     dcdt(:,23) = 0; % H
     dcdt(:,24) = 0; % OH
-    dcdt(:,25) = - bioirrigation(CO2, alfax, phi)  +  ((Cx2 - Ny2 + 2*Pz2)*R1a + (Cx3 - Ny3 + 2*Pz3)*R1b + (Cx1 - Ny1 + 2*Pz1)*R1f + (0.2*Cx2 - Ny2 + 2*Pz2)*R2a +  (0.2*Cx3 - Ny3 + 2*Pz3)*R2b +  (0.2*Cx1 - Ny1 + 2*Pz1)*R2f - (7*Cx2 + Ny2 + 2*Pz2)*(R3a+R4a) - (7*Cx3 + Ny3 + 2*Pz3)*(R3b+R4b) - (7*Cx1 + Ny1 + 2*Pz1)*(R3f+R4f)  - (Ny2 - 2*Pz2)*R5a + (Ny3 - 2*Pz3)*R5b + (Ny1 - 2*Pz1)*R5f + (0.5 * Cx2 - Ny2 - 2*Pz2)*R6a + (0.5 * Cx3 - Ny3 - 2*Pz3)*R6b + (0.5 * Cx1 - Ny1 - 2*Pz1)*R6f) .* F  +  (Cx2 - Ny2 + 2*Pz2)*R1c + (Cx3 - Ny3 + 2*Pz3)*R1d + (0.2*Cx2 - Ny2 + 2*Pz2)*R2c +  (0.2*Cx3 - Ny3 + 2*Pz3)*R2d - (7*Cx2 + Ny2 + 2*Pz2)*(R3c+R4c) - (7*Cx3 + Ny3 + 2*Pz3)*(R3d+R4d)  - (Ny2 - 2*Pz2)*R5c + (Ny3 - 2*Pz3)*R5d + (0.5*Cx2 - Ny2 + 2*Pz2)*R6c + (0.5*Cx3 - Ny3 + 2*Pz3)*R6d + 2*R13 + 2*R14 + R15 - R16;  % CO2
+    dcdt(:,25) = - bioirrigation(CO2, alfax, phi) + (2*R13 + 2*R14 + R15 +  ((Cx2 - Ny2 + 2*Pz2)*R1a + (Cx3 - Ny3 + 2*Pz3)*R1b + (Cx1 - Ny1 + 2*Pz1)*R1f + (0.2*Cx2 - Ny2 + 2*Pz2)*R2a +  (0.2*Cx3 - Ny3 + 2*Pz3)*R2b +  (0.2*Cx1 - Ny1 + 2*Pz1)*R2f  + (0.5 * Cx2 - Ny2 - 2*Pz2)*R6a + (0.5 * Cx3 - Ny3 - 2*Pz3)*R6b + (0.5 * Cx1 - Ny1 - 2*Pz1)*R6f) .* F  +  (Cx2 - Ny2 + 2*Pz2)*R1c + (Cx3 - Ny3 + 2*Pz3)*R1d + (0.2*Cx2 - Ny2 + 2*Pz2)*R2c +  (0.2*Cx3 - Ny3 + 2*Pz3)*R2d - (7*Cx2 + Ny2 + 2*Pz2)*(R3c+R4c) + (0.5*Cx2 - Ny2 + 2*Pz2)*R6c + (0.5*Cx3 - Ny3 + 2*Pz3)*R6d).*(CO2_over_sat<0) + (- (7*Cx2 + Ny2 + 2*Pz2)*(R3a+R4a) - (7*Cx3 + Ny3 + 2*Pz3)*(R3b+R4b) - (7*Cx1 + Ny1 + 2*Pz1)*(R3f+R4f)  - (Ny2 - 2*Pz2)*R5a - (Ny3 - 2*Pz3)*R5b - (Ny1 - 2*Pz1)*R5f) .* F  - (7*Cx3 + Ny3 + 2*Pz3)*(R3d+R4d)  - (Ny2 - 2*Pz2)*R5c - (Ny3 - 2*Pz3)*R5d - R16;  % CO2 (aq) NOTE: we need to add gas (Rename H2CO3 to gas)
     dcdt(:,26) = - bioirrigation(CO3, alfax, phi) ; % CO3
-    dcdt(:,27) = - bioirrigation(HCO3, alfax, phi) +  ((0.8*Cx2 + Ny2 - 2*Pz2)*R2a + (0.8*Cx3 + Ny3 - 2*Pz3)*R2b + (0.8*Cx1 + Ny1 - 2*Pz1)*R2f  + (8*Cx2+Ny2-2*Pz2)*(R3a + R4a) +(8*Cx3+Ny3-2*Pz3)*(R3b + R4b) +(8*Cx1+Ny1-2*Pz1)*(R3f + R4f)  + (Cx2+Ny2-2*Pz2)*R5a + (1*Cx3+Ny3-2*Pz3)*R5b + (1*Cx1+Ny1-2*Pz1)*R5f + (Ny2-2*Pz2)*R6a + (Ny3-2*Pz3)*R6b + (Ny1-2*Pz1)*R6f) .* F + (0.8*Cx2 + Ny2 - 2*Pz2)*R2c + (0.8*Cx3 + Ny3 - 2*Pz3)*R2d + (8*Cx2+Ny2-2*Pz2)*(R3c + R4c) +(8*Cx3+Ny3-2*Pz3)*(R3d + R4d) + (Cx2+Ny2-2*Pz2)*R5c + (1*Cx3+Ny3-2*Pz3)*R5d + (Ny2-2*Pz2)*R6c + (Ny3-2*Pz3)*R6d  -  2*R13 - 2*R14 + 2*R16; % HCO3
+    dcdt(:,27) = - bioirrigation(HCO3, alfax, phi)+  ( - (Ny2 - 2*Pz2)*R1a - (Ny3 - 2*Pz3)*R1b - (Ny1 - 2*Pz1)*R1f +  (0.8*Cx2 + Ny2 - 2*Pz2)*R2a + (0.8*Cx3 + Ny3 - 2*Pz3)*R2b + (0.8*Cx1 + Ny1 - 2*Pz1)*R2f  + (8*Cx2+Ny2-2*Pz2)*(R3a + R4a) +(8*Cx3+Ny3-2*Pz3)*(R3b + R4b) +(8*Cx1+Ny1-2*Pz1)*(R3f + R4f)  + (Cx2+Ny2-2*Pz2)*R5a + (1*Cx3+Ny3-2*Pz3)*R5b + (1*Cx1+Ny1-2*Pz1)*R5f + (Ny2-2*Pz2)*R6a + (Ny3-2*Pz3)*R6b + (Ny1-2*Pz1)*R6f) .* F - (Ny2 - 2*Pz2)*R1c - (Ny3 - 2*Pz3)*R1d + (0.8*Cx2 + Ny2 - 2*Pz2)*R2c + (0.8*Cx3 + Ny3 - 2*Pz3)*R2d + (8*Cx2+Ny2-2*Pz2)*(R3c + R4c) +(8*Cx3+Ny3-2*Pz3)*(R3d + R4d) + (Cx2+Ny2-2*Pz2)*R5c + (1*Cx3+Ny3-2*Pz3)*R5d + (Ny2-2*Pz2)*R6c + (Ny3-2*Pz3)*R6d  -  2*R13 - 2*R14 + 2*R16; % HCO3
     dcdt(:,28) = - bioirrigation(NH3, alfax, phi) ; % NH3
     dcdt(:,29) = - bioirrigation(H2CO3, alfax, phi) ; % H2CO3
     dcdt(:,30) = - bioirrigation(DOP, alfax, phi)  - Rc - R21c; % DOP
