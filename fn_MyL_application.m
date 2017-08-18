@@ -85,7 +85,7 @@ Sediment_results.basin1 = sediment_results_basin1;
 
 if is_save_results
     disp('Saving sediment and water-column profiles for basin 1: Storefjorden');
-    sediment_save_result_for_init_conc(Sediment_results.basin1, 1)
+    sediment_save_init_conc(Sediment_results.basin1, 1)
     MyLake_save_result_for_init_conc(MyLake_results.basin1, 1)
 else
     disp('Skipping saving the results and initial concentrations');
@@ -169,7 +169,7 @@ if false % simulate 2nd basin?
 if is_save_results
     disp('Saving sediment and water-column profiles for basin 2: Vanemfjorden');
     MyLake_save_result_for_init_conc(MyLake_results.basin2, 2)
-    sediment_save_result_for_init_conc(Sediment_results.basin2, 2)
+    sediment_save_init_conc(Sediment_results.basin2, 2)
 else
     disp('Skipping saving the results and initial concentrations');
 end
