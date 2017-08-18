@@ -43,12 +43,16 @@ molar_masses = {
     'PP': 30973.762,
     'Ca2': 80156.0,
     'CO2': 44009.5,
+    'CO2aq': 44009.5,
+    'HCO3': 61016.8,
+    'CO3': 60008.9,
     'POC': 12010.7,
     'DOC': 12010.7,
+    'DIC': 61016.8,
     'Ca3PO42': 310176.7}
 
 
-solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42', 'POC', 'POP']
+solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42', 'POC', 'POP', 'FeS2', 'FeS']
 disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S', 'HS', 'PO4', 'Al3', 'Ca2', 'CO2']
 
 
