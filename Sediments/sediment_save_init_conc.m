@@ -1,4 +1,4 @@
-function sediment_save_result_for_init_conc(sed_res, n)
+function sediment_save_init_conc(sed_res, n)
 
 if n == 1
     file_name = 'IO/sediment_initial_concentrations.txt';
