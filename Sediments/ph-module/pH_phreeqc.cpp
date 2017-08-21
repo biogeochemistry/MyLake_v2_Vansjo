@@ -5,16 +5,16 @@
 #include <cstdlib>
 #include <iostream>
 #include <IPhreeqc.hpp>
- 
+
 
 
 void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
 {
 
-    size_t n_species;                  
+    size_t n_species;
     double *rows = (double *) mxGetData(prhs[0]);
     double *data = (double *) mxGetData(prhs[1]);
-    int n_rows= (int) rows[0];
+    int n_rows = (int) rows[0];
     float alkalinity;
     float C4;
     float N5;
@@ -61,62 +61,62 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
 
     n_species = mxGetN(prhs[1]);
 
-    for (int i = 0; i <n_rows; ++i)    {
-        H0(i)       = data[ 0*n_rows+i];
-        HCO30(i)    = data[ 1*n_rows+i];
-        CO20(i)     = data[ 2*n_rows+i];
-        CO30(i)     = data[ 3*n_rows+i];
-        NH30(i)     = data[ 4*n_rows+i];
-        NH40(i)     = data[ 5*n_rows+i];
-        HS0(i)      = data[ 6*n_rows+i];
-        H2S0(i)     = data[ 7*n_rows+i];
-        OH0(i)      = data[ 8*n_rows+i];
-        H2CO30(i)   = data[ 9*n_rows+i];
-        Fe20(i)     = data[10*n_rows+i];
-        Ca20(i)     = data[11*n_rows+i];
-        NO30(i)     = data[12*n_rows+i];
-        SO40(i)     = data[13*n_rows+i];
-        PO40(i)     = data[14*n_rows+i];
-        FeS0(i)     = data[15*n_rows+i];
-        FeS20(i)    = data[16*n_rows+i];
-        FeOH30(i)   = data[17*n_rows+i];
-        FeOOH0(i)   = data[18*n_rows+i];
-        Ca3PO40(i)  = data[19*n_rows+i];
-        PO4adsa0(i) = data[20*n_rows+i];
-        PO4adsb0(i) = data[21*n_rows+i];
+    for (int i = 0; i < n_rows; ++i)    {
+        H0(i)       = data[ 0 * n_rows + i];
+        HCO30(i)    = data[ 1 * n_rows + i];
+        CO20(i)     = data[ 2 * n_rows + i];
+        CO30(i)     = data[ 3 * n_rows + i];
+        NH30(i)     = data[ 4 * n_rows + i];
+        NH40(i)     = data[ 5 * n_rows + i];
+        HS0(i)      = data[ 6 * n_rows + i];
+        H2S0(i)     = data[ 7 * n_rows + i];
+        OH0(i)      = data[ 8 * n_rows + i];
+        H2CO30(i)   = data[ 9 * n_rows + i];
+        Fe20(i)     = data[10 * n_rows + i];
+        Ca20(i)     = data[11 * n_rows + i];
+        NO30(i)     = data[12 * n_rows + i];
+        SO40(i)     = data[13 * n_rows + i];
+        PO40(i)     = data[14 * n_rows + i];
+        FeS0(i)     = data[15 * n_rows + i];
+        FeS20(i)    = data[16 * n_rows + i];
+        FeOH30(i)   = data[17 * n_rows + i];
+        FeOOH0(i)   = data[18 * n_rows + i];
+        Ca3PO40(i)  = data[19 * n_rows + i];
+        PO4adsa0(i) = data[20 * n_rows + i];
+        PO4adsb0(i) = data[21 * n_rows + i];
     }
 
 
     IPhreeqc iphreeqc;
-  
+
     if (iphreeqc.LoadDatabase("Sediments/ph-module/phreeqc.dat") != 0 && iphreeqc.LoadDatabase("phreeqc.dat") != 0) {
         mexPrintf("%s", iphreeqc.GetErrorString());
     }
 
-/*
-    SOLUTION 1
-        -temp 8
-        -units mmol/kgw
-        Alkalinity 0.3 ## = [HCO3] + 2[CO3] + [OH] + 1.5[PO4] - [H+]
-        C(+4)   0.1 ## = HCO3 + CO2 +CO3 + H2CO3 
-        N(+5) 0.1 ## = NO3
-        S(-2)   0.1 ## = HS + H2S + 0.5 * FeS2
-        Fe(+2)  0.1 ## = Fe2 + FeS2 + FeS
-        Fe(+3)  0.1 ## = FeOH3 + FeOOH
-        Ca  0.1 ## = Ca2 + Ca3PO4
-        P 0.1 ## = PO4 + Ca3PO4 + PO4adsa + PO4adsb
-    EQUILIBRIUM_PHASES 1
-        Pyrite ## = FeS2
-        Mackinawite ## =FeS
-        Goethite ## =FeOOH
-        Fe(OH)3(a) ## =FeOH3
-        Vivianite ## =PO4adsa
+    /*
+        SOLUTION 1
+            -temp 8
+            -units mmol/kgw
+            Alkalinity 0.3 ## = [HCO3] + 2[CO3] + [OH] + 1.5[PO4] - [H+]
+            C(+4)   0.1 ## = HCO3 + CO2 +CO3 + H2CO3
+            N(+5) 0.1 ## = NO3
+            S(-2)   0.1 ## = HS + H2S + 0.5 * FeS2
+            Fe(+2)  0.1 ## = Fe2 + FeS2 + FeS
+            Fe(+3)  0.1 ## = FeOH3 + FeOOH
+            Ca  0.1 ## = Ca2 + Ca3PO4
+            P 0.1 ## = PO4 + Ca3PO4 + PO4adsa + PO4adsb
+        EQUILIBRIUM_PHASES 1
+            Pyrite ## = FeS2
+            Mackinawite ## =FeS
+            Goethite ## =FeOOH
+            Fe(OH)3(a) ## =FeOH3
+            Vivianite ##
 
 
-    SELECTED_OUTPUT
-        -molalities Fe+2
-    END
-*/
+        SELECTED_OUTPUT
+            -molalities Fe+2
+        END
+    */
 
     for (int i = 0; i < n_rows; ++i) {
         alkalinity = HCO30(i) + 2 * CO30(i) + OH0(i) + 1.5 * PO40(i) - H0(i);
@@ -128,7 +128,7 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
         Ca = Ca20(i) + Ca3PO40(i);
         P = PO40(i) + Ca3PO40(i) + PO4adsa0(i) + PO4adsb0(i);
 
-        sprintf(sol_str,        "SOLUTION %i", i+1);
+        sprintf(sol_str,        "SOLUTION %i", i + 1);
         sprintf(alkalinity_str, "     Alkalinity    %f", alkalinity);
         sprintf(C4_str,         "     C(+4)         %f", C4);
         sprintf(N5_str,         "     N(+5)         %f", N5);
@@ -136,7 +136,7 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
         sprintf(Fe2_str,        "     Fe(+2)        %f", Fe2);
         sprintf(Fe3_str,        "     Fe(+3)        %f", Fe3);
         sprintf(Ca_str,         "     Ca            %f", Ca);
-        sprintf(P_str,          "     P             %f", P);   
+        sprintf(P_str,          "     P             %f", P);
 
         iphreeqc.AccumulateLine(sol_str);
         iphreeqc.AccumulateLine("     temperature 8");
@@ -151,12 +151,12 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
         iphreeqc.AccumulateLine(Ca_str);
         iphreeqc.AccumulateLine(P_str);
         // iphreeqc.AccumulateLine("END");
-    }        
+    }
     // for (int i = 0; i < n_rows; ++i) {
-        // sprintf(eq_str,        "EQUILIBRIUM_PHASES %i", i+1);
-        // iphreeqc.AccumulateLine(eq_str);
+    // sprintf(eq_str,        "EQUILIBRIUM_PHASES %i", i+1);
+    // iphreeqc.AccumulateLine(eq_str);
     // }
-    
+
     // iphreeqc.AccumulateLine("END");
     iphreeqc.AccumulateLine("SELECTED_OUTPUT");
     iphreeqc.AccumulateLine("     -molalities Fe+2");
@@ -169,7 +169,7 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     if (iphreeqc.RunAccumulated() != 0) {
         mexPrintf("Phreeqc::Sediments::%s", iphreeqc.GetErrorString());
     }
-  
+
     VAR v;
     ::VarInit(&v);
     // for (int i = 0; i < iphreeqc.GetSelectedOutputRowCount(); ++i) {
@@ -196,13 +196,13 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     // }
 
     for (int i = 0; i < n_rows; ++i) {
-        iphreeqc.GetSelectedOutputValue(i+1, 6, &v) ;
+        iphreeqc.GetSelectedOutputValue(i + 1, 6, &v) ;
         est_pH(i) = v.dVal;
         ::VarClear(&v);
         // mexPrintf("%f\n", est_pH(i));
     }
 
-  
+
 
 
     // Debugging
@@ -214,9 +214,9 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
 
 
 
-    plhs[0] = mxCreateDoubleMatrix(1,n_rows,mxREAL);
+    plhs[0] = mxCreateDoubleMatrix(1, n_rows, mxREAL);
     double * z = mxGetPr(plhs[0]);
     for (int i = 0; i < n_rows; ++i) {
-            z[i] = est_pH(i);
+        z[i] = est_pH(i);
     }
 }

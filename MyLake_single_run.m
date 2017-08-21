@@ -11,10 +11,10 @@ is_metrics = true; % print metrics in the end
 
 m_start=[1985, 1, 1]; %
 m_stop=[2013, 12, 31]; %
-big_results = cell(1,no_runs);  % collects the results
-big_inputs = cell(1,no_runs);   % collects the inputs
+% big_results = cell(1,no_runs);  % collects the results
+% big_inputs = cell(1,no_runs);   % collects the inputs
 save_initial_conditions = true; % save final concentrations as initial for the next run
-
+file_name = 'IO/MyLakeResults_pH_Phr.mat'
 
 [lake_params, sediment_params] = load_params();
 
@@ -200,8 +200,11 @@ sediment_params{5} = 0.5 * 1 * 1/50*2;
 
 
 % try
+run_ID = 0;
+clim_ID = 0;
 [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, save_initial_conditions); % runs the model and outputs obs and sim
-big_results{current_run} = {MyLake_results, Sediment_results};
+
+% big_results{current_run} = {MyLake_results, Sediment_results};
 % catch ME
 %     fprintf('Process crashed: %s\n', num2str(current_run))
 %     fprintf('\tID: %s\n', ME.identifier)
@@ -215,7 +218,7 @@ big_results{current_run} = {MyLake_results, Sediment_results};
 
 
 disp('Saving results...')
-save('IO/MyLakeResults.mat', 'MyLake_results', 'Sediment_results')
+save(file_name, 'MyLake_results', 'Sediment_results')
 disp('Finished at:')
 disp(datetime('now'));
 

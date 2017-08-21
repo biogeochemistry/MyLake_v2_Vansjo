@@ -101,8 +101,8 @@ sediment_params = {
     0.1,   'k_alum';       % 22
     1.35,  'k_pdesorb_a';; % 23
     1.35,  'k_pdesorb_b';  % 24
-    6500,  'k_rhom';       % 25
-    8,   'k_tS_Fe';        % 26      % Cappellen (1996) in Canavan, R. W (2006) the reaction is different
+    20000,  'k_fesox';       % 25        % R23 %Canavan
+    8,      'k_tS_Fe';        % 26      % Cappellen (1996) in Canavan, R. W (2006) the reaction is different
     9600,  'Ks_FeS';       % 27      % Canavan, R. W (2006)
     0.001, 'k_Fe_dis';     % 28      % Canavan, R. W (2006)
     1500*2,'k_Fe_pre';     % 29      % Canavan, R. W (2006)

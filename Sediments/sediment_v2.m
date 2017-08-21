@@ -245,7 +245,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
 
     % pH Module
     if sediment_params.pH_algorithm ~= 0
-      [H(:,i), OH(:,i), DOC(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i)] = pH_module(sediment_params.pH_algorithm, H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i), Fe2(:,i), Ca2(:,i), NO3(:,i), SO4(:,i), PO4(:,i), FeS(:,i), FeS2(:,i), FeOH3(:,i), FeOOH(:,i), Ca3PO42(:,i), PO4adsa(:,i), PO4adsb(:,i), sediment_bc.T, sediment_params.aq_system);
+      [H(:,i), OH(:,i), DOC(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i)] = pH_module(sediment_params.pH_algorithm, H(:,i), OH(:,i), H2CO3(:,i), HCO3(:,i), CO2(:,i), CO3(:,i), NH3(:,i), NH4(:,i), HS(:,i), H2S(:,i), Fe2(:,i), Ca2(:,i), NO3(:,i), SO4(:,i), PO4(:,i), FeS(:,i), FeS2(:,i), FeOH3(:,i), FeOOH(:,i), Ca3PO42(:,i), PO4adsa(:,i), PO4adsb(:,i), sediment_bc.T, sediment_params);
     end
 
   end
@@ -351,20 +351,26 @@ end
 
 
 
-function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm, H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S, Fe2, Ca2, NO3, SO4, PO4, FeS, FeS2, FeOH3, FeOOH, Ca3PO42, PO4adsa, PO4adsb, Temperature, aq_system)
+function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm, H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S, Fe2, Ca2, NO3, SO4, PO4, FeS, FeS2, FeOH3, FeOOH, Ca3PO42, PO4adsa, PO4adsb, Temperature, sediment_params)
   %% pH_module: pH equilibrium function
   % 0. No pH module
   % 1. Phreeqc
   % 2. New algorithm by Markelov (under test)
+  % 3. Phreeqc Py
 
+    Kc1=5.01*10^(-7); Kc2=4.78*10^(-11); Knh=5.62*10^(-10); Khs=1.3*10^(-7); Kw=10^(-14); Kc0 = 1.7*10^(-3);
 
     if algorithm == 1 %
         in =[H HCO3 CO2 CO3 NH3 NH4 HS H2S OH H2CO3 Fe2 Ca2 NO3 SO4 PO4 FeS FeS2 FeOH3 FeOOH Ca3PO42 PO4adsa PO4adsb];
         [pH_est] = pH_phreeqc(size(H,1),in);
 
-        Kc1=5.01*10^(-7); Kc2=4.78*10^(-11); Knh=5.62*10^(-10); Khs=1.3*10^(-7); Kw=10^(-14); Kc0 = 1.7*10^(-3);
+
         H = 10.^(-pH_est');
         Ct = H2CO3 + HCO3 + CO3;
+        a = alpha(-log10(H), [6.52, 10.56]);
+        CO2 = Ct.*a(:,1);
+        HCO3 = Ct.*a(:,2);
+        CO3 = Ct.*a(:,3);
         Nt = NH3 + NH4;
         St = HS + H2S;
         OH = Kw./H;
@@ -377,41 +383,36 @@ function [H, OH, H2CO3, HCO3, CO2, CO3, NH3, NH4, HS, H2S] = pH_module(algorithm
 
     elseif algorithm == 2
       for i=1:size(H,1)
-        aq_system.carb_acid.conc = 1e-3*(CO2(i)+HCO3(i)+CO3(i));
-        aq_system.amonia.conc = 1e-3*(NH4(i)+NH3(i));
-        aq_system.sulf.conc = 1e-3*(H2S(i)+HS(i));
-        aq_system.ca.conc = 1e-3*(Ca2(i));
-        aq_system.fe2.conc = 1e-3*(Fe2(i));
-        aq_system.no3.conc = 1e-3*(NO3(i));
-        aq_system.so4.conc = 1e-3*(SO4(i));
-        aq_system.p_acid.conc = 1e-3*(PO4(i));
+        sediment_params.aq_system.carb_acid.conc = 1e-3*(CO2(i)+HCO3(i)+CO3(i));
+        sediment_params.aq_system.amonia.conc = 1e-3*(NH4(i)+NH3(i));
+        sediment_params.aq_system.sulf.conc = 1e-3*(H2S(i)+HS(i));
+        sediment_params.aq_system.ca.conc = 1e-3*(Ca2(i));
+        sediment_params.aq_system.fe2.conc = 1e-3*(Fe2(i));
+        sediment_params.aq_system.no3.conc = 1e-3*(NO3(i));
+        sediment_params.aq_system.so4.conc = 1e-3*(SO4(i));
+        sediment_params.aq_system.p_acid.conc = 1e-3*(PO4(i));
 
         if i == 1
           pHs = linspace(0,14,1400)';
         else
           pHs = linspace(pHz(i-1)-0.5,pHz(i-1)+0.5,100)';
         end
-        pHz(i) = new_pH_module(aq_system, pHs);
+        pHz(i) = new_pH_module(sediment_params.aq_system, pHs);
 
-        res = bsxfun(@times, aq_system.carb_acid.conc, alpha(pHz(i), aq_system.carb_acid.pKs));
+        res = bsxfun(@times, sediment_params.aq_system.carb_acid.conc, alpha(pHz(i), sediment_params.aq_system.carb_acid.pKs));
         CO2(i) = 1e3*res(1);
         HCO3(i) = 1e3*res(2);
         CO3(i) = 1e3*res(3);
-        res = bsxfun(@times, aq_system.amonia.conc, alpha(pHz(i), aq_system.amonia.pKs));
+        res = bsxfun(@times, sediment_params.aq_system.amonia.conc, alpha(pHz(i), sediment_params.aq_system.amonia.pKs));
         NH4(i) = 1e3*res(1);
         NH3(i) = 1e3*res(2);
-        res = bsxfun(@times, aq_system.sulf.conc, alpha(pHz(i), aq_system.sulf.pKs));
+        res = bsxfun(@times, sediment_params.aq_system.sulf.conc, alpha(pHz(i), sediment_params.aq_system.sulf.pKs));
         H2S(i) = 1e3*res(1);
         HS(i) = 1e3*res(2);
         H(i) = 10^(-pHz(i))*1e3;
         OH(i) = 10^(-14+pHz(i))*1e3;
       end
-
     end
-
-
-
-
 end
 
 
@@ -654,7 +655,7 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     k_pdesorb_a = sediment_params.k_pdesorb_a;
     k_pdesorb_b = sediment_params.k_pdesorb_b;
     % k_alum = sediment_params.k_alum;
-    k_rhom   = sediment_params.k_rhom;
+    k_fesox   = sediment_params.k_fesox;
     k_tS_Fe = sediment_params.k_tS_Fe;
     Ks_FeS = sediment_params.Ks_FeS;
     k_Fe_dis = sediment_params.k_Fe_dis;
@@ -816,7 +817,7 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     R21f = k_oms * Sum_H2S .* Chl;
 
     R22 = k_FeSpre .* FeS .* S0;
-    R23 = k_rhom * O2 .* FeS;
+    R23 = k_fesox * O2 .* FeS;
     R24 = k_FeS2pre .* FeS .* Sum_H2S;
 
     % NOTE: Could cause instability. These rates are too high when pH > 7

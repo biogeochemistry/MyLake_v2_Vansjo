@@ -47,7 +47,7 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.k_alum = data{2}(22);
     sediment_params.k_pdesorb_a = data{2}(23);
     sediment_params.k_pdesorb_b = data{2}(24);
-    sediment_params.k_rhom = data{2}(25);
+    sediment_params.k_fesox = data{2}(25);
     sediment_params.k_tS_Fe = data{2}(26);
     sediment_params.Ks_FeS = data{2}(27);
     sediment_params.k_Fe_dis = data{2}(28);
@@ -106,15 +106,18 @@ function [sediment_params] = params(max_depth, temperature)
     % 2. New algorithm by Markelov (simulation time: ~12m per year) (under test) - produces NaN values
 
     sediment_params.pH_algorithm = 1;
-    aq_system.carb_acid = acid([6.52, 10.56], 0, 0);
-    aq_system.amonia = acid([9.2503], 1, 0);
-    aq_system.sulf = acid([6.8861], 0, 0);
-    aq_system.ca = neutral(2, 0);
-    aq_system.fe2 = neutral(2, 0);
-    aq_system.no3 = neutral(-1, 0);
-    aq_system.so4 = neutral(-2, 0);
-    aq_system.p_acid= acid([2.148, 7.198, 12.319], 0, 0);
-    sediment_params.aq_system = aq_system;
+
+    if sediment_params.pH_algorithm == 2
+        aq_system.carb_acid = acid([6.52, 10.56], 0, 0);
+        aq_system.amonia = acid([9.2503], 1, 0);
+        aq_system.sulf = acid([6.8861], 0, 0);
+        aq_system.ca = neutral(2, 0);
+        aq_system.fe2 = neutral(2, 0);
+        aq_system.no3 = neutral(-1, 0);
+        aq_system.so4 = neutral(-2, 0);
+        aq_system.p_acid= acid([2.148, 7.198, 12.319], 0, 0);
+        sediment_params.aq_system = aq_system;
+    end
 
 
     sediment_params.years = 1/365;  % 1 day #35
@@ -398,7 +401,7 @@ function [AL, AR] = cn_template_dirichlet(D_m, tortuosity, v, phi, dx, dt, n)
     AR      = spdiags([ s/2+q/4 phi-s s/2-q/4],[-1 0 1],n,n);
     AR(1,1) = phi(1);
     AR(1,2) = 0;
-    AR(n,n) = phi(n)-s(n) - dx*v*s(1)/D + dx*q(1)*v/2/D;
+    AR(n,n) = phi(n)-s(n);
     AR(n,n-1) = s(n);
 end
 
@@ -410,15 +413,15 @@ function [AL, AR, flux_coef] = cn_template_neumann(D, v, phi, dx, dt, n)
     q = (1-phi) * v * dt / dx;
 
     AL      = spdiags([-s/2-q/4 (1-phi+s) -s/2+q/4],[-1 0 1],n,n);
-    AL(1,1) = 1-phi(1)+s(1) + dx*v*s(1)/D - dx*q(1)*v/2/D;
+    AL(1,1) = 1-phi(1)+s(1);
     AL(1,2) = -s(1);
-    AL(n,n) = 1-phi(n)+s(n) + dx*v*s(1)/D - dx*q(1)*v/2/D;
+    AL(n,n) = 1-phi(n)+s(n);
     AL(n,n-1) = -s(n);
 
     AR      = spdiags([ s/2+q/4 (1-phi-s)  s/2-q/4],[-1 0 1],n,n);
-    AR(1,1) = 1-phi(1)-s(1) - dx*v*s(1)/D + dx*q(1)*v/2/D ;
+    AR(1,1) = 1-phi(1)-s(1);
     AR(1,2) = +s(1);
-    AR(n,n) = 1-phi(n)-s(n) - dx*v*s(1)/D + dx*q(1)*v/2/D;
+    AR(n,n) = 1-phi(n)-s(n);
     AR(n,n-1) = s(n);
 
     flux_coef = dx / D * (2*s(1) - q(1)) / (1-phi(1));

@@ -19,6 +19,51 @@ rc('text', usetex=True)
 # solid_species = ['OMzt', 'OMbzt', 'FeOOHzt', 'FeSzt', 'S8zt', 'FeS2zt', 'AlOH3zt', 'Ca3PO42zt', 'PO4adsazt', 'PO4adsbzt', 'OMSzt', 'FeOH3zt']
 # solute_species = ['O2zt', 'NO3zt', 'SO4zt', 'NH4zt', 'Fe2zt', 'H2Szt', 'S0zt', 'PO4zt', 'Ca2zt',
 #                   'HSzt', 'Hzt', 'OHzt', 'CO2zt', 'CO3zt', 'HCO3zt', 'NH3zt', 'H2CO3zt', 'DOM1zt', 'DOM2zt']
+
+species_formulas = {
+    'O2': r'$O_2(aq)$',
+    'CH4aq': r'$CH_4(aq)$',
+    'CH4g': r'$CH_4(g)$',
+    'Ox': r'$O_2(aq)$',
+    'OM1': r'$OM1-C$',
+    'POP': r'$POP-P$',
+    'C': r'$Phy(I)-P$',
+    'Chl': r'$Phy(II)-P$',
+    'DOP': r'$DOP-P$',
+    'NO3': r'$NO_3^-$',
+    'FeOH3': r'$Fe(OH)_3$',
+    'FeOOH': r'$FeOOH$',
+    'FeS2': r'$FeS_2$',
+    'FeS': r'$FeS$',
+    'Fe3': r'$Fe(III)$',
+    'SO4': r'$SO_4^{2-}$',
+    'NH4': r'$NH_4^+$',
+    'Fe2': r'$Fe^{2+}$',
+    'H2S': r'$H_2S$',
+    'HS': r'$HS$',
+    'P': r'$PO_4-P$',
+    'H': r'$H_3O^+$',
+    'PO4adsa': r'$P=Fe(OH)_3$',
+    'PO4adsb': r'$P=FeOOH$',
+    'PO4': r'$PO_4-P$',
+    'Al3': r'$Al(OH)_3$',
+    'PP': r'$P=Fe(III)$',
+    'Ca2': r'$Ca^{2+}$',
+    'CO2': r'$CO_2(aq)$',
+    'CO2aq': r'$CO_2(aq)$',
+    'HCO3': r'$HCO_3^{-}$',
+    'CO3': r'$CO_3^{2-}$',
+    'POC': r'$POC-C$',
+    'DOC': r'$DOC-C$',
+    'DIC': r'$DIC-C$',
+    'Ca3PO42': r'$Ca_3(PO_4)_2$',
+    'H_sw': r'$Hsw$',
+    'H_sw_2': r'$Hsw_2$',
+    'T': r'T',
+    'pH': r'pH'
+}
+
+
 molar_masses = {
     'O2': 31998.8,
     'CH4aq': 16042.5,
@@ -49,11 +94,16 @@ molar_masses = {
     'POC': 12010.7,
     'DOC': 12010.7,
     'DIC': 61016.8,
-    'Ca3PO42': 310176.7}
+    'Ca3PO42': 310176.7
+}
 
 
 solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42', 'POC', 'POP', 'FeS2', 'FeS']
 disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S', 'HS', 'PO4', 'Al3', 'Ca2', 'CO2']
+
+
+def find_element_name(element):
+    return species_formulas[element]
 
 
 def load_data(f):
@@ -75,7 +125,7 @@ class ResultsPlotter:
     def env_getter(self, env, basin=1):
         if env == 'sediment':
             results = self.sediment_results['basin' + str(basin)][0, 0]
-        elif env == 'water-column':
+        elif env == 'water':
             results = self.myLake_results['basin' + str(basin)][0, 0]
         return results
 
@@ -84,14 +134,14 @@ class ResultsPlotter:
             if env == 'sediment':
                 coef = molar_masses[e]
                 units = '[$mg/m^3$]'
-            elif env == 'water-column':
+            elif env == 'water':
                 coef = 1 / molar_masses[e]
                 units = '[$mmol/L$]'
         else:
             coef = 1
             if env == 'sediment':
                 units = '[$mmol/L$]'
-            elif env == 'water-column':
+            elif env == 'water':
                 units = '[$mg/m^3$]'
         return coef, units
 
@@ -107,10 +157,10 @@ class ResultsPlotter:
         lines = {}
         if convert_units:
             y = y / (molar_masses[elem] * 10**4 / 365 / 10**6)
-            lbl = elem + ' flux, $[umol/cm^{2}/y]$'
+            lbl = '[' + find_element_name(elem) + ']' + ' flux, $[umol/cm^{2}/y]$'
             total['D'] = np.trapz(y, x / 365)
         else:
-            lbl = elem + ' flux, $[mg/m^{2}/d]$'
+            lbl = '[' + find_element_name(elem) + ']' + ' flux, $[mg/m^{2}/d]$'
             total['D'] = np.trapz(y, x)
         if smoothing_factor:
             spl = UnivariateSpline(x, y)
@@ -164,14 +214,14 @@ class ResultsPlotter:
             y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef
             if log_scale:
                 y = np.log10(y)
-            lines[e], = plt.plot(y, -z, lw=3, label=e)
+            lines[e], = plt.plot(y, -z, lw=3, label=find_element_name(e))
             if convert_units and env == 'sediment':
                 mass_per_area[e] = np.trapz(y, z / 100)
                 lbl = r'$mg / m^2$'
-            elif convert_units and env == 'water-column':
+            elif convert_units and env == 'water':
                 mass_per_area[e] = np.trapz(y, z * 100)
                 lbl = r'$umol/cm^{2}$'
-            elif not convert_units and env == 'water-column':
+            elif not convert_units and env == 'water':
                 mass_per_area[e] = np.trapz(y, z)
                 lbl = r'$mg / m^2$'
             elif not convert_units and env == 'sediment':
@@ -180,7 +230,7 @@ class ResultsPlotter:
         if not log_scale:
             leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
         plt.xlabel(units)
-        if env == 'water-column':
+        if env == 'water':
             plt.ylabel('Depth, [m]')
         else:
             plt.ylabel('Depth, [cm]')
@@ -206,15 +256,15 @@ class ResultsPlotter:
         lines = {}
         for e in elem:
             y = results['rates'][0, 0][e][0, 0][:, -1 + end]
-            lines[e], = plt.plot(y, -z, lw=3, label=e)
-            if env == 'water-column':
+            lines[e], = plt.plot(y, -z, lw=3, label=find_element_name(e))
+            if env == 'water':
                 rate_per_area[e] = np.trapz(y, z * 100)
             elif env == 'sediment':
                 rate_per_area[e] = np.trapz(y, z)
         lbl = r'$umol/cm^{2} / y$'
         leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(rate_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
         plt.xlabel('$umol/cm^{3}/y$')
-        if env == 'water-column':
+        if env == 'water':
             plt.ylabel('Depth, [m]')
         else:
             plt.ylabel('Depth, [cm]')
@@ -246,7 +296,7 @@ class ResultsPlotter:
 
         plt.ylabel('Depth, [cm]')
 
-        if env == 'water-column':
+        if env == 'water':
             ice_thickness = results['His'][0, 0][0, start:end]
             plt.fill_between(results['days'][0, 0][0][start:end] - 366, 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
             plt.ylabel('Depth, [m]')
@@ -257,7 +307,7 @@ class ResultsPlotter:
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
         lbl = ''
         for e in elem:
-            lbl += e + ', '
+            lbl += find_element_name(e) + ', '
         cbar.ax.set_ylabel(lbl + units)
         if elem[0] == 'T':
             cbar.ax.set_ylabel('Temperature, [C]')
@@ -285,7 +335,7 @@ class ResultsPlotter:
 
         plt.ylabel('Depth, [cm]')
 
-        if env == 'water-column':
+        if env == 'water':
             ice_thickness = results['His'][0, 0][0, start:end]
             plt.fill_between(results['days'][0, 0][0][start:end], 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
             plt.ylabel('Depth, [m]')
@@ -320,7 +370,7 @@ class ResultsPlotter:
                 y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef * fi
             elif e in solid:
                 y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef * (1 - fi)
-            lines[e], = plt.plot(y, -z, lw=3, label=e)
+            lines[e], = plt.plot(y, -z, lw=3, label=find_element_name(e))
             if convert_units:
                 mass_per_area[e] = np.trapz(y, z / 100)
                 lbl = r'$mg / m^2$'
@@ -333,7 +383,7 @@ class ResultsPlotter:
         ax = plt.gca()
         ax.ticklabel_format(useOffset=False)
         ax.grid(linestyle='-', linewidth=0.2)
-        plt.legend(loc=1)
+        plt.legend(loc=1, frameon=1)
         plt.gca().add_artist(leg1)
         plt.ylim([-results['z'][0, 0][-1], -results['z'][0, 0][0]])
         plt.tight_layout()
@@ -343,7 +393,7 @@ class ResultsPlotter:
         plt.show()
 
     def temperature_fit(self):
-        results = self.env_getter('water-column', basin=2)
+        results = self.env_getter('water', basin=2)
         T = results['T'][0, 0]
         t = results['days'][0, 0][0] - 366
 
@@ -375,7 +425,7 @@ class ResultsPlotter:
     def phosphorus_fit(self):
         fig, axes = plt.subplots(4, 1, sharex='col', figsize=(8, 5), dpi=192)
 
-        results = self.env_getter('water-column', basin=1)
+        results = self.env_getter('water', basin=1)
 
         inx = np.where(results['z'][0, 0] == 4)[0][0]
         TOTP = np.mean(results['concentrations'][0, 0]['P'][0, 0][0:inx, :], axis=0) + \
@@ -426,7 +476,7 @@ class ResultsPlotter:
 
         for e in elem:
             y = results['concentrations'][0, 0]['P'][0, 0][inx, :]
-            plt.scatter(-366 + results['days'][0, 0][0], y, lw=3, label=e)
+            plt.scatter(-366 + results['days'][0, 0][0], y, lw=3, label=find_element_name(e))
         ax = plt.gca()
         ax.ticklabel_format(useOffset=False)
         ax.grid(linestyle='-', linewidth=0.2)
@@ -442,7 +492,7 @@ class ResultsPlotter:
         self.plot_fit_wc(['O2'], depth, ax=None, dstart=dstart, dend=dend, factor=1e-3)
 
     def plot_fit_wc(self, elements, depth, ax=None, dstart='2005-03-07', dend='2011-03-07', factor=1):
-        env = 'water-column'
+        env = 'water'
         results = self.env_getter(env)
 
         inx = np.where(results['z'][0, 0] == depth)[0][0]
