@@ -76,67 +76,74 @@ lake_params = {
     1, 'wc_factor',            % 71    Scaling factor for rates in WC
     4.8497, 'T_ref_wc'};       % 72    Reference Temperature for rates
 
+
 sediment_params = {
-    10,    'k_Chl';        % 1       % 1
-    1,     'k_POP';        % 2       % 1
-    1      'k_POC';        % 3       % 0.01
-    1,     'k_DOP';        % 4       % 1
-    1,     'k_DOC';        % 5       % 1
-    0.008, 'Km_O2';        % 6       % Canavan, R. W (2006) rho=2
-    0.01,  'Km_NO3';       % 7       % Canavan, R. W (2006) rho=2
-    0.2*2,  'Km_Fe(OH)3';   % 8       % Canavan, R. W (2006) rho=2
-    0.2*2,  'Km_FeOOH';     % 9       % Canavan, R. W (2006) rho=2
-    0.1,  'Km_SO4';       % 10       % Canavan, R. W (2006 rho=2
-    0.001,'Km_oxao';      % 11       % the same as Km rho=2
-    0.1,  'Km_amao';      % 12       % the same as Km rho=2
-    0.008, 'Kin_O2';       % 13       % the same as Km rho=2
-    0.01,  'Kin_NO3';      % 14       % the same as Km rho=2
-    0.2*2,   'Kin_FeOH3';    % 15       % the same as Km rho=2
-    0.2*2,   'Kin_FeOOH';    % 16       % the same as Km rho=2
-    20,    'k_amox';       % 17       % Canavan, R. W (2006)
-    50e3,  'k_Feox';       % 18       % Canavan, R. W (2006)
-    0.1,   'k_Sdis';       % 19       %
-    2500,  'k_Spre';       % 20       %
-    3.17,  'k_FeS2pre';    % 21
-    0.1,   'k_alum';       % 22
-    1.35,  'k_pdesorb_a';; % 23
-    1.35,  'k_pdesorb_b';  % 24
-    20000,  'k_fesox';       % 25        % R23 %Canavan
-    8,      'k_tS_Fe';        % 26      % Cappellen (1996) in Canavan, R. W (2006) the reaction is different
-    9600,  'Ks_FeS';       % 27      % Canavan, R. W (2006)
-    0.001, 'k_Fe_dis';     % 28      % Canavan, R. W (2006)
-    1500*2,'k_Fe_pre';     % 29      % Canavan, R. W (2006)
-    0.37,  'k_apa';        % 30
-    3e-6,  'kapa';         % 31
-    0.3134,'k_oms';        % 32
-    1e6,   'k_tsox';       % 33     % Canavan, R. W (2006)
-    0.3/2, 'k_FeSpre';     % 34     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
-    1e7,   'k_ch4_o2'      % 35     % Canavan, R. W (2006)
-    1e-1,  'k_ch4_so4'     % 36     % Canavan, R. W (2006)
-    0.0015,  'Kh_CH4' %      37     % Henry cobstant M/atm
-    0.034,  'Kh_CO2' %       38     % Henry cobstant M/atm
-    1e3,   'k_ch4_dis'     % 39
-    5,     'CH4_rising_vel' % 39     % Canavan, R. W (2006)
-    30,    'accel';        % 41
-    1e-6,   'f_pfe';       % 42
-    1.35,   'k_pdesorb_c'; % 43
-    0.98,   'fi_in';       % 44
-    0.85,   'fi_f';        % 45
-    0.5,    'X_b';         % 46
-    1,      'tortuosity';  % 47
-    0.1,    'w';           % 48
-    256,    'n';           % 49
-    30,     'depth';       % 50
-    5,      'w_CH4';       % 51     rising velocity of methane gas in the sediment
-    14.4,   'alfa0';       % 52
-    106,    'Cx1';         % 53           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    16,     'Ny1';         % 54           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Pz1';         % 55           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    200,    'Cx2';         % 56           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    20,     'Ny2';         % 57           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Pz2';         % 58           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Cx3';         % 59           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    0.1,    'Ny3';         % 60           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    0,      'Pz3';         % 61           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    10,      'n_ts';       % 62           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
+    10,    'k_Chl',                 % 1       % 1
+    1,     'k_POP',                 % 2       % 1
+    1      'k_POC',                 % 3       % 0.01
+    1,     'k_DOP',                 % 4       % 1
+    1,     'k_DOC',                 % 5       % 1
+    0.008, 'Km_O2',                 % 6       % Canavan, R. W (2006) rho=2.5
+    0.01,  'Km_NO3',                % 7       % Canavan, R. W (2006) rho=2.5
+    0.2/2.5,  'Km_Fe(OH)3',         % 8       % Canavan, R. W (2006) rho=2.5
+    0.2/2.5,  'Km_FeOOH',           % 9       % Canavan, R. W (2006) rho=2.5
+    0.1,  'Km_SO4',                 % 10       % Canavan, R. W (2006 rho=2.5
+    0.001,'Km_oxao',                % 11       % the same as Km rho=2.5
+    0.1,  'Km_amao',                % 12       % the same as Km rho=2.5
+    0.008, 'Kin_O2',                % 13       % the same as Km rho=2.5
+    0.01,  'Kin_NO3',               % 14       % the same as Km rho=2.5
+    0.2/2.5,   'Kin_FeOH3',         % 15       % the same as Km rho=2.5
+    0.2/2.5,   'Kin_FeOOH',         % 16       % the same as Km rho=2.5
+    20,    'k_amox',                % 17       % Canavan, R. W (2006)
+    50e3,  'k_Feox',                % 18       % Canavan, R. W (2006)
+    0.1,   'k_Sdis',                % 19       %
+    2500,  'k_Spre',                % 20       %
+    3.17,  'k_FeS2pre',             % 21
+    0.1,   'k_alum',                % 22
+    1.35,  'k_pdesorb_a',           % 23
+    1.35,  'k_pdesorb_b',           % 24
+    20000,  'k_fesox',              % 25        % R23 %Canava
+    8,      'k_tS_Fe',              % 26      % Cappellen (1996) in Canavan, R. W (2006) the reaction is different
+    9600,  'Ks_FeS',                % 27      % Canavan, R. W (2006)
+    0.001, 'k_Fe_dis',              % 28      % Canavan, R. W (2006), Katsev, R. W (2013)
+    0.1/2.5,'k_Fe_pre',             % 29         % Katsev, R. W (2013)
+    0.37,  'k_apa',                 % 30
+    3e-6,  'kapa',                  % 31
+    0.1/2.5,  'k_CaCO3_pre',        % 32      % Katsev (2013)
+    0.05,  'k_CaCO3_dis',           % 33      % Katsev (2013)
+    5e-9,  'K_CaCO3',               % 34      %
+    450/2.5,  'k_FeCO3_pre',        % 35      % Cappellen (1996)
+    0.25,  'k_FeCO3_dis',           % 36      % Cappellen (1996)
+    10^(-8.4),  'K_FeCO3',          % 37      % Cappellen (1996)
+    0.3134,'k_oms',                 % 38
+    1e6,   'k_tsox',                % 39     % Canavan, R. W (2006)
+    0.3/2.5, 'k_FeSpre',            % 40     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
+    1e7,   'k_ch4_o2',              % 41     % Canavan, R. W (2006)
+    1e-1,  'k_ch4_so4',             % 42     % Canavan, R. W (2006)
+    0.0015,  'Kh_CH4',              % 43     % Henry cobstant M/atm
+    0.034,  'Kh_CO2',               % 44     % Henry cobstant M/atm
+    1e3,   'k_ch4_dis',             % 45
+    5,     'CH4_rising_vel',        % 46     % Canavan, R. W (2006)
+    30,    'accel',                 % 47
+    1e-6,   'f_pfe',                % 48
+    1.35,   'k_pdesorb_c',          % 49
+    0.98,   'fi_in',                % 50
+    0.85,   'fi_f',                 % 51
+    0.5,    'X_b',                  % 52
+    1,      'tortuosity',           % 53
+    0.1,    'w',                    % 54
+    256,    'n',                    % 55
+    30,     'depth',                % 56
+    5,      'w_CH4',                % 57     rising velocity of methane gas in the sediment
+    14.4,   'alfa0',                % 58
+    106,    'Cx1',                  % 59           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    16,     'Ny1',                  % 60           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Pz1',                  % 61           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    200,    'Cx2',                  % 62           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    20,     'Ny2',                  % 63           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Pz2',                  % 64           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Cx3',                  % 65           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    0.1,    'Ny3',                  % 66           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    0,      'Pz3',                  % 67           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    10,     'n_ts',                 % 68           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
     };

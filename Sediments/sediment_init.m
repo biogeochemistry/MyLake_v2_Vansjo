@@ -19,7 +19,7 @@ function [sediment_params] = params(max_depth, temperature)
     global sed_par_file
     f=fopen(sed_par_file);
     % f=fopen('calibration_k_values.txt');
-    data = textscan(f,'%s%f', 62,'Delimiter', '\t');
+    data = textscan(f,'%s%f', 68,'Delimiter', '\t');
     fclose(f);
 
     % chemical constants from file
@@ -54,37 +54,43 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.k_Fe_pre = data{2}(29);
     sediment_params.k_apa = data{2}(30);
     sediment_params.kapa = data{2}(31);
-    sediment_params.k_oms = data{2}(32);
-    sediment_params.k_tsox = data{2}(33);
-    sediment_params.k_FeSpre = data{2}(34);
-    sediment_params.k_ch4_o2 = data{2}(35);
-    sediment_params.k_ch4_so4 = data{2}(36);
-    sediment_params.Kh_CH4 = data{2}(37);
-    sediment_params.Kh_CO2 = data{2}(38);
-    sediment_params.k_ch4_dis = data{2}(39);
-    sediment_params.CH4_rising_vel = data{2}(40);
-    sediment_params.accel = data{2}(41);
-    sediment_params.f_pfe = data{2}(42);
-    sediment_params.k_pdesorb_c = data{2}(43);
-    phi_in = data{2}(44);
-    phi_f  = data{2}(45);
-    X_b   = data{2}(46);
-    tortuosity = data{2}(47);
-    sediment_params.w = data{2}(48);      % time-dependent burial rate w = 0.1
-    sediment_params.n = data{2}(49);;  % points in spatial grid
-    sediment_params.depth = data{2}(50);  % sediment depth
-    sediment_params.w_CH4 = data{2}(51);
-    alpha0 = data{2}(52);
-    sediment_params.Cx1 = data{2}(53);
-    sediment_params.Ny1 = data{2}(54);
-    sediment_params.Pz1 = data{2}(55);
-    sediment_params.Cx2 = data{2}(56);
-    sediment_params.Ny2 = data{2}(57);
-    sediment_params.Pz2 = data{2}(58);
-    sediment_params.Cx3 = data{2}(59);
-    sediment_params.Ny3 = data{2}(60);
-    sediment_params.Pz3 = data{2}(61);
-    sediment_params.n_of_time_steps_during_1_dt_of_myLake = data{2}(62);  % time step
+    sediment_params.k_CaCO3_pre = data{2}(32);
+    sediment_params.k_CaCO3_dis = data{2}(33);
+    sediment_params.K_CaCO3 = data{2}(34);
+    sediment_params.k_FeCO3_pre = data{2}(35);
+    sediment_params.k_FeCO3_dis = data{2}(36);
+    sediment_params.K_FeCO3 = data{2}(37);
+    sediment_params.k_oms = data{2}(38);
+    sediment_params.k_tsox = data{2}(39);
+    sediment_params.k_FeSpre = data{2}(40);
+    sediment_params.k_ch4_o2 = data{2}(41);
+    sediment_params.k_ch4_so4 = data{2}(42);
+    sediment_params.Kh_CH4 = data{2}(43);
+    sediment_params.Kh_CO2 = data{2}(44);
+    sediment_params.k_ch4_dis = data{2}(45);
+    sediment_params.CH4_rising_vel = data{2}(46);
+    sediment_params.accel = data{2}(47);
+    sediment_params.f_pfe = data{2}(48);
+    sediment_params.k_pdesorb_c = data{2}(49);
+    phi_in = data{2}(50);
+    phi_f  = data{2}(51);
+    X_b   = data{2}(52);
+    tortuosity = data{2}(53);
+    sediment_params.w = data{2}(54);      % time-dependent burial rate w = 0.1
+    sediment_params.n = data{2}(55);;  % points in spatial grid
+    sediment_params.depth = data{2}(56);  % sediment depth
+    sediment_params.w_CH4 = data{2}(57);
+    alpha0 = data{2}(58);
+    sediment_params.Cx1 = data{2}(59);
+    sediment_params.Ny1 = data{2}(60);
+    sediment_params.Pz1 = data{2}(61);
+    sediment_params.Cx2 = data{2}(62);
+    sediment_params.Ny2 = data{2}(63);
+    sediment_params.Pz2 = data{2}(64);
+    sediment_params.Cx3 = data{2}(65);
+    sediment_params.Ny3 = data{2}(66);
+    sediment_params.Pz3 = data{2}(67);
+    sediment_params.n_of_time_steps_during_1_dt_of_myLake = data{2}(68);  % time step
 
 
 
@@ -95,29 +101,27 @@ function [sediment_params] = params(max_depth, temperature)
     P_water = 998 * 9.8 * max_depth/10^5; % [Bar]
     pressure = P_atm + P_water; % [Bar]
     salinity = 0;
-    viscosity = viscosity(temperature,pressure,salinity);
+    viscosity = viscosity_fun(temperature,pressure,salinity);
 
 
-    % pH module. NOTE: experimental feature
+    % pH module. NOTE: estimates pH once a day
     % !!!!!!! Recommend to use #3 Phreeqc
     % Specify pH algorithm:
-    % 0. Disabled
-    % 1. Phreeqc  adds computatinal time. (simulation time: ~ 6m per year) - tested
-    % 2. New algorithm by Markelov (simulation time: ~12m per year) (under test) - produces NaN values
+    % 0. Disabled (simulation time: ~40 sec per year)
+    % 1. Phreeqc  adds computatinal time. (simulation time: ~ 80 sec per year) - tested
+    % 2. New algorithm by Markelov (simulation time: ~ 100 sec per year) (under test) - produces NaN values
 
-    sediment_params.pH_algorithm = 2;
+    sediment_params.pH_algorithm = 1;
 
-    if sediment_params.pH_algorithm == 2
-        aq_system.carb_acid = acid([6.52, 10.56], 0, 0);
-        aq_system.amonia = acid([9.2503], 1, 0);
-        aq_system.sulf = acid([6.8861], 0, 0);
-        aq_system.ca = neutral(2, 0);
-        aq_system.fe2 = neutral(2, 0);
-        aq_system.no3 = neutral(-1, 0);
-        aq_system.so4 = neutral(-2, 0);
-        aq_system.p_acid= acid([2.148, 7.198, 12.319], 0, 0);
-        sediment_params.aq_system = aq_system;
-    end
+    aq_system.carb_acid = acid([6.52, 10.56], 0, 0);
+    aq_system.amonia = acid([9.2503], 1, 0);
+    aq_system.sulf = acid([6.8861], 0, 0);
+    aq_system.ca = neutral(2, 0);
+    aq_system.fe2 = neutral(2, 0);
+    aq_system.no3 = neutral(-1, 0);
+    aq_system.so4 = neutral(-2, 0);
+    aq_system.p_acid= acid([2.148, 7.198, 12.319], 0, 0);
+    sediment_params.aq_system = aq_system;
 
 
     sediment_params.years = 1/365;  % 1 day #35
@@ -153,9 +157,10 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.D_CO2 = hayduk_laudie_diffusion(viscosity, abs_temp, 37.3);
     sediment_params.D_CH4aq = hayduk_laudie_diffusion(viscosity, abs_temp, 37.7);
     sediment_params.D_CH4g = hayduk_laudie_diffusion(viscosity, abs_temp, 37.7);
+    sediment_params.D_CO2g = hayduk_laudie_diffusion(viscosity, abs_temp, 37.7);
 
     % Diffusion coefficient based on Einstein relation:
-    sediment_params.D_H2CO3 = einstein_diffusion(410.28, abs_temp, viscosity);
+
 
     % User specified diffusion coefficients and other params (if there is no values found above):
     sediment_params.D_H2S = 284;
@@ -208,15 +213,17 @@ function [sediment_concentrations ] = init_concentrations(pH)
         sediment_concentrations.Ca2 = interp1(in_z, Init(1:end, 24), zz);
         sediment_concentrations.Ca3PO42 = interp1(in_z, Init(1:end, 25), zz);
         sediment_concentrations.OMS = interp1(in_z, Init(1:end, 26), zz);
-        sediment_concentrations.H = interp1(in_z, Init(1:end, 27), zz);
-        sediment_concentrations.OH = interp1(in_z, Init(1:end, 28), zz);
+        sediment_concentrations.H   = interp1(in_z, Init(1:end, 27), zz);
+        sediment_concentrations.CaCO3 = interp1(in_z, Init(1:end, 28), zz);
         sediment_concentrations.CO2 = interp1(in_z, Init(1:end, 29), zz);
         sediment_concentrations.CO3 = interp1(in_z, Init(1:end, 30), zz);
         sediment_concentrations.HCO3 = interp1(in_z, Init(1:end, 31), zz);
-        sediment_concentrations.H2CO3 = interp1(in_z, Init(1:end, 32), zz);
+        sediment_concentrations.CO2g = interp1(in_z, Init(1:end, 32), zz);
         sediment_concentrations.Chl = interp1(in_z, Init(1:end, 33), zz);
         sediment_concentrations.CH4aq = interp1(in_z, Init(1:end, 34), zz);
         sediment_concentrations.CH4g = interp1(in_z, Init(1:end, 35), zz);
+        sediment_concentrations.FeCO3 = interp1(in_z, Init(1:end, 36), zz);
+        sediment_concentrations.Fe3PO42 = interp1(in_z, Init(1:end, 3), zz);
     else
         sediment_concentrations.POP     = ones(n,1) * 0;
         sediment_concentrations.POC     = ones(n,1) * 0;
@@ -244,14 +251,16 @@ function [sediment_concentrations ] = init_concentrations(pH)
         sediment_concentrations.Ca3PO42 = ones(n,1) * 0;
         sediment_concentrations.OMS     = ones(n,1) * 0;
         sediment_concentrations.H       = ones(n,1) * 10^-pH*10^3;
-        sediment_concentrations.OH      = ones(n,1) * 0;
+        sediment_concentrations.CaCO3   = ones(n,1) * 0;
         sediment_concentrations.CO2     = ones(n,1) * 0;
         sediment_concentrations.CO3     = ones(n,1) * 0;
         sediment_concentrations.HCO3    = ones(n,1) * 0;
-        sediment_concentrations.H2CO3   = ones(n,1) * 0;
+        sediment_concentrations.CO2g   = ones(n,1) * 0;
         sediment_concentrations.Chl   = ones(n,1) * 0;
         sediment_concentrations.CH4aq   = ones(n,1) * 0;
         sediment_concentrations.CH4g   = ones(n,1) * 0;
+        sediment_concentrations.FeCO3   = ones(n,1) * 0;
+        sediment_concentrations.Fe3PO42   = ones(n,1) * 0;
 
     end
 end
@@ -296,7 +305,7 @@ function [D] = lr_ion_diffusion(m0, m1, t)
   D = ( m0 + m1*t ) * 10^-6 * 3.156 * 10^7;
 end
 
-function [u] = viscosity(temperature,pressure,salinity)
+function [u] = viscosity_fun(temperature,pressure,salinity)
   %% viscosity: Values of the dynamic viscosity can be calculated from an empirical equation
   % developed by Matthaus (as quoted in Kukulka et al., 1987), which is claimed to be accurate to within 0.7% for the temperature, t, salinity, S, and pressure, P, ranges of 0
   % ≤ C ≤ 30, 0 ≤ S ≤ 36, and 1 to 1000 bars, respectively (Boudreau, 1997):
@@ -347,7 +356,7 @@ function [sediment_matrix_templates] = templates()
     [CO3_AL, CO3_AR]        = cn_template_dirichlet(sediment_params.D_CO3 + Db, tortuosity, v, phi, dx, dt, n);
     [HCO3_AL, HCO3_AR]        = cn_template_dirichlet(sediment_params.D_HCO3 + Db, tortuosity, v, phi, dx, dt, n);
     [NH3_AL, NH3_AR]        = cn_template_dirichlet(sediment_params.D_NH3 + Db, tortuosity, v, phi, dx, dt, n);
-    [H2CO3_AL, H2CO3_AR]        = cn_template_dirichlet(sediment_params.D_H2CO3 + Db, tortuosity, v, phi, dx, dt, n);
+    [CO2g_AL, CO2g_AR]        = cn_template_dirichlet(sediment_params.D_CO2g + Db, tortuosity, v, phi, dx, dt, n);
     [DOP_AL, DOP_AR]        = cn_template_dirichlet(sediment_params.D_DOP + Db, tortuosity, v, phi, dx, dt, n);
     [DOC_AL, DOC_AR]        = cn_template_dirichlet(sediment_params.D_DOC + Db, tortuosity, v, phi, dx, dt, n);
     [CH4aq_AL, CH4aq_AR]        = cn_template_dirichlet(sediment_params.D_CH4aq + Db, tortuosity, v, phi, dx, dt, n);
@@ -367,17 +376,15 @@ function [sediment_matrix_templates] = templates()
         PO4_AL, PO4_AR, 'PO4'; % 9
         Ca2_AL, Ca2_AR, 'Ca2'; % 10
         HS_AL, HS_AR, 'HS'; % 11
-        H_AL, H_AR, 'H'; % 12
-        OH_AL, OH_AR, 'OH'; % 13
-        CO2_AL, CO2_AR, 'CO2'; % 14
-        CO3_AL, CO3_AR, 'CO3'; % 15
-        HCO3_AL, HCO3_AR, 'HCO3'; % 16
-        NH3_AL, NH3_AR, 'NH3'; % 17
-        H2CO3_AL, H2CO3_AR, 'H2CO3'; %18
-        DOP_AL, DOP_AR, 'DOP'; %19
-        DOC_AL, DOC_AR, 'DOC'; %20
-        CH4aq_AL, CH4aq_AR, 'DOC'; %21
-        CH4g_AL, CH4g_AR, 'DOC'; %22
+        CO2_AL, CO2_AR, 'CO2'; % 12
+        CO3_AL, CO3_AR, 'CO3'; % 13
+        HCO3_AL, HCO3_AR, 'HCO3'; % 14
+        NH3_AL, NH3_AR, 'NH3'; % 15
+        CO2g_AL, CO2g_AR, 'CO2g'; %16
+        DOP_AL, DOP_AR, 'DOP'; %17
+        DOC_AL, DOC_AR, 'DOC'; %18
+        CH4aq_AL, CH4aq_AR, 'DOC'; %19
+        CH4g_AL, CH4g_AR, 'DOC'; %20
     };
 
 end

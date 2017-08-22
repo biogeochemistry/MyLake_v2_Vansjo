@@ -3,7 +3,7 @@ function [sediment_bc] = update_sediment(mylake_temp_results, mylake_params, sed
     %   [Water-column units] ------>  [Sediments units]
     % for dissolved species - concentration BC
     % for solid - Neumann (flux) BC
-    pH = mylake_params.pH;
+
     % pH = 6.47;
     w_s = mylake_params.w_s * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
     w_chl = mylake_params.w_chl * 100 * 365; %settling velocity for S [m d-1] -> [cm year-1]
@@ -32,12 +32,12 @@ function [sediment_bc] = update_sediment(mylake_temp_results, mylake_params, sed
     sediment_bc.Ca2_c = dissolved_bc(mylake_temp_results.Ca2z, phi);
     sediment_bc.Ca3PO42_fx = 0;
     sediment_bc.OMS_fx = 0;
-    sediment_bc.H_c = 10^-pH*10^3;
-    sediment_bc.OH_c = 10^-(14-pH)*10^3;
+    sediment_bc.H_c = dissolved_bc(10.^-mylake_temp_results.pHz*10^3, 1);
+    sediment_bc.CaCO3_fx = 0;
     sediment_bc.CO2_c = dissolved_bc(mylake_temp_results.CO2z, phi); % gas
     sediment_bc.CO3_c = dissolved_bc(mylake_temp_results.CO3z, phi);;
     sediment_bc.HCO3_c = dissolved_bc(mylake_temp_results.HCO3z, phi);;
-    sediment_bc.H2CO3_c = 0;
+    sediment_bc.CO2g_c = 0;
     sediment_bc.NH3_c = 0;
     sediment_bc.NH4_c = dissolved_bc(mylake_temp_results.NH4z, phi);
     sediment_bc.HS_c = dissolved_bc(mylake_temp_results.HSz, phi);
@@ -46,6 +46,8 @@ function [sediment_bc] = update_sediment(mylake_temp_results, mylake_params, sed
     sediment_bc.DOC_c = dissolved_bc(mylake_temp_results.DOCz, phi);
     sediment_bc.CH4aq_c = dissolved_bc(mylake_temp_results.CH4aqz, phi);
     sediment_bc.CH4g_fx = 0; % dissolved_bc(mylake_temp_results.CH4gz, phi);
+    sediment_bc.FeCO3_fx = 0; % dissolved_bc(mylake_temp_results.CH4gz, phi);
+    sediment_bc.Fe3PO42_fx = 0; % dissolved_bc(mylake_temp_results.CH4gz, phi);
     sediment_bc.T = mylake_temp_results.Tz(end);
 
 end
