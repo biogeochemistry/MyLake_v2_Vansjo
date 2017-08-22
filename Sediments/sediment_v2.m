@@ -239,19 +239,19 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
 
 
       % Estimate fluxes:
-      sediment_bioirrigation_fluxes.O2(i-1)   = integrate_over_depth_2( bioirrigation(O2(:, i), alfax, phi), x);
-      sediment_bioirrigation_fluxes.PO4(i-1)  = integrate_over_depth_2( bioirrigation(PO4(:, i),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.Fe2(i-1)  = integrate_over_depth_2( bioirrigation(Fe2(:, i),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.NO3(i-1)  = integrate_over_depth_2( bioirrigation(NO3(:, i),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.NH4(i-1)  = integrate_over_depth_2( bioirrigation(NH4(:, i),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.SO4(i-1)  = integrate_over_depth_2( bioirrigation(SO4(:, i),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.DOP(i-1) = integrate_over_depth_2( bioirrigation(DOP(:, i),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.DOC(i-1) = integrate_over_depth_2( bioirrigation(DOC(:, i),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.CH4aq(i-1) = integrate_over_depth_2( bioirrigation(CH4aq(:, i),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.CH4g(i-1) = integrate_over_depth_2( bioirrigation(CH4g(:, i),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.CO2(i-1) = integrate_over_depth_2( bioirrigation(CO2(:, i),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.HCO3(i-1) = integrate_over_depth_2( bioirrigation(HCO3(:, i),  alfax,  phi), x);
-      sediment_bioirrigation_fluxes.CO3(i-1) = integrate_over_depth_2( bioirrigation(CO3(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.O2(i-1)   = phi(1)*integrate_over_depth_2(bioirrigation(O2(:, i), alfax, phi), x);
+      sediment_bioirrigation_fluxes.PO4(i-1)  = phi(1)*integrate_over_depth_2(bioirrigation(PO4(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.Fe2(i-1)  = phi(1)*integrate_over_depth_2(bioirrigation(Fe2(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.NO3(i-1)  = phi(1)*integrate_over_depth_2(bioirrigation(NO3(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.NH4(i-1)  = phi(1)*integrate_over_depth_2(bioirrigation(NH4(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.SO4(i-1)  = phi(1)*integrate_over_depth_2(bioirrigation(SO4(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.DOP(i-1) = phi(1)*integrate_over_depth_2(bioirrigation(DOP(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.DOC(i-1) = phi(1)*integrate_over_depth_2(bioirrigation(DOC(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.CH4aq(i-1) = phi(1)*integrate_over_depth_2(bioirrigation(CH4aq(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.CH4g(i-1) = phi(1)*integrate_over_depth_2(bioirrigation(CH4g(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.CO2(i-1) = phi(1)*integrate_over_depth_2(bioirrigation(CO2(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.HCO3(i-1) = phi(1)*integrate_over_depth_2(bioirrigation(HCO3(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.CO3(i-1) = phi(1)*integrate_over_depth_2(bioirrigation(CO3(:, i),  alfax,  phi), x);
 
       sediment_transport_fluxes.POP(i-1)          = -sediment_bc.POP_fx; % * (1-phi(1)) ./ phi(i);
       sediment_transport_fluxes.Chl(i-1)          = -sediment_bc.Chl_fx; % * (1-phi(1)) ./ phi(i);
@@ -581,7 +581,7 @@ function bioR = bioirrigation(C, alfax, phi)
   % C - concentration profile of current species
   % phi - porosity
   Co = C(1);
-  bioR = alfax .* (C - Co); % .* fi
+  bioR = alfax .* (C - Co);
   % NOTE:Disabled?
   % bioR = 0;
 end
@@ -706,15 +706,6 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     f_SO4   = SO4 ./ (Km_SO4 + SO4 ) .* Kin_FeOOH ./ (Kin_FeOOH + FeOOH) .* Kin_FeOH3 ./ (Kin_FeOH3 + tot_FeOH3) .* Kin_NO3 ./ (Kin_NO3 + NO3) .* Kin_O2 ./ (Kin_O2 + O2);
     f_CH4 = 1 - f_O2 - f_NO3 - f_FeOH3 - f_FeOOH - f_SO4;
     f_CH4 = f_CH4.*(f_CH4>0);
-
-    % % Solubility of CH4aq and switch function as in Canavan
-    % delta = (CH4aq - CH4_solubility/2)/Sm;
-    % fm = (tanh(-delta) + 1)/2;
-
-
-
-
-
 
 
 
@@ -877,12 +868,13 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     % Canavan, R. W., Slomp, C. P., Jourabchi, P., Van Cappellen, P., Laverman, A. M., & van den Berg, G. A. (2006). Organic matter mineralization in sediment of a coastal freshwater lake and response to salinization. Geochimica Et Cosmochimica Acta, 70(11), 2836–2855. http://doi.org/10.1016/j.gca.2006.03.012
 
 
-    % F = 1./phi;
+    % NOTE: R.*F the rate is written per solid;
+    % R./F the rate is written per aqueous;
     F = (1-phi) ./ phi;
 
-    dcdt(:,1)  = - bioirrigation(O2, alfax, phi) +  -0.25 * R13  - R15 - 2 * R14  - (Cx2*R1a + Cx3*R1b+Cx1*R1f) .* F - (Cx2*R1c + Cx3*R1d) - 3 * R23.*F ; % O2 (aq)
-    dcdt(:,2)  = -Ra - R21a; % POP (solid)
-    dcdt(:,3)  = -Rb - R21b; % POC (solid)
+    dcdt(:,1)  = - bioirrigation(O2, alfax, phi) +  -0.25 * R13  - R15 - 2 * R14  - (Cx2*R1a + Cx3*R1b+Cx1*R1f) .* F - (Cx2*R1c + Cx3*R1d) - 3 * R23.*F - 2* R11; % O2 (aq)
+    dcdt(:,2)  = -Ra - R21a./F; % POP (solid)
+    dcdt(:,3)  = -Rb - R21b./F; % POC (solid)
     dcdt(:,4)  = - bioirrigation(NO3, alfax, phi) +  - 0.8*(Cx2*R2a+Cx2*R2b+Cx1*R2f) .* F - 0.8*(Cx2*R2c+Cx2*R2d)+ R14; % NO3(aq)
     dcdt(:,5)  = -4 * (Cx2*R3a_Fe + Cx3*R3b_Fe + Cx2*R3c_Fe + Cx3*R3d_Fe+ Cx1*R3f_Fe) - 2*R12 + R13./ F - R31a; % FeOH3(solid)
     dcdt(:,6)  = - bioirrigation(SO4, alfax, phi) +  - 0.5*(Cx2*R5a + Cx3*R5b+ Cx1*R5f) .* F -0.5*(Cx2*R5c + Cx3*R5d)+ R11 - R16; % SO4(aq)
@@ -890,7 +882,7 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     dcdt(:,8)  = - bioirrigation(Fe2, alfax, phi) +  4*(Cx2*R3a + Cx3*R3b+ Cx1*R3f) .* F + 4* (Cx2*R3c + Cx3*R3d) + 4*(Cx2*R4a + Cx3*R4b+ Cx1*R4f) .* F + 4 * (Cx2*R4c + Cx3*R4d) + 2*R12.*F - R13 + R25b.*F - R25a.*F - R28a.*F + R28b.*F; % Fe2(aq)
     dcdt(:,9)  = -4*(Cx2*R4a_Fe + Cx3*R4b_Fe + Cx2*R4c_Fe + Cx3*R4d_Fe+ Cx1*R4f_Fe) + R23 - R32a; % FeOOH(solid)
     dcdt(:,10) = - bioirrigation(H2S, alfax, phi); % H2S(aq)
-    dcdt(:,11) = - bioirrigation(HS, alfax, phi) +  0.5*(Cx2*R5a + Cx3*R5b + Cx1*R5f) .* F + 0.5 * (Cx2*R5c + Cx3*R5d) - R11 - R12.*F + R25b.*F - R25a.*F + (R21a + R21b + R21c + R21d + R21f).*F -R24.*F + R16; % HS(aq)
+    dcdt(:,11) = - bioirrigation(HS, alfax, phi) +  0.5*(Cx2*R5a + Cx3*R5b + Cx1*R5f) .* F + 0.5 * (Cx2*R5c + Cx3*R5d) - R11 - R12.*F + R25b.*F - R25a.*F - (R21a + R21b + R21c + R21d + R21f) -R24.*F + R16; % HS(aq)
     dcdt(:,12) =  - R22 - 4*R23 -R24 + R25a - R25b ; % FeS(solid)
     dcdt(:,13) = - R22.*F - R26a + R12.*F + R26b.*F; % S0(aq)
     dcdt(:,14) = - bioirrigation(PO4, alfax, phi) +  (Pz2 * Ra + Pz3 * Rb + Pz1 * Rf) .* F + (Pz2 * Rc + Pz3 * Rd) + R31b + R32b.*F + R32b.*F - R31a.*F - R32a.*F - R33a.*F - 2 * R34; % PO4(aq)
@@ -901,7 +893,7 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     dcdt(:,19) = R32a - R32b; % PO4adsb(s)
     dcdt(:,20) = - bioirrigation(Ca2, alfax, phi) -3*R34 - R27a.*F + R27b.*F; % Ca2(aq)
     dcdt(:,21) = R34./F; % Ca3PO42(s)
-    dcdt(:,22) = R21a + R21b + R21c + R21d + R21f; % OMS(s)
+    dcdt(:,22) = (R21a + R21b + R21c + R21d + R21f)./F; % OMS(s)
     dcdt(:,23) = R27a - R27b; % CaCO3(s)
     dcdt(:,24) = - bioirrigation(CO2, alfax, phi) + (R15 +  ((Cx2 - Ny2 + 2*Pz2)*R1a + (Cx3 - Ny3 + 2*Pz3)*R1b + (Cx1 - Ny1 + 2*Pz1)*R1f + (0.2*Cx2 - Ny2 + 2*Pz2)*R2a +  (0.2*Cx3 - Ny3 + 2*Pz3)*R2b +  (0.2*Cx1 - Ny1 + 2*Pz1)*R2f  + (0.5 * Cx2 - Ny2 - 2*Pz2)*R6a + (0.5 * Cx3 - Ny3 - 2*Pz3)*R6b + (0.5 * Cx1 - Ny1 - 2*Pz1)*R6f) .* F  +  (Cx2 - Ny2 + 2*Pz2)*R1c + (Cx3 - Ny3 + 2*Pz3)*R1d + (0.2*Cx2 - Ny2 + 2*Pz2)*R2c +  (0.2*Cx3 - Ny3 + 2*Pz3)*R2d - (7*Cx2 + Ny2 + 2*Pz2)*(R3c+R4c) + (0.5*Cx2 - Ny2 + 2*Pz2)*R6c + (0.5*Cx3 - Ny3 + 2*Pz3)*R6d).*(CO2_over_sat<0) + (- (7*Cx2 + Ny2 + 2*Pz2)*(R3a+R4a) - (7*Cx3 + Ny3 + 2*Pz3)*(R3b+R4b) - (7*Cx1 + Ny1 + 2*Pz1)*(R3f+R4f)  - (Ny2 - 2*Pz2)*R5a - (Ny3 - 2*Pz3)*R5b - (Ny1 - 2*Pz1)*R5f) .* F  - (7*Cx3 + Ny3 + 2*Pz3)*(R3d+R4d)  - (Ny2 - 2*Pz2)*R5c - (Ny3 - 2*Pz3)*R5d - R16 + 2*R13 + 2*R14;  % CO2 (aq) NOTE: we need to add gas (Rename CO2g to gas)
     dcdt(:,25) = - bioirrigation(CO3, alfax, phi) - R27a.*F + R27b.*F - R28a.*F + R28b.*F; % CO3(aq)
@@ -910,7 +902,7 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     dcdt(:,28) = - bioirrigation(CO2g, alfax, phi) ; % CO2g (aq)
     dcdt(:,29) = - bioirrigation(DOP, alfax, phi)  - Rc - R21c; % DOP (aq)
     dcdt(:,30) = - bioirrigation(DOC, alfax, phi)  - Rd - R21d; % DOC (aq)
-    dcdt(:,31) = -Rf - R21f; ; % Chl (s)
+    dcdt(:,31) = -Rf - R21f./F; % Chl (s)
     dcdt(:,32) = - bioirrigation(CH4aq, alfax, phi) + 0.5*(Cx2*R6a+Cx2*R6b+Cx1*R6f).* F .* (CH4_over_sat < 0) + 0.5*(Cx2*R6c + Cx3*R6d).* (CH4_over_sat < 0) - R15 - R16 - R17;  % CH4aq
     dcdt(:,33) = - bioirrigation(CH4g, alfax, phi) + 0.5*(Cx2*R6a+Cx2*R6b+Cx1*R6f).* F .* (CH4_over_sat > 0) + 0.5*(Cx2*R6c + Cx3*R6d).* (CH4_over_sat > 0) + R17;  % CH4g
     dcdt(:,34) = R28a - R28b;  % FeCO3
