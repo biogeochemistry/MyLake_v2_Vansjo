@@ -2038,8 +2038,8 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
     Ks_FeS        = sediment_params.Ks_FeS;
     k_Fe_dis      = sediment_params.k_Fe_dis;
     k_Fe_pre      = sediment_params.k_Fe_pre;
-    k_apa         = sediment_params.k_apa;
-    kapa          = sediment_params.kapa;
+    k_apa_pre         = sediment_params.k_apa_pre;
+    K_apa          = sediment_params.K_apa;
     k_oms         = sediment_params.k_oms;
     k_tsox        = sediment_params.k_tsox;
     k_FeSpre      = sediment_params.k_FeSpre;
@@ -2257,7 +2257,7 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
     R33a = k_pdesorb_c .* Pz .* Al3z; % NOTE: No separate pool for sorbed P on aluminum in WC
     R33a = 0; % NOTE: No separate pool for sorbed P on aluminum in WC
     R33b = 0; % NOTE: the rate is unknown
-    R34  = k_apa .* (Pz - kapa); % NOTE: no Ca3PO42 pool in WC
+    R34  = 0; %k_apa_pre .* (Pz - kapa); % NOTE: no Ca3PO42 pool in WC
     R34  = (R34 >= 0) .* R34;
 
 
