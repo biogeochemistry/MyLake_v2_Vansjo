@@ -10,11 +10,11 @@ use_INCA = 0; % 1- MyLake will take written INCA input, either written just now 
 is_metrics = true; % print metrics in the end
 
 m_start=[1985, 1, 1]; %
-m_stop=[2013, 12, 31]; %
+m_stop=[1985, 1, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
 save_initial_conditions = true; % save final concentrations as initial for the next run
-file_name = 'IO/MyLakeResults_pH_Phr.mat'
+file_name = 'IO/MyLakeResults.mat'
 
 [lake_params, sediment_params] = load_params();
 
