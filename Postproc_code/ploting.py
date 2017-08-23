@@ -1,3 +1,4 @@
+import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib.dates as mdates
@@ -102,7 +103,7 @@ molar_masses = {
 }
 
 
-solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42', 'POC', 'POP', 'FeS2', 'FeS']
+solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42', 'POC', 'POP', 'FeS2', 'FeS', 'Fe3PO42']
 disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S', 'HS', 'PO4', 'Al3', 'Ca2', 'CO2']
 
 
@@ -374,6 +375,9 @@ class ResultsPlotter:
                 y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef * fi
             elif e in solid:
                 y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef * (1 - fi)
+            else:
+                print(e + " is not in solid or dissolved species. Check the dictionaries.")
+                sys.exit()
             lines[e], = plt.plot(y, -z, lw=3, label=find_element_name(e))
             if convert_units:
                 mass_per_area[e] = np.trapz(y, z / 100)
