@@ -161,9 +161,11 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     // iphreeqc.AccumulateLine(cell_str);
     iphreeqc.AccumulateLine("END");
 
-    if (iphreeqc.RunAccumulated() != 0) {
-        mexPrintf("Phreeqc::Sediments::%s", iphreeqc.GetErrorString());
-    }
+
+    // show error if not converge?
+    // if (iphreeqc.RunAccumulated() != 0) {
+    //     mexPrintf("Phreeqc::Sediments::%s", iphreeqc.GetErrorString());
+    // }
 
     VAR v;
     ::VarInit(&v);
