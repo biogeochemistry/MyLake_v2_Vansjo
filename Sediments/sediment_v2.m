@@ -566,7 +566,7 @@ function [H3O] = pH_module(algorithm, H3O, CO2g, HCO3, CO2, CO3, NH3, NH4, HS, H
         Kw=10^(-14);
         OH = Kw./H3O/1e-3;
         in =[H3O HCO3 CO2 CO3 NH3 NH4 HS H2S OH CO2g Fe2 Ca2 NO3 SO4 PO4 FeS FeS2 FeOH3 FeOOH Ca3PO42 PO4adsa PO4adsb];
-        [pH_est] = pH_phreeqc(size(H3O,1),in);
+        [pH_est] = pH_phreeqc_std(size(H3O,1),in);
         H3O = 10.^(-pH_est')*1e3;
 
     elseif algorithm == 2

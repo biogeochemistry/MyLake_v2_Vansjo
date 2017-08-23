@@ -115,7 +115,7 @@ function [sediment_params] = params(max_depth, temperature)
     % 1. Phreeqc  adds computatinal time. (simulation time: ~ 80 sec per year) - tested
     % 2. New algorithm by Markelov (simulation time: ~ 100 sec per year) (under test) - produces NaN values
 
-    sediment_params.pH_algorithm = 0;
+    sediment_params.pH_algorithm = 1;
 
     aq_system.carb_acid = acid([6.52, 10.56], 0, 0);
     aq_system.amonia = acid([9.2503], 1, 0);
