@@ -108,19 +108,19 @@ sediment_params = {
     0.001, 'k_Fe_dis',              % 28      % Canavan, R. W (2006), Katsev, R. W (2013)
     0.1/2.5,'k_Fe_pre',             % 29         % Katsev, R. W (2013)
     0.37e-3,  'k_apa_pre',          % 30
-    0.37e-3,  'k_apa_dis',          % 30
+    0.37,     'k_apa_dis',          % 30
     10^(-4.2249),  'K_apa',         % 31      % linl.dat PREEQC
     0.1/2.5,  'k_CaCO3_pre',        % 32      % Katsev (2013)
     0.05,  'k_CaCO3_dis',           % 33      % Katsev (2013)
     5e-9,  'K_CaCO3',               % 34      %
     450/2.5,  'k_FeCO3_pre',        % 35      % Cappellen (1996)
-    0.25,  'k_FeCO3_dis',           % 36      % Cappellen (1996)
+    0.25,     'k_FeCO3_dis',           % 36      % Cappellen (1996)
     10^(-8.4),  'K_FeCO3',          % 37      % Cappellen (1996)
     0.37e-3,  'k_viv_pre',          % 38
-    0.37e-3,  'k_viv_dis',          % 39
-    10^(-4.7237), 'K_viv',          % 40
+    0.37,  'k_viv_dis',          % 39
+    10^(-4.7237), 'K_viv',          % 40     % linl.dat PREEQC
     0.3134,'k_oms',                 % 41
-    1e6,   'k_tsox',                % 42     % Canavan, R. W (2006)
+    1e4,   'k_tsox',                % 42     % Canavan, R. W (2006)
     0.3/2.5, 'k_FeSpre',            % 43     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
     1e7,   'k_ch4_o2',              % 44     % Canavan, R. W (2006)
     1e-1,  'k_ch4_so4',             % 45     % Canavan, R. W (2006)
