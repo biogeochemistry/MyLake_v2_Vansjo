@@ -4,17 +4,17 @@ function [lake_params, sediment_params] = load_params()
 lake_params = {
     % PhysPar
     0.5, 'dz',                 % 1
-    0.0164, 'Kz_K1',           % 2     open water diffusion parameter (-)
+    44.2401e-003, 'Kz_K1',     % 2     open water diffusion parameter (-)
     0.000898, 'Kz_K1_ice',     % 3     under ice diffusion parameter (-)
     7E-05, 'Kz_N0',            % 4     min. stability frequency (s-2)
-    0.74, 'C_shelter',         % 5     wind shelter parameter (-)
+    0.5, 'C_shelter',         % 5     wind shelter parameter (-)
     59.40, 'lat',              % 6     latitude (decimal degrees)
     10.80, 'lon',              % 7     longitude (decimal degrees)
     0.3, 'alb_melt_ice',       % 8     albedo of melting ice (-)
     0.77, 'alb_melt_snow',     % 9     albedo of melting snow (-)
-    2.00E-04, 'PAR_sat',       % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+    1.00E-04, 'PAR_sat',       % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
     0.45, 'f_par',             % 11    Fraction of PAR in incoming solar radiation (-)
-    0.015, 'beta_chl',         % 12    Optical cross_section of chlorophyll (m2 mg-1)
+    0.005, 'beta_chl',         % 12    Optical cross_section of chlorophyll (m2 mg-1)
     5, 'lambda_i',             % 13    PAR light attenuation coefficient for ice (m-1)
     15, 'lambda_s',            % 14    PAR light attenuation coefficient for snow (m-1)
     0.36, 'F_sed_sld',         % 15    volume fraction of solids in sediment (= 1-porosity)
@@ -48,20 +48,20 @@ lake_params = {
     0.03, 'H_sed',             % 43     height of active sediment layer (m, wet mass)
     15, 'Psat_L',              % 44     NOTE: NOT USED: Half saturation parameter for Langmuir isotherm
     30, 'Fmax_L',              % 45     NOTE: NOT USED: Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
-    0.05, 'w_s',               % 46     settling velocity for S (m day-1)
-    0.01, 'w_chl',             % 47     settling velocity for Chl a (m day-1)
+    0.03, 'w_s',               % 46     settling velocity for S (m day-1)
+    0.472, 'w_chl',             % 47     settling velocity for Chl a (m day-1)
     1, 'Y_cp',                 % 48     NOTE: NOT USED:  yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   1/55*112/1 = 1
     0.2, 'm_twty',             % 49    loss rate (1/day) at 20 deg C
-    1.5, 'g_twty',             % 50    specific growth rate (1/day) at 20 deg C
+    1.0, 'g_twty',             % 50    specific growth rate (1/day) at 20 deg C
     2.00E-04, 'k_twty',        % 51    NOTE: NOT USED: specific Chl a to P transformation rate (1/day) at 20 deg C
     0, 'dop_twty',             % 52    NOTE: NOT USED: specific DOP to P transformation rate (day-1) at 20 deg C
-    0.2, 'P_half',             % 53    Half saturation growth P level (mg/m3)
-    3.00E-05, 'PAR_sat_2',     % 54    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-    0.015, 'beta_chl_2',       % 55    Optical cross_section of chlorophyll (m2 mg-1)
+    0.8, 'P_half',             % 53    Half saturation growth P level (mg/m3)
+    1.00E-05, 'PAR_sat_2',     % 54    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+    0.038, 'beta_chl_2',       % 55    Optical cross_section of chlorophyll (m2 mg-1)
     0.01, 'w_chl_2',           % 56    Settling velocity for Chl a (m day-1)
-    0.2, 'm_twty_2',           % 57    Loss rate (1/day) at 20 deg C
-    1.5, 'g_twty_2',           % 58    Specific growth rate (1/day) at 20 deg C
-    0.2, 'P_half_2',           % 59    Half saturation growth P level (mg/m3)
+    0.1, 'm_twty_2',           % 57    Loss rate (1/day) at 20 deg C
+    1.0, 'g_twty_2',           % 58    Specific growth rate (1/day) at 20 deg C
+    1.875, 'P_half_2',           % 59    Half saturation growth P level (mg/m3)
     0.01, 'oc_DOC',            % 60    Optical cross-section of DOC (m2/mg DOC)
     0.1, 'qy_DOC',             % 61    Quantum yield (mg DOC degraded/mol quanta)
     0.1, 'k_BOD',              % 62    NOTE: NOT USED: Organic decomposition rate (1/d)
@@ -78,11 +78,11 @@ lake_params = {
 
 
 sediment_params = {
-    10,    'k_Chl',                 % 1       % 1
-    1,     'k_POP',                 % 2       % 1
-    1      'k_POC',                 % 3       % 0.01
-    1,     'k_DOP',                 % 4       % 1
-    1,     'k_DOC',                 % 5       % 1
+    0.1,   'k_Chl',                 % 1       % 1
+    0.01,  'k_POP',                 % 2       % 1
+    0.005, 'k_POC',                 % 3       % 0.01
+    0.01,  'k_DOP',                 % 4       % 1
+    0.005, 'k_DOC',                 % 5       % 1
     0.008, 'Km_O2',                 % 6       % Canavan, R. W (2006) rho=2.5
     0.01,  'Km_NO3',                % 7       % Canavan, R. W (2006) rho=2.5
     0.2/2.5,  'Km_Fe(OH)3',         % 8       % Canavan, R. W (2006) rho=2.5
@@ -100,8 +100,8 @@ sediment_params = {
     2500,  'k_Spre',                % 20       %
     3.17,  'k_FeS2pre',             % 21
     0.1,   'k_alum',                % 22
-    1.35,  'k_pdesorb_a',           % 23
-    1.35,  'k_pdesorb_b',           % 24
+    2,     'k_pdesorb_a',           % 23
+    2,     'k_pdesorb_b',           % 24
     20000,  'k_fesox',              % 25        % R23 %Canava
     8,      'k_tS_Fe',              % 26      % Cappellen (1996) in Canavan, R. W (2006) the reaction is different
     9600,  'Ks_FeS',                % 27      % Canavan, R. W (2006)
@@ -114,10 +114,10 @@ sediment_params = {
     0.05,  'k_CaCO3_dis',           % 33      % Katsev (2013)
     5e-9,  'K_CaCO3',               % 34      %
     450/2.5,  'k_FeCO3_pre',        % 35      % Cappellen (1996)
-    0.25,     'k_FeCO3_dis',           % 36      % Cappellen (1996)
+    0.25,     'k_FeCO3_dis',        % 36      % Cappellen (1996)
     10^(-8.4),  'K_FeCO3',          % 37      % Cappellen (1996)
     0.37e-3,  'k_viv_pre',          % 38
-    0.37,  'k_viv_dis',          % 39
+    0.37,  'k_viv_dis',             % 39
     10^(-4.7237), 'K_viv',          % 40     % linl.dat PREEQC
     0.3134,'k_oms',                 % 41
     1e4,   'k_tsox',                % 42     % Canavan, R. W (2006)
@@ -128,7 +128,7 @@ sediment_params = {
     0.034,  'Kh_CO2',               % 47     % Henry cobstant M/atm
     1e3,   'k_ch4_dis',             % 48
     5,     'CH4_rising_vel',        % 49     % Canavan, R. W (2006)
-    30,    'accel',                 % 50
+    32.5,  'accel',                 % 50
     1e-6,   'f_pfe',                % 51
     1.35,   'k_pdesorb_c',          % 52
     0.98,   'fi_in',                % 53

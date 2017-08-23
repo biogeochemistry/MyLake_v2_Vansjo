@@ -14,7 +14,6 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     float C4;
     float N5;
     float S2;
-    float S6;
     float Fe2;
     float Fe3;
     float Ca;
@@ -24,13 +23,10 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     char C4_str[256];
     char N5_str[256];
     char S2_str[256];
-    char S6_str[256];
     char Fe2_str[256];
     char Fe3_str[256];
     char Ca_str[256];
     char P_str[256];
-    char Temperature_str[256];
-    char Pressure_str[256];
     char eq_str[256];
     char cell_str[256];
     double H0[n_rows];
@@ -55,8 +51,7 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     double Ca3PO40[n_rows];
     double PO4adsa0[n_rows];
     double PO4adsb0[n_rows];
-    double Temperature[n_rows];
-    double Pressure[n_rows];
+
     double est_pH[n_rows];
 
     n_species = mxGetN(prhs[1]);
@@ -84,8 +79,6 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
         Ca3PO40[i]  = data[19 * n_rows + i];
         PO4adsa0[i] = data[20 * n_rows + i];
         PO4adsb0[i] = data[21 * n_rows + i];
-        Temperature[i] = data[22 * n_rows + i];
-        Pressure[i] = data[23 * n_rows + i];
     }
 
 
@@ -103,11 +96,10 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
             C(+4)   0.1 ## = HCO3 + CO2 +CO3 + H2CO3
             N(+5) 0.1 ## = NO3
             S(-2)   0.1 ## = HS + H2S + 0.5 * FeS2
-            S(+6)   0.1 ## = SO4
             Fe(+2)  0.1 ## = Fe2 + FeS2 + FeS
-            Fe(+3)  0.1 ## = FeOH3 + FeOOH + PO4adsa + PO4adsb
-            Ca  0.1 ## = Ca2
-            P 0.1 ## = PO4
+            Fe(+3)  0.1 ## = FeOH3 + FeOOH
+            Ca  0.1 ## = Ca2 + Ca3PO4
+            P 0.1 ## = PO4 + Ca3PO4 + PO4adsa + PO4adsb
         EQUILIBRIUM_PHASES 1
             Pyrite ## = FeS2
             Mackinawite ## =FeS
@@ -122,32 +114,28 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     */
 
     for (int i = 0; i < n_rows; ++i) {
-        alkalinity = HCO30[i] + 2 * CO30[i] + OH0[i] + HS0[i] - NH40[i] - H0[i];
+        alkalinity = HCO30[i] + 2 * CO30[i] + OH0[i] + HS0[i] - NH40[i] + 1.5 * PO40[i] - H0[i];
         C4 =  HCO30[i] + CO20[i] + CO30[i] + H2CO30[i];
         N5 = NO30[i];
-        S2 = HS0[i] + H2S0[i] + FeS0[i] + 0.5 * FeS20[i];
-        S6 = SO40[i];
+        S2 = HS0[i] + H2S0[i] + 0.5 * FeS20[i];
         Fe2 = Fe20[i] + FeS20[i] +  FeS0[i];
-        Fe3 = FeOH30[i] + FeOOH0[i] + PO4adsa0[i] + PO4adsb0[i];
-        Ca = Ca20[i];
-        P = PO40[i];
+        Fe3 = FeOH30[i] + FeOOH0[i];
+        Ca = Ca20[i] + Ca3PO40[i];
+        P = PO40[i] + Ca3PO40[i] + PO4adsa0[i] + PO4adsb0[i];
 
         sprintf(sol_str,        "SOLUTION %i", i + 1);
         sprintf(alkalinity_str, "     Alkalinity    %f", alkalinity);
         sprintf(C4_str,         "     C(+4)         %f", C4);
         sprintf(N5_str,         "     N(+5)         %f", N5);
         sprintf(S2_str,         "     S(-2)         %f", S2);
-        sprintf(S6_str,         "     S(+6)         %f", S6);
         sprintf(Fe2_str,        "     Fe(+2)        %f", Fe2);
         sprintf(Fe3_str,        "     Fe(+3)        %f", Fe3);
         sprintf(Ca_str,         "     Ca            %f", Ca);
         sprintf(P_str,          "     P             %f", P);
-        sprintf(Temperature_str, "    temperature   %f", Temperature[i]);
-        sprintf(Pressure_str,   "     pressure      %f", Pressure[i]);
 
         iphreeqc.AccumulateLine(sol_str);
-        iphreeqc.AccumulateLine(Temperature_str);
-        iphreeqc.AccumulateLine(Pressure_str);
+        iphreeqc.AccumulateLine("     temperature 8");
+        iphreeqc.AccumulateLine("     pressure 5");
         iphreeqc.AccumulateLine("     -units mmol/kgw");
         iphreeqc.AccumulateLine(alkalinity_str);
         iphreeqc.AccumulateLine(C4_str);
@@ -173,10 +161,9 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     // iphreeqc.AccumulateLine(cell_str);
     iphreeqc.AccumulateLine("END");
 
-    // Show errors?
-    // if (iphreeqc.RunAccumulated() != 0) {
-    //     mexPrintf("Phreeqc::Sediments::%s", iphreeqc.GetErrorString());
-    // }
+    if (iphreeqc.RunAccumulated() != 0) {
+        mexPrintf("Phreeqc::Sediments::%s", iphreeqc.GetErrorString());
+    }
 
     VAR v;
     ::VarInit(&v);

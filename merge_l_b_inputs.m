@@ -54,7 +54,7 @@ fac=1./(data1.InflowQ+data2.InflowQ);
 nylake(:,11)=data1.InflowQ+data2.InflowQ;
 nylake(:,12)=fac.*(data1.InflowQ.*data1.InflowT + data2.InflowQ.*data2.InflowT);
 nylake(:,13)=fac.*(data1.InflowQ.*data1.InflowC + data2.InflowQ.*data2.InflowC);
-nylake(:,14)=fac.*(data1.InflowQ.*data1.InflowSS + data2.InflowQ.*data2.InflowSS);
+nylake(:,14)=fac.*(data1.InflowQ.*data1.POC + data2.InflowQ.*data2.POC);
 nylake(:,15)=fac.*(data1.InflowQ.*data1.InflowTP + data2.InflowQ.*data2.InflowTP);
 nylake(:,16)=fac.*(data1.InflowQ.*data1.InflowDIP + data2.InflowQ.*data2.InflowDIP);
 nylake(:,17)=fac.*(data1.InflowQ.*data1.InflowChla + data2.InflowQ.*data2.InflowChla);
@@ -67,13 +67,13 @@ nylake(:,23)=fac.*(data1.InflowQ.*data1.SO4 + data2.InflowQ.*data2.SO4);
 nylake(:,24)=fac.*(data1.InflowQ.*data1.Fe2 + data2.InflowQ.*data2.Fe2);
 nylake(:,25)=fac.*(data1.InflowQ.*data1.Ca2 + data2.InflowQ.*data2.Ca2);
 nylake(:,26)=fac.*(data1.InflowQ.*data1.pH + data2.InflowQ.*data2.pH);
-nylake(:,27)=fac.*(data1.InflowQ.*data1.CH4 + data2.InflowQ.*data2.CH4);
+nylake(:,27)=fac.*(data1.InflowQ.*data1.CH4aq + data2.InflowQ.*data2.CH4aq);
 nylake(:,28)=fac.*(data1.InflowQ.*data1.Fe3 + data2.InflowQ.*data2.Fe3);
 nylake(:,29)=fac.*(data1.InflowQ.*data1.Al3 + data2.InflowQ.*data2.Al3);
 nylake(:,30)=fac.*(data1.InflowQ.*data1.SiO4 + data2.InflowQ.*data2.SiO4);
 nylake(:,31)=fac.*(data1.InflowQ.*data1.SiO2 + data2.InflowQ.*data2.SiO2);
-nylake(:,32)=fac.*(data1.InflowQ.*data1.diatom + data2.InflowQ.*data2.diatom);
-nylake(:,33)=fac.*(data1.InflowQ.*data1.POC + data2.InflowQ.*data2.POC);
+nylake(:,32)=fac.*(data1.InflowQ.*data1.CH4g + data2.InflowQ.*data2.CH4g);
+nylake(:,33)=fac.*(data1.InflowQ.*data1.POP + data2.InflowQ.*data2.POP);
 
 
 

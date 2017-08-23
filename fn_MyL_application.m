@@ -91,37 +91,36 @@ else
     disp('Skipping saving the results and initial concentrations');
 end
 
-if false % simulate 2nd basin?
+if true % simulate 2nd basin?
 
-    surfacearea = MyLake_results_basin1.params.Az(1); % m2
-    precipvolume = surfacearea * MyLake_results_basin1.Wt(:, 7) / 1000; % m3 day-1
-    runoffintolake = MyLake_results_basin1.params.Phys_par(16) * MyLake_results_basin1.Inflw(:, 1); % I_scV should be 1'is input scaling 1?'
+    surfacearea = MyLake_results.basin1.params.Az(1); % m2
+    precipvolume = surfacearea * MyLake_results.basin1.Wt(:, 7) / 1000; % m3 day-1
+    runoffintolake = MyLake_results.basin1.params.Phys_par(16) * MyLake_results.basin1.Inflw(:, 1); % I_scV should be 1'is input scaling 1?'
     outflow = precipvolume + runoffintolake; %% dd x 1
-    outflowTemp = MyLake_results_basin1.T(1, :)';
-    outflowC = MyLake_results_basin1.concentrations.C(1, :)';
-    outflowS = MyLake_results_basin1.concentrations.S(1, :)';
-    outflowTP = MyLake_results_basin1.concentrations.C(1, :)' + MyLake_results_basin1.concentrations.P(1, :)' + MyLake_results_basin1.concentrations.Chl(1, :)' + MyLake_results_basin1.concentrations.PP(1, :)' + MyLake_results_basin1.concentrations.DOP(1, :)' ;
-    outflowDOP = MyLake_results_basin1.concentrations.DOP(1, :)';
-    outflowChl = MyLake_results_basin1.concentrations.Chl(1, :)';
-    outflowDOC = MyLake_results_basin1.concentrations.DOC(1, :)';
-    outflowDIC = MyLake_results_basin1.concentrations.DOC(1, :)'; %dummy for MyLake TSA
-    outflowO = MyLake_results_basin1.concentrations.DOC(1, :)'; %dummy for MyLake TSA
-    outflowDIC = MyLake_results_basin1.concentrations.DIC(1, :)';
-    outflowO = MyLake_results_basin1.concentrations.O2(1, :)';
-    outflowNO3zt = MyLake_results_basin1.concentrations.NO3(1,:)';
-    outflowNH4zt = MyLake_results_basin1.concentrations.NH4(1,:)';
-    outflowSO4zt = MyLake_results_basin1.concentrations.SO4(1,:)';
-    outflowHSzt = MyLake_results_basin1.concentrations.HS(1,:)';
-    outflowH2Szt = MyLake_results_basin1.concentrations.H2S(1,:)';
-    outflowFe2zt = MyLake_results_basin1.concentrations.Fe2(1,:)';
-    outflowCa2zt = MyLake_results_basin1.concentrations.Ca2(1,:)';
-    outflowpHzt = MyLake_results_basin1.concentrations.pH(1,:)';
-    outflowCH4zt = MyLake_results_basin1.concentrations.CH4(1,:)';
-    outflowFe3zt = MyLake_results_basin1.concentrations.Fe3(1,:)';
-    outflowAl3zt = MyLake_results_basin1.concentrations.Al3(1,:)';
-    outflowSiO4zt = MyLake_results_basin1.concentrations.SiO4(1,:)';
-    outflowSiO2zt = MyLake_results_basin1.concentrations.SiO2(1,:)';
-    outflowdiatomzt = MyLake_results_basin1.concentrations.diatom(1,:)';
+    outflowTemp = MyLake_results.basin1.T(1, :)';
+    outflowC = MyLake_results.basin1.concentrations.C(1, :)';
+    outflowPOC = MyLake_results.basin1.concentrations.POC(1, :)';
+    outflowTP = MyLake_results.basin1.concentrations.C(1, :)' + MyLake_results.basin1.concentrations.P(1, :)' + MyLake_results.basin1.concentrations.Chl(1, :)' + MyLake_results.basin1.concentrations.PP(1, :)' + MyLake_results.basin1.concentrations.DOP(1, :)' ;
+    outflowDOP = MyLake_results.basin1.concentrations.DOP(1, :)';
+    outflowChl = MyLake_results.basin1.concentrations.Chl(1, :)';
+    outflowDOC = MyLake_results.basin1.concentrations.DOC(1, :)';
+    outflowDIC = MyLake_results.basin1.concentrations.DIC(1, :)';
+    outflowO = MyLake_results.basin1.concentrations.O2(1, :)';
+    outflowNO3zt = MyLake_results.basin1.concentrations.NO3(1,:)';
+    outflowNH4zt = MyLake_results.basin1.concentrations.NH4(1,:)';
+    outflowSO4zt = MyLake_results.basin1.concentrations.SO4(1,:)';
+    outflowHSzt = MyLake_results.basin1.concentrations.HS(1,:)';
+    outflowH2Szt = MyLake_results.basin1.concentrations.H2S(1,:)';
+    outflowFe2zt = MyLake_results.basin1.concentrations.Fe2(1,:)';
+    outflowCa2zt = MyLake_results.basin1.concentrations.Ca2(1,:)';
+    outflowpHzt = MyLake_results.basin1.concentrations.pH(1,:)';
+    outflowCH4aqzt = MyLake_results.basin1.concentrations.CH4aq(1,:)';
+    outflowFe3zt = MyLake_results.basin1.concentrations.Fe3(1,:)';
+    outflowAl3zt = MyLake_results.basin1.concentrations.Al3(1,:)';
+    outflowSiO4zt = MyLake_results.basin1.concentrations.SiO4(1,:)';
+    outflowSiO2zt = MyLake_results.basin1.concentrations.SiO2(1,:)';
+    outflowCH4gzt = MyLake_results.basin1.concentrations.CH4g(1,:)';
+    outflowPOPzt = MyLake_results.basin1.concentrations.POP(1,:)';
 
 
     % %# ############ This is Vansjø Vanemfj. ##############
@@ -134,7 +133,7 @@ if false % simulate 2nd basin?
     end
 
 
-    store_to_vanem = [outflow outflowTemp outflowC outflowS outflowTP outflowDOP outflowChl outflowDOC outflowDIC outflowO outflowDIC outflowO outflowNO3zt outflowNH4zt outflowSO4zt outflowHSzt outflowH2Szt outflowFe2zt outflowCa2zt outflowpHzt outflowCH4zt outflowFe3zt outflowAl3zt outflowSiO4zt outflowSiO2zt outflowdiatomzt];
+    store_to_vanem = [outflow outflowTemp outflowC outflowPOC outflowTP outflowDOP outflowChl outflowDOC outflowDIC outflowO outflowDIC outflowO outflowNO3zt outflowNH4zt outflowSO4zt outflowHSzt outflowH2Szt outflowFe2zt outflowCa2zt outflowpHzt outflowCH4aqzt outflowFe3zt outflowAl3zt outflowSiO4zt outflowSiO2zt outflowCH4gzt outflowPOPzt];
 
     Q_lake = outflow;
 
