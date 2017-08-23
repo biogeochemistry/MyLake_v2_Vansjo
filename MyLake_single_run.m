@@ -9,7 +9,7 @@ use_INCA = 0; % 1- MyLake will take written INCA input, either written just now 
 
 is_metrics = true; % print metrics in the end
 
-m_start=[1985, 1, 1]; %
+m_start=[2000, 1, 1]; %
 m_stop=[2013, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
@@ -50,7 +50,7 @@ lake_params{5} = 500.0000e-003;
 
 % % Scaling factors
 lake_params{21 -5} = 1; % 16    scaling factor for inflow volume (-)
-lake_params{22 -5} = 1; % 17    adjusting delta for inflow temperature (-)
+lake_params{22 -5} = 0; % 17    adjusting delta for inflow temperature (-)
 lake_params{23 -5} = 1; % 18    scaling factor for inflow concentration of C (-)
 lake_params{24 -5} = 1; % 19    scaling factor for inflow concentration of S (-)
 lake_params{25 -5} = 1; % 20    scaling factor for inflow concentration of total P (-)
@@ -129,7 +129,7 @@ lake_params{51 -5} = 0.03;  % % 8  settling velocity for S (m day-1)
 
 
 % To much POC:
-lake_params{24 -5} = 1; % 23    scaling factor for inflow concentration of POC  (-)
+lake_params{24 -5} = 15; % 23    scaling factor for inflow concentration of POC  (-)
 lake_params{39 -5} = 5; % 34    Scaling factor for inflow concentration of Fe3 (-)
 sediment_params{50} = 1.3*50/2;  %    accel
 sediment_params{1} = 10 * 1/50*2;
