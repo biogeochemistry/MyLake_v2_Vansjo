@@ -1,4 +1,3 @@
-for i=1:1000
 tic
 disp('Started at:')
 disp(datetime('now'));
@@ -90,4 +89,4 @@ end
 
 
 toc
-end
+
