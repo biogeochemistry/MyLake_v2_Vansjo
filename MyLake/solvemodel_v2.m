@@ -1393,7 +1393,7 @@ for i = 1:length(tt)
 
         % Preparing units and estimate flux from [WC] ----> [Sediments]
         if sediment_params.effective_depth == -1
-            effective_depth = Tcz;
+            effective_depth = TCz;
         else
             effective_depth = sediment_params.effective_depth;
         end
