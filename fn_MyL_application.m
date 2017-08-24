@@ -91,7 +91,7 @@ else
     disp('Skipping saving the results and initial concentrations');
 end
 
-if true % simulate 2nd basin?
+if false % simulate 2nd basin?
 
     surfacearea = MyLake_results.basin1.params.Az(1); % m2
     precipvolume = surfacearea * MyLake_results.basin1.Wt(:, 7) / 1000; % m3 day-1

@@ -1,4 +1,4 @@
-function [ sediment_concentrations, sediment_params, sediment_matrix_templates] = sediment_init( pH, max_depth, temperature )
+function [ sediment_concentrations, sediment_params, sediment_matrix_templates] = sediment_init( pH, max_depth, temperature, rate_estimator_switch)
   % Input:
   % bottom pH of the lake, temperature at SWI.
 
@@ -7,7 +7,7 @@ function [ sediment_concentrations, sediment_params, sediment_matrix_templates] 
   % sediment_params - all sediment params
   % sediment_matrix_templates - all matrix templates for sediment module
   % species_sediment - which species to simulate
-    global sed_par_file sediment_params rate_estimator_switch
+    global sed_par_file sediment_params
 
     sediment_params = params(max_depth, temperature);
     sediment_concentrations = init_concentrations(pH);
@@ -115,7 +115,7 @@ function [sediment_params] = params(max_depth, temperature)
     % 1. Phreeqc  adds computatinal time. (simulation time: ~ 80 sec per year) - tested
     % 2. New algorithm by Markelov (simulation time: ~ 100 sec per year) (under test)
 
-    sediment_params.pH_algorithm = 2;
+    sediment_params.pH_algorithm = 0;
 
     aq_system.carb_acid = acid([6.52, 10.56], 0, 0);
     aq_system.amonia = acid([9.2503], 1, 0);

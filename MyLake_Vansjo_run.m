@@ -204,16 +204,7 @@ run_ID = 0;
 clim_ID = 0;
 [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, save_initial_conditions); % runs the model and outputs obs and sim
 
-% big_results{current_run} = {MyLake_results, Sediment_results};
-% catch ME
-%     fprintf('Process crashed: %s\n', num2str(current_run))
-%     fprintf('\tID: %s\n', ME.identifier)
-%     fprintf('\tMessage: %s\n', ME.message)
-%     fprintf('\tStack::\n')
-%     for k=1:length(ME.stack)
-%         disp(ME.stack(k))
-%     end
-% end
+
 
 
 

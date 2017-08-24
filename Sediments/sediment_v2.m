@@ -831,19 +831,18 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     R21d = k_oms * Sum_H2S .* DOC;
     R21f = k_oms * Sum_H2S .* Chl;
 
-    R23 = k_FeSpre .* FeS .* S0;
-    R24 = k_fesox * O2 .* FeS;
-    R25 = k_FeS2pre .* FeS .* Sum_H2S;
-
     % NOTE: Could cause instability. These rates are too high when pH > 7
     R22a = k_Spre * S0;
     R22b = k_Sdis .* S8;
 
-    Sat_FeS = Fe2*1e-3 .* Sum_H2S*1e-3 ./ (H3O*1e-3+1e-16) ./ Ks_FeS;
-    R26a = k_Fe_pre .* (Sat_FeS-1) .* (Sat_FeS > 1); %(Sat_FeS-1)
+    R23 = k_FeSpre .* FeS .* S0;
+    R24 = k_fesox * O2 .* FeS;
+    R25 = k_FeS2pre .* FeS .* Sum_H2S;
+
+    Sat_FeS = Fe2*1e-3 .* Sum_H2S*1e-3 ./ (H3O*1e-3+1e-16).^2 ./ Ks_FeS;
+    R26a = k_Fe_pre .* (Sat_FeS-1) .* (Sat_FeS > 1);
     R26b  =  k_Fe_dis .* FeS .* (1-Sat_FeS) .* (Sat_FeS < 1); %
-    % R26a = (R26a >= 0) .* R26a; % can only be non negative
-    % R26b  = (R26b >= 0) .* R26b; % can only be non negative
+
 
     Sat_CaCO3 = Ca2*1e-3 .* CO3*1e-3 / K_CaCO3;
     R27a = k_CaCO3_pre .* (Sat_CaCO3-1) .* (Sat_CaCO3 > 1);
@@ -900,8 +899,8 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     F = (1-phi) ./ phi;
 
     dcdt(:,1)  = - bioirrigation(O2, alfax, phi) +  -0.25 * R13  - R15 - 2 * R14  - (Cx2*R1a + Cx3*R1b+Cx1*R1f) .* F - (Cx2*R1c + Cx3*R1d) - 3 * R24.*F - 2* R11; % O2 (aq)
-    dcdt(:,2)  = -Ra - R21a./F; % POP (solid)
-    dcdt(:,3)  = -Rb - R21b./F; % POC (solid)
+    dcdt(:,2)  = -Ra - Cx1*R21a./F; % POP (solid)
+    dcdt(:,3)  = -Rb - Cx1*R21b./F; % POC (solid)
     dcdt(:,4)  = - bioirrigation(NO3, alfax, phi) +  - 0.8*(Cx2*R2a+Cx2*R2b+Cx1*R2f) .* F - 0.8*(Cx2*R2c+Cx2*R2d)+ R14; % NO3(aq)
     dcdt(:,5)  = -4 * (Cx2*R3a_Fe + Cx3*R3b_Fe + Cx2*R3c_Fe + Cx3*R3d_Fe+ Cx1*R3f_Fe) - 2*R12 + R13./ F - R31a; % FeOH3(solid)
     dcdt(:,6)  = - bioirrigation(SO4, alfax, phi) +  - 0.5*(Cx2*R5a + Cx3*R5b+ Cx1*R5f) .* F -0.5*(Cx2*R5c + Cx3*R5d)+ R11 - R16; % SO4(aq)
@@ -909,27 +908,27 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     dcdt(:,8)  = - bioirrigation(Fe2, alfax, phi) +  4*(Cx2*R3a + Cx3*R3b+ Cx1*R3f) .* F + 4* (Cx2*R3c + Cx3*R3d) + 4*(Cx2*R4a + Cx3*R4b+ Cx1*R4f) .* F + 4 * (Cx2*R4c + Cx3*R4d) + 2*R12.*F - R13 + R26b.*F - R26a.*F - R28a.*F + R28b.*F -3*R33a + 3*R33b; % Fe2(aq)
     dcdt(:,9)  = -4*(Cx2*R4a_Fe + Cx3*R4b_Fe + Cx2*R4c_Fe + Cx3*R4d_Fe+ Cx1*R4f_Fe) + R24 - R32a; % FeOOH(solid)
     dcdt(:,10) = - bioirrigation(H2S, alfax, phi); % H2S(aq)
-    dcdt(:,11) = - bioirrigation(HS, alfax, phi) +  0.5*(Cx2*R5a + Cx3*R5b + Cx1*R5f) .* F + 0.5 * (Cx2*R5c + Cx3*R5d) - R11 - R12.*F + R26b.*F - R26a.*F - (R21a + R21b + R21c + R21d + R21f) -R25.*F + R16; % HS(aq)
-    dcdt(:,12) =  - R23 - 4*R24 -R25 + R26a - R26b ; % FeS(solid)
+    dcdt(:,11) = - bioirrigation(HS, alfax, phi) +  0.5*(Cx2*R5a + Cx3*R5b + Cx1*R5f) .* F + 0.5 * (Cx2*R5c + Cx3*R5d) - R11 - R12.*F + R26b.*F - R26a.*F - (Cx2*R21a + Cx3*R21b + Cx2*R21c + Cx3*R21d + Cx1*R21f) -R25 + R16; % HS(aq)
+    dcdt(:,12) =  - R23 - 4*R24 -R25./F + R26a - R26b ; % FeS(solid)
     dcdt(:,13) = - R23.*F - R22a + R12.*F + R22b.*F; % S0(aq)
     dcdt(:,14) = - bioirrigation(PO4, alfax, phi) +  (Pz2 * Ra + Pz3 * Rb + Pz1 * Rf) .* F + (Pz2 * Rc + Pz3 * Rd) + R31b + R32b.*F + R32b.*F - R31a.*F - R32a.*F - R35a.*F - 2 * R34a + 2 * R34b -2*R33a + 2*R33b; % PO4(aq)
     dcdt(:,15) = 4*R24 - R22b + R22a./F; % S8(solid)
-    dcdt(:,16) = + R23 + R25; % FeS2(solid)
+    dcdt(:,16) = + R23 + R25./F; % FeS2(solid)
     dcdt(:,17) = -R35a; % AlOH3(s)
     dcdt(:,18) = R31a - R31b; % PO4adsa(s)
     dcdt(:,19) = R32a - R32b; % PO4adsb(s)
     dcdt(:,20) = - bioirrigation(Ca2, alfax, phi) -3*R34a + 3*R34b - R27a.*F + R27b.*F; % Ca2(aq)
     dcdt(:,21) = R34a./F - R34b./F; % Ca3PO42(s)
-    dcdt(:,22) = (R21a + R21b + R21c + R21d + R21f)./F; % OMS(s)
+    dcdt(:,22) = (Cx2*R21a + Cx3*R21b + Cx2*R21c + Cx3*R21d + Cx1*R21f)./F; % OMS(s)
     dcdt(:,23) = R27a - R27b; % CaCO3(s)
     dcdt(:,24) = - bioirrigation(CO2, alfax, phi) + (R15 +  ((Cx2 - Ny2 + 2*Pz2)*R1a + (Cx3 - Ny3 + 2*Pz3)*R1b + (Cx1 - Ny1 + 2*Pz1)*R1f + (0.2*Cx2 - Ny2 + 2*Pz2)*R2a +  (0.2*Cx3 - Ny3 + 2*Pz3)*R2b +  (0.2*Cx1 - Ny1 + 2*Pz1)*R2f  + (0.5 * Cx2 - Ny2 - 2*Pz2)*R6a + (0.5 * Cx3 - Ny3 - 2*Pz3)*R6b + (0.5 * Cx1 - Ny1 - 2*Pz1)*R6f) .* F  +  (Cx2 - Ny2 + 2*Pz2)*R1c + (Cx3 - Ny3 + 2*Pz3)*R1d + (0.2*Cx2 - Ny2 + 2*Pz2)*R2c +  (0.2*Cx3 - Ny3 + 2*Pz3)*R2d - (7*Cx2 + Ny2 + 2*Pz2)*(R3c+R4c) + (0.5*Cx2 - Ny2 + 2*Pz2)*R6c + (0.5*Cx3 - Ny3 + 2*Pz3)*R6d).*(CO2_over_sat<0) + (- (7*Cx2 + Ny2 + 2*Pz2)*(R3a+R4a) - (7*Cx3 + Ny3 + 2*Pz3)*(R3b+R4b) - (7*Cx1 + Ny1 + 2*Pz1)*(R3f+R4f)  - (Ny2 - 2*Pz2)*R5a - (Ny3 - 2*Pz3)*R5b - (Ny1 - 2*Pz1)*R5f) .* F  - (7*Cx3 + Ny3 + 2*Pz3)*(R3d+R4d)  - (Ny2 - 2*Pz2)*R5c - (Ny3 - 2*Pz3)*R5d - R16 + 2*R13 + 2*R14;  % CO2 (aq) NOTE: we need to add gas (Rename CO2g to gas)
     dcdt(:,25) = - bioirrigation(CO3, alfax, phi) - R27a.*F + R27b.*F - R28a.*F + R28b.*F; % CO3(aq)
     dcdt(:,26) = - bioirrigation(HCO3, alfax, phi)+  ( - (Ny2 - 2*Pz2)*R1a - (Ny3 - 2*Pz3)*R1b - (Ny1 - 2*Pz1)*R1f +  (0.8*Cx2 + Ny2 - 2*Pz2)*R2a + (0.8*Cx3 + Ny3 - 2*Pz3)*R2b + (0.8*Cx1 + Ny1 - 2*Pz1)*R2f  + (8*Cx2+Ny2-2*Pz2)*(R3a + R4a) +(8*Cx3+Ny3-2*Pz3)*(R3b + R4b) +(8*Cx1+Ny1-2*Pz1)*(R3f + R4f)  + (Cx2+Ny2-2*Pz2)*R5a + (1*Cx3+Ny3-2*Pz3)*R5b + (1*Cx1+Ny1-2*Pz1)*R5f + (Ny2-2*Pz2)*R6a + (Ny3-2*Pz3)*R6b + (Ny1-2*Pz1)*R6f) .* F - (Ny2 - 2*Pz2)*R1c - (Ny3 - 2*Pz3)*R1d + (0.8*Cx2 + Ny2 - 2*Pz2)*R2c + (0.8*Cx3 + Ny3 - 2*Pz3)*R2d + (8*Cx2+Ny2-2*Pz2)*(R3c + R4c) +(8*Cx3+Ny3-2*Pz3)*(R3d + R4d) + (Cx2+Ny2-2*Pz2)*R5c + (1*Cx3+Ny3-2*Pz3)*R5d + (Ny2-2*Pz2)*R6c + (Ny3-2*Pz3)*R6d  -  2*R13 - 2*R14 + 2*R16; % HCO3(aq)
     dcdt(:,27) = - bioirrigation(NH3, alfax, phi) ; % NH3(aq)
     dcdt(:,28) = - bioirrigation(CO2g, alfax, phi) ; % CO2g (aq)
-    dcdt(:,29) = - bioirrigation(DOP, alfax, phi)  - Rc - R21c; % DOP (aq)
-    dcdt(:,30) = - bioirrigation(DOC, alfax, phi)  - Rd - R21d; % DOC (aq)
-    dcdt(:,31) = -Rf - R21f./F; % Chl (s)
+    dcdt(:,29) = - bioirrigation(DOP, alfax, phi)  - Rc - Cx1*R21c; % DOP (aq)
+    dcdt(:,30) = - bioirrigation(DOC, alfax, phi)  - Rd - Cx1*R21d; % DOC (aq)
+    dcdt(:,31) = -Rf - Cx1*R21f./F; % Chl (s)
     dcdt(:,32) = - bioirrigation(CH4aq, alfax, phi) + 0.5*(Cx2*R6a+Cx2*R6b+Cx1*R6f).* F .* (CH4_over_sat < 0) + 0.5*(Cx2*R6c + Cx3*R6d).* (CH4_over_sat < 0) - R15 - R16 - R17;  % CH4aq
     dcdt(:,33) = - bioirrigation(CH4g, alfax, phi) + 0.5*(Cx2*R6a+Cx2*R6b+Cx1*R6f).* F .* (CH4_over_sat > 0) + 0.5*(Cx2*R6c + Cx3*R6d).* (CH4_over_sat > 0) + R17;  % CH4g
     dcdt(:,34) = R28a - R28b;  % FeCO3

@@ -49,7 +49,7 @@ lake_params = {
     15, 'Psat_L',              % 44     NOTE: NOT USED: Half saturation parameter for Langmuir isotherm
     30, 'Fmax_L',              % 45     NOTE: NOT USED: Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
     0.03, 'w_s',               % 46     settling velocity for S (m day-1)
-    0.472, 'w_chl',             % 47     settling velocity for Chl a (m day-1)
+    0.47, 'w_chl',             % 47     settling velocity for Chl a (m day-1)
     1, 'Y_cp',                 % 48     NOTE: NOT USED:  yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   1/55*112/1 = 1
     0.2, 'm_twty',             % 49    loss rate (1/day) at 20 deg C
     1.0, 'g_twty',             % 50    specific growth rate (1/day) at 20 deg C
@@ -61,7 +61,7 @@ lake_params = {
     0.01, 'w_chl_2',           % 56    Settling velocity for Chl a (m day-1)
     0.1, 'm_twty_2',           % 57    Loss rate (1/day) at 20 deg C
     1.0, 'g_twty_2',           % 58    Specific growth rate (1/day) at 20 deg C
-    1.875, 'P_half_2',           % 59    Half saturation growth P level (mg/m3)
+    1.875, 'P_half_2',         % 59    Half saturation growth P level (mg/m3)
     0.01, 'oc_DOC',            % 60    Optical cross-section of DOC (m2/mg DOC)
     0.1, 'qy_DOC',             % 61    Quantum yield (mg DOC degraded/mol quanta)
     0.1, 'k_BOD',              % 62    NOTE: NOT USED: Organic decomposition rate (1/d)
@@ -78,11 +78,11 @@ lake_params = {
 
 
 sediment_params = {
-    0.1,   'k_Chl',                 % 1       % 1
-    0.01,  'k_POP',                 % 2       % 1
-    0.005, 'k_POC',                 % 3       % 0.01
-    0.01,  'k_DOP',                 % 4       % 1
-    0.005, 'k_DOC',                 % 5       % 1
+    0.4,   'k_Chl',                 % 1       % 1
+    0.04,  'k_POP',                 % 2       % 1
+    0.02, 'k_POC',                 % 3       % 0.01
+    0.04,  'k_DOP',                 % 4       % 1
+    0.02, 'k_DOC',                 % 5       % 1
     0.008, 'Km_O2',                 % 6       % Canavan, R. W (2006) rho=2.5
     0.01,  'Km_NO3',                % 7       % Canavan, R. W (2006) rho=2.5
     0.2/2.5,  'Km_Fe(OH)3',         % 8       % Canavan, R. W (2006) rho=2.5
@@ -98,10 +98,10 @@ sediment_params = {
     50e3,  'k_Feox',                % 18       % Canavan, R. W (2006)
     0.1,   'k_Sdis',                % 19       %
     2500,  'k_Spre',                % 20       %
-    3.17,  'k_FeS2pre',             % 21
+    3.3,   'k_FeS2pre',             % 21       % Canavan (2006)
     0.1,   'k_alum',                % 22
     2,     'k_pdesorb_a',           % 23
-    2,     'k_pdesorb_b',           % 24
+    10,    'k_pdesorb_b',           % 24
     20000,  'k_fesox',              % 25        % R23 %Canava
     8,      'k_tS_Fe',              % 26      % Cappellen (1996) in Canavan, R. W (2006) the reaction is different
     9600,  'Ks_FeS',                % 27      % Canavan, R. W (2006)
@@ -109,7 +109,7 @@ sediment_params = {
     0.1/2.5,'k_Fe_pre',             % 29         % Katsev, R. W (2013)
     0.37e-3,  'k_apa_pre',          % 30
     0.37,     'k_apa_dis',          % 30
-    10^(-4.2249),  'K_apa',         % 31      % linl.dat PREEQC
+    10^(-4.2249),  'K_apa',         % 31      % linl.dat PHREEQC
     0.1/2.5,  'k_CaCO3_pre',        % 32      % Katsev (2013)
     0.05,  'k_CaCO3_dis',           % 33      % Katsev (2013)
     5e-9,  'K_CaCO3',               % 34      %
@@ -118,8 +118,8 @@ sediment_params = {
     10^(-8.4),  'K_FeCO3',          % 37      % Cappellen (1996)
     0.37e-3,  'k_viv_pre',          % 38
     0.37,  'k_viv_dis',             % 39
-    10^(-4.7237), 'K_viv',          % 40     % linl.dat PREEQC
-    0.3134,'k_oms',                 % 41
+    10^(-4.7237), 'K_viv',          % 40     % linl.dat PHREEQC
+    1e-6,  'k_oms',                 % 41
     1e4,   'k_tsox',                % 42     % Canavan, R. W (2006)
     0.3/2.5, 'k_FeSpre',            % 43     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
     1e7,   'k_ch4_o2',              % 44     % Canavan, R. W (2006)

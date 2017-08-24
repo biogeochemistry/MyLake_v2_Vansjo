@@ -65,7 +65,8 @@ species_formulas = {
     'H_sw': r'$Hsw$',
     'H_sw_2': r'$Hsw_2$',
     'T': r'T',
-    'pH': r'pH'
+    'pH': r'pH',
+    'OMS': r'OMS'
 }
 
 

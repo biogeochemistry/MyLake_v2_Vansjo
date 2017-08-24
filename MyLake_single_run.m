@@ -10,17 +10,13 @@ use_INCA = 0; % 1- MyLake will take written INCA input, either written just now 
 is_metrics = true; % print metrics in the end
 
 m_start=[2000, 1, 1]; %
-m_stop=[2000, 1, 10]; %
+m_stop=[2013, 12, 31]; %
 
 save_initial_conditions = true; % save final concentrations as initial for the next run
-file_name = 'IO/test_2.mat'
+file_name = 'IO/disabled_pH.mat'
 
 [lake_params, sediment_params] = load_params();
 
-
-% To much POC:
-lake_params{24 -5} = 15; % 23    scaling factor for inflow concentration of POC  (-)
-lake_params{39 -5} = 10; % 34    Scaling factor for inflow concentration of Fe3 (-)
 
 
 % try
@@ -94,8 +90,4 @@ end
 
 
 toc
-
-
-
-
 end
