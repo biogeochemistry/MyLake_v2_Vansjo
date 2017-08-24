@@ -19,7 +19,7 @@ function [sediment_params] = params(max_depth, temperature)
     global sed_par_file
     f=fopen(sed_par_file);
     % f=fopen('calibration_k_values.txt');
-    data = textscan(f,'%s%f', 72,'Delimiter', '\t');
+    data = textscan(f,'%s%f', 73,'Delimiter', '\t');
     fclose(f);
 
     % chemical constants from file
@@ -95,7 +95,7 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.Pz3 = data{2}(70);
     sediment_params.effective_depth = data{2}(71);
     sediment_params.n_of_time_steps_during_1_dt_of_myLake = data{2}(72);  % time step
-
+    sediment_params.pH_algorithm = data{2}(73);
 
 
     % Estimation of params:
@@ -115,7 +115,7 @@ function [sediment_params] = params(max_depth, temperature)
     % 1. Phreeqc  adds computational time. (simulation time: ~ 80 sec per year) - tested
     % 2. New algorithm by Markelov (simulation time: ~ 100 sec per year) (under test)
 
-    sediment_params.pH_algorithm = 0;
+
 
     aq_system.carb_acid = acid([6.52, 10.56], 0, 0);
     aq_system.amonia = acid([9.2503], 1, 0);
