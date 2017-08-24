@@ -100,7 +100,7 @@ photobleaching=0;               %photo bleaching: 0=TSA model, 1=FOKEMA model
 floculation_switch=1;           % floculation according to Wachenfeldt 2008  %% NEW_DOCOMO
 resuspension_enabled=0;         % Resuspension switch
 
-rate_estimator_switch=1;        % estimate rates or not, additional cost of about 20% of computational time;
+rate_estimator_switch=0;        % save rates or not, additional cost of about 20% of computational time;
 % ==============
 
 dt=1.0; %model time step = 1 day (DO NOT CHANGE!)
@@ -1377,6 +1377,7 @@ for i = 1:length(tt)
             mylake_temp_results.NO3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(NO3z, 62004);
             mylake_temp_results.NH4z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(NH4z, 18038);
             mylake_temp_results.SO4z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(SO4z, 96062);
+            mylake_temp_results.HS = convert_mg_per_qubic_m_to_umol_per_qubic_cm(HSz, 33072);
             mylake_temp_results.Fe3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Fe3z, 106867.0);
             mylake_temp_results.Ca2z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Ca2z, 80156.0);
             mylake_temp_results.Al3z = convert_mg_per_qubic_m_to_umol_per_qubic_cm(Al3z, 78003.6);
@@ -1403,6 +1404,8 @@ for i = 1:length(tt)
         mylake_prev_results.Fe2z = Fe2z;
         mylake_prev_results.NO3z = NO3z;
         mylake_prev_results.NH4z = NH4z;
+        mylake_prev_results.SO4z = SO4z;
+        mylake_prev_results.HSz = HSz;
         mylake_prev_results.DOPz = DOPz;
         mylake_prev_results.DOCz = DOCz;
         mylake_prev_results.CH4aqz = CH4aqz;
@@ -1423,6 +1426,8 @@ for i = 1:length(tt)
         Fe2z = mylake_new_resutls.Fe2z;
         NO3z = mylake_new_resutls.NO3z;
         NH4z = mylake_new_resutls.NH4z;
+        SO4z = mylake_new_resutls.SO4z;
+        HSz = mylake_new_resutls.HSz;
         DOPz = mylake_new_resutls.DOPz;
         DOCz = mylake_new_resutls.DOCz;
         CH4aqz = mylake_new_resutls.CH4aqz;
@@ -1994,7 +1999,7 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
 
     O2z = C(:,1) .* (C(:,1)>0);
     Chlz = C(:,2) .* (C(:,2)>0);
-    DOCz = C(:,3) .* (C(:,3)>0); % NOTE: POP: DOC 1:20 ratio. Conversion happens at SWI flux
+    DOCz = C(:,3) .* (C(:,3)>0);
     NO3z = C(:,4) .* (C(:,4)>0);
     Fe3z = C(:,5) .* (C(:,5)>0);
     SO4z = C(:,6) .* (C(:,6)>0);
@@ -2038,8 +2043,8 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
     Ks_FeS        = sediment_params.Ks_FeS;
     k_Fe_dis      = sediment_params.k_Fe_dis;
     k_Fe_pre      = sediment_params.k_Fe_pre;
-    k_apa_pre         = sediment_params.k_apa_pre;
-    K_apa          = sediment_params.K_apa;
+    k_apa_pre     = sediment_params.k_apa_pre;
+    K_apa         = sediment_params.K_apa;
     k_oms         = sediment_params.k_oms;
     k_tsox        = sediment_params.k_tsox;
     k_FeSpre      = sediment_params.k_FeSpre;
@@ -2117,10 +2122,8 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
     %flocculation
     if (floculation_switch==1) %Fokema
         dfloc_DOC = 0.030 .* DOCz;
-        dfloc_DOP = 0.030 .* DOPz;
     else
         dfloc_DOC = 0;
-        dfloc_DOP = 0;
     end
 
 
@@ -2267,7 +2270,7 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
     r.R1a = R1a; r.R1b = R1b; r.R1c = R1c; r.R1d = R1d; r.R1e = R1e; r.R1f = R1f; r.R2a = R2a; r.R2b = R2b; r.R2c = R2c; r.R2d = R2d; r.R2e = R2e; r.R2f = R2f; r.R3a = R3a; r.R3b = R3b; r.R3c = R3c; r.R3d = R3d; r.R3e = R3e; r.R3f = R3f; r.R5a = R5a; r.R5b = R5b; r.R5c = R5c; r.R5d = R5d; r.R5e = R5e; r.R5f = R5f; r.R6a = R6a; r.R6b = R6b; r.R6c = R6c; r.R6d = R6d; r.R6e = R6e; r.R6f = R6f;  r.Ra = Ra; r.Rb = Rb; r.Rc = Rc; r.Rd = Rd; r.Re = Re; r.Rf = Rf; r.R1 = R1; r.R2 = R2; r.R3 = R3; r.R5 = R5;  r.R6 = R6; r.R11 = R11; r.R12 = R12; r.R13  = R13; r.R14 = R14; r.R15 = R15; r.R16 = R16; r.R21a = R21a; r.R21b = R21b; r.R21c = R21c; r.R21d = R21d;; r.R21e = R21e;; r.R21f = R21f; r.R24 = R24; r.R25 = R25; r.R26a = R26a; r.R26b  = R26b; r.R31a = R31a; r.R31b  = R31b; r.R32a = R32a; r.R32b = R32b; r.R35a = R35a; r.R35b = R35b; r.R34 = R34;
 
 
-    dcdt(:,1)  = -0.25*R13  - R11 - 2*R14 - (Cx1*R1a + Cx1*R1b + Cx2*R1c + Cx3*R1d+ Cx2*R1e+ Cx3*R1f) - 3*R24 + Cx1 * R_Alg_tot_growth -R15; % O2z
+    dcdt(:,1)  = -0.25*R13  - 2*R11 - 2*R14 - (Cx1*R1a + Cx1*R1b + Cx2*R1c + Cx3*R1d+ Cx2*R1e+ Cx3*R1f) - 3*R24 + Cx1 * R_Alg_tot_growth -R15; % O2z
     dcdt(:,2)  = -Ra - R21a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R21d - dfloc_DOC;% DOCz
     dcdt(:,4)  = - 0.8*(Cx1*R2a + Cx1*R2b + Cx2*R2c + Cx3*R2d+ Cx2*R2e + Cx3*R2f) + R14 - Ny1 * R_Alg_tot_growth; % NO3z
@@ -2282,12 +2285,12 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
     dcdt(:,13) = R31a - R31b;% PPz
     dcdt(:,14) = -3*R34 ;% Ca2z
     dcdt(:,15) =  -(Ny1-2*Pz1)*R_Alg_tot_growth  + 2*R13 + 2*R14 + R15 - R16 + (Cx1 - Ny1 + 2*Pz1)*R1a + (Cx1 - Ny1 + 2*Pz1)*R1b + (Cx2 - Ny2 + 2*Pz2)*R1c + (Cx3 - Ny3 + 2*Pz3)*R1d + (Cx2 - Ny2 + 2*Pz2)*R1e + (Cx2 - Ny2 + 2*Pz2)*R1f + (0.2*Cx1 - Ny1 + 2*Pz1)*R2a + (0.2*Cx1 - Ny1 + 2*Pz1)*R2b + (0.2*Cx2 - Ny2 + 2*Pz2)*R2c + (0.2*Cx3 - Ny3 + 2*Pz3)*R2d + (0.2*Cx2 - Ny2 + 2*Pz2)*R2e + (0.2*Cx3 - Ny3 + 2*Pz3)*R2f - (7*Cx1 + Ny1 + 2*Pz1)*R3a - (7*Cx1 + Ny1 + 2*Pz1)*R3b - (7*Cx2 + Ny2 + 2*Pz2)*R3c - (7*Cx3 + Ny3 + 2*Pz3)*R3d - (7*Cx2 + Ny2 + 2*Pz2)*R3e - (7*Cx3 + Ny3 + 2*Pz3)*R3f - (Ny1 - 2*Pz1)*R5a - (Ny1 - 2*Pz1)*R5b - (Ny2 - 2*Pz2)*R5c - (Ny3 - 2*Pz3)*R5d - (Ny2 - 2*Pz2)*R5e - (Ny3 - 2*Pz3)*R5f + (0.5 * Cx1 - Ny1 - 2*Pz1)*R6a + (0.5 * Cx1 - Ny1 - 2*Pz1)*R6b + (0.5*Cx2 - Ny2 + 2*Pz2)*R6c + (0.5*Cx3 - Ny3 + 2*Pz3)*R6d + (0.5*Cx2 - Ny2 + 2*Pz2)*R6e + (0.5 * Cx3 - Ny3 - 2*Pz3)*R6f;% CO2z
-    dcdt(:,16) = -Rc - R21c - R_dDOP - dfloc_DOP;% DOPz
+    dcdt(:,16) = -Rc - R21c - R_dDOP;% DOPz
     dcdt(:,17) = -Rb - R21b + R_dCz_growth;% Cz
     dcdt(:,18) = -Rf - R21f + dfloc_DOC; % POCz
-    dcdt(:,19) = - Re + dfloc_DOP;% POPz
+    dcdt(:,19) = - Re;% POPz
     dcdt(:,20) = 0.5*(Cx1*R6a + Cx1*R6b + Cx2*R6c + Cx3*R6d+ Cx2*R6e + Cx3*R6f).* (CH4_over_sat < 0) -R15 - R16 + R17;% CH4aqz
-    dcdt(:,21) = 0.5*(Cx1*R6a + Cx1*R6b + Cx2*R6c + Cx3*R6d+ Cx2*R6e + Cx3*R6f).* (CH4_over_sat > 0) - R17;% CH4aqz
+    dcdt(:,21) = 0.5*(Cx1*R6a + Cx1*R6b + Cx2*R6c + Cx3*R6d+ Cx2*R6e + Cx3*R6f).* (CH4_over_sat > 0) - R17;% CH4gz
     dcdt(:,22) = (Ny1+2*Pz1)*R_Alg_tot_growth - (Ny1 - 2*Pz1)*R1a - (Ny1 - 2*Pz1)*R1b - (Ny2 - 2*Pz2)*R1c - (Ny3 - 2*Pz3)*R1d - (Ny2 - 2*Pz2)*R1e - (Ny3 - 2*Pz3)*R1f + (0.8*Cx1 + Ny1 - 2*Pz1)*R2a + (0.8*Cx1 + Ny1 - 2*Pz1)*R2b + (0.8*Cx2 + Ny2 - 2*Pz2)*R2c + (0.8*Cx3 + Ny3 - 2*Pz3)*R2d + (0.8*Cx2 + Ny2 - 2*Pz2)*R2e + (0.8*Cx3 + Ny3 - 2*Pz3)*R2f + (8*Cx1+Ny1-2*Pz1)*R3a + (8*Cx1+Ny1-2*Pz1)*R3b + (8*Cx2+Ny2-2*Pz2)*R3c + (8*Cx3+Ny3-2*Pz3)*R3d + (8*Cx2+Ny2-2*Pz2)*R3e + (8*Cx3+Ny3-2*Pz3)*R3f + (Cx1+Ny1-2*Pz1)*R5a + (Cx1+Ny1-2*Pz1)*R5b + (Cx2+Ny2-2*Pz2)*R5c + (Cx3+Ny3-2*Pz3)*R5d + (Cx2+Ny2-2*Pz2)*R5e + (Cx3+Ny3-2*Pz3)*R5f + (Ny1-2*Pz1)*R6a + (Ny1-2*Pz1)*R6b + (Ny2-2*Pz2)*R6c + (Ny3-2*Pz3)*R6d + (Ny2-2*Pz2)*R6e + (Ny3-2*Pz3)*R6f   - 2*R13 - 2*R14 + 2*R16; % HCO3
 
 
