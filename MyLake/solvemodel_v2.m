@@ -1392,7 +1392,12 @@ for i = 1:length(tt)
             mylake_temp_results.pHz = pHz;
 
         % Preparing units and estimate flux from [WC] ----> [Sediments]
-        sediment_bc = update_sediment(mylake_temp_results, mylake_params, sediment_params);
+        if sediment_params.effective_depth == -1
+            effective_depth = Tcz;
+        else
+            effective_depth = sediment_params.effective_depth;
+        end
+        sediment_bc = update_sediment(mylake_temp_results, mylake_params, sediment_params, effective_depth);
 
         % Running sediment module
         [sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_concentrations, sediment_additional_results] = sediment_v2(...
@@ -1419,7 +1424,7 @@ for i = 1:length(tt)
         end
 
         % Update WC:  [sediment] ----> [WC]
-        [mylake_new_resutls] = update_wc(mylake_prev_results, sediment_concentrations, sediment_transport_fluxes, sediment_bioirrigation_fluxes, mylake_params, sediment_params);
+        [mylake_new_resutls] = update_wc(mylake_prev_results, sediment_concentrations, sediment_transport_fluxes, sediment_bioirrigation_fluxes, mylake_params, sediment_params, effective_depth);
 
         O2z = mylake_new_resutls.O2z;
         Pz = mylake_new_resutls.Pz;

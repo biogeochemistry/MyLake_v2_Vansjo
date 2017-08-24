@@ -148,6 +148,6 @@ sediment_params = {
     1,      'Cx3',                  % 68           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0.1,    'Ny3',                  % 69           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0,      'Pz3',                  % 70           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    30,     'effective_depth',       % 71           % depth below which the lake is affected by sediments, meters
+    -1,      'effective_depth',     % 71           % depth below which the lake is affected by sediments, [m], if -1, then sediments below pycnocline
     10,     'n_ts',                 % 72           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
     };

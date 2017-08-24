@@ -112,7 +112,7 @@ function [sediment_params] = params(max_depth, temperature)
     % !!!!!!! Recommend to use #3 Phreeqc
     % Specify pH algorithm:
     % 0. Disabled (simulation time: ~40 sec per year)
-    % 1. Phreeqc  adds computatinal time. (simulation time: ~ 80 sec per year) - tested
+    % 1. Phreeqc  adds computational time. (simulation time: ~ 80 sec per year) - tested
     % 2. New algorithm by Markelov (simulation time: ~ 100 sec per year) (under test)
 
     sediment_params.pH_algorithm = 0;

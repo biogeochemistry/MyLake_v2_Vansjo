@@ -1,5 +1,7 @@
-function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concentrations, sediment_transport_fluxes, sediment_bioirrigation_fluxes, MyLake_params, sediment_params)
+function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concentrations, sediment_transport_fluxes, sediment_bioirrigation_fluxes, MyLake_params, sediment_params, effective_depth)
     %UPDATE_WC Summary of this function goes here
+
+    effective_depth(isnan(effective_depth)) = 0;
 
     O2z = mylake_prev_results.O2z;
     Pz = mylake_prev_results.Pz;
@@ -17,38 +19,38 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     CO3z = mylake_prev_results.CO3z;
 
     % Diffusion Fluxes:
-    O2z = update_bottom_concentrations_below_eff_depth(O2z, sediment_transport_fluxes.O2, MyLake_params, sediment_params);
-    Pz = update_bottom_concentrations_below_eff_depth(Pz, sediment_transport_fluxes.PO4, MyLake_params, sediment_params);
-    Fe2z = update_bottom_concentrations_below_eff_depth(Fe2z, sediment_transport_fluxes.Fe2, MyLake_params, sediment_params);
-    NO3z = update_bottom_concentrations_below_eff_depth(NO3z, sediment_transport_fluxes.NO3, MyLake_params, sediment_params);
-    NH4z = update_bottom_concentrations_below_eff_depth(NH4z, sediment_transport_fluxes.NH4, MyLake_params, sediment_params);
-    SO4z = update_bottom_concentrations_below_eff_depth(SO4z, sediment_transport_fluxes.SO4, MyLake_params, sediment_params);
-    HSz = update_bottom_concentrations_below_eff_depth(HSz, sediment_transport_fluxes.HS, MyLake_params, sediment_params);
-    DOPz = update_bottom_concentrations_below_eff_depth(DOPz, sediment_transport_fluxes.DOP, MyLake_params, sediment_params);
-    DOCz = update_bottom_concentrations_below_eff_depth(DOCz, sediment_transport_fluxes.DOC, MyLake_params, sediment_params);
-    CH4aqz = update_bottom_concentrations_below_eff_depth(CH4aqz, sediment_transport_fluxes.CH4aq, MyLake_params, sediment_params);
-    CH4gz = update_bottom_concentrations_below_eff_depth(CH4gz, sediment_transport_fluxes.CH4g, MyLake_params, sediment_params);
-    CO2z = update_bottom_concentrations_below_eff_depth(CO2z, sediment_transport_fluxes.CO2, MyLake_params, sediment_params);
-    HCO3z = update_bottom_concentrations_below_eff_depth(HCO3z, sediment_transport_fluxes.HCO3, MyLake_params, sediment_params);
-    CO3z = update_bottom_concentrations_below_eff_depth(CO3z, sediment_transport_fluxes.CO3, MyLake_params, sediment_params);
+    O2z = update_bottom_concentrations_below_eff_depth(O2z, sediment_transport_fluxes.O2, MyLake_params, sediment_params, effective_depth);
+    Pz = update_bottom_concentrations_below_eff_depth(Pz, sediment_transport_fluxes.PO4, MyLake_params, sediment_params, effective_depth);
+    Fe2z = update_bottom_concentrations_below_eff_depth(Fe2z, sediment_transport_fluxes.Fe2, MyLake_params, sediment_params, effective_depth);
+    NO3z = update_bottom_concentrations_below_eff_depth(NO3z, sediment_transport_fluxes.NO3, MyLake_params, sediment_params, effective_depth);
+    NH4z = update_bottom_concentrations_below_eff_depth(NH4z, sediment_transport_fluxes.NH4, MyLake_params, sediment_params, effective_depth);
+    SO4z = update_bottom_concentrations_below_eff_depth(SO4z, sediment_transport_fluxes.SO4, MyLake_params, sediment_params, effective_depth);
+    HSz = update_bottom_concentrations_below_eff_depth(HSz, sediment_transport_fluxes.HS, MyLake_params, sediment_params, effective_depth);
+    DOPz = update_bottom_concentrations_below_eff_depth(DOPz, sediment_transport_fluxes.DOP, MyLake_params, sediment_params, effective_depth);
+    DOCz = update_bottom_concentrations_below_eff_depth(DOCz, sediment_transport_fluxes.DOC, MyLake_params, sediment_params, effective_depth);
+    CH4aqz = update_bottom_concentrations_below_eff_depth(CH4aqz, sediment_transport_fluxes.CH4aq, MyLake_params, sediment_params, effective_depth);
+    CH4gz = update_bottom_concentrations_below_eff_depth(CH4gz, sediment_transport_fluxes.CH4g, MyLake_params, sediment_params, effective_depth);
+    CO2z = update_bottom_concentrations_below_eff_depth(CO2z, sediment_transport_fluxes.CO2, MyLake_params, sediment_params, effective_depth);
+    HCO3z = update_bottom_concentrations_below_eff_depth(HCO3z, sediment_transport_fluxes.HCO3, MyLake_params, sediment_params, effective_depth);
+    CO3z = update_bottom_concentrations_below_eff_depth(CO3z, sediment_transport_fluxes.CO3, MyLake_params, sediment_params, effective_depth);
 
     % % Boudreau, B.P., 1999. Metals and models : Diagenetic modelling in freshwater lacustrine sediments *. , pp.227–251.
 
     % % Bioirrigation
-    O2z = update_bottom_concentrations_below_eff_depth(O2z, sediment_bioirrigation_fluxes.O2, MyLake_params, sediment_params);
-    Pz = update_bottom_concentrations_below_eff_depth(Pz, sediment_bioirrigation_fluxes.PO4, MyLake_params, sediment_params);
-    Fe2z = update_bottom_concentrations_below_eff_depth(Fe2z, sediment_bioirrigation_fluxes.Fe2, MyLake_params, sediment_params);
-    NO3z = update_bottom_concentrations_below_eff_depth(NO3z, sediment_bioirrigation_fluxes.NO3, MyLake_params, sediment_params);
-    NH4z = update_bottom_concentrations_below_eff_depth(NH4z, sediment_bioirrigation_fluxes.NH4, MyLake_params, sediment_params);
-    SO4z = update_bottom_concentrations_below_eff_depth(SO4z, sediment_bioirrigation_fluxes.SO4, MyLake_params, sediment_params);
-    HSz = update_bottom_concentrations_below_eff_depth(HSz, sediment_bioirrigation_fluxes.HS, MyLake_params, sediment_params);
-    DOPz = update_bottom_concentrations_below_eff_depth(DOPz, sediment_bioirrigation_fluxes.DOP, MyLake_params, sediment_params);
-    DOCz = update_bottom_concentrations_below_eff_depth(DOCz, sediment_bioirrigation_fluxes.DOC, MyLake_params, sediment_params);
-    CH4aqz = update_bottom_concentrations_below_eff_depth(CH4aqz, sediment_bioirrigation_fluxes.CH4aq, MyLake_params, sediment_params);
-    CH4gz = update_bottom_concentrations_below_eff_depth(CH4gz, sediment_bioirrigation_fluxes.CH4g, MyLake_params, sediment_params);
-    CO2z = update_bottom_concentrations_below_eff_depth(CO2z, sediment_bioirrigation_fluxes.CO2, MyLake_params, sediment_params);
-    HCO3z = update_bottom_concentrations_below_eff_depth(HCO3z, sediment_bioirrigation_fluxes.HCO3, MyLake_params, sediment_params);
-    CO3z = update_bottom_concentrations_below_eff_depth(CO3z, sediment_bioirrigation_fluxes.CO3, MyLake_params, sediment_params);
+    O2z = update_bottom_concentrations_below_eff_depth(O2z, sediment_bioirrigation_fluxes.O2, MyLake_params, sediment_params, effective_depth);
+    Pz = update_bottom_concentrations_below_eff_depth(Pz, sediment_bioirrigation_fluxes.PO4, MyLake_params, sediment_params, effective_depth);
+    Fe2z = update_bottom_concentrations_below_eff_depth(Fe2z, sediment_bioirrigation_fluxes.Fe2, MyLake_params, sediment_params, effective_depth);
+    NO3z = update_bottom_concentrations_below_eff_depth(NO3z, sediment_bioirrigation_fluxes.NO3, MyLake_params, sediment_params, effective_depth);
+    NH4z = update_bottom_concentrations_below_eff_depth(NH4z, sediment_bioirrigation_fluxes.NH4, MyLake_params, sediment_params, effective_depth);
+    SO4z = update_bottom_concentrations_below_eff_depth(SO4z, sediment_bioirrigation_fluxes.SO4, MyLake_params, sediment_params, effective_depth);
+    HSz = update_bottom_concentrations_below_eff_depth(HSz, sediment_bioirrigation_fluxes.HS, MyLake_params, sediment_params, effective_depth);
+    DOPz = update_bottom_concentrations_below_eff_depth(DOPz, sediment_bioirrigation_fluxes.DOP, MyLake_params, sediment_params, effective_depth);
+    DOCz = update_bottom_concentrations_below_eff_depth(DOCz, sediment_bioirrigation_fluxes.DOC, MyLake_params, sediment_params, effective_depth);
+    CH4aqz = update_bottom_concentrations_below_eff_depth(CH4aqz, sediment_bioirrigation_fluxes.CH4aq, MyLake_params, sediment_params, effective_depth);
+    CH4gz = update_bottom_concentrations_below_eff_depth(CH4gz, sediment_bioirrigation_fluxes.CH4g, MyLake_params, sediment_params, effective_depth);
+    CO2z = update_bottom_concentrations_below_eff_depth(CO2z, sediment_bioirrigation_fluxes.CO2, MyLake_params, sediment_params, effective_depth);
+    HCO3z = update_bottom_concentrations_below_eff_depth(HCO3z, sediment_bioirrigation_fluxes.HCO3, MyLake_params, sediment_params, effective_depth);
+    CO3z = update_bottom_concentrations_below_eff_depth(CO3z, sediment_bioirrigation_fluxes.CO3, MyLake_params, sediment_params, effective_depth);
 
     mylake_new_resutls.O2z = O2z;
     mylake_new_resutls.Pz = Pz;
@@ -71,12 +73,12 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
 end
 
 %% update_bottom_concentrations_below_eff_depth: Update concentration of the WC due to flux from/to sediment bellow effective depth
-function [C] = update_bottom_concentrations_below_eff_depth(C, flux, MyLake_params, sediment_params)
+function [C] = update_bottom_concentrations_below_eff_depth(C, flux, MyLake_params, sediment_params, effective_depth)
 
     Az_dif = -diff([MyLake_params.Az; 0]);
     Vz = MyLake_params.Vz;
     dt     = MyLake_params.dt;
-    effective_depth = sediment_params.effective_depth;
+    % effective_depth = sediment_params.effective_depth;
     z = MyLake_params.zz;
 
     dC = flux * dt * Az_dif ./ Vz;

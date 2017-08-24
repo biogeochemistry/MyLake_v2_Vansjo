@@ -306,6 +306,8 @@ class ResultsPlotter:
         if env == 'water':
             ice_thickness = results['His'][0, 0][0, start:end]
             plt.fill_between(results['days'][0, 0][0][start:end] - 366, 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
+            TCz = results['MixStat'][0, 0][11, start:end]
+            plt.plot(results['days'][0, 0][0][start:end] - 366, -TCz * (TCz > 1), lw=0.2, c='k')
             plt.ylabel('Depth, [m]')
 
         ax = plt.gca()
@@ -475,7 +477,7 @@ class ResultsPlotter:
 
         for ax in axes:
             ax.grid(linestyle='-', linewidth=0.2)
-            ax.set_ylim([0, 50])
+            # ax.set_ylim([0, 50])
             ax.set_ylabel(r'$[mg / m^3]$')
             ax.legend(loc=1)
 

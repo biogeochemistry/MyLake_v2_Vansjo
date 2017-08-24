@@ -13,7 +13,7 @@ m_start=[2000, 1, 1]; %
 m_stop=[2013, 12, 31]; %
 
 save_initial_conditions = false; % save final concentrations as initial for the next run
-file_name = 'IO/test.mat'
+file_name = 'IO/test_pH.mat'
 
 [lake_params, sediment_params] = load_params();
 
