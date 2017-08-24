@@ -80,9 +80,9 @@ lake_params = {
 sediment_params = {
     0.4,   'k_Chl',                 % 1       % 1
     0.04,  'k_POP',                 % 2       % 1
-    0.02, 'k_POC',                 % 3       % 0.01
+    0.02, 'k_POC',                  % 3       % 0.01
     0.04,  'k_DOP',                 % 4       % 1
-    0.02, 'k_DOC',                 % 5       % 1
+    0.02, 'k_DOC',                  % 5       % 1
     0.008, 'Km_O2',                 % 6       % Canavan, R. W (2006) rho=2.5
     0.01,  'Km_NO3',                % 7       % Canavan, R. W (2006) rho=2.5
     0.2/2.5,  'Km_Fe(OH)3',         % 8       % Canavan, R. W (2006) rho=2.5
@@ -108,37 +108,36 @@ sediment_params = {
     0.001, 'k_Fe_dis',              % 28      % Canavan, R. W (2006), Katsev, R. W (2013)
     0.1/2.5,'k_Fe_pre',             % 29         % Katsev, R. W (2013)
     0.37e-3,  'k_apa_pre',          % 30
-    0.37,     'k_apa_dis',          % 30
-    10^(-4.2249),  'K_apa',         % 31      % linl.dat PHREEQC
-    0.1/2.5,  'k_CaCO3_pre',        % 32      % Katsev (2013)
-    0.05,  'k_CaCO3_dis',           % 33      % Katsev (2013)
-    5e-9,  'K_CaCO3',               % 34      %
-    450/2.5,  'k_FeCO3_pre',        % 35      % Cappellen (1996)
-    0.25,     'k_FeCO3_dis',        % 36      % Cappellen (1996)
-    10^(-8.4),  'K_FeCO3',          % 37      % Cappellen (1996)
-    0.37e-3,  'k_viv_pre',          % 38
-    0.37,  'k_viv_dis',             % 39
-    10^(-4.7237), 'K_viv',          % 40     % linl.dat PHREEQC
-    1e-6,  'k_oms',                 % 41
-    1e4,   'k_tsox',                % 42     % Canavan, R. W (2006)
-    0.3/2.5, 'k_FeSpre',            % 43     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
-    1e7,   'k_ch4_o2',              % 44     % Canavan, R. W (2006)
-    1e-1,  'k_ch4_so4',             % 45     % Canavan, R. W (2006)
-    0.0015,  'Kh_CH4',              % 46     % Henry cobstant M/atm
-    0.034,  'Kh_CO2',               % 47     % Henry cobstant M/atm
+    0.37,     'k_apa_dis',          % 31
+    10^(-4.2249),  'K_apa',         % 32      % linl.dat PHREEQC
+    0.1/2.5,  'k_CaCO3_pre',        % 33      % Katsev (2013)
+    0.05,  'k_CaCO3_dis',           % 34      % Katsev (2013)
+    5e-9,  'K_CaCO3',               % 35      %
+    450/2.5,  'k_FeCO3_pre',        % 36      % Cappellen (1996)
+    0.25,     'k_FeCO3_dis',        % 37      % Cappellen (1996)
+    10^(-8.4),  'K_FeCO3',          % 38      % Cappellen (1996)
+    0.37e-3,  'k_viv_pre',          % 39
+    0.37,  'k_viv_dis',             % 40
+    10^(-4.7237), 'K_viv',          % 41     % linl.dat PHREEQC
+    1e-6,  'k_oms',                 % 42
+    1e6,   'k_tsox',                % 43     % Canavan, R. W (2006)
+    0.3/2.5, 'k_FeSpre',            % 44     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
+    1e7,   'k_ch4_o2',              % 45     % Canavan, R. W (2006)
+    1e-1,  'k_ch4_so4',             % 46     % Canavan, R. W (2006)
+    0.0015,  'Kh_CH4',              % 47     % Henry cobstant M/atm
     1e3,   'k_ch4_dis',             % 48
-    5,     'CH4_rising_vel',        % 49     % Canavan, R. W (2006)
-    32.5,  'accel',                 % 50
-    1e-6,   'f_pfe',                % 51
-    1.35,   'k_pdesorb_c',          % 52
-    0.98,   'fi_in',                % 53
-    0.85,   'fi_f',                 % 54
-    0.5,    'X_b',                  % 55
-    1,      'tortuosity',           % 56
-    0.1,    'w',                    % 57
-    256,    'n',                    % 58
-    30,     'depth',                % 59
-    5,      'w_CH4',                % 60     rising velocity of methane gas in the sediment
+    5,     'w_CH4g',                % 49     % Rising velocity of methane
+    0.034,  'Kh_CO2',               % 50     % Henry cobstant M/atm
+    32.5,  'accel',                 % 51
+    1e-6,   'f_pfe',                % 52
+    1.35,   'k_pdesorb_c',          % 53
+    0.98,   'fi_in',                % 54
+    0.85,   'fi_f',                 % 55
+    0.5,    'X_b',                  % 56
+    1,      'tortuosity',           % 57
+    0.1,    'w',                    % 58
+    256,    'n',                    % 59
+    30,     'depth',                % 60
     14.4,   'alfa0',                % 61
     106,    'Cx1',                  % 62           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     16,     'Ny1',                  % 63           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
@@ -149,5 +148,6 @@ sediment_params = {
     1,      'Cx3',                  % 68           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0.1,    'Ny3',                  % 69           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0,      'Pz3',                  % 70           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    10,     'n_ts',                 % 71           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
+    30,     'effective_depth',      % 71 % depth below which the lake is affected by sediments, meters
+    10,     'n_ts',                 % 72           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
     };
