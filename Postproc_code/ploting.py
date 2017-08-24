@@ -105,7 +105,7 @@ molar_masses = {
 
 
 solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42', 'POC', 'POP', 'FeS2', 'FeS', 'Fe3PO42']
-disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S', 'HS', 'PO4', 'Al3', 'Ca2', 'CO2']
+disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S', 'HS', 'PO4', 'Al3', 'Ca2', 'CO2', 'CH4aq', 'CH4g']
 
 
 def find_element_name(element):
@@ -124,7 +124,7 @@ class ResultsPlotter:
 
     def __init__(self, years_ago=0., f='../IO/MyLakeResults.mat'):
         MyLake_results, Sediment_results = load_data(f)
-        self.myLake_results = MyLake_results
+        self.my_lake_results = MyLake_results
         self.sediment_results = Sediment_results
         years_ago = years_ago + 1
 
@@ -132,16 +132,16 @@ class ResultsPlotter:
         if env == 'sediment':
             results = self.sediment_results['basin' + str(basin)][0, 0]
         elif env == 'water':
-            results = self.myLake_results['basin' + str(basin)][0, 0]
+            results = self.my_lake_results['basin' + str(basin)][0, 0]
         return results
 
-    def unit_converter(self, convert_units, env, e):
+    def unit_converter(self, convert_units, env, elem):
         if convert_units:
             if env == 'sediment':
-                coef = molar_masses[e]
+                coef = molar_masses[elem]
                 units = '[$mg/m^3$]'
             elif env == 'water':
-                coef = 1 / molar_masses[e]
+                coef = 1 / molar_masses[elem]
                 units = '[$mmol/L$]'
         else:
             coef = 1
@@ -262,7 +262,7 @@ class ResultsPlotter:
         lines = {}
         for e in elem:
             y = results['rates'][0, 0][e][0, 0][:, -1 + end]
-            lines[e], = plt.plot(y, -z, lw=3, label=find_element_name(e))
+            lines[e], = plt.plot(y, -z, lw=3, label=e)
             if env == 'water':
                 rate_per_area[e] = np.trapz(y, z * 100)
             elif env == 'sediment':
@@ -296,8 +296,9 @@ class ResultsPlotter:
                 z += results['concentrations'][0, 0][e][0, 0][0: -1, start:end] * coef
             except:
                 z += results[e][0, 0][0:-1, start:end] * coef
-        CS = plt.contourf(X, Y, z, 51, cmap=cmap, origin='lower')
-    #     plt.clabel(CS, inline=1, fontsize=10, colors='w')
+
+        v = np.linspace(0, z.max(), 51, endpoint=True)
+        CS = plt.contourf(X, Y, z, v, cmap=cmap, origin='lower', vmin=0, vmax=z.max())
         cbar = plt.colorbar(CS)
 
         plt.ylabel('Depth, [cm]')

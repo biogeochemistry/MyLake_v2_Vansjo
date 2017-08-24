@@ -120,7 +120,7 @@ sediment_params = {
     0.37,  'k_viv_dis',             % 40
     10^(-4.7237), 'K_viv',          % 41     % linl.dat PHREEQC
     1e-6,  'k_oms',                 % 42
-    1e6,   'k_tsox',                % 43     % Canavan, R. W (2006)
+    1e4,   'k_tsox',                % 43     % Canavan, R. W (2006)
     0.3/2.5, 'k_FeSpre',            % 44     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
     1e7,   'k_ch4_o2',              % 45     % Canavan, R. W (2006)
     1e-1,  'k_ch4_so4',             % 46     % Canavan, R. W (2006)
@@ -148,6 +148,6 @@ sediment_params = {
     1,      'Cx3',                  % 68           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0.1,    'Ny3',                  % 69           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0,      'Pz3',                  % 70           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    30,     'effective_depth',      % 71 % depth below which the lake is affected by sediments, meters
+    30,     'effective_depth',       % 71           % depth below which the lake is affected by sediments, meters
     10,     'n_ts',                 % 72           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
     };

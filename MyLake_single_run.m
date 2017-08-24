@@ -1,3 +1,4 @@
+for i=1:1000
 tic
 disp('Started at:')
 disp(datetime('now'));
@@ -11,12 +12,12 @@ is_metrics = true; % print metrics in the end
 m_start=[2000, 1, 1]; %
 m_stop=[2013, 12, 31]; %
 
-save_initial_conditions = true; % save final concentrations as initial for the next run
-file_name = 'IO/disabled_pH.mat'
+save_initial_conditions = false; % save final concentrations as initial for the next run
+file_name = 'IO/test.mat'
 
 [lake_params, sediment_params] = load_params();
 
-
+% lake_params{23} = 1000;
 
 % try
 run_ID = 0;
@@ -89,4 +90,4 @@ end
 
 
 toc
-
+end

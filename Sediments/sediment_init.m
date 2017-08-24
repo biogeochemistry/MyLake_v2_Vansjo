@@ -70,9 +70,9 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.k_ch4_o2 = data{2}(45);
     sediment_params.k_ch4_so4 = data{2}(46);
     sediment_params.Kh_CH4 = data{2}(47);
-    sediment_params.Kh_CO2 = data{2}(48);
-    sediment_params.k_ch4_dis = data{2}(49);
-    sediment_params.CH4_rising_vel = data{2}(50);
+    sediment_params.k_ch4_dis = data{2}(48);
+    sediment_params.w_CH4g = data{2}(49);
+    sediment_params.Kh_CO2 = data{2}(50);
     sediment_params.accel = data{2}(51);
     sediment_params.f_pfe = data{2}(52);
     sediment_params.k_pdesorb_c = data{2}(53);
@@ -83,17 +83,17 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.w = data{2}(58);      % time-dependent burial rate w = 0.1
     sediment_params.n = data{2}(59);;  % points in spatial grid
     sediment_params.depth = data{2}(60);  % sediment depth
-    sediment_params.w_CH4 = data{2}(61);
-    alpha0 = data{2}(62);
-    sediment_params.Cx1 = data{2}(63);
-    sediment_params.Ny1 = data{2}(64);
-    sediment_params.Pz1 = data{2}(65);
-    sediment_params.Cx2 = data{2}(66);
-    sediment_params.Ny2 = data{2}(67);
-    sediment_params.Pz2 = data{2}(68);
-    sediment_params.Cx3 = data{2}(69);
-    sediment_params.Ny3 = data{2}(70);
-    sediment_params.Pz3 = data{2}(71);
+    alpha0 = data{2}(61);
+    sediment_params.Cx1 = data{2}(62);
+    sediment_params.Ny1 = data{2}(63);
+    sediment_params.Pz1 = data{2}(64);
+    sediment_params.Cx2 = data{2}(65);
+    sediment_params.Ny2 = data{2}(66);
+    sediment_params.Pz2 = data{2}(67);
+    sediment_params.Cx3 = data{2}(68);
+    sediment_params.Ny3 = data{2}(69);
+    sediment_params.Pz3 = data{2}(70);
+    sediment_params.effective_depth = data{2}(71);
     sediment_params.n_of_time_steps_during_1_dt_of_myLake = data{2}(72);  % time step
 
 
@@ -363,7 +363,7 @@ function [sediment_matrix_templates] = templates()
     [DOP_AL, DOP_AR]        = cn_template_dirichlet(sediment_params.D_DOP + Db, tortuosity, v, phi, dx, dt, n);
     [DOC_AL, DOC_AR]        = cn_template_dirichlet(sediment_params.D_DOC + Db, tortuosity, v, phi, dx, dt, n);
     [CH4aq_AL, CH4aq_AR]        = cn_template_dirichlet(sediment_params.D_CH4aq + Db, tortuosity, v, phi, dx, dt, n);
-    [CH4g_AL, CH4g_AR]        = cn_template_dirichlet(sediment_params.D_CH4g + Db, tortuosity, sediment_params.w_CH4, phi, dx, dt, n);  % NOTE: Rising velocity of the gas
+    [CH4g_AL, CH4g_AR]        = cn_template_dirichlet(sediment_params.D_CH4g + Db, tortuosity, sediment_params.w_CH4g, phi, dx, dt, n);  % NOTE: Rising velocity of the gas
 
 
     sediment_matrix_templates = {...
