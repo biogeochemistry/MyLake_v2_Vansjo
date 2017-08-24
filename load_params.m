@@ -110,8 +110,8 @@ sediment_params = {
     0.37e-3,  'k_apa_pre',          % 30
     0.37,     'k_apa_dis',          % 31
     10^(-4.2249),  'K_apa',         % 32      % linl.dat PHREEQC
-    0.1/2.5,  'k_CaCO3_pre',        % 33      % Katsev (2013)
-    0.05,  'k_CaCO3_dis',           % 34      % Katsev (2013)
+    1e3*0.1/2.5,  'k_CaCO3_pre',        % 33      % Katsev (2013)
+    1e3*0.05,  'k_CaCO3_dis',           % 34      % Katsev (2013)
     5e-9,  'K_CaCO3',               % 35      %
     450/2.5,  'k_FeCO3_pre',        % 36      % Cappellen (1996)
     0.25,     'k_FeCO3_dis',        % 37      % Cappellen (1996)

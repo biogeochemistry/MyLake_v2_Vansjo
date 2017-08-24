@@ -143,6 +143,8 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
     H2S(:,i-1) = St.*a(:,1);
     HS(:,i-1) = St.*a(:,2);
 
+    % -log10(H3O)+3
+
     a = alpha(-log10(H3O)+3, sediment_params.aq_system.p_acid.pKs);
     sediment_params.HPO4 = a(:,3).*PO4(:,i-1);
 
@@ -571,7 +573,7 @@ function [H3O] = pH_module(algorithm, H3O, CO2g, HCO3, CO2, CO3, NH3, NH4, HS, H
         T = Temperature*ones(size(H3O));
         P = sediment_params.pressure*ones(size(H3O));
         in =[H3O HCO3 CO2 CO3 NH3 NH4 HS H2S OH CO2g Fe2 Ca2 NO3 SO4 PO4 FeS FeS2 FeOH3 FeOOH Ca3PO42 PO4adsa PO4adsb];
-        [pH_est] = pH_phreeqc_std(size(H3O,1),in);
+        [pH_est] = pH_phreeqc(size(H3O,1),in);
         H3O = 10.^(-pH_est')*1e3;
 
     elseif algorithm == 2
@@ -929,7 +931,7 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     dcdt(:,25) = - bioirrigation(CO3, alfax, phi) - R27a.*F + R27b.*F - R28a.*F + R28b.*F; % CO3(aq)
     dcdt(:,26) = - bioirrigation(HCO3, alfax, phi)+  ( - (Ny2 - 2*Pz2)*R1a - (Ny3 - 2*Pz3)*R1b - (Ny1 - 2*Pz1)*R1f +  (0.8*Cx2 + Ny2 - 2*Pz2)*R2a + (0.8*Cx3 + Ny3 - 2*Pz3)*R2b + (0.8*Cx1 + Ny1 - 2*Pz1)*R2f  + (8*Cx2+Ny2-2*Pz2)*(R3a + R4a) +(8*Cx3+Ny3-2*Pz3)*(R3b + R4b) +(8*Cx1+Ny1-2*Pz1)*(R3f + R4f)  + (Cx2+Ny2-2*Pz2)*R5a + (1*Cx3+Ny3-2*Pz3)*R5b + (1*Cx1+Ny1-2*Pz1)*R5f + (Ny2-2*Pz2)*R6a + (Ny3-2*Pz3)*R6b + (Ny1-2*Pz1)*R6f) .* F - (Ny2 - 2*Pz2)*R1c - (Ny3 - 2*Pz3)*R1d + (0.8*Cx2 + Ny2 - 2*Pz2)*R2c + (0.8*Cx3 + Ny3 - 2*Pz3)*R2d + (8*Cx2+Ny2-2*Pz2)*(R3c + R4c) +(8*Cx3+Ny3-2*Pz3)*(R3d + R4d) + (Cx2+Ny2-2*Pz2)*R5c + (1*Cx3+Ny3-2*Pz3)*R5d + (Ny2-2*Pz2)*R6c + (Ny3-2*Pz3)*R6d  -  2*R13 - 2*R14 + 2*R16; % HCO3(aq)
     dcdt(:,27) = - bioirrigation(NH3, alfax, phi) ; % NH3(aq)
-    dcdt(:,28) = - bioirrigation(CO2g, alfax, phi) ; % CO2g (aq)
+    dcdt(:,28) = - bioirrigation(CO2g, alfax, phi) ; % CO2g
     dcdt(:,29) = - bioirrigation(DOP, alfax, phi)  - Rc - Cx1*R21c; % DOP (aq)
     dcdt(:,30) = - bioirrigation(DOC, alfax, phi)  - Rd - Cx1*R21d; % DOC (aq)
     dcdt(:,31) = -Rf - Cx1*R21f./F; % Chl (s)
