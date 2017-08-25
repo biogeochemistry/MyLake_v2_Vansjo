@@ -110,8 +110,8 @@ sediment_params = {
     0.37e-3,  'k_apa_pre',          % 30
     0.37,     'k_apa_dis',          % 31
     10^(-4.2249),  'K_apa',         % 32      % linl.dat PHREEQC
-    1e3*0.1/2.5,  'k_CaCO3_pre',        % 33      % Katsev (2013)
-    1e3*0.05,  'k_CaCO3_dis',           % 34      % Katsev (2013)
+    0.1/2.5,  'k_CaCO3_pre',        % 33      % Katsev (2013)
+    0.05,  'k_CaCO3_dis',           % 34      % Katsev (2013)
     5e-9,  'K_CaCO3',               % 35      %
     450/2.5,  'k_FeCO3_pre',        % 36      % Cappellen (1996)
     0.25,     'k_FeCO3_dis',        % 37      % Cappellen (1996)
@@ -148,7 +148,7 @@ sediment_params = {
     1,      'Cx3',                  % 68           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0.1,    'Ny3',                  % 69           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0,      'Pz3',                  % 70           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    -1,      'effective_depth',     % 71           % depth below which the lake is affected by sediments, [m], if -1, then sediments below pycnocline
+    30,      'effective_depth',     % 71           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
     10,     'n_ts',                 % 72           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
-    0,     'pH algorithm',          % 73           % 0. Disabled  % 1. Phreeqc  % 2. Electro-neutrality (experimental)
+    2,     'pH algorithm',          % 73           % 0. Disabled  % 1. Phreeqc  % 2. Electro-neutrality (experimental)
     };
