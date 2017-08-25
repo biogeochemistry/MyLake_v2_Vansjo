@@ -28,7 +28,7 @@ x(14) = lake_params{54}; % 16    PAR saturation level for phytoplankton growth (
 x(15) = lake_params{12}; % 12    Optical cross_section of chlorophyll (m2 mg-1)
 x(16) = lake_params{55}; % 17    Optical cross_section of chlorophyll (m2 mg-1)
 x(17) = sediment_params{23};  % 38 R16 sorption of P on Fe k
-x(18) = sediment_params{51};  %    accel
+x(18) = sediment_params{52};  %    accel
 
 
 lb = [0.05, 0.1, 1, 0.2, 0.05, 0.1, 1, 0.2, 0.01,  0, 0, 0, 1e-5, 1e-5, 0.005, 0.005, 1, 1,];
@@ -74,7 +74,7 @@ lake_params{54} = x(14); % 16    PAR saturation level for phytoplankton growth (
 lake_params{12} = x(15); % 12    Optical cross_section of chlorophyll (m2 mg-1)
 lake_params{55} = x(16); % 17    Optical cross_section of chlorophyll (m2 mg-1)
 sediment_params{23} = x(17);  % 38 R16 sorption of P on Fe k
-sediment_params{51} = x(18);  %    accel
+sediment_params{52} = x(18);  %    accel
 
 
 

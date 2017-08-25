@@ -101,54 +101,55 @@ sediment_params = {
     3.3,   'k_FeS2pre',             % 21       % Canavan (2006)
     0.1,   'k_alum',                % 22
     2,     'k_pdesorb_a',           % 23
-    10,    'k_pdesorb_b',           % 24
+    2,     'k_pdesorb_b',           % 24
     20000,  'k_fesox',              % 25        % R23 %Canava
-    8,      'k_tS_Fe',              % 26      % Cappellen (1996) in Canavan, R. W (2006) the reaction is different
-    9600,  'Ks_FeS',                % 27      % Canavan, R. W (2006)
-    0.001, 'k_Fe_dis',              % 28      % Canavan, R. W (2006), Katsev, R. W (2013)
-    0.1/2.5,'k_Fe_pre',             % 29         % Katsev, R. W (2013)
-    0.37e-3,  'k_apa_pre',          % 30
-    0.37,     'k_apa_dis',          % 31
-    10^(-4.2249),  'K_apa',         % 32      % linl.dat PHREEQC
-    0.1/2.5,  'k_CaCO3_pre',        % 33      % Katsev (2013)
-    0.05,  'k_CaCO3_dis',           % 34      % Katsev (2013)
-    5e-9,  'K_CaCO3',               % 35      %
-    450/2.5,  'k_FeCO3_pre',        % 36      % Cappellen (1996)
-    0.25,     'k_FeCO3_dis',        % 37      % Cappellen (1996)
-    10^(-8.4),  'K_FeCO3',          % 38      % Cappellen (1996)
-    0.37e-3,  'k_viv_pre',          % 39
-    0.37,  'k_viv_dis',             % 40
-    10^(-4.7237), 'K_viv',          % 41     % linl.dat PHREEQC
-    1e-6,  'k_oms',                 % 42
-    1e4,   'k_tsox',                % 43     % Canavan, R. W (2006)
-    0.3/2.5, 'k_FeSpre',            % 44     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
-    1e7,   'k_ch4_o2',              % 45     % Canavan, R. W (2006)
-    1e-1,  'k_ch4_so4',             % 46     % Canavan, R. W (2006)
-    0.0015,  'Kh_CH4',              % 47     % Henry cobstant M/atm
-    1e3,   'k_ch4_dis',             % 48
-    5,     'w_CH4g',                % 49     % Rising velocity of methane
-    0.034,  'Kh_CO2',               % 50     % Henry cobstant M/atm
-    32.5,  'accel',                 % 51
-    1e-6,   'f_pfe',                % 52
-    1.35,   'k_pdesorb_c',          % 53
-    0.98,   'fi_in',                % 54
-    0.85,   'fi_f',                 % 55
-    0.5,    'X_b',                  % 56
-    1,      'tortuosity',           % 57
-    0.1,    'w',                    % 58
-    256,    'n',                    % 59
-    30,     'depth',                % 60
-    14.4,   'alfa0',                % 61
-    106,    'Cx1',                  % 62           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    16,     'Ny1',                  % 63           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Pz1',                  % 64           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    200,    'Cx2',                  % 65           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    20,     'Ny2',                  % 66           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Pz2',                  % 67           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    1,      'Cx3',                  % 68           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    0.1,    'Ny3',                  % 69           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    0,      'Pz3',                  % 70           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    30,      'effective_depth',     % 71           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
-    10,     'n_ts',                 % 72           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
-    0,     'pH algorithm',          % 73           % 0. Disabled  % 1. Phreeqc  % 2. Electro-neutrality (experimental)
+    1000,   'k_fes2ox',             % 26        % R23 % Katsev (2013)
+    8,      'k_tS_Fe',              % 27      % Cappellen (1996) in Canavan, R. W (2006) the reaction is different
+    9600,  'Ks_FeS',                % 28      % Canavan, R. W (2006)
+    0.001, 'k_Fe_dis',              % 29      % Canavan, R. W (2006), Katsev, R. W (2013)
+    0.1/2.5,'k_Fe_pre',             % 30         % Katsev, R. W (2013)
+    0.37e-3,  'k_apa_pre',          % 31
+    0.37,     'k_apa_dis',          % 32
+    10^(-4.2249),  'K_apa',         % 33      % linl.dat PHREEQC
+    0.1/2.5,  'k_CaCO3_pre',        % 34      % Katsev (2013)
+    0.05,  'k_CaCO3_dis',           % 35      % Katsev (2013)
+    5e-9,  'K_CaCO3',               % 36      %
+    450/2.5,  'k_FeCO3_pre',        % 37      % Cappellen (1996)
+    0.25,     'k_FeCO3_dis',        % 38      % Cappellen (1996)
+    10^(-8.4),  'K_FeCO3',          % 39      % Cappellen (1996)
+    0.37e-3,  'k_viv_pre',          % 40
+    0.37,  'k_viv_dis',             % 41
+    10^(-4.7237), 'K_viv',          % 42     % linl.dat PHREEQC
+    1e-6,  'k_oms',                 % 43
+    1e4,   'k_tsox',                % 44     % Canavan, R. W (2006)
+    0.3/2.5, 'k_FeSpre',            % 45     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
+    1e7,   'k_ch4_o2',              % 46     % Canavan, R. W (2006)
+    1e-1,  'k_ch4_so4',             % 47     % Canavan, R. W (2006)
+    0.0015,  'Kh_CH4',              % 48     % Henry cobstant M/atm
+    1e3,   'k_ch4_dis',             % 49
+    5,     'w_CH4g',                % 50     % Rising velocity of methane
+    0.034,  'Kh_CO2',               % 51     % Henry cobstant M/atm
+    32.5,  'accel',                 % 52
+    1e-6,   'f_pfe',                % 53
+    1.35,   'k_pdesorb_c',          % 54
+    0.98,   'fi_in',                % 55
+    0.85,   'fi_f',                 % 56
+    0.5,    'X_b',                  % 57
+    1,      'tortuosity',           % 58
+    0.1,    'w',                    % 59
+    256,    'n',                    % 60
+    30,     'depth',                % 61
+    14.4,   'alfa0',                % 62
+    106,    'Cx1',                  % 63           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    16,     'Ny1',                  % 64           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Pz1',                  % 65           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    200,    'Cx2',                  % 66           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    20,     'Ny2',                  % 67           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Pz2',                  % 68           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    1,      'Cx3',                  % 69           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    0.1,    'Ny3',                  % 70           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    0,      'Pz3',                  % 71           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
+    30,      'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
+    10,     'n_ts',                 % 73           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
+    0,     'pH algorithm',          % 74           % 0. Disabled  % 1. Phreeqc  % 2. Electro-neutrality (experimental)
     };
