@@ -104,7 +104,7 @@ molar_masses = {
 }
 
 
-solid = ['OM', 'OMb', 'FeOH3', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42', 'POC', 'POP', 'FeS2', 'FeS', 'Fe3PO42']
+solid = ['OM', 'OMb', 'FeOH3', 'FeOOH', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42', 'POC', 'POP', 'FeS2', 'FeS', 'Fe3PO42', 'FeCO3']
 disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S', 'HS', 'PO4', 'Al3', 'Ca2', 'CO2', 'CH4aq', 'CH4g']
 
 
@@ -215,6 +215,7 @@ class ResultsPlotter:
         z = results['z'][0, 0][:, -1]
         mass_per_area = {}
         lines = {}
+
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
             y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef
@@ -222,7 +223,12 @@ class ResultsPlotter:
                 y = np.log10(y)
             lines[e], = plt.plot(y, -z, lw=3, label=find_element_name(e))
             if convert_units and env == 'sediment':
-                mass_per_area[e] = np.trapz(y, z / 100)
+                fi = results['params'][0, 0]['phi'][0, 0][:, -1]
+                if e in solid:
+                    theta = 1 - fi
+                else:
+                    theta = fi
+                mass_per_area[e] = np.trapz(y * theta, z / 100)
                 lbl = r'$mg / m^2$'
             elif convert_units and env == 'water':
                 mass_per_area[e] = np.trapz(y, z * 100)
@@ -231,7 +237,12 @@ class ResultsPlotter:
                 mass_per_area[e] = np.trapz(y, z)
                 lbl = r'$mg / m^2$'
             elif not convert_units and env == 'sediment':
-                mass_per_area[e] = np.trapz(y, z)
+                fi = results['params'][0, 0]['phi'][0, 0][:, -1]
+                if e in solid:
+                    theta = 1 - fi
+                else:
+                    theta = fi
+                mass_per_area[e] = np.trapz(y * theta, z)
                 lbl = r'$umol/cm^{2}$'
         if not log_scale:
             leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
@@ -297,8 +308,8 @@ class ResultsPlotter:
             except:
                 z += results[e][0, 0][0:-1, start:end] * coef
 
-        v = np.linspace(0, z.max(), 51, endpoint=True)
-        CS = plt.contourf(X, Y, z, v, cmap=cmap, origin='lower', vmin=0, vmax=z.max())
+        v = np.linspace(0, z.max() * 1.2, 51, endpoint=True)
+        CS = plt.contourf(X, Y, z, v, cmap=cmap, origin='lower', vmin=0, vmax=z.max() * 1.2)
         cbar = plt.colorbar(CS)
 
         plt.ylabel('Depth, [cm]')
