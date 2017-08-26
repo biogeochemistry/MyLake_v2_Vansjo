@@ -92,8 +92,8 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
         SOLUTION 1
             -temp 8
             -units mmol/kgw
-            Alkalinity 0.3 ## = [HCO3] + 2[CO3] + [OH] + 1.5[PO4] - [H+]
-            C(+4)   0.1 ## = HCO3 + CO2 +CO3 + H2CO3
+            Alkalinity 0.3 ## = [HCO3] + 2[CO3] + [OH] - [NH40] + 1.5[PO4] - [H+]
+            C(+4)   0.1 ## = HCO3 + CO2aq +CO3
             N(+5) 0.1 ## = NO3
             S(-2)   0.1 ## = HS + H2S + 0.5 * FeS2
             Fe(+2)  0.1 ## = Fe2 + FeS2 + FeS
