@@ -9,8 +9,8 @@ use_INCA = 0; % 1- MyLake will take written INCA input, either written just now 
 
 is_metrics = true; % print metrics in the end
 
-m_start=[2005, 1, 1]; %
-m_stop=[2005, 12, 31]; %
+m_start=[2000, 1, 1]; %
+m_stop=[2009, 12, 31]; %
 
 save_initial_conditions = true; % save final concentrations as initial for the next run
 file_name = 'IO/test.mat'
