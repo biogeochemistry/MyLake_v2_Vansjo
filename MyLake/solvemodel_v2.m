@@ -2254,10 +2254,10 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
     R21e = k_oms .* Sum_H2S .* POPz;
     R21f = k_oms .* Sum_H2S .* POCz;
 
-    R24  = 0; % NOTE: no FeS
     R25  = 0; % NOTE: no FeS
-    R26a = 0; % NOTE: no FeS
-    R26b = 0; % NOTE: no FeS
+    R26  = 0; % NOTE: no FeS
+    R27a = 0; % NOTE: no FeS
+    R27b = 0; % NOTE: no FeS
 
     R31a = k_pdesorb_a .* Fe3z .* Pz;
     % R31b = f_pfe .* (4 * R3 + 2 * R12);
@@ -2277,19 +2277,19 @@ function [dcdt, r] = wc_rates(mylake_params, sediment_params, mylake_temp_result
 
 
     % saving rates
-    r.R1a = R1a; r.R1b = R1b; r.R1c = R1c; r.R1d = R1d; r.R1e = R1e; r.R1f = R1f; r.R2a = R2a; r.R2b = R2b; r.R2c = R2c; r.R2d = R2d; r.R2e = R2e; r.R2f = R2f; r.R3a = R3a; r.R3b = R3b; r.R3c = R3c; r.R3d = R3d; r.R3e = R3e; r.R3f = R3f; r.R5a = R5a; r.R5b = R5b; r.R5c = R5c; r.R5d = R5d; r.R5e = R5e; r.R5f = R5f; r.R6a = R6a; r.R6b = R6b; r.R6c = R6c; r.R6d = R6d; r.R6e = R6e; r.R6f = R6f;  r.Ra = Ra; r.Rb = Rb; r.Rc = Rc; r.Rd = Rd; r.Re = Re; r.Rf = Rf; r.R1 = R1; r.R2 = R2; r.R3 = R3; r.R5 = R5;  r.R6 = R6; r.R11 = R11; r.R12 = R12; r.R13  = R13; r.R14 = R14; r.R15 = R15; r.R16 = R16; r.R21a = R21a; r.R21b = R21b; r.R21c = R21c; r.R21d = R21d;; r.R21e = R21e;; r.R21f = R21f; r.R24 = R24; r.R25 = R25; r.R26a = R26a; r.R26b  = R26b; r.R31a = R31a; r.R31b  = R31b; r.R32a = R32a; r.R32b = R32b; r.R35a = R35a; r.R35b = R35b; r.R34 = R34;
+    r.R1a = R1a; r.R1b = R1b; r.R1c = R1c; r.R1d = R1d; r.R1e = R1e; r.R1f = R1f; r.R2a = R2a; r.R2b = R2b; r.R2c = R2c; r.R2d = R2d; r.R2e = R2e; r.R2f = R2f; r.R3a = R3a; r.R3b = R3b; r.R3c = R3c; r.R3d = R3d; r.R3e = R3e; r.R3f = R3f; r.R5a = R5a; r.R5b = R5b; r.R5c = R5c; r.R5d = R5d; r.R5e = R5e; r.R5f = R5f; r.R6a = R6a; r.R6b = R6b; r.R6c = R6c; r.R6d = R6d; r.R6e = R6e; r.R6f = R6f;  r.Ra = Ra; r.Rb = Rb; r.Rc = Rc; r.Rd = Rd; r.Re = Re; r.Rf = Rf; r.R1 = R1; r.R2 = R2; r.R3 = R3; r.R5 = R5;  r.R6 = R6; r.R11 = R11; r.R12 = R12; r.R13  = R13; r.R14 = R14; r.R15 = R15; r.R16 = R16; r.R21a = R21a; r.R21b = R21b; r.R21c = R21c; r.R21d = R21d;; r.R21e = R21e;; r.R21f = R21f; r.R25 = R25; r.R26 = R26; r.R27a = R27a; r.R27b  = R27b; r.R31a = R31a; r.R31b  = R31b; r.R32a = R32a; r.R32b = R32b; r.R35a = R35a; r.R35b = R35b; r.R34 = R34;
 
 
-    dcdt(:,1)  = -0.25*R13  - 2*R11 - 2*R14 - (Cx1*R1a + Cx1*R1b + Cx2*R1c + Cx3*R1d+ Cx2*R1e+ Cx3*R1f) - 3*R24 + Cx1 * R_Alg_tot_growth -R15; % O2z
+    dcdt(:,1)  = -0.25*R13  -R15 - 2*R11 - 2*R14 - (Cx1*R1a + Cx1*R1b + Cx2*R1c + Cx3*R1d+ Cx2*R1e+ Cx3*R1f) - 3*R25 + Cx1 * R_Alg_tot_growth ; % O2z
     dcdt(:,2)  = -Ra - R21a + R_dChl_growth;% Chlz
     dcdt(:,3)  = -Rd - R21d - dfloc_DOC;% DOCz
     dcdt(:,4)  = - 0.8*(Cx1*R2a + Cx1*R2b + Cx2*R2c + Cx3*R2d+ Cx2*R2e + Cx3*R2f) + R14 - Ny1 * R_Alg_tot_growth; % NO3z
     dcdt(:,5)  = - 4*(Cx1*R3a_Fe + Cx1*R3b_Fe + Cx2*R3c_Fe + Cx3*R3d_Fe+ Cx2*R3e_Fe+ Cx3*R3f_Fe) - 2*R12  + R13 - R31a; % Fe3z
     dcdt(:,6)  = - 0.5*(Cx1*R5a + Cx1*R5b + Cx2*R5c + Cx3*R5d+ Cx2*R5e+ Cx3*R5f) + R11 ; % SO4z
     dcdt(:,7)  =  (Ny1 * Ra + Ny1 * Rb + Ny2 * Rc + Ny3 * Rd+ Ny2 * Re+ Ny3 * Rf) - R14;% NH4z
-    dcdt(:,8)  = 4*(Cx1*R3a + Cx1*R3b + Cx2*R3c + Cx3*R3d + Cx2*R3e+ Cx3*R3f) + 2*R12 - R13 + R26b - R26a; % Fe2z
+    dcdt(:,8)  = 4*(Cx1*R3a + Cx1*R3b + Cx2*R3c + Cx3*R3d + Cx2*R3e+ Cx3*R3f) + 2*R12 - R13 + R27b - R27a; % Fe2z
     dcdt(:,9)  =  0;% H2Sz
-    dcdt(:,10) = 0.5*(Cx1*R5a + Cx1*R5b + Cx2*R5c + Cx3*R5d+ Cx2*R5e+ Cx3*R5f) - R11 - R12  - R21a - R21b - R21c - R21d - R21e - R21f + R26b - R26a - R25 + R16;% HSz
+    dcdt(:,10) = 0.5*(Cx1*R5a + Cx1*R5b + Cx2*R5c + Cx3*R5d+ Cx2*R5e+ Cx3*R5f) - R11 - R12  - R21a - R21b - R21c - R21d - R21e - R21f + R27b - R27a - R26 + R16;% HSz
     dcdt(:,11) = (Pz1 * Ra + Pz1 * Rb + Pz2 * Rc + Pz3 * Rd+ Pz2 * Re+ Pz3 * Rf) - R35a + R35b - R31a - R32a + R31b + R32b - 2*R34 + R_dDOP - Pz1 * R_Alg_tot_growth;% Pz
     dcdt(:,12) = -R35a ;% Al3z
     dcdt(:,13) = R31a - R31b;% PPz

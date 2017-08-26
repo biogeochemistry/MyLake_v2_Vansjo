@@ -18,7 +18,7 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
     HCO3z = mylake_prev_results.HCO3z;
     CO3z = mylake_prev_results.CO3z;
 
-    % Diffusion Fluxes:
+    % Transport Fluxes:
     O2z = update_bottom_concentrations_below_eff_depth(O2z, sediment_transport_fluxes.O2, MyLake_params, sediment_params, effective_depth);
     Pz = update_bottom_concentrations_below_eff_depth(Pz, sediment_transport_fluxes.PO4, MyLake_params, sediment_params, effective_depth);
     Fe2z = update_bottom_concentrations_below_eff_depth(Fe2z, sediment_transport_fluxes.Fe2, MyLake_params, sediment_params, effective_depth);
@@ -71,6 +71,7 @@ function [mylake_new_resutls] = update_wc( mylake_prev_results, sediment_concent
         error('NaN')
     end
 end
+
 
 %% update_bottom_concentrations_below_eff_depth: Update concentration of the WC due to flux from/to sediment bellow effective depth
 function [C] = update_bottom_concentrations_below_eff_depth(C, flux, MyLake_params, sediment_params, effective_depth)

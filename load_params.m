@@ -48,7 +48,7 @@ lake_params = {
     0.03, 'H_sed',             % 43     height of active sediment layer (m, wet mass)
     15, 'Psat_L',              % 44     NOTE: NOT USED: Half saturation parameter for Langmuir isotherm
     30, 'Fmax_L',              % 45     NOTE: NOT USED: Scaling parameter for Langmuir isotherm !!!!!!!!!!!!
-    0.03, 'w_s',               % 46     settling velocity for S (m day-1)
+    0.03, 'w_s',                % 46     settling velocity for S (m day-1)
     0.47, 'w_chl',             % 47     settling velocity for Chl a (m day-1)
     1, 'Y_cp',                 % 48     NOTE: NOT USED:  yield coefficient (chlorophyll to carbon) * (carbon to phosphorus) ratio (-)   1/55*112/1 = 1
     0.2, 'm_twty',             % 49    loss rate (1/day) at 20 deg C
@@ -132,12 +132,12 @@ sediment_params = {
     32.5,  'accel',                 % 52
     1e-6,   'f_pfe',                % 53
     1.35,   'k_pdesorb_c',          % 54
-    0.98,   'fi_in',                % 55
+    0.95,   'fi_in',                % 55
     0.85,   'fi_f',                 % 56
     0.5,    'X_b',                  % 57
     1,      'tortuosity',           % 58
     0.1,    'w',                    % 59
-    256,    'n',                    % 60
+    300,    'n',                    % 60
     30,     'depth',                % 61
     14.4,   'alfa0',                % 62
     106,    'Cx1',                  % 63           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
@@ -149,7 +149,7 @@ sediment_params = {
     1,      'Cx3',                  % 69           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0.1,    'Ny3',                  % 70           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0,      'Pz3',                  % 71           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    30,      'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
-    10,     'n_ts',                 % 73           % number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
-    0,     'pH algorithm',          % 74           % 0. Disabled  % 1. Phreeqc  % 2. Electro-neutrality (experimental)
+    30,     'effective_depth',      % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
+    100,    'n_ts',                 % 73           % (100 is the minimum) number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
+    0,      'pH algorithm',         % 74           % 0. Disabled  % 1. Phreeqc  % 2. Electro-neutrality (experimental)
     };

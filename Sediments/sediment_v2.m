@@ -910,7 +910,7 @@ function [dcdt, r] = sediment_rates(sediment_params, C, dt)
     % R./F the rate is written per aqueous;
     F = (1-phi) ./ phi;
 
-    dcdt(:,1)  = - bioirrigation(O2, alfax, phi) +  -0.25 * R13  - R15 - 2 * R14  - (Cx2*R1a + Cx3*R1b+Cx1*R1f) .* F - (Cx2*R1c + Cx3*R1d) - 3 * R25.*F - 2* R11 - 5*R23; % O2 (aq)
+    dcdt(:,1)  = - bioirrigation(O2, alfax, phi) +  -0.25 * R13  - R15 - 2 * R14  - 2* R11 - (Cx2*R1a + Cx3*R1b+Cx1*R1f) .* F - (Cx2*R1c + Cx3*R1d) - 3 * R25.*F  - 5*R23; % O2 (aq)
     dcdt(:,2)  = -Ra - Cx1*R21a./F; % POP (solid)
     dcdt(:,3)  = -Rb - Cx1*R21b./F; % POC (solid)
     dcdt(:,4)  = - bioirrigation(NO3, alfax, phi) +  - 0.8*(Cx2*R2a+Cx2*R2b+Cx1*R2f) .* F - 0.8*(Cx2*R2c+Cx2*R2d)+ R14; % NO3(aq)
