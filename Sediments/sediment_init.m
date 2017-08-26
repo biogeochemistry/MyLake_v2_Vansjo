@@ -133,7 +133,7 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.ts = 1/365/sediment_params.n_of_time_steps_during_1_dt_of_myLake;  % time step
     x = linspace(0, sediment_params.depth, sediment_params.n);
     sediment_params.x = x;      % x-axis
-    sediment_params.phi =  ( phi_in - phi_f ) * exp( -x' / X_b ) + phi_f;;      % porosity
+    sediment_params.phi =  ones(size(x'))*0.92 ;%( phi_in - phi_f ) * exp( -x' / X_b ) + phi_f;;      % porosity
     sediment_params.tortuosity = tortuosity;  % tortuosity
     alfax = alpha0*exp(-0.25*x);
     sediment_params.alfax = alfax';   % bioirrigation
@@ -435,6 +435,5 @@ function [AL, AR, flux_coef] = cn_template_neumann(D, v, phi, dx, dt, n)
     AR(n,n) = 1-phi(n)-s(n);
     AR(n,n-1) = s(n);
 
-    flux_coef = dx / D * (2*s(1) - q(1)) / (1-phi(1));
+    flux_coef = dx / D * (2*s(1) - q(1)) / (1-phi(1)); % NOTE: Tested, it is correct
 end
-
