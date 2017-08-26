@@ -7,7 +7,7 @@ else
 end
 
 fid = fopen(file_name,'wt');
-fprintf(fid, 'z\t OMzt\t OMbzt\t DOM1zt\t DOM2zt\t O2zt\t NO3zt\t NH4zt\t NH3zt\t FeOH3zt\t FeOOHzt\t Fe2zt\t SO4zt\t H2Szt\t HSzt\t PO4zt\t PO4adsazt\t PO4adsbzt\t S0zt\t S8zt\t FeSzt\t FeS2zt\t AlOH3zt\t Ca2zt\t Ca3PO42zt\t OMSzt\t Hzt\t CaCO3zt\t CO2zt\t CO3zt\t HCO3zt\t H2CO3zt\t Chlzt\t CH4aq\t CH4g\t FeCO3\t Fe3PO42\n');
+fprintf(fid, 'z\t POPzt\t POCzt\t DOPzt\t DOCzt\t O2zt\t NO3zt\t NH4zt\t NH3zt\t FeOH3zt\t FeOOHzt\t Fe2zt\t SO4zt\t H2Szt\t HSzt\t PO4zt\t PO4adsazt\t PO4adsbzt\t S0zt\t S8zt\t FeSzt\t FeS2zt\t AlOH3zt\t Ca2zt\t Ca3PO42zt\t OMSzt\t Hzt\t CaCO3zt\t CO2zt\t CO3zt\t HCO3zt\t H2CO3zt\t Chlzt\t CH4aq\t CH4g\t FeCO3\t Fe3PO42\n');
 fclose(fid);
 
 dlmwrite(file_name, ...
