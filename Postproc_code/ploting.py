@@ -422,7 +422,7 @@ class ResultsPlotter:
         plt.tight_layout()
         date = results['days'][0, 0][0][-1 + end]
         date = datetime.datetime.fromordinal(date - 365)
-        plt.title('Profiles on ' + date.strftime('%B %d, %Y'))
+        plt.title('Bulk profiles on ' + date.strftime('%B %d, %Y'))
         plt.show()
 
     def temperature_fit(self):
