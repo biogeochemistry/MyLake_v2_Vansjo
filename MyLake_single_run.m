@@ -12,8 +12,8 @@ is_metrics = true; % print metrics in the end
 m_start=[2000, 1, 1]; %
 m_stop=[2009, 12, 31]; %
 
-save_initial_conditions = true; % save final concentrations as initial for the next run
-file_name = 'IO/test.mat'
+save_initial_conditions = false; % save final concentrations as initial for the next run
+file_name = 'IO/0_effective_sediment.mat'
 
 [lake_params, sediment_params] = load_params();
 
