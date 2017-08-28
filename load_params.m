@@ -149,7 +149,7 @@ sediment_params = {
     1,      'Cx3',                  % 69           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0.1,    'Ny3',                  % 70           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0,      'Pz3',                  % 71           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    30,      'effective_depth',      % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
+    0,      'effective_depth',      % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
     100,    'n_ts',                 % 73           % (100 is the minimum) number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
     2,      'pH algorithm',         % 74           % 0. Disabled  % 1. Phreeqc  % 2. Electro-neutrality Equation
     };
