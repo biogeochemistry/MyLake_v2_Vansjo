@@ -30,12 +30,10 @@ x(16) = lake_params{55}; % 17    Optical cross_section of chlorophyll (m2 mg-1)
 x(17) = sediment_params{23};  % 38 R16 sorption of P on Fe k
 x(18) = sediment_params{52};  %    accel
 x(19) = lake_params{24};  %    % 24    scaling factor for inflow concentration of POP (-)
-x(20) = lake_params{19};  %    % 19    scaling factor for inflow concentration of POC (-)
-x(21) = lake_params{34};  %    % 34    Scaling factor for inflow concentration of Fe3 (-)
 
 
-lb = [0.05, 0.1, 1, 0.2, 0.05, 0.1, 1, 0.2, 0.01,  0, 0, 0, 1e-5, 1e-5, 0.005, 0.005, 1, 1, 0, 0, 0];
-ub = [0.5, 0.3, 1.5, 2, 0.5, 0.3, 1.5, 2, 1, 10, 100, 100, 1e-4, 1e-4, 0.045, 0.045, 1e5, 100, 1, 1, 1];
+lb = [0.05, 0.1, 1, 0.2, 0.05, 0.1, 1, 0.2, 0.01,  0, 0, 0, 1e-5, 1e-5, 0.005, 0.005, 1, 1, 0];
+ub = [0.5, 0.3, 1.5, 2, 0.5, 0.3, 1.5, 2, 1, 10, 100, 100, 1e-4, 1e-4, 0.045, 0.045, 1e5, 100, 1];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
@@ -79,8 +77,6 @@ lake_params{55} = x(16); % 17    Optical cross_section of chlorophyll (m2 mg-1)
 sediment_params{23} = x(17);  % 38 R16 sorption of P on Fe k
 sediment_params{52} = x(18);  %    accel
 lake_params{24} = x(19);  % 24    scaling factor for inflow concentration of POP (-)
-lake_params{19} = x(20);  %    % 19    scaling factor for inflow concentration of POC (-)
-lake_params{34} = x(21);  %    % 34    Scaling factor for inflow concentration of Fe3 (-)
 
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
