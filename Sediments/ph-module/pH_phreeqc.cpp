@@ -122,8 +122,8 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     */
 
     for (int i = 0; i < n_rows; ++i) {
-        alkalinity = HCO30[i] + 2 * CO30[i] + OH0[i]  - H0[i] ; // + HS0[i] - NH40[i] + 1.5 * PO40[i];
-        C4 =  CO30[i] + HCO30[i];// + CO20[i];
+        alkalinity = HCO30[i] + 2 * CO30[i] + OH0[i]  - H0[i] + HS0[i] - NH40[i] + 1.5 * PO40[i];
+        C4 =  CO30[i] + HCO30[i];// CO20[i];
         N5 = NO30[i];
         S2 = HS0[i] + H2S0[i]; // + 0.5 * FeS20[i];
         S6 = SO40[i]; // + 0.5 * FeS20[i];

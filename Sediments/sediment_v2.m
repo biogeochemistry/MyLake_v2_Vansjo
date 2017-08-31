@@ -527,7 +527,7 @@ function [flux] = top_sediment_diffusion_flux(C, D, dx, phi)
   % phi - porosity (no porosity because C is the concentration in pores (not bulk))
 
   % fourth-order
-  flux = D * (-25 * phi(2)*C(2) + 48 * phi(3)*C(3) - 36 * phi(4)*C(4) + 16 * phi(5)*C(5) - 3 * phi(6)*C(6)) / dx / 12;  %  [umol/cm^2/y]
+  flux = D * (-25 * phi(1)*C(1) + 48 * phi(2)*C(2) - 36 * phi(3)*C(3) + 16 * phi(4)*C(4) - 3 * phi(5)*C(5)) / dx / 12;  %  [umol/cm^2/y]
 
   % third order
   % flux = D * (-11 * C(1) + 18 * C(2) - 9 * C(3) + 2 * C(4)) / dx / 6;  %  [umol/cm^2/y]
