@@ -80,7 +80,6 @@ sediment_params{23} = x(17);  % 38 R16 sorption of P on Fe k
 sediment_params{52} = x(18);  %    accel
 lake_params{24} = x(19);  % 24    scaling factor for inflow concentration of POP (-)
 
-sediment_params{73} = x(25); % times steps
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
 clim_ID = run_ID
