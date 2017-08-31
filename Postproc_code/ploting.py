@@ -51,6 +51,7 @@ species_formulas = {
     'PO4adsb': r'$P=FeOOH$',
     'PO4': r'$PO_4-P$',
     'Al3': r'$Al(OH)_3$',
+    'AlOH3': r'$Al(OH)_3$',
     'PP': r'$P=Fe(III)$',
     'Ca2': r'$Ca^{2+}$',
     'CaCO3': r'$CaCO_3$',
@@ -100,14 +101,26 @@ molar_masses = {
     'POC': 12010.7,
     'DOC': 12010.7,
     'DIC': 61016.8,
-    'Ca3PO42': 310176.7
+    'Ca3PO42': 310176.7,
+    'Fe3PO42': 357477.7,
+    'FeS': 87910.0,
+    'CaCO3': 100086.9,
+    'AlOH3': 78003.6
 }
 
 
-solid = ['OM', 'OMb', 'FeOH3', 'FeOOH', 'PO4adsa', 'PO4adsb', 'OMb', 'Ca3PO42', 'POC', 'POP', 'FeS2', 'FeS', 'Fe3PO42', 'FeCO3']
-disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S', 'HS', 'PO4', 'Al3', 'Ca2', 'CO2', 'CH4aq', 'CH4g']
-solid_rates = ['R1a', 'R1b', 'R1f', 'R2a', 'R2b', 'R2f', 'R3a', 'R3b', 'R3f', 'R4a', 'R4b', 'R4f', 'R5a', 'R5b', 'R5f', 'R6a', 'R6b', 'R6f', 'Ra', 'Rb', 'Rf']
-aqueous_rate = ['R1c', 'R2c', 'R3c', 'R4c', 'R5c', 'R6c', 'Rc', 'R1d', 'R2d', 'R3d', 'R4d', 'R5d', 'R6d', 'Rd']
+solid = ['OM', 'OMb', 'FeOH3', 'FeOOH', 'PO4adsa', 'PO4adsb', 'OMb',
+         'Ca3PO42', 'POC', 'POP', 'FeS2', 'FeS', 'Fe3PO42', 'FeCO3', 'AlOH3']
+
+disolved = ['O2', 'DOM1', 'DOM2', 'NO3', 'SO4', 'NH4', 'Fe2', 'H2S',
+            'HS', 'PO4', 'Al3', 'Ca2', 'CO2', 'CH4aq', 'CH4g', ]
+
+solid_rates = ['R1a', 'R1b', 'R1f', 'R2a', 'R2b', 'R2f', 'R3a', 'R3b',
+               'R3f', 'R4a', 'R4b', 'R4f', 'R5a', 'R5b', 'R5f', 'R6a',
+               'R6b', 'R6f', 'Ra', 'Rb', 'Rf']
+
+aqueous_rates = ['R1c', 'R2c', 'R3c', 'R4c', 'R5c', 'R6c', 'Rc', 'R1d',
+                 'R2d', 'R3d', 'R4d', 'R5d', 'R6d', 'Rd']
 
 
 def find_element_name(element):
@@ -246,6 +259,10 @@ class ResultsPlotter:
                     theta = fi
                 mass_per_area[e] = np.trapz(y * theta, z)
                 lbl = r'$umol/cm^{2}$'
+            if e is 'pH':
+                units = r'pH'
+            if e is 'Temperature':
+                units = r'Temperature, C'
         if not log_scale:
             leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
         plt.xlabel(units)
@@ -264,7 +281,7 @@ class ResultsPlotter:
         date = results['days'][0, 0][0][-1 + end]
         date = datetime.datetime.fromordinal(date - 365)
         plt.title('Profiles on ' + date.strftime('%B %d, %Y'))
-        plt.show()
+        return ax
 
     def rate_profile(self, env, rates, years_ago=0.):
         results = self.env_getter(env)
@@ -282,7 +299,7 @@ class ResultsPlotter:
                 fi = results['params'][0, 0]['phi'][0, 0][:, -1]
                 if rate in solid_rates:
                     theta = 1 - fi
-                elif rate in aqueous_rate:
+                elif rate in aqueous_rates:
                     theta = fi
                 else:
                     print('Add rate in the solid or aqueous dictionary')
@@ -318,8 +335,8 @@ class ResultsPlotter:
             except:
                 z += results[e][0, 0][0:-1, start:end] * coef
 
-        v = np.linspace(0, z.max(), 51, endpoint=True)
-        CS = plt.contourf(X, Y, z, v, cmap=cmap, origin='lower', vmin=0, vmax=z.max())
+        # v = np.linspace(0, z.max(), 51, endpoint=True)
+        CS = plt.contourf(X, Y, z, 51, cmap=cmap, origin='lower')  # v, vmin=0, vmax=z.max()
         cbar = plt.colorbar(CS)
 
         plt.ylabel('Depth, [cm]')

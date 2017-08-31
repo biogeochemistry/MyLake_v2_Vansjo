@@ -14,6 +14,7 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     float C4;
     float N5;
     float S2;
+    float S6;
     float Fe2;
     float Fe3;
     float Ca;
@@ -25,10 +26,15 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     char N5_str[256];
     char N3_str[256];
     char S2_str[256];
+    char S6_str[256];
     char Fe2_str[256];
     char Fe3_str[256];
     char Ca_str[256];
     char P_str[256];
+    char K_str[256];
+    char Na_str[256];
+    char Al_str[256];
+    char Mg_str[256];
     char eq_str[256];
     char cell_str[256];
     double H0[n_rows];
@@ -40,7 +46,7 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
     double HS0[n_rows];
     double H2S0[n_rows];
     double OH0[n_rows];
-    double H2CO30[n_rows];
+    double CO2g0[n_rows];
     double Fe20[n_rows];
     double Ca20[n_rows];
     double NO30[n_rows];
@@ -68,7 +74,7 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
         HS0[i]      = data[ 6 * n_rows + i];
         H2S0[i]     = data[ 7 * n_rows + i];
         OH0[i]      = data[ 8 * n_rows + i];
-        H2CO30[i]   = data[ 9 * n_rows + i];
+        CO2g0[i]   = data[ 9 * n_rows + i];
         Fe20[i]     = data[10 * n_rows + i];
         Ca20[i]     = data[11 * n_rows + i];
         NO30[i]     = data[12 * n_rows + i];
@@ -117,25 +123,31 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
 
     for (int i = 0; i < n_rows; ++i) {
         alkalinity = HCO30[i] + 2 * CO30[i] + OH0[i]  - H0[i] ; // + HS0[i] - NH40[i] + 1.5 * PO40[i];
-        C4 =  HCO30[i] + CO20[i] + CO30[i] + H2CO30[i];
+        C4 =  CO30[i] + HCO30[i];// + CO20[i];
         N5 = NO30[i];
         S2 = HS0[i] + H2S0[i]; // + 0.5 * FeS20[i];
+        S6 = SO40[i]; // + 0.5 * FeS20[i];
         Fe2 = Fe20[i]; // + FeS20[i] +  FeS0[i]
         // Fe3 = 0; // FeOH30[i] + FeOOH0[i]
         Ca = Ca20[i]; // + Ca3PO40[i]
-        P = PO40[i]; // + Ca3PO40[i] + PO4adsa0[i] + PO4adsb0[i]
+        P = PO40[i] + PO4adsa0[i] + PO4adsb0[i];  // + Ca3PO40[i]
         N3 = NH40[i] + NH30[i];
 
         sprintf(sol_str,        "SOLUTION %i", i + 1);
         sprintf(alkalinity_str, "     Alkalinity    %f", alkalinity);
         sprintf(C4_str,         "     C(+4)         %f", C4);
-        // sprintf(N5_str,         "     N(+5)         %f", N5);
+        sprintf(N5_str,         "     N(+5)         %f", N5);
         sprintf(N3_str,         "     NH4+         %f", N3);
-        // sprintf(S2_str,         "     S(-2)         %f", S2);
+        sprintf(S2_str,         "     S(-2)         %f", S2);
+        sprintf(S6_str,         "     SO4         %f", S6);
         sprintf(Fe2_str,        "     Fe(+2)        %f", Fe2);
         // sprintf(Fe3_str,        "     Fe(+3)        %f", Fe3);
         sprintf(Ca_str,         "     Ca            %f", Ca);
-        // sprintf(P_str,          "     P             %f", P);
+        sprintf(P_str,          "     P             %f", P);
+        // sprintf(K_str,          "     K             %f", 0.12);
+        // sprintf(Na_str,          "     Na             %f", 1.6);
+        // sprintf(Al_str,          "     Al             %f", 0.013);
+        // sprintf(Mg_str,          "     Mg             %f", 0.14);
 
         iphreeqc.AccumulateLine(sol_str);
         iphreeqc.AccumulateLine("     temperature 8");
@@ -143,13 +155,17 @@ void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[] )
         iphreeqc.AccumulateLine("     -units mmol/kgw");
         iphreeqc.AccumulateLine(alkalinity_str);
         iphreeqc.AccumulateLine(C4_str);
-        // iphreeqc.AccumulateLine(N5_str);
+        iphreeqc.AccumulateLine(N5_str);
         iphreeqc.AccumulateLine(N3_str);
-        // iphreeqc.AccumulateLine(S2_str);
+        iphreeqc.AccumulateLine(S2_str);
         iphreeqc.AccumulateLine(Fe2_str);
         // iphreeqc.AccumulateLine(Fe3_str);
         iphreeqc.AccumulateLine(Ca_str);
-        // iphreeqc.AccumulateLine(P_str);
+        iphreeqc.AccumulateLine(P_str);
+        // iphreeqc.AccumulateLine(K_str);
+        // iphreeqc.AccumulateLine(Na_str);
+        // iphreeqc.AccumulateLine(Al_str);
+        // iphreeqc.AccumulateLine(Mg_str);
         // iphreeqc.AccumulateLine("END");
     }
     // for (int i = 0; i < n_rows; ++i) {

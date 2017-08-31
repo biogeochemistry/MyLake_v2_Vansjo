@@ -38,8 +38,8 @@ lake_params = {
     1,  'I_scCH4',             % 33    Scaling factor for inflow concentration of CH4 (-)
     1,  'I_scFe3',             % 34    Scaling factor for inflow concentration of Fe3 (-)
     1,  'I_scAl3',             % 35    Scaling factor for inflow concentration of Al3 (-)
-    1,  'I_scSiO4',            % 36    Scaling factor for inflow concentration of SiO4 (-)
-    1,  'I_scSiO2',            % 37    Scaling factor for inflow concentration of SiO2 (-)
+    1,  'I_scFeS',             % 36    Scaling factor for inflow concentration of FeS (-)
+    1,  'I_scCaCO3',           % 37    Scaling factor for inflow concentration of CaCO3 (-)
     1,  'I_scCH4g',            % 38    Scaling factor for inflow concentration of CH4g (-)
     2.5, 'swa_b0',             % 39     non-PAR light attenuation coeff. (m-1)
     1.05, 'swa_b1',            % 40     PAR light attenuation coeff. (m-1)
@@ -100,8 +100,8 @@ sediment_params = {
     2500,  'k_Spre',                % 20       %
     3.3,   'k_FeS2pre',             % 21       % Canavan (2006)
     0.1,   'k_alum',                % 22
-    2,     'k_pdesorb_a',           % 23
-    2,     'k_pdesorb_b',           % 24
+    0.3,     'k_pdesorb_a',         % 23
+    0.3,     'k_pdesorb_b',         % 24
     20000,  'k_fesox',              % 25        % R23 %Canava
     1000,   'k_fes2ox',             % 26        % R23 % Katsev (2013)
     8,      'k_tS_Fe',              % 27      % Cappellen (1996) in Canavan, R. W (2006) the reaction is different
@@ -149,7 +149,7 @@ sediment_params = {
     1,      'Cx3',                  % 69           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0.1,    'Ny3',                  % 70           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0,      'Pz3',                  % 71           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
-    30,      'effective_depth',      % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
-    100,    'n_ts',                 % 73           % (100 is the minimum) number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
-    2,      'pH algorithm',         % 74           % 0. Disabled  % 1. Phreeqc  % 2. Electro-neutrality Equation
+    30,     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
+    100,     'n_ts',                 % 73           % (100 is the minimum) number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
+    0,      'pH algorithm',         % 74           % 0. Disabled  % 1. Phreeqc  % 2. Electro-neutrality Equation
     };

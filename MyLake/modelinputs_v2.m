@@ -5,7 +5,7 @@
 % Code checked by TSA, xx.03.2005
 % Last modified by TSA, 15.08.2006 (Az replaced by In_Az 10.03.06; Possibility to have NaN in Global rad. series, 15.08.06)
 
-function [In_Z,In_Az,tt,In_Tz,In_Cz,In_POCz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_CH4gz,In_POPz,In_FIM,Ice0,Wt,Inflw,...
+function [In_Z,In_Az,tt,In_Tz,In_Cz,In_POCz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_FeSz,In_CaCO3z,In_CH4gz,In_POPz,In_FIM,Ice0,Wt,Inflw,...
          Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
             = modelinputs_v2(M_start,M_stop,init_filename,init_sheet,...
             input_filename,input_sheet,param_filename,param_sheet,dt);
@@ -121,8 +121,8 @@ InitMx = dlmread(init_filename, '\t', 2, 0);
  In_CH4z=InitMx(1:end,25);
  In_Fe3z=InitMx(1:end,26);
  In_Al3z=InitMx(1:end,27);
- In_SiO4z=InitMx(1:end,28);
- In_SiO2z=InitMx(1:end,29);
+ In_FeSz=InitMx(1:end,28);
+ In_CaCO3z=InitMx(1:end,29);
  In_CH4gz=InitMx(1:end,30);
  In_POPz=InitMx(1:end,31);
 

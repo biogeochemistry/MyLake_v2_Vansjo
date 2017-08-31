@@ -171,8 +171,8 @@ function [sediment_params] = params(max_depth, temperature)
     sediment_params.D_H2S = 284;
     sediment_params.D_HS  = 284;
     sediment_params.D_S0  = 100;
-    sediment_params.D_DOP  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
-    sediment_params.D_DOC  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes Roland Fuß
+    sediment_params.D_DOP  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes, Roland
+    sediment_params.D_DOC  = 85.14; %  0.27 · 10-5 cm2 s-1 taken from Diffusion processes of soluble organic substances in soil and their effect on ecological processes, Roland
     sediment_params.Db    = 5;
 
     sediment_params.CH4_solubility = sediment_params.Kh_CH4 * pressure;
