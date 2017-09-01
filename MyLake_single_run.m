@@ -19,7 +19,6 @@ file_name = 'IO/test_pH_1.mat'
 
 sediment_params{62}  = 14.4/2; % 62 alfa0 bioirrigation
 sediment_params{74}  = 1; % 74 pH algorithm
-sediment_params{73}  = 100; % (100 is the minimum) number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
 lake_params{19}  = 1; % POC scaling
 lake_params{34} = 0.03;
 

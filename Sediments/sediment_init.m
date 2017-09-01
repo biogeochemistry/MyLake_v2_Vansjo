@@ -130,7 +130,7 @@ function [sediment_params] = params(max_depth, temperature)
 
 
     sediment_params.years = 1/365;  % 1 day #35
-    sediment_params.ts = 1/365/sediment_params.n_of_time_steps_during_1_dt_of_myLake;  % time step
+    sediment_params.ts = 1/365/(sediment_params.n_of_time_steps_during_1_dt_of_myLake);  % time step
     x = linspace(0, sediment_params.depth, sediment_params.n);
     sediment_params.x = x;      % x-axis
     sediment_params.phi =  ones(size(x'))*0.92 ;%( phi_in - phi_f ) * exp( -x' / X_b ) + phi_f;;      % porosity

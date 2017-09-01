@@ -102,8 +102,8 @@ function [C] = update_only_bottom_concentrations(C, flux, MyLake_params, sedimen
 end
 
 %% update_C_as_dirichlet: function description
-function [C] = update_C_as_dirichlet(C_wc, BC_value)
+function [C_wc] = update_C_as_dirichlet(C_wc, BC_value)
     % BC_value - boundary condition produced by sediment
     % C_wc - concentration of the species in the water-column
-    C_WC(end) = BC_value;
+    C_wc(end) = BC_value;
 end
