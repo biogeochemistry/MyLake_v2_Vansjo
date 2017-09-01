@@ -29,7 +29,7 @@ x(15) = lake_params{24};   % 24    scaling factor for inflow concentration of PO
 
 
 lb = [0.05 , 0.1 , 1   , 0.2 , 0.05 , 0.1 , 1   , 0.2 , 0.01 , 1e-5 , 1e-5 , 0.005 , 0.005 , 1   , 0];
-ub = [0.5  , 0.3 , 1.5 , 2   , 0.5  , 0.3 , 1.5 , 2   , 1    , 1e-4 , 1e-4 , 0.045 , 0.045 , 100 , 10];
+ub = [0.5  , 0.3 , 1.5 , 2   , 0.5  , 0.3 , 1.5 , 2   , 1    , 1e-4 , 1e-4 , 0.045 , 0.045 , 100 , 1];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
