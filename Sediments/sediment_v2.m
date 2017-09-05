@@ -1,6 +1,77 @@
 function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_concentrations, sediment_additional_results] = sediment_v2(sediment_concentrations, sediment_params, sediment_matrix_templates, sediment_bc)
   % SEDIMENTS This function models the chemical process in the sediment
 
+  % model domain:
+  years = sediment_params.years; %1 day
+  ts    = sediment_params.ts; % time step
+  alfax = sediment_params.alfax;
+  D_O2  = sediment_params.D_O2;
+  D_NO3 = sediment_params.D_NO3;
+  D_SO4 = sediment_params.D_SO4;
+  D_NH4 = sediment_params.D_NH4;
+  D_Fe2 = sediment_params.D_Fe2;
+  D_H2S = sediment_params.D_H2S;
+  D_S0  = sediment_params.D_S0;
+  D_PO4 = sediment_params.D_PO4;
+  D_Ca2 = sediment_params.D_Ca2;
+  D_HS  = sediment_params.D_HS;
+  D_DOP = sediment_params.D_DOP;
+  D_DOC = sediment_params.D_DOC;
+  D_CO2 = sediment_params.D_CO2;
+  D_CO2g = sediment_params.D_CO2g;
+  D_HCO3 = sediment_params.D_HCO3;
+  D_CO3 = sediment_params.D_CO3;
+  D_NH3 = sediment_params.D_NH3;
+  D_CH4aq = sediment_params.D_CH4aq;
+  D_CH4g = sediment_params.D_CH4g;
+  phi    = sediment_params.phi;
+  x  = sediment_params.x;
+
+  dx = x(2)-x(1);
+  xz = x'/100;
+  % time domain:
+  t     = 0:ts:years; % years
+  m     = size(t,2); %steps in time
+  dt    = t(2)-t(1);
+  n = sediment_params.n;
+
+
+  % Preallocation:
+  O2 = zeros(n, m);
+  POP = zeros(n, m);
+  POC = zeros(n, m);
+  NO3 = zeros(n, m);
+  FeOH3 = zeros(n, m);
+  SO4 = zeros(n, m);
+  Fe2 = zeros(n, m);
+  FeOOH = zeros(n, m);
+  FeS = zeros(n, m);
+  S0 = zeros(n, m);
+  PO4 = zeros(n, m);
+  S8 = zeros(n, m);
+  FeS2 = zeros(n, m);
+  AlOH3 = zeros(n, m);
+  PO4adsa = zeros(n, m);
+  PO4adsb = zeros(n, m);
+  Ca2 = zeros(n, m);
+  Ca3PO42 = zeros(n, m);
+  OMS = zeros(n, m);
+  CaCO3 = zeros(n, m);
+  CO2 = zeros(n, m);
+  CO3 = zeros(n, m);
+  HCO3 = zeros(n, m);
+  NH3 = zeros(n, m);
+  NH4 = zeros(n, m);
+  HS = zeros(n, m);
+  H2S = zeros(n, m);
+  CO2g = zeros(n, m);
+  DOP = zeros(n, m);
+  DOC = zeros(n, m);
+  Chl = zeros(n, m);
+  CH4aq = zeros(n, m);
+  CH4g = zeros(n, m);
+  FeCO3 = zeros(n, m);
+  Fe3PO42 = zeros(n, m);
 
   O2(:,1) = sediment_concentrations.O2;
   POP(:,1) = sediment_concentrations.POP;
@@ -39,35 +110,9 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   Fe3PO42(:,1) = sediment_concentrations.Fe3PO42;
 
 
-  H3O = ones(size(Fe3PO42)).* sediment_bc.H3O_c;
+  H3O = ones(n, 1).* sediment_bc.H3O_c;
 
-  % model domain:
-  years = sediment_params.years; %1 day
-  ts    = sediment_params.ts; % time step
-  alfax = sediment_params.alfax;
-  D_O2  = sediment_params.D_O2;
-  D_NO3 = sediment_params.D_NO3;
-  D_SO4 = sediment_params.D_SO4;
-  D_NH4 = sediment_params.D_NH4;
-  D_Fe2 = sediment_params.D_Fe2;
-  D_H2S = sediment_params.D_H2S;
-  D_S0  = sediment_params.D_S0;
-  D_PO4 = sediment_params.D_PO4;
-  D_Ca2 = sediment_params.D_Ca2;
-  D_HS  = sediment_params.D_HS;
-  D_DOP = sediment_params.D_DOP;
-  D_DOC = sediment_params.D_DOC;
-  D_CH4aq = sediment_params.D_CH4aq;
-  D_CH4g = sediment_params.D_CH4g;
-  phi    = sediment_params.phi;
-  x  = sediment_params.x;
 
-  dx = x(2)-x(1);
-  xz = x'/100;
-  % time domain:
-  t     = 0:ts:years; % years
-  m     = size(t,2); %steps in time
-  dt    = t(2)-t(1);
 
 
 
@@ -117,7 +162,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   % Solving equations!!!
   % =========================================================================================================
 
-  for i=2:m+1
+  for i=2:m
 
 
     % =======================================================================================================
@@ -254,6 +299,7 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       sediment_bioirrigation_fluxes.NH4(i-1)  = integrate_over_depth_2(bioirrigation(NH4(:, i),  alfax,  phi), x);
       sediment_bioirrigation_fluxes.SO4(i-1)  = integrate_over_depth_2(bioirrigation(SO4(:, i),  alfax,  phi), x);
       sediment_bioirrigation_fluxes.HS(i-1)  = integrate_over_depth_2(bioirrigation(HS(:, i),  alfax,  phi), x);
+      sediment_bioirrigation_fluxes.H2S(i-1)  = integrate_over_depth_2(bioirrigation(H2S(:, i),  alfax,  phi), x);
       sediment_bioirrigation_fluxes.DOP(i-1) = integrate_over_depth_2(bioirrigation(DOP(:, i),  alfax,  phi), x);
       sediment_bioirrigation_fluxes.DOC(i-1) = integrate_over_depth_2(bioirrigation(DOC(:, i),  alfax,  phi), x);
       sediment_bioirrigation_fluxes.CH4aq(i-1) = integrate_over_depth_2(bioirrigation(CH4aq(:, i),  alfax,  phi), x);
@@ -266,11 +312,18 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       sediment_transport_fluxes.Chl(i-1)          = -sediment_bc.Chl_fx;
       sediment_transport_fluxes.POC(i-1)          = -sediment_bc.POC_fx;
       sediment_transport_fluxes.FeOH3(i-1)        = -sediment_bc.FeOH3_fx;
+      % sediment_transport_fluxes.FeOOH(i-1)        = -sediment_bc.FeOOH_fx;
       sediment_transport_fluxes.AlOH3(i-1)        = -sediment_bc.AlOH3_fx;
       sediment_transport_fluxes.PO4adsa(i-1)      = -sediment_bc.PO4adsa_fx;
       sediment_transport_fluxes.PO4adsb(i-1)      = -sediment_bc.PO4adsb_fx;
       sediment_transport_fluxes.FeCO3(i-1)        = -sediment_bc.FeCO3_fx;
       sediment_transport_fluxes.Fe3PO42(i-1)      = -sediment_bc.Fe3PO42_fx;
+      sediment_transport_fluxes.FeS(i-1)          = -sediment_bc.FeS_fx;
+      % sediment_transport_fluxes.FeS2(i-1)          = -sediment_bc.FeS2_fx;
+      % sediment_transport_fluxes.S8(i-1)          = -sediment_bc.S8_fx;
+      % sediment_transport_fluxes.Ca3PO42(i-1)          = -sediment_bc.Ca3PO42_fx;
+      % sediment_transport_fluxes.OMS(i-1)          = -sediment_bc.OMS_fx;
+      sediment_transport_fluxes.CaCO3(i-1)          = -sediment_bc.CaCO3_fx;
       sediment_transport_fluxes.O2(i-1)           = top_sediment_diffusion_flux(O2(:, i), D_O2, dx, phi) + top_sediment_advection_flux(O2(:, i), sediment_params.w, phi);
       sediment_transport_fluxes.PO4(i-1)          = top_sediment_diffusion_flux(PO4(:, i), D_PO4, dx, phi) + top_sediment_advection_flux(PO4(:, i), sediment_params.w, phi);
       sediment_transport_fluxes.NO3(i-1)          = top_sediment_diffusion_flux(NO3(:, i), D_NO3, dx, phi) + top_sediment_advection_flux(NO3(:, i), sediment_params.w, phi);
@@ -278,39 +331,59 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
       sediment_transport_fluxes.NH4(i-1)          = top_sediment_diffusion_flux(NH4(:, i), D_NH4, dx, phi) + top_sediment_advection_flux(NH4(:, i), sediment_params.w, phi);
       sediment_transport_fluxes.SO4(i-1)          = top_sediment_diffusion_flux(SO4(:, i), D_SO4, dx, phi) + top_sediment_advection_flux(SO4(:, i), sediment_params.w, phi);
       sediment_transport_fluxes.HS(i-1)          = top_sediment_diffusion_flux(HS(:, i), D_HS, dx, phi) + top_sediment_advection_flux(HS(:, i), sediment_params.w, phi);
+      sediment_transport_fluxes.H2S(i-1)          = top_sediment_diffusion_flux(H2S(:, i), D_H2S, dx, phi) + top_sediment_advection_flux(H2S(:, i), sediment_params.w, phi);
       sediment_transport_fluxes.DOP(i-1)         = top_sediment_diffusion_flux(DOP(:, i), D_DOP, dx, phi) + top_sediment_advection_flux(DOP(:, i), sediment_params.w, phi);
       sediment_transport_fluxes.DOC(i-1)         = top_sediment_diffusion_flux(DOC(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(DOC(:, i), sediment_params.w, phi);
-      sediment_transport_fluxes.CH4aq(i-1)         = top_sediment_diffusion_flux(CH4aq(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(CH4aq(:, i), sediment_params.w, phi);
-      sediment_transport_fluxes.CH4g(i-1)         = top_sediment_diffusion_flux(CH4g(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(CH4g(:, i), sediment_params.w_CH4g, phi);  % NOTE: rising velocity of methane
-      sediment_transport_fluxes.CO2(i-1)         = top_sediment_diffusion_flux(CO2(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(CO2(:, i), sediment_params.w, phi);
-      sediment_transport_fluxes.HCO3(i-1)         = top_sediment_diffusion_flux(HCO3(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(HCO3(:, i), sediment_params.w, phi);
-      sediment_transport_fluxes.CO3(i-1)         = top_sediment_diffusion_flux(CO3(:, i), D_DOC, dx, phi) + top_sediment_advection_flux(CO3(:, i), sediment_params.w, phi);
+      sediment_transport_fluxes.CH4aq(i-1)         = top_sediment_diffusion_flux(CH4aq(:, i), D_CH4aq, dx, phi) + top_sediment_advection_flux(CH4aq(:, i), sediment_params.w, phi);
+      sediment_transport_fluxes.CH4g(i-1)         = top_sediment_diffusion_flux(CH4g(:, i), D_CH4g, dx, phi) + top_sediment_advection_flux(CH4g(:, i), sediment_params.w_CH4g, phi);  % NOTE: rising velocity of methane
+      sediment_transport_fluxes.CO2(i-1)         = top_sediment_diffusion_flux(CO2(:, i), D_CO2, dx, phi) + top_sediment_advection_flux(CO2(:, i), sediment_params.w, phi);
+      sediment_transport_fluxes.HCO3(i-1)         = top_sediment_diffusion_flux(HCO3(:, i), D_HCO3, dx, phi) + top_sediment_advection_flux(HCO3(:, i), sediment_params.w, phi);
+      sediment_transport_fluxes.CO3(i-1)         = top_sediment_diffusion_flux(CO3(:, i), D_CO3, dx, phi) + top_sediment_advection_flux(CO3(:, i), sediment_params.w, phi);
+      sediment_transport_fluxes.Ca2(i-1)         = top_sediment_diffusion_flux(Ca2(:, i), D_Ca2, dx, phi) + top_sediment_advection_flux(Ca2(:, i), sediment_params.w, phi);
+      sediment_transport_fluxes.NH3(i-1)         = top_sediment_diffusion_flux(NH3(:, i), D_NH3, dx, phi) + top_sediment_advection_flux(NH3(:, i), sediment_params.w, phi);
+      sediment_transport_fluxes.CO2g(i-1)         = top_sediment_diffusion_flux(CO2g(:, i), D_CO2g, dx, phi) + top_sediment_advection_flux(CO2g(:, i), sediment_params.w, phi);
   end
 
-% Estimate flux
-  sediment_transport_fluxes.O2           = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.O2), 31998);
-  sediment_transport_fluxes.POP          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.POP), 30973.762);
-  sediment_transport_fluxes.POC          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.POC), 12010.7);
-  sediment_transport_fluxes.PO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.PO4), 30973.762);
-  sediment_transport_fluxes.NO3          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.NO3), 62004);
-  sediment_transport_fluxes.FeOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.FeOH3), 106867.0);
-  sediment_transport_fluxes.Fe2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.Fe2), 55845);
-  sediment_transport_fluxes.NH4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.NH4), 18038);
-  sediment_transport_fluxes.AlOH3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.AlOH3), 78003.6);
-  sediment_transport_fluxes.PO4adsa      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.PO4adsa), 30973.762);
-  sediment_transport_fluxes.PO4adsb      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.PO4adsb), 30973.762);
-  sediment_transport_fluxes.FeCO3        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.FeCO3), 115853);
-  sediment_transport_fluxes.Fe3PO42      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.Fe3PO42), 357477.7);
-  sediment_transport_fluxes.SO4          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.SO4), 96062);
-  sediment_transport_fluxes.HS           = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.HS), 33072);
-  sediment_transport_fluxes.DOP          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.DOP), 30973.762);
-  sediment_transport_fluxes.DOC          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.DOC), 12010.7);
-  sediment_transport_fluxes.Chl          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.Chl), 30973.762);
-  sediment_transport_fluxes.CH4aq        = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CH4aq), 16042.5);
-  sediment_transport_fluxes.CH4g         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CH4g), 16042.5);
-  sediment_transport_fluxes.CO2          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CO2), 44009.5);
-  sediment_transport_fluxes.HCO3         = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.HCO3), 61016.8);
-  sediment_transport_fluxes.CO3          = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CO3), 60008.9);
+    % convert flux to [mg/m2/d]
+    sediment_transport_fluxes.O2      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.O2), 31998);
+    sediment_transport_fluxes.POP     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.POP), 30973.762);
+    sediment_transport_fluxes.POC     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.POC), 12010.7);
+    sediment_transport_fluxes.NO3     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.NO3), 62004);
+    sediment_transport_fluxes.FeOH3   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.FeOH3), 106867);
+    sediment_transport_fluxes.SO4     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.SO4), 96062);
+    sediment_transport_fluxes.NH4     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.NH4), 18038);
+    sediment_transport_fluxes.Fe2     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.Fe2), 55845);
+    % sediment_transport_fluxes.FeOOH   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.FeOOH), 88851.7);
+    sediment_transport_fluxes.H2S     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.H2S), 34072);
+    sediment_transport_fluxes.HS      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.HS), 33072);
+    sediment_transport_fluxes.FeS     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.FeS), 87910);
+    % sediment_transport_fluxes.S0      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.S0), 32065.0);
+    sediment_transport_fluxes.PO4     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.PO4), 30973.762);
+    % sediment_transport_fluxes.S8      = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.S8), 256520);
+    % sediment_transport_fluxes.FeS2    = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.FeS2), 119975.0);
+    sediment_transport_fluxes.AlOH3   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.AlOH3), 78003.6);
+    sediment_transport_fluxes.PO4adsa = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.PO4adsa), 30973.762);
+    sediment_transport_fluxes.PO4adsb = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.PO4adsb), 30973.762);
+    sediment_transport_fluxes.Ca2     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.Ca2), 80156);
+    % sediment_transport_fluxes.Ca3PO42 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.Ca3PO42), 310176.7);
+    % sediment_transport_fluxes.OMS     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.OMS), 12010.7);
+    sediment_transport_fluxes.CaCO3   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CaCO3), 100086.9);
+    sediment_transport_fluxes.CO2     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CO2), 44009.5);
+    sediment_transport_fluxes.CO3     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CO3), 60008.9);
+    sediment_transport_fluxes.HCO3    = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.HCO3), 61016.8);
+    % sediment_transport_fluxes.NH3     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.NH3), 17038);
+    sediment_transport_fluxes.CO2g    = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CO2g), 44009.5);
+    sediment_transport_fluxes.DOP     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.DOP), 30973.762);
+    sediment_transport_fluxes.DOC     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.DOC), 12010.7);
+    sediment_transport_fluxes.Chl     = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.Chl), 30973.762);
+    sediment_transport_fluxes.CH4aq   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CH4aq), 16042.5);
+    sediment_transport_fluxes.CH4g    = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.CH4g), 16042.5);
+    sediment_transport_fluxes.FeCO3   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.FeCO3), 115853.9);
+    sediment_transport_fluxes.Fe3PO42 = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_transport_fluxes.Fe3PO42), 357477.7);
+
+
+
+
 
   sediment_bioirrigation_fluxes.O2   = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.O2), 31998);
   sediment_bioirrigation_fluxes.PO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.PO4), 30973.762);
@@ -318,7 +391,8 @@ function [ sediment_bioirrigation_fluxes, sediment_transport_fluxes, sediment_co
   sediment_bioirrigation_fluxes.NO3  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.NO3), 62004);
   sediment_bioirrigation_fluxes.NH4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.NH4), 18038);
   sediment_bioirrigation_fluxes.SO4  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.SO4), 33072);
-  sediment_bioirrigation_fluxes.HS  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.HS), 96062);
+  sediment_bioirrigation_fluxes.HS  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.HS), 33072);
+  sediment_bioirrigation_fluxes.H2S  = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.H2S), 34072);
   sediment_bioirrigation_fluxes.DOP = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOP), 30973.762);
   sediment_bioirrigation_fluxes.DOC = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.DOC), 12010.7);
   sediment_bioirrigation_fluxes.CH4aq = convert_flux_umol_per_cm2_y_to_mg_per_m2_d(mean(sediment_bioirrigation_fluxes.CH4aq), 16042.5);
@@ -527,7 +601,7 @@ function [flux] = top_sediment_diffusion_flux(C, D, dx, phi)
   % phi - porosity (no porosity because C is the concentration in pores (not bulk))
 
   % fourth-order
-  flux = D * (-25 * phi(2)*C(2) + 48 * phi(3)*C(3) - 36 * phi(4)*C(4) + 16 * phi(5)*C(5) - 3 * phi(6)*C(6)) / dx / 12;  %  [umol/cm^2/y]
+  flux = D * (-25 * phi(1)*C(1) + 48 * phi(2)*C(2) - 36 * phi(3)*C(3) + 16 * phi(4)*C(4) - 3 * phi(5)*C(5)) / dx / 12;  %  [umol/cm^2/y]
 
   % third order
   % flux = D * (-11 * C(1) + 18 * C(2) - 9 * C(3) + 2 * C(4)) / dx / 6;  %  [umol/cm^2/y]
