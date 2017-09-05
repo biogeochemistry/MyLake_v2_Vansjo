@@ -53,7 +53,6 @@ function [sediment_bc] = update_sediment(mylake_temp_results, mylake_params, sed
 end
 
 function C_bc = dissolved_bc_with_effective_depth(C, sediment_params, mylake_params, effective_depth)
-
     z = mylake_params.zz;
     % effective_depth = sediment_params.effective_depth;
     Az_dif = -diff([mylake_params.Az; 0]) .* (z > effective_depth);
@@ -66,12 +65,7 @@ end
 
 %% solid_bc_with_effective_depth: estimates average flux under effective sediment depth
 function solid_fx = solid_bc_with_effective_depth(C, w_s, sediment_params, mylake_params, effective_depth)
-    z = mylake_params.zz;
-    % effective_depth = sediment_params.effective_depth;
-    Az_dif = -diff([mylake_params.Az; 0]) .* (z > effective_depth);
-
-    % estimate area average flux at the bottom
-    solid_fx = w_s * sum(C .* Az_dif) / sum(Az_dif);
+    solid_fx = w_s * dissolved_bc_with_effective_depth(C, sediment_params, mylake_params, effective_depth);
 end
 
 
