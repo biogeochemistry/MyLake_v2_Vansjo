@@ -1424,6 +1424,15 @@ for i = 1:length(tt)
         mylake_prev_results.CO2z = CO2z;
         mylake_prev_results.HCO3z = HCO3z;
         mylake_prev_results.CO3z = CO3z;
+        mylake_prev_results.Chlz = Chlz;
+        mylake_prev_results.Cz = Cz;
+        mylake_prev_results.POPz = POPz;
+        mylake_prev_results.POCz = POCz;
+        mylake_prev_results.Fe3z = Fe3z;
+        mylake_prev_results.FeSz = FeSz;
+        mylake_prev_results.Al3z = Al3z;
+        mylake_prev_results.PPz = PPz;
+        mylake_prev_results.CaCO3z = CaCO3z;
 
         if any(isnan(O2z)) | any(isnan(Pz)) | any(isnan(Fe2z)) | any(isnan(NO3z)) | any(isnan(NH4z))
             error('NaN')
@@ -1446,6 +1455,15 @@ for i = 1:length(tt)
         CO2z = mylake_new_resutls.CO2z;
         HCO3z = mylake_new_resutls.HCO3z;
         CO3z = mylake_new_resutls.CO3z;
+        Chlz= mylake_new_resutls.Chlz;
+        Cz= mylake_new_resutls.Cz;
+        POPz= mylake_new_resutls.POPz;
+        POCz= mylake_new_resutls.POCz;
+        Fe3z= mylake_new_resutls.Fe3z;
+        FeSz= mylake_new_resutls.FeSz;
+        Al3z= mylake_new_resutls.Al3z;
+        PPz= mylake_new_resutls.PPz;
+        CaCO3z= mylake_new_resutls.CaCO3z;
 
         DICz = CO2z + HCO3z + CO3z;
 
