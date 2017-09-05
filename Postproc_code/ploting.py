@@ -29,7 +29,7 @@ species_formulas = {
     'OM1': r'$OM1-C$',
     'POP': r'$POP-P$',
     'C': r'$Phy(I)-P$',
-    'Chl': r'$Phy(II)-P$',
+    'Chl': r'$Phy(I)-P$',
     'DOP': r'$DOP-P$',
     'NO3': r'$NO_3^-$',
     'FeOH3': r'$Fe(OH)_3$',
@@ -335,12 +335,12 @@ class ResultsPlotter:
             except:
                 z += results[e][0, 0][0:-1, start:end] * coef
 
-        # v = np.linspace(0, z.max(), 51, endpoint=True)
-        CS = plt.contourf(X, Y, z, 51, cmap=cmap, origin='lower')  # v, vmin=0, vmax=z.max()
+        v = np.linspace(0, z.max(), 51, endpoint=True)
+        CS = plt.contourf(X, Y, z, v, cmap=cmap, origin='lower', vmin=0, vmax=z.max())  # v, vmin=0, vmax=z.max()
         cbar = plt.colorbar(CS)
 
         plt.ylabel('Depth, [cm]')
-
+        plt.ylim(Y.min(), 0)
         if env == 'water':
             ice_thickness = results['His'][0, 0][0, start:end]
             plt.fill_between(results['days'][0, 0][0][start:end] - 366, 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
