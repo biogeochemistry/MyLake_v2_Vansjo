@@ -12,7 +12,7 @@ is_metrics = true; % print metrics in the end
 m_start=[2000, 1, 1]; %
 m_stop=[2013, 12, 31]; %
 
-save_initial_conditions = false; % save final concentrations as initial for the next run
+save_initial_conditions = true; % save final concentrations as initial for the next run
 file_name = 'IO/test_pH_1.mat'
 
 [lake_params, sediment_params] = load_params();
@@ -20,7 +20,22 @@ file_name = 'IO/test_pH_1.mat'
 sediment_params{62}  = 14.4/2; % 62 alfa0 bioirrigation
 sediment_params{74}  = 1; % 74 pH algorithm
 lake_params{19}  = 1; % POC scaling
-lake_params{34} = 0.03;
+lake_params{34}  = 50; % Fe3 scaling
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -96,3 +111,4 @@ end
 
 toc
 end
+%
