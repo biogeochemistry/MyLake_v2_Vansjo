@@ -67,7 +67,7 @@ lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chloro
 sediment_params{52} = x(14); % 65.1237e+000   %    accel
 lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 
-sediment_params{73}  = 25;
+sediment_params{73}  = 48;
 
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
