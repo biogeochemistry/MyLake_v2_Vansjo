@@ -11,21 +11,21 @@ format compact
 
 [lake_params, sediment_params] = load_params();
 
-x(1) = lake_params{47};  % 47     settling velocity for Chl1 a (m day-1)
-x(2) = lake_params{49};  % 49    loss rate (1/day) at 20 deg C
-x(3) = lake_params{50};  % 50    specific growth rate (1/day) at 20 deg C
-x(4) = lake_params{53};  % 53    Half saturation growth P level (mg/m3)
-x(5) = lake_params{56};  % 56    Settling velocity for Chl2 a (m day-1)
-x(6) = lake_params{57};   % 57    Loss rate (1/day) at 20 deg C
-x(7) = lake_params{58};   % 58    Specific growth rate (1/day) at 20 deg C
-x(8) = lake_params{59};   % 59    Half saturation growth P level (mg/m3)
-x(9) = lake_params{46};   % % 46  settling velocity for S (m day-1)
-x(10) = lake_params{10};  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-x(11) = lake_params{54};  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-x(12) = lake_params{12};  % 12    Optical cross_section of chlorophyll (m2 mg-1)
-x(13) = lake_params{55};  % 17    Optical cross_section of chlorophyll (m2 mg-1)
-x(14) = sediment_params{52};   %    accel
-x(15) = lake_params{24};   % 24    scaling factor for inflow concentration of POP (-)
+x(1) = 58.3842e-003; % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
+x(2) = 128.2949e-003; % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
+x(3) = 1.4988e+000; % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
+x(4) = 1.6945e+000; % 638.9222e-003  % 53    Half saturation growth P level (mg/m3)
+x(5) = 208.3324e-003; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+x(6) = 201.6135e-003; % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
+x(7) = 1.2687e+000; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+x(8) = 1.6142e+000; % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
+x(9) = 31.3665e-003; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
+x(10) = 14.4699e-006; % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+x(11) = 30.5827e-006; % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+x(12) = 37.9560e-003; % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
+x(13) = 34.7141e-003; % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
+x(14) = 21.5114e+000; % 65.1237e+000   %    accel
+x(15) = 373.1228e-003; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 
 
 lb = [0.05 , 0.1 , 1   , 0.2 , 0.05 , 0.1 , 1   , 0.2 , 0.01 , 1e-5 , 1e-5 , 0.005 , 0.005 , 1   , 0];
