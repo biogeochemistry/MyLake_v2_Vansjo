@@ -10,10 +10,10 @@ use_INCA = 0; % 1- MyLake will take written INCA input, either written just now 
 is_metrics = true; % print metrics in the end
 
 m_start=[2000, 1, 1]; %
-m_stop=[2013, 12, 31]; %
+m_stop=[2000, 12, 31]; %
 
-save_initial_conditions = true; % save final concentrations as initial for the next run
-file_name = 'IO/niva_res_2.mat'
+save_initial_conditions = false; % save final concentrations as initial for the next run
+file_name = 'IO/test_C.mat'
 
 [lake_params, sediment_params] = load_params();
 
@@ -63,7 +63,13 @@ lake_params{24} = 373.1228e-003; % 390.1162e-003   % 24    scaling factor for in
 % Trials:
 lake_params{24} = 1; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 
-
+% test C the same as Chl with Raoul
+lake_params{56} = lake_params{47}; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+lake_params{57} = lake_params{49}; % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
+lake_params{58} = lake_params{50}; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+lake_params{59} = lake_params{53}; % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
+lake_params{54} = lake_params{10};
+lake_params{55} = lake_params{12};
 
 % try
 run_ID = 0;
