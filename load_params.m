@@ -36,7 +36,7 @@ lake_params = {
     1,  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
     1,  'I_scpH',              % 32    Scaling factor for inflow concentration of pH (-)
     1,  'I_scCH4',             % 33    Scaling factor for inflow concentration of CH4 (-)
-    50,  'I_scFe3',             % 34    Scaling factor for inflow concentration of Fe3 (-)
+    50,  'I_scFe3',            % 34    Scaling factor for inflow concentration of Fe3 (-)
     1,  'I_scAl3',             % 35    Scaling factor for inflow concentration of Al3 (-)
     1,  'I_scFeS',             % 36    Scaling factor for inflow concentration of FeS (-)
     1,  'I_scCaCO3',           % 37    Scaling factor for inflow concentration of CaCO3 (-)

@@ -9,11 +9,11 @@ use_INCA = 0; % 1- MyLake will take written INCA input, either written just now 
 
 is_metrics = true; % print metrics in the end
 
-m_start=[2000, 1, 1]; %
-m_stop=[2000, 12, 31]; %
+m_start=[1995, 1, 1]; %
+m_stop=[2013, 12, 31]; %
 
 save_initial_conditions = false; % save final concentrations as initial for the next run
-file_name = 'IO/test_C.mat'
+file_name = 'IO/calibrated.mat'
 
 [lake_params, sediment_params] = load_params();
 
