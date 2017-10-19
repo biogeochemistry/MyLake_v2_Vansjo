@@ -1,8 +1,16 @@
 import numpy as np
 
 
-def percentage_deviation(x_model, x_measured):
-    return sum(sum(abs(np.transpose(x_model) - x_measured) / abs(x_measured)))
+def percentage_deviation(s, o):
+    """
+    Percent deviation
+    input:
+        s: simulated
+        o: observed
+    output:
+        percent deviation
+    """
+    return sum(sum(abs(np.transpose(s) - o) / abs(o)))
 
 
 def filter_nan(s, o):
@@ -110,7 +118,7 @@ def NS(s, o):
     return 1 - sum((s - o)**2) / sum((o - np.mean(o))**2)
 
 
-def L(s, o, N=5):
+def likelihood(s, o, N=5):
     """
     Likelihood
     input:
@@ -130,7 +138,7 @@ def correlation(s, o):
         s: simulated
         o: observed
     output:
-        correlation: correlation coefficient
+        corr: correlation coefficient
     """
     s, o = filter_nan(s, o)
     if s.size == 0:
@@ -156,12 +164,28 @@ def index_agreement(s, o):
     return ia
 
 
-def squared_error(o, s):
+def squared_error(s, o):
+    """
+    squared error
+    input:
+        s: simulated
+        o: observed
+    output:
+        se: squared error
+    """
     return sum((s - o)**2)
 
 
 def coefficient_of_determination(s, o):
+    """
+    coefficient of determination
+    input:
+        s: simulated
+        o: observed
+    output:
+        cd: coefficient of determination
+    """
     o_mean = np.mean(o)
-    squared_error_regr = squared_error(o, s)
-    squared_error_y_mean = squared_error(o, o_mean)
-    return 1 - (squared_error_regr / squared_error_y_mean)
+    se = squared_error(o, s)
+    se_mean = squared_error(o, o_mean)
+    return 1 - (se / se_mean)
