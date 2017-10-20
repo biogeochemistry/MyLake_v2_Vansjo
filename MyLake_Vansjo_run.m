@@ -93,6 +93,7 @@ x(5) = 0.01; % 18    Settling velocity for Chl2 a (m day-1)
 
 % x = [0.0643, 0.28, 1.0077, 1.7957, 0.0688, 0.2460, 1.3924, 0.3426, 0.0644, 1.7694, 1.25, 0.3723, 0.2254, 0, 1.4055e-5, 2.9596e-5, 0.0230, 0.0289]; % RMSD 148.29 NIva24core
 
+
 lake_params{52 -5} = x(1); % 9     settling velocity for Chl1 a (m day-1)
 lake_params{54 -5} = x(2); % 11    loss rate (1/day) at 20 deg C
 lake_params{55 -5} = x(3); % 12    specific growth rate (1/day) at 20 deg C
