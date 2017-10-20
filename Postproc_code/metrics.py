@@ -1,16 +1,5 @@
 import numpy as np
-
-
-def percentage_deviation(s, o):
-    """
-    Percent deviation
-    input:
-        s: simulated
-        o: observed
-    output:
-        percent deviation
-    """
-    return sum(sum(abs(np.transpose(s) - o) / abs(o)))
+from sklearn.metrics import r2_score
 
 
 def filter_nan(s, o):
@@ -25,6 +14,18 @@ def filter_nan(s, o):
     data = np.transpose(data)
     data = data[~np.isnan(data).any(1)]
     return data[:, 0], data[:, 1]
+
+
+def percentage_deviation(s, o):
+    """
+    Percent deviation
+    input:
+        s: simulated
+        o: observed
+    output:
+        percent deviation
+    """
+    return sum(sum(abs(s - o) / abs(o)))
 
 
 def pc_bias(s, o):
@@ -178,14 +179,19 @@ def squared_error(s, o):
 
 def coefficient_of_determination(s, o):
     """
-    coefficient of determination
+    coefficient of determination (r-squared)
     input:
         s: simulated
         o: observed
     output:
-        cd: coefficient of determination
+        r2: coefficient of determination
     """
     o_mean = np.mean(o)
-    se = squared_error(o, s)
+    se = squared_error(s, o)
     se_mean = squared_error(o, o_mean)
-    return 1 - (se / se_mean)
+    r2 = 1 - (se / se_mean)
+    return r2
+
+
+def rsquared(s, o):
+    return r2_score(o, s)
