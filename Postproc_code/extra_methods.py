@@ -54,8 +54,8 @@ def run_metrics(days_sim, values_sim, days_obs, values_obs, calibration_end_date
         calibration_end_date (str, optional): date of end of calibration
         methods (list of python methods, optional): methods of metrics
     """
-    idxs_sim_before, idxs_sim_after = find_indeces_of_dates(days_sim, days_obs, calibration_end_date='2010-01-01')
-    idxs_obs_before, idxs_obs_after = find_indeces_of_dates(days_obs, days_sim, calibration_end_date='2010-01-01')
+    idxs_sim_before, idxs_sim_after = find_indeces_of_dates(days_sim, days_obs, calibration_end_date=calibration_end_date)
+    idxs_obs_before, idxs_obs_after = find_indeces_of_dates(days_obs, days_sim, calibration_end_date=calibration_end_date)
 
     print('{0: <35}'.format('Metrics'), end='')
     print('{0: <30}'.format('During calibration'), end='')
