@@ -2,7 +2,6 @@ import numpy as np
 import datetime
 import metrics
 
-
 def convert_timestamp_to_num(timestamp):
     return (timestamp.date() - datetime.date(1, 1, 1)).days + 367
 
@@ -66,6 +65,3 @@ def run_metrics(days_sim, values_sim, days_obs, values_obs, calibration_end_date
         print('\t {0: <30}'.format(m(values_sim.take(idxs_sim_before), values_obs.take(idxs_obs_before))), end='')
         print('\t {0: <30}'.format(m(values_sim.take(idxs_sim_after), values_obs.take(idxs_obs_after))))
 
-
-[metrics.rmse, metrics.correlation, metrics.percentage_deviation, metrics.pc_bias, metrics.apb, metrics.norm_rmse, metrics.mae,
-    metrics.bias, metrics.NS, metrics.likelihood, metrics.index_agreement, metrics.squared_error, metrics.coefficient_of_determination]
