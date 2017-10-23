@@ -166,19 +166,23 @@ class ResultsPlotter:
                 units = '[$mg/m^3$]'
         return coef, units
 
-    def flux(self, elem, convert_units=False, smoothing_factor=False, years_ago=0.):
+    def flux(self, elem, convert_units=False,
+             smoothing_factor=False, years_ago=0.):
+
         results = self.env_getter('sediment', basin=1)
 
         plt.figure(figsize=(6, 4), dpi=192)
         start = int(-365 * (years_ago + 1))
         end = int(-365 * years_ago - 1)
         x = results['days'][0, 0][0][start:end] - 366
-        y = results['sediment_transport_fluxes'][0, 0][elem][0, 0][0][start:end]
+        y = results['sediment_transport_fluxes'][0,
+                                                 0][elem][0, 0][0][start:end]
         total = {}
         lines = {}
         if convert_units:
             y = y / (molar_masses[elem] * 10**4 / 365 / 10**6)
-            lbl = '[' + find_element_name(elem) + ']' + ' flux, $[umol/cm^{2}/y]$'
+            lbl = '[' + find_element_name(elem) + ']' + \
+                ' flux, $[umol/cm^{2}/y]$'
             total['D'] = np.trapz(y, x / 365)
         else:
             lbl = '[' + find_element_name(elem) + ']' + ' flux, $[mg/m^{2}/d]$'
@@ -186,15 +190,18 @@ class ResultsPlotter:
         if smoothing_factor:
             spl = UnivariateSpline(x, y)
             spl.set_smoothing_factor(smoothing_factor)
-            lines['D'], = plt.plot(x, spl(x), sns.xkcd_rgb["denim blue"], lw=3, label='Transport')
+            lines['D'], = plt.plot(
+                x, spl(x), sns.xkcd_rgb["denim blue"], lw=3, label='Transport')
         else:
-            lines['D'], = plt.plot(x, y, sns.xkcd_rgb["denim blue"], lw=3, label='Transport')
+            lines['D'], = plt.plot(
+                x, y, sns.xkcd_rgb["denim blue"], lw=3, label='Transport')
 
         try:
             b = results['Bioirrigation_fx_zt'][0, 0][elem][0, 0][0][start:end]
             if convert_units:
                 b = b / (molar_masses[elem] * 10**4 / 365 / 10**6)
-            lines['B'], = plt.plot(x, b, sns.xkcd_rgb["medium green"], lw=3, label='Bioirrigation')
+            lines['B'], = plt.plot(
+                x, b, sns.xkcd_rgb["medium green"], lw=3, label='Bioirrigation')
             if convert_units:
                 x = x / 365
             total['B'] = np.trapz(b, x)
@@ -205,13 +212,15 @@ class ResultsPlotter:
             lbl_2 = ' $[umol/cm^{2}]$'
         else:
             lbl_2 = ' $[mg/m^{2}]$'
-        leg1 = plt.legend([lines[e] for e in lines.keys()], ["{:.2f} ".format(total[e]) + lbl_2 for e in total.keys()], loc=4, frameon=1, title="Integrated over time")
+        leg1 = plt.legend([lines[e] for e in lines.keys()], ["{:.2f} ".format(
+            total[e]) + lbl_2 for e in total.keys()], loc=4, frameon=1, title="Integrated over time")
         ax = plt.gca()
         ax.set_ylabel(lbl)
         ax.ticklabel_format(useOffset=False)
         ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
-        ax.set_xlim([results['days'][0, 0][0][start:end][0] - 366, results['days'][0, 0][0][start:end][-1] - 366])
+        ax.set_xlim([results['days'][0, 0][0][start:end][0] - 366,
+                     results['days'][0, 0][0][start:end][-1] - 366])
         ax.grid(linestyle='-', linewidth=0.2)
         ax.legend(loc=1)
         plt.gca().add_artist(leg1)
@@ -264,7 +273,8 @@ class ResultsPlotter:
             if e is 'Temperature':
                 units = r'Temperature, C'
         if not log_scale:
-            leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
+            leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(
+                mass_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
         plt.xlabel(units)
         if env == 'water':
             plt.ylabel('Depth, [m]')
@@ -306,7 +316,8 @@ class ResultsPlotter:
                     sys.exit()
                 rate_per_area[rate] = np.trapz(y * theta, z)
         lbl = r'$umol/cm^{2} / y$'
-        leg1 = plt.legend([lines[rate] for rate in rates], ["{:.2f} ".format(rate_per_area[rate]) + lbl for rate in rates], loc=4, frameon=1, title="Integrated over depth")
+        leg1 = plt.legend([lines[rate] for rate in rates], ["{:.2f} ".format(
+            rate_per_area[rate]) + lbl for rate in rates], loc=4, frameon=1, title="Integrated over depth")
         plt.xlabel('$umol/cm^{3}/y$')
         if env == 'water':
             plt.ylabel('Depth, [m]')
@@ -326,26 +337,31 @@ class ResultsPlotter:
         plt.figure(figsize=(6, 4), dpi=192)
         start = int(-365 * (years_ago + 1))
         end = int(-365 * years_ago - 1)
-        X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 365, -results['z'][0, 0][0: -1])
+        X, Y = np.meshgrid(results['days'][0, 0][0]
+                           [start:end] - 365, -results['z'][0, 0][0: -1])
         z = 0
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
             try:
-                z += results['concentrations'][0, 0][e][0, 0][0: -1, start:end] * coef
+                z += results['concentrations'][0,
+                                               0][e][0, 0][0: -1, start:end] * coef
             except:
                 z += results[e][0, 0][0:-1, start:end] * coef
 
         v = np.linspace(0, z.max(), 51, endpoint=True)
-        CS = plt.contourf(X, Y, z, v, cmap=cmap, origin='lower', vmin=0, vmax=z.max())  # v, vmin=0, vmax=z.max()
+        CS = plt.contourf(X, Y, z, v, cmap=cmap, origin='lower',
+                          vmin=0, vmax=z.max())  # v, vmin=0, vmax=z.max()
         cbar = plt.colorbar(CS)
 
         plt.ylabel('Depth, [cm]')
         plt.ylim(Y.min(), 0)
         if env == 'water':
             ice_thickness = results['His'][0, 0][0, start:end]
-            plt.fill_between(results['days'][0, 0][0][start:end] - 366, 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
+            plt.fill_between(results['days'][0, 0][0][start:end] - 366, 0, -ice_thickness,
+                             where=-ice_thickness <= 0, facecolor='red', interpolate=True)
             TCz = results['MixStat'][0, 0][11, start:end]
-            plt.plot(results['days'][0, 0][0][start:end] - 366, -TCz * (TCz > 1), lw=0.2, c='k')
+            plt.plot(results['days'][0, 0][0][start:end] -
+                     366, -TCz * (TCz > 1), lw=0.2, c='k')
             plt.ylabel('Depth, [m]')
 
         ax = plt.gca()
@@ -369,14 +385,16 @@ class ResultsPlotter:
         plt.figure(figsize=(6, 4), dpi=192)
         start = int(-365 * (years_ago + 1))
         end = int(-365 * years_ago - 1)
-        X, Y = np.meshgrid(results['days'][0, 0][0][start:end], -results['z'][0, 0])
+        X, Y = np.meshgrid(results['days'][0, 0][0]
+                           [start:end], -results['z'][0, 0])
         z = 0
         for e in elem:
             z += results['dcdt'][0, 0][e][0, 0][:, start:end]
         # CS = plt.contourf(X, Y, z, 51, cmap=cmap, origin='lower')
         lim = np.max(np.abs(z))
         lim = np.linspace(-lim - 1e-16, +lim + 1e-16, 51)
-        CS = plt.contourf(X, Y, z, 51, cmap=ListedColormap(sns.color_palette("RdBu_r", 101)), origin='lower', levels=lim, extend='both')
+        CS = plt.contourf(X, Y, z, 51, cmap=ListedColormap(sns.color_palette(
+            "RdBu_r", 101)), origin='lower', levels=lim, extend='both')
     #     plt.clabel(CS, inline=1, fontsize=10, colors='w')
         cbar = plt.colorbar(CS)
 
@@ -384,7 +402,8 @@ class ResultsPlotter:
 
         if env == 'water':
             ice_thickness = results['His'][0, 0][0, start:end]
-            plt.fill_between(results['days'][0, 0][0][start:end], 0, -ice_thickness, where=-ice_thickness <= 0, facecolor='red', interpolate=True)
+            plt.fill_between(results['days'][0, 0][0][start:end], 0, -ice_thickness,
+                             where=-ice_thickness <= 0, facecolor='red', interpolate=True)
             plt.ylabel('Depth, [m]')
         ax = plt.gca()
         ax.ticklabel_format(useOffset=False)
@@ -414,11 +433,14 @@ class ResultsPlotter:
         for e in elem:
             coef, units = self.unit_converter(convert_units, 'sediment', e)
             if e in disolved:
-                y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef * fi
+                y = results['concentrations'][0,
+                                              0][e][0, 0][:, -1 + end] * coef * fi
             elif e in solid:
-                y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef * (1 - fi)
+                y = results['concentrations'][0, 0][e][0,
+                                                       0][:, -1 + end] * coef * (1 - fi)
             else:
-                print(e + " is not in solid or dissolved species. Check the dictionaries.")
+                print(
+                    e + " is not in solid or dissolved species. Check the dictionaries.")
                 sys.exit()
             lines[e], = plt.plot(y, -z, lw=3, label=find_element_name(e))
             if convert_units:
@@ -427,7 +449,8 @@ class ResultsPlotter:
             elif not convert_units:
                 mass_per_area[e] = np.trapz(y, z)
                 lbl = r'$umol/cm^{2}$'
-        leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
+        leg1 = plt.legend([lines[e] for e in elem], ["{:.2f} ".format(
+            mass_per_area[e]) + lbl for e in elem], loc=4, frameon=1, title="Integrated over depth")
         plt.xlabel(units)
         plt.ylabel('Depth, [cm]')
         ax = plt.gca()
@@ -448,17 +471,20 @@ class ResultsPlotter:
         t = results['days'][0, 0][0] - 366
 
         df = pd.read_csv('../obs/vanem_obs/temperature.txt', sep=',')
-        df.rename(columns={r'Dato': 'date', 'TemperaturC': 'T', 'Depthm': 'z'}, inplace=True)
+        df.rename(columns={r'Dato': 'date',
+                           'TemperaturC': 'T', 'Depthm': 'z'}, inplace=True)
         df['date'] = pd.to_datetime(df['date'], errors='coerce')
         df = df.dropna()
         unique_depths = df.z.unique()
 
-        fig, axes = plt.subplots(len(unique_depths), 1, sharex='col', figsize=(8, len(unique_depths) * 1.5), dpi=192)
+        fig, axes = plt.subplots(len(unique_depths), 1, sharex='col', figsize=(
+            8, len(unique_depths) * 1.5), dpi=192)
 
         for i, d in enumerate(np.sort(df.z.unique())):
             inx = np.where(results['z'][0, 0] == d)[0][0]
             axes[i].plot(t, T[inx, :], c=sns.xkcd_rgb["denim blue"], lw=2)
-            axes[i].plot(df[df.z == d].date, df[df.z == d]['T'], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4, label=str(d) + ' m')
+            axes[i].plot(df[df.z == d].date, df[df.z == d]['T'], 'bo',
+                         c=sns.xkcd_rgb["pale red"], markersize=4, label=str(d) + ' m')
 
         axes[3].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
         axes[3].xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
@@ -481,33 +507,45 @@ class ResultsPlotter:
         TOTP = np.mean(results['concentrations'][0, 0]['P'][0, 0][0:inx, :], axis=0) + \
             np.mean(results['concentrations'][0, 0]['PP'][0, 0][0:inx, :], axis=0) + \
             np.mean(results['concentrations'][0, 0]['DOP'][0, 0][0:inx, :], axis=0) + \
-            np.mean(results['concentrations'][0, 0]['POP'][0, 0][0:inx, :], axis=0)
+            np.mean(results['concentrations'][0, 0]
+                    ['POP'][0, 0][0:inx, :], axis=0)
         # np.mean(results['concentrations'][0, 0]['Chl'][0, 0][0:inx, :], axis=0) + \
         # np.mean(results['concentrations'][0, 0]['C'][0, 0][0:inx, :], axis=0)
         Chl = np.mean(results['concentrations'][0, 0]['C'][0, 0][0:inx, :], axis=0) + np.mean(results['concentrations'][0, 0]['Chl']
                                                                                               [0, 0][0:inx, :], axis=0)
-        PO4 = np.mean(results['concentrations'][0, 0]['P'][0, 0][0:inx, :], axis=0)
+        PO4 = np.mean(results['concentrations'][0, 0]
+                      ['P'][0, 0][0:inx, :], axis=0)
 
-        Part = np.mean(results['concentrations'][0, 0]['POP'][0, 0][0:inx, :], axis=0)
+        Part = np.mean(results['concentrations'][0, 0]
+                       ['POP'][0, 0][0:inx, :], axis=0)
 
         # + np.mean(results['concentrations'][0, 0]['POC'][0, 0][0:inx, :], axis=0)
 
-        axes[0].plot(-366 + results['days'][0, 0][0], TOTP, c=sns.xkcd_rgb["denim blue"], lw=3, label='Total P')
-        axes[1].plot(-366 + results['days'][0, 0][0], Chl, c=sns.xkcd_rgb["denim blue"], lw=3, label='Chl-a')
-        axes[2].plot(-366 + results['days'][0, 0][0], PO4, c=sns.xkcd_rgb["denim blue"], lw=3, label='PO_4')
-        axes[3].plot(-366 + results['days'][0, 0][0], Part, c=sns.xkcd_rgb["denim blue"], lw=3, label='POP')
+        axes[0].plot(-366 + results['days'][0, 0][0], TOTP,
+                     c=sns.xkcd_rgb["denim blue"], lw=3, label='Total P')
+        axes[1].plot(-366 + results['days'][0, 0][0], Chl,
+                     c=sns.xkcd_rgb["denim blue"], lw=3, label='Chl-a')
+        axes[2].plot(-366 + results['days'][0, 0][0], PO4,
+                     c=sns.xkcd_rgb["denim blue"], lw=3, label='PO_4')
+        axes[3].plot(-366 + results['days'][0, 0][0], Part,
+                     c=sns.xkcd_rgb["denim blue"], lw=3, label='POP')
         # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['DOP'][0, 0][0:inx, :], axis=0), lw=3, label='DOP')
         # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['P'][0, 0][0:inx, :], axis=0), lw=3, label='P')
         # axes[4].plot(-366 + results['days'][0, 0][0], np.mean(results['POC'][0, 0][0:inx, :], axis=0), lw=3, label='POC')
 
         TOTP = np.loadtxt('../obs/store_obs/TOTP.dat', delimiter=',')
-        Chl = np.loadtxt('../obs/store_obs/Cha_aquaM_march_2017.dat', delimiter=',')
+        Chl = np.loadtxt(
+            '../obs/store_obs/Cha_aquaM_march_2017.dat', delimiter=',')
         PO4 = np.loadtxt('../obs/store_obs/PO4.dat', delimiter=',')
         Part = np.loadtxt('../obs/store_obs/Part.dat', delimiter=',')
-        axes[0].plot(-366 + TOTP[:, 0], TOTP[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
-        axes[1].plot(-366 + Chl[:, 0], Chl[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
-        axes[2].plot(-366 + PO4[:, 0], PO4[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
-        axes[3].plot(-366 + Part[:, 0], Part[:, 1], 'bo', c=sns.xkcd_rgb["pale red"], markersize=4)
+        axes[0].plot(-366 + TOTP[:, 0], TOTP[:, 1], 'bo',
+                     c=sns.xkcd_rgb["pale red"], markersize=4)
+        axes[1].plot(-366 + Chl[:, 0], Chl[:, 1], 'bo',
+                     c=sns.xkcd_rgb["pale red"], markersize=4)
+        axes[2].plot(-366 + PO4[:, 0], PO4[:, 1], 'bo',
+                     c=sns.xkcd_rgb["pale red"], markersize=4)
+        axes[3].plot(-366 + Part[:, 0], Part[:, 1], 'bo',
+                     c=sns.xkcd_rgb["pale red"], markersize=4)
 
         axes[3].xaxis.set_major_locator(mdates.MonthLocator(interval=12))
         axes[3].xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
@@ -526,7 +564,8 @@ class ResultsPlotter:
 
         for e in elem:
             y = results['concentrations'][0, 0]['P'][0, 0][inx, :]
-            plt.scatter(-366 + results['days'][0, 0][0], y, lw=3, label=find_element_name(e))
+            plt.scatter(-366 + results['days'][0, 0]
+                        [0], y, lw=3, label=find_element_name(e))
         ax = plt.gca()
         ax.ticklabel_format(useOffset=False)
         ax.grid(linestyle='-', linewidth=0.2)
@@ -539,7 +578,8 @@ class ResultsPlotter:
         plt.show()
 
     def oxygen_fit_wc(self, depth, ax=None, dstart='2005-03-07', dend='2011-03-07'):
-        self.plot_fit_wc(['O2'], depth, ax=None, dstart=dstart, dend=dend, factor=1e-3)
+        self.plot_fit_wc(['O2'], depth, ax=None,
+                         dstart=dstart, dend=dend, factor=1e-3)
 
     def plot_fit_wc(self, elements, depth, ax=None, dstart='2005-03-07', dend='2011-03-07', factor=1):
         env = 'water'
