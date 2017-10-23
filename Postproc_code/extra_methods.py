@@ -16,13 +16,13 @@ def find_indeces_of_dates(s, o, calibration_end_date='2010-01-01'):
     Args:
         s: simulated date
         o: observed date
-        calibration_end_date (str, optional): calibration/validation date 
+        calibration_end_date (str, optional): calibration/validation date
         border
 
     Returns:
-        idxs_before: indexes of observed values in simulated array before 
+        idxs_before: indexes of observed values in simulated array before
         calibration_end_date
-        idxs_after: indexes of observed values in simulated array after 
+        idxs_after: indexes of observed values in simulated array after
         calibration_end_date
     """
     idxs_before = np.array([])
@@ -52,7 +52,8 @@ def elements_at_indexes(sv, idxs):
     return sv.take(idxs)
 
 
-def run_metrics(days_sim, values_sim, days_obs, values_obs, calibration_end_date='2010-01-01', methods=[metrics.rmse, metrics.correlation, metrics.pc_bias, metrics.apb, metrics.norm_rmse, metrics.mae, metrics.bias, metrics.NS, metrics.likelihood, metrics.index_agreement, metrics.squared_error, metrics.coefficient_of_determination]):
+def run_metrics(days_sim, values_sim, days_obs, values_obs, calibration_end_date='2010-01-01',
+                methods=[metrics.mae, metrics.rmse, metrics.correlation, metrics.rsquared, metrics.pc_bias, metrics.likelihood, metrics.NS]):
     """ run specific metrics for measured and simulated data
     Args:
         days_sim (array): matlabs datenum date
@@ -76,3 +77,29 @@ def run_metrics(days_sim, values_sim, days_obs, values_obs, calibration_end_date
             m(values_sim.take(idxs_sim_before), values_obs.take(idxs_obs_before))), end='')
         print('\t {0: <30}'.format(
             m(values_sim.take(idxs_sim_after), values_obs.take(idxs_obs_after))))
+
+
+def generate_latex_table(days_sim, values_sim, days_obs, values_obs, calibration_end_date='2010-01-01',
+                         methods=[metrics.mae, metrics.rmse, metrics.correlation, metrics.rsquared, metrics.pc_bias, metrics.likelihood, metrics.NS]):
+    """ run specific metrics for measured and simulated data
+    Args:
+        days_sim (array): matlabs datenum date
+        values_sim (array): simulated values
+        days_obs (array): matlabs datenum date
+        values_obs (array): observed values
+        calibration_end_date (str, optional): date of end of calibration
+        methods (list of python methods, optional): methods of metrics
+    """
+    idxs_sim_before, idxs_sim_after = find_indeces_of_dates(
+        days_sim, days_obs, calibration_end_date=calibration_end_date)
+    idxs_obs_before, idxs_obs_after = find_indeces_of_dates(
+        days_obs, days_sim, calibration_end_date=calibration_end_date)
+
+    for m in methods:
+        #     print('{0: <30}'.format(m.__name__), end='')
+        print(' & ', end='')
+        print('{0:0.2f}'.format(
+            m(values_sim.take(idxs_sim_before), values_obs.take(idxs_obs_before))), end=' / ')
+        print('{0:0.2f}'.format(
+            m(values_sim.take(idxs_sim_after), values_obs.take(idxs_obs_after))), end='')
+    print(' \\\\')
