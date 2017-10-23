@@ -18,4 +18,4 @@ def plot_depth(df, y, depth, ax=None):
         ax = plt.gca()
     ax.plot_date(df[(np.isfinite(df[y])) & (df['Depth1'] == depth)][x], df[(
         np.isfinite(df[y])) & (df.Depth1 == depth)][y], label=y + ' at ' + str(depth) + ' m')
-    return ax  # wterr
+    return ax
