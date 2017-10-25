@@ -10,7 +10,7 @@ def convert_timestamp_to_num(timestamp):
     return (timestamp.date() - datetime.date(1, 1, 1)).days + 367
 
 
-def find_indeces_of_dates(s, o, calibration_end_date='2010-01-01'):
+def find_indexes_of_dates(s, o, calibration_end_date='2010-01-01'):
     """
     find indexes of dates simulated vs observed
     Args:
@@ -65,11 +65,11 @@ def intersaction_of_sim_with_obs(days_sim, values_sim, days_obs, values_obs):
         s: Description
         o:
     """
-    idxs_sim_before, idxs_sim_after = find_indeces_of_dates(
+    idxs_sim_before, idxs_sim_after = find_indexes_of_dates(
         days_sim, days_obs, calibration_end_date='2010-01-01')
     idxs_sim = np.append(idxs_sim_before, idxs_sim_after)
 
-    idxs_obs_before, idxs_obs_after = find_indeces_of_dates(
+    idxs_obs_before, idxs_obs_after = find_indexes_of_dates(
         days_obs, days_sim, calibration_end_date='2010-01-01')
     idxs_obs = np.append(idxs_obs_before, idxs_obs_after)
     return values_sim.take(idxs_sim), values_obs.take(idxs_obs)
@@ -86,9 +86,9 @@ def run_metrics(days_sim, values_sim, days_obs, values_obs, calibration_end_date
         calibration_end_date (str, optional): date of end of calibration
         methods (list of python methods, optional): methods of metrics
     """
-    idxs_sim_before, idxs_sim_after = find_indeces_of_dates(
+    idxs_sim_before, idxs_sim_after = find_indexes_of_dates(
         days_sim, days_obs, calibration_end_date=calibration_end_date)
-    idxs_obs_before, idxs_obs_after = find_indeces_of_dates(
+    idxs_obs_before, idxs_obs_after = find_indexes_of_dates(
         days_obs, days_sim, calibration_end_date=calibration_end_date)
 
     print('{0: <35}'.format('Metrics'), end='')
@@ -113,9 +113,9 @@ def generate_latex_table(days_sim, values_sim, days_obs, values_obs, calibration
         calibration_end_date (str, optional): date of end of calibration
         methods (list of python methods, optional): methods of metrics
     """
-    idxs_sim_before, idxs_sim_after = find_indeces_of_dates(
+    idxs_sim_before, idxs_sim_after = find_indexes_of_dates(
         days_sim, days_obs, calibration_end_date=calibration_end_date)
-    idxs_obs_before, idxs_obs_after = find_indeces_of_dates(
+    idxs_obs_before, idxs_obs_after = find_indexes_of_dates(
         days_obs, days_sim, calibration_end_date=calibration_end_date)
 
     for m in methods:
