@@ -52,6 +52,29 @@ def elements_at_indexes(sv, idxs):
     return sv.take(idxs)
 
 
+def intersaction_of_sim_with_obs(days_sim, values_sim, days_obs, values_obs):
+    """Summary
+
+    Args:
+        days_sim (TYPE): Description
+        values_sim (TYPE): Description
+        days_obs (TYPE): Description
+        values_obs (TYPE): Description
+
+    Returns:
+        s: Description
+        o:
+    """
+    idxs_sim_before, idxs_sim_after = find_indeces_of_dates(
+        days_sim, days_obs, calibration_end_date='2010-01-01')
+    idxs_sim = np.append(idxs_sim_before, idxs_sim_after)
+
+    idxs_obs_before, idxs_obs_after = find_indeces_of_dates(
+        days_obs, days_sim, calibration_end_date='2010-01-01')
+    idxs_obs = np.append(idxs_obs_before, idxs_obs_after)
+    return values_sim.take(idxs_sim), values_obs.take(idxs_obs)
+
+
 def run_metrics(days_sim, values_sim, days_obs, values_obs, calibration_end_date='2010-01-01',
                 methods=[metrics.mae, metrics.rmse, metrics.correlation, metrics.rsquared, metrics.pc_bias, metrics.likelihood, metrics.NS]):
     """ run specific metrics for measured and simulated data
@@ -80,7 +103,7 @@ def run_metrics(days_sim, values_sim, days_obs, values_obs, calibration_end_date
 
 
 def generate_latex_table(days_sim, values_sim, days_obs, values_obs, calibration_end_date='2010-01-01',
-                         methods=[metrics.mae, metrics.rmse, metrics.correlation, metrics.rsquared, metrics.pc_bias, metrics.likelihood, metrics.NS]):
+                         methods=[metrics.mae, metrics.pc_bias, metrics.rmse, metrics.correlation, metrics.rsquared]):
     """ run specific metrics for measured and simulated data
     Args:
         days_sim (array): matlabs datenum date

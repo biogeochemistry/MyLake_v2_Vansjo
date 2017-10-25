@@ -108,7 +108,7 @@ def bias(s, o):
 
 def NS(s, o):
     """
-    Nash Sutcliffe efficiency coefficient
+    Nash Sutcliffe efficiency coefficient (the same as r^2)
     input:
         s: simulated
         o: observed
