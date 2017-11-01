@@ -92,6 +92,7 @@ try
 
     depths = [5;10;15;20;25;30;35;40];
     rmsd_O2 = 0;
+    rsquared_O2 = 0;
 
 
     for i=1:size(depths,1)
@@ -105,9 +106,11 @@ try
         O2_mod = MyLake_results.basin1.concentrations.O2(zinx,:)'/1000;
         [T_date,loc_sim, loc_obs] = intersect(MyLake_results.basin1.days, day_measured);
 
-        rmsd_O2 = rmsd_O2 + RMSE(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
+        rmsd_O2(i) = rmsd(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
+        rsquared_O2(i) = rsquared(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
         % rmsd_O2 = rmsd_O2 + sqrt(mean((O2_mod(loc_sim, 1)-O2_measured(loc_obs, 1)).^2));
     end
+
 
     zinx=find(MyLake_results.basin1.z<4);
     TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.DOP(zinx,:) + MyLake_results.basin1.concentrations.POP(zinx,:))', 2);
@@ -123,24 +126,29 @@ try
 
 
     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, TOTP(:,1)));
-    rmsd_TOTP = RMSE(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
+    rmsd_TOTP = rmsd(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
+    rsquared_TOTP = rsquared(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
 
 
     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha_aquaM_march_2017(:,1)));
-    rmsd_Chl = RMSE(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
+    rmsd_Chl = rmsd(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
+    rsquared_Chl = rsquared(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
 
 
     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
-    rmsd_PO4 = RMSE(P_mod(loc_sim, 1), PO4(loc_obs, 2));
+    rmsd_PO4 = rmsd(P_mod(loc_sim, 1), PO4(loc_obs, 2));
+    rsquared_PO4 = rsquared(P_mod(loc_sim, 1), PO4(loc_obs, 2));
 
 
     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Part(:,1)));
-    rmsd_PP = RMSE(POP_mod(loc_sim, 1), Part(loc_obs, 2));
+    rmsd_PP = rmsd(POP_mod(loc_sim, 1), Part(loc_obs, 2));
+    rsquared_PP = rsquared(POP_mod(loc_sim, 1), Part(loc_obs, 2));
 
 
     x'
 
-    res = sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2])
+    % res = sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2])
+    res = sum([- (rsquared_TOTP + 1) .* rmsd_TOTP, - (rsquared_Chl + 1) .* rmsd_Chl, - (rsquared_PO4 + 1) .* rmsd_PO4, - (rsquared_PP + 1) .* rmsd_PP, mean(- (rsquared_O2 + 1) .* rmsd_O2)])
 
 catch ME
     fprintf('\tID: %s\n', ME.identifier)
@@ -153,8 +161,6 @@ catch ME
 end
 
 
-function r = RMSE(y, yhat)
-    r = sqrt(mean((y-yhat).^2));
 
 function [c,ceq] = nonlcon(x)
 c = -x;
