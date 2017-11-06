@@ -61,7 +61,7 @@ def rmse(s, o):
         s: simulated
         o: observed
     output:
-        rmses: root mean squared error
+        rmse: root mean squared error
     """
     s, o = filter_nan(s, o)
     return np.sqrt(np.mean((s - o)**2))
