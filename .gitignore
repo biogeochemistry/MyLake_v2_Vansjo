@@ -3,3 +3,4 @@
 .vscode/settings.json
 .vscode/tags
 /.vscode/
+*.DS_Store
