@@ -1,4 +1,5 @@
-for i=1:1000
+for i = 1:1000
+    
 tic
 disp('Started at:')
 disp(datetime('now'));
@@ -14,7 +15,7 @@ m_stop=[2013, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
 save_initial_conditions = true; % save final concentrations as initial for the next run
-file_name = 'IO/test.mat'
+file_name = 'IO/vansjo_run.mat'
 
 [lake_params, sediment_params] = load_params();
 
