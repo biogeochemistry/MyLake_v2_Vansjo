@@ -28,11 +28,14 @@ x(14) = 21.5114e+000; % 65.1237e+000   %    accel
 x(15) = 373.1228e-003; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 
 % Ecomac-2 results "-RMSD*(R^2 - 1) = 42" % ====================================================
-x = [0.0509799553636229; 0.112442493655332; 1.28362330332034; 1.36809570914136; 0.0501864460452149; 0.108370399688849; 1.46968213451174; 1.53127867204317; 0.0473597449781419; 2.37096381881603e-05; 3.26782527521984e-05; 0.0449499936004535; 0.0403445049032881; 20.3036606042011; 0.622744575375964];
+x = [0.0509799553636229; 0.112442493655332; 1.28362330332034; 1.36809570914136; 0.0501864460452149; 0.108370399688849; 1.46968213451174; 1.53127867204317; 0.0473597449781419; 2.37096381881603e-05; 3.26782527521984e-05; 0.0449499936004535; 0.0403445049032881; 20.3036606042011; 0.622744575375964; 0.4; 0.04; 0.02; 0.04; 0.02; 0.3; 0.3];
 
 
-lb = [0.05 , 0.1 , 1   , 0.2 , 0.05 , 0.1 , 1   , 0.2 , 0.01 , 1e-5 , 1e-5 , 0.005 , 0.005 , 1   , 0];
-ub = [0.5  , 0.3 , 1.5 , 2   , 0.5  , 0.3 , 1.5 , 2   , 1    , 1e-4 , 1e-4 , 0.045 , 0.045 , 100 , 1];
+
+
+
+lb = [0.05 , 0.1 , 1   , 0.2 , 0.05 , 0.1 , 1   , 0.2 , 0.01 , 1e-5 , 1e-5 , 0.005 , 0.005 , 1   , 0, 0.01, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001];
+ub = [0.5  , 0.3 , 1.5 , 2   , 0.5  , 0.3 , 1.5 , 2   , 1    , 1e-4 , 1e-4 , 0.045 , 0.045 , 100 , 1,    1, 0.1,   0.1,   0.1,   0.1,   0.1,   0.1 ];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
@@ -69,6 +72,16 @@ lake_params{12} = x(12); % 45.0000e-003  % 12    Optical cross_section of chloro
 lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
 sediment_params{52} = x(14); % 65.1237e+000   %    accel
 lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+
+
+sediment_params{1} = x(16);  %   'k_Chl',                 %        % 1
+sediment_params{2} = x(17);  %  'k_POP',                 %        % 1
+sediment_params{3} = x(18);  % 'k_POC',                  %        % 0.01
+sediment_params{4} = x(19);  %  'k_DOP',                 %        % 1
+sediment_params{5} = x(20);  % 'k_DOC',                  %        % 1
+sediment_params{23} = x(21);  %     'k_pdesorb_a',         % 
+sediment_params{24} = x(22);  %     'k_pdesorb_b',         % 
+
 
 sediment_params{73}  = 48;
 
