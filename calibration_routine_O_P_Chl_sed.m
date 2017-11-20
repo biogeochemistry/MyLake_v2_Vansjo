@@ -35,7 +35,7 @@ x = [0.0509799553636229; 0.112442493655332; 1.28362330332034; 1.36809570914136; 
 
 
 lb = [0.05 , 0.1 , 1   , 0.2 , 0.05 , 0.1 , 1   , 0.2 , 0.01 , 1e-5 , 1e-5 , 0.005 , 0.005 , 1   , 0, 0.01, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001];
-ub = [0.5  , 0.3 , 1.5 , 2   , 0.5  , 0.3 , 1.5 , 2   , 1    , 1e-4 , 1e-4 , 0.045 , 0.045 , 100 , 1,    1, 0.1,   0.1,   0.1,   0.1,   0.1,   0.1 ];
+ub = [0.5  , 0.3 , 1.5 , 2   , 0.5  , 0.3 , 1.5 , 2   , 1    , 1e-4 , 1e-4 , 0.045 , 0.045 , 100 , 1,    1, 0.1,   0.1,   0.1,   0.1,   100,   100 ];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
