@@ -3,7 +3,8 @@ global sed_par_file lake_par_file Eevapor
 % This is the main MyLake application configuration file. INCA is a switch
 % It is made to run a after the parameter are set by Set_Prior
 
-Eevapor=0;    disp('init ...');
+Eevapor=0;    
+% disp('init ...');
 
 calibration_k_values = [(1:length(K_sediments))',cell2mat(K_sediments(:,1)) ]; % writing sediments parameters file
 
@@ -53,7 +54,7 @@ end
 % vanem_INCAP_input
 
 
-%# ############ This is Vansjø Storefj ##############
+%# ############ This is Vansjï¿½ Storefj ##############
 
 parafile=lake_par_file;
 initfile='IO/mylake_initial_concentrations.txt';
@@ -62,20 +63,20 @@ initfile='IO/mylake_initial_concentrations.txt';
 if use_INCA == 0
     inputfile='IO/store_INCAP_input_baseline_mod.txt';
     % inputfile='IO/store_constant_input.txt';
-    disp('Using existing input')
+    % disp('Using existing input')
 elseif use_INCA == 1
     inputfile = store_INCAP_input; % setting use_INCA to 2 will look for store_INCAP_input
-    disp('Using INCA output')
+    % disp('Using INCA output')
 elseif ischar(use_INCA);
     inputfile=use_INCA;
-    disp('Using response surfaces array')
+    % disp('Using response surfaces array')
 end
 
 
 
 Deposition = 0;
 
-disp('Storefjorden ...')
+% disp('Storefjorden ...')
 
 [MyLake_results_basin1, sediment_results_basin1] ...
     = solvemodel_v2(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake');
@@ -84,11 +85,11 @@ MyLake_results.basin1 = MyLake_results_basin1;
 Sediment_results.basin1 = sediment_results_basin1;
 
 if is_save_results
-    disp('Saving sediment and water-column profiles for basin 1: Storefjorden');
+    % disp('Saving sediment and water-column profiles for basin 1: Storefjorden');
     sediment_save_init_conc(Sediment_results.basin1, 1)
     MyLake_save_result_for_init_conc(MyLake_results.basin1, 1)
 else
-    disp('Skipping saving the results and initial concentrations');
+    % disp('Skipping saving the results and initial concentrations');
 end
 
 if false % simulate 2nd basin?
@@ -123,7 +124,7 @@ if false % simulate 2nd basin?
     outflowPOPzt = MyLake_results.basin1.concentrations.POP(1,:)';
 
 
-    % %# ############ This is Vansjø Vanemfj. ##############
+    % %# ############ This is Vansjï¿½ Vanemfj. ##############
     % if isnumeric(use_INCA) % to avoid running two basins in case of RS analysis.
 
     if use_INCA == 0
@@ -160,17 +161,17 @@ if false % simulate 2nd basin?
     [MyLake_results_basin2, sediment_results_basin2] = solvemodel_v2(m_start,m_stop,initfile,'lake',inputfile,'timeseries', parafile,'lake');
 
     delete (vanem_input)
-    disp('Cleanup ... done.')
+    % disp('Cleanup ... done.')
 
     MyLake_results.basin2 = MyLake_results_basin2;
     Sediment_results.basin2 = sediment_results_basin2;
 
 if is_save_results
-    disp('Saving sediment and water-column profiles for basin 2: Vanemfjorden');
+    % disp('Saving sediment and water-column profiles for basin 2: Vanemfjorden');
     MyLake_save_result_for_init_conc(MyLake_results.basin2, 2)
     sediment_save_init_conc(Sediment_results.basin2, 2)
 else
-    disp('Skipping saving the results and initial concentrations');
+    % disp('Skipping saving the results and initial concentrations');
 end
 
 

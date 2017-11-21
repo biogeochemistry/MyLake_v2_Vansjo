@@ -1,6 +1,6 @@
 function x = calibration_routine()
 tic
-% format shortEng
+format shortEng
 format compact
 % parpool
 % gaoptions = optimoptions('ga','UseParallel',true);
@@ -27,26 +27,25 @@ x(13) = 34.7141e-003; % 29.6431e-003  % 17    Optical cross_section of chlorophy
 x(14) = 21.5114e+000; % 65.1237e+000   %    accel
 x(15) = 373.1228e-003; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 
-% Ecomac-2 results "-RMSD*(R^2 - 1) = 42" % ====================================================
+% Ecomac-2 results "-RMSD*(R^2 - 1) = 42" and additional input% ====================================================
 x = [0.0509799553636229; 0.112442493655332; 1.28362330332034; 1.36809570914136; 0.0501864460452149; 0.108370399688849; 1.46968213451174; 1.53127867204317; 0.0473597449781419; 2.37096381881603e-05; 3.26782527521984e-05; 0.0449499936004535; 0.0403445049032881; 20.3036606042011; 0.622744575375964; 0.4; 0.04; 0.02; 0.04; 0.02; 0.3; 0.3];
 
 
 
 
 
-lb = [0.05 , 0.1 , 1   , 0.2 , 0.05 , 0.1 , 1   , 0.2 , 0.01 , 1e-5 , 1e-5 , 0.005 , 0.005 , 1   , 0, 0.01, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001];
-ub = [0.5  , 0.3 , 1.5 , 2   , 0.5  , 0.3 , 1.5 , 2   , 1    , 1e-4 , 1e-4 , 0.045 , 0.045 , 100 , 1,    1, 0.1,   0.1,   0.1,   0.1,   100,   100 ];
+lb = [0.05 , 0.1 , 1   , 0.2 , 0.05 , 0.1 , 1   , 0.2 , 0.01 , 1e-5 , 1e-5 , 0.005 , 0.005 , 1   , 0, 0.01, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ub = [0.5  , 0.3 , 1.5 , 2   , 0.5  , 0.3 , 1.5 , 2   , 1    , 1e-4 , 1e-4 , 0.045 , 0.045 , 100 , 1,    1, 0.1,   0.1,   0.1,   0.1,   100,   100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
 
 population_size = 72;  % Populations size for each generation of the genetic algorithm
 max_generations = 7;  % How many generations to run the genetic algorithm for
-parallelize     = true; % 15 generation takes 12 hours on 24 cores
+parallelize     = true;
 
 % options = gaoptimset('Display','iter','UseParallel', true, 'TolFun', 1e-2, 'PlotFcns', fcns);
 options = optimoptions('ga', 'MaxGenerations', max_generations, 'PopulationSize', population_size, 'UseParallel', parallelize);
-
 x = ga(@opt_fun,length(x),[],[],[],[],lb,ub, @nonlcon, options)
 
 
@@ -73,7 +72,7 @@ lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chloro
 sediment_params{52} = x(14); % 65.1237e+000   %    accel
 lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 
-
+% new added for cores
 sediment_params{1} = x(16);  %   'k_Chl',                 %        % 1
 sediment_params{2} = x(17);  %  'k_POP',                 %        % 1
 sediment_params{3} = x(18);  % 'k_POC',                  %        % 0.01
@@ -82,22 +81,33 @@ sediment_params{5} = x(20);  % 'k_DOC',                  %        % 1
 sediment_params{23} = x(21);  %     'k_pdesorb_a',         % 
 sediment_params{24} = x(22);  %     'k_pdesorb_b',         % 
 
+% for cores too (scaling unknown inputs):
+lake_params{18} = x(23);%    scaling factor for inflow concentration of C (-)
+lake_params{19} = x(24);%    scaling factor for inflow concentration of POC (-)
+lake_params{20} = x(25);%    scaling factor for inflow concentration of total P (-)
+lake_params{21} = x(26);%    scaling factor for inflow concentration of diss. organic P (-)
+lake_params{22} = x(27);%    scaling factor for inflow concentration of Chl a (-)
+lake_params{23} = x(28);%    scaling factor for inflow concentration of DOC  (-)
+lake_params{24} = x(29);%    scaling factor for inflow concentration of POP  (-)
+lake_params{25} = x(30);%    Scaling factor for inflow concentration of O2 (-)
+lake_params{27} = x(31);%    Scaling factor for inflow concentration of NO3 (-)
+lake_params{34} = x(32);%    Scaling factor for inflow concentration of Fe3 (-)
+lake_params{35} = x(33);%    Scaling factor for inflow concentration of Al3 (-)
+lake_params{37} = x(34);%    Scaling factor for inflow concentration of CaCO3 (-)
 
 sediment_params{73}  = 48;
 
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
-clim_ID = run_ID
+clim_ID = run_ID;
 m_start=[2000, 1, 1]; % Do not change this date if you are calibrating the cores (using relative dates in the code)
 m_stop=[2013, 10, 31]; %
 run_INCA = 0; % 1- MyLake will run INCA, 0- No run
 use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
 is_save_results = false;
 
-% sediment_params{56} = 1; % Only for preliminary calibration: coarse time step for chemical and sediment modules
 
-
-disp(datetime('now'));
+% disp(datetime('now'));
 
 try
 
@@ -212,7 +222,10 @@ try
 
     % res = sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2])
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
-    res = sum([- (rsquared_TOTP - 1) .* rmsd_TOTP, - (rsquared_Chl - 1) .* rmsd_Chl, - (rsquared_PO4 - 1) .* rmsd_PO4, - (rsquared_PP - 1) .* rmsd_PP, mean(- (rsquared_O2 - 1) .* rmsd_O2), - (rsquared_PO4_sed - 1) .* rmsd_PO4_sed, - (rsquared_Ca_sed - 1) .* rmsd_Ca_sed, - (rsquared_Fe_sed - 1) .* rmsd_Fe_sed, - (rsquared_S_sed - 1) .* rmsd_S_sed, - (rsquared_P_Fe_sed - 1) .* rmsd_P_Fe_sed, - (rsquared_P_Ca_sed - 1) .* rmsd_P_Ca_sed])
+
+    k_chl = 3;
+
+    res = sum([- (rsquared_TOTP - 1) .* rmsd_TOTP, - (rsquared_Chl - 1) .* rmsd_Chl * k_chl, - (rsquared_PO4 - 1) .* rmsd_PO4, - (rsquared_PP - 1) .* rmsd_PP, mean(- (rsquared_O2 - 1) .* rmsd_O2), - (rsquared_PO4_sed - 1) .* rmsd_PO4_sed, - (rsquared_Ca_sed - 1) .* rmsd_Ca_sed, - (rsquared_Fe_sed - 1) .* rmsd_Fe_sed, - (rsquared_S_sed - 1) .* rmsd_S_sed, - (rsquared_P_Fe_sed - 1) .* rmsd_P_Fe_sed, - (rsquared_P_Ca_sed - 1) .* rmsd_P_Ca_sed])
 
 
 
