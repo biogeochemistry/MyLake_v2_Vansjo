@@ -28,14 +28,14 @@ x(14) = 21.5114e+000; % 65.1237e+000   %    accel
 x(15) = 373.1228e-003; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 
 % Ecomac-2 results "-RMSD*(R^2 - 1) = 42" and additional input% ====================================================
-x = [0.0509799553636229; 0.112442493655332; 1.28362330332034; 1.36809570914136; 0.0501864460452149; 0.108370399688849; 1.46968213451174; 1.53127867204317; 0.0473597449781419; 2.37096381881603e-05; 3.26782527521984e-05; 0.0449499936004535; 0.0403445049032881; 20.3036606042011; 0.622744575375964; 0.4; 0.04; 0.02; 0.04; 0.02; 0.3; 0.3];
+x = [0.0509799553636229; 0.112442493655332; 1.28362330332034; 1.36809570914136; 0.0501864460452149; 0.108370399688849; 1.46968213451174; 1.53127867204317; 0.0473597449781419; 2.37096381881603e-05; 3.26782527521984e-05; 0.0449499936004535; 0.0403445049032881; 20.3036606042011; 0.622744575375964; 0.4; 0.04; 0.02; 0.04; 0.02; 0.3; 0.3; 1; 1; 1; 1; 1; 1; 1; 1; 50; 1; 1];
 
 
 
 
 
-lb = [0.05 , 0.1 , 1   , 0.2 , 0.05 , 0.1 , 1   , 0.2 , 0.01 , 1e-5 , 1e-5 , 0.005 , 0.005 , 1   , 0, 0.01, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-ub = [0.5  , 0.3 , 1.5 , 2   , 0.5  , 0.3 , 1.5 , 2   , 1    , 1e-4 , 1e-4 , 0.045 , 0.045 , 100 , 1,    1, 0.1,   0.1,   0.1,   0.1,   100,   100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
+lb = [0.05 , 0.1 , 1   , 0.2 , 0.05 , 0.1 , 1   , 0.2 , 0.01 , 1e-5 , 1e-5 , 0.005 , 0.005 , 1   , 0, 0.01, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+ub = [0.5  , 0.3 , 1.5 , 2   , 0.5  , 0.3 , 1.5 , 2   , 1    , 1e-4 , 1e-4 , 0.045 , 0.045 , 100 , 1,    1, 0.1,   0.1,   0.1,   0.1,   100,   100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
@@ -88,12 +88,11 @@ lake_params{20} = x(25);%    scaling factor for inflow concentration of total P 
 lake_params{21} = x(26);%    scaling factor for inflow concentration of diss. organic P (-)
 lake_params{22} = x(27);%    scaling factor for inflow concentration of Chl a (-)
 lake_params{23} = x(28);%    scaling factor for inflow concentration of DOC  (-)
-lake_params{24} = x(29);%    scaling factor for inflow concentration of POP  (-)
-lake_params{25} = x(30);%    Scaling factor for inflow concentration of O2 (-)
-lake_params{27} = x(31);%    Scaling factor for inflow concentration of NO3 (-)
-lake_params{34} = x(32);%    Scaling factor for inflow concentration of Fe3 (-)
-lake_params{35} = x(33);%    Scaling factor for inflow concentration of Al3 (-)
-lake_params{37} = x(34);%    Scaling factor for inflow concentration of CaCO3 (-)
+lake_params{25} = x(29);%    Scaling factor for inflow concentration of O2 (-)
+lake_params{27} = x(30);%    Scaling factor for inflow concentration of NO3 (-)
+lake_params{34} = x(31);%    Scaling factor for inflow concentration of Fe3 (-)
+lake_params{35} = x(32);%    Scaling factor for inflow concentration of Al3 (-)
+lake_params{37} = x(33);%    Scaling factor for inflow concentration of CaCO3 (-)
 
 sediment_params{73}  = 48;
 
