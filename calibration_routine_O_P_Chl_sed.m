@@ -76,7 +76,7 @@ lake_params{34} = x(31);%    Scaling factor for inflow concentration of Fe3 (-)
 lake_params{35} = x(32);%    Scaling factor for inflow concentration of Al3 (-)
 lake_params{37} = x(33);%    Scaling factor for inflow concentration of CaCO3 (-)
 
-sediment_params{73}  = 48;
+% sediment_params{73}  = 48;
 
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
