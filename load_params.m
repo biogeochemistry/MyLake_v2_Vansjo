@@ -130,7 +130,7 @@ sediment_params = {
     32.5,     'w_CH4g',                % 50     % Rising velocity of methane
     0.034,  'Kh_CO2',               % 51     % Henry cobstant M/atm
     32.5,  'accel',                 % 52
-    1.0e-06,   'f_pfe',                % 53
+    1.0e-06,   'f_pfe',              % 53 NOTE: note used
     1.35,   'k_pdesorb_c',          % 54
     0.95,   'fi_in',                % 55
     0.85,   'fi_f',                 % 56
