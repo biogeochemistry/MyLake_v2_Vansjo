@@ -61,6 +61,11 @@ lake_params{34} = x(14);%    Scaling factor for inflow concentration of Fe3 (-)
 lake_params{35} = x(15);%    Scaling factor for inflow concentration of Al3 (-)
 lake_params{37} = x(16);%    Scaling factor for inflow concentration of CaCO3 (-)
 
+% P minerals:
+lake_params{31} = x(17);%    k_apa_pre
+lake_params{32} = x(18);%    k_apa_pre
+lake_params{40} = x(19);%    k_viv_pre
+lake_params{41} = x(20);%    k_viv_pre
 
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
@@ -182,6 +187,8 @@ try
 
     rmsd_POP_sed = rmsd(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.POP(idx_depthx_sed_cores,idx_date_sed_cores), P_Org_sed(:,2));
     rsquared_POP_sed = rsquared(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.POP(idx_depthx_sed_cores,idx_date_sed_cores), P_Org_sed(:,2));
+
+    rmsd_POP_sed = rmsd(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.PO4adsc(idx_depthx_sed_cores,idx_date_sed_cores), P_Org_sed(:,2));
 
     x'
 
