@@ -12,12 +12,12 @@ format compact
 [lake_params, sediment_params] = load_params();
 
 % Niva sediment cores & inputs scaled & k_chl=3; err= r^2*RMSD, res=~850.34  % ====================================================
-x = [50; 0.111452954004814; 0.0756702079558015; 0.0633637582049403; 0.100000000000000; 0.0957726460081909; 1.96425357122318; 19.1927004493911; 19.1927004493911; 0.1; 1; 1; 1; 1; 1; 1];
+x = [50; 0.111452954004814; 0.0756702079558015; 0.0633637582049403; 0.100000000000000; 0.0957726460081909; 1.96425357122318; 19.1927004493911; 19.1927004493911; 0.1; 1; 1; 1; 1; 1; 1; 0.00037; 0.37; 0.00037; 0.37];
 
 
 
-lb = [1; 0.01; 0.001; 0.001; 0.001; 0.001; 0.001; 0.001; 0.001;   0;    0; 0;    0;   0;   0;   0];
-ub = [100;  1;   0.1;   0.1;   0.1;   0.1;   100;   100;   100; 100;  100; 2;  100; 100; 100; 100];
+lb = [1; 0.01; 0.001; 0.001; 0.001; 0.001; 0.001; 0.001; 0.001;   0;    0; 0;    0;   0;   0;   0; 1e-6; 1e-6; 1e-6; 1e-6];
+ub = [100;  1;   0.1;   0.1;   0.1;   0.1;   100;   100;   100; 100;  100; 2;  100; 100; 100; 100;   10;   10;   10;   10];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
@@ -188,7 +188,8 @@ try
     rmsd_POP_sed = rmsd(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.POP(idx_depthx_sed_cores,idx_date_sed_cores), P_Org_sed(:,2));
     rsquared_POP_sed = rsquared(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.POP(idx_depthx_sed_cores,idx_date_sed_cores), P_Org_sed(:,2));
 
-    rmsd_POP_sed = rmsd(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.PO4adsc(idx_depthx_sed_cores,idx_date_sed_cores), P_Org_sed(:,2));
+    rmsd_P_Al_sed = rmsd(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.PO4adsc(idx_depthx_sed_cores,idx_date_sed_cores), P_Al_sed(:,2));
+    rsquared_P_Al_sed = rmsd(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.PO4adsc(idx_depthx_sed_cores,idx_date_sed_cores), P_Al_sed(:,2));
 
     x'
 
@@ -197,7 +198,7 @@ try
 
     k_chl = 3;
 
-    res = sum([- (rsquared_TOTP - 1) .* rmsd_TOTP, - (rsquared_Chl - 1) .* rmsd_Chl * k_chl, - (rsquared_PO4 - 1) .* rmsd_PO4, - (rsquared_PP - 1) .* rmsd_PP, mean(- (rsquared_O2 - 1) .* rmsd_O2), - (rsquared_PO4_sed - 1) .* rmsd_PO4_sed, - (rsquared_Ca_sed - 1) .* rmsd_Ca_sed, - (rsquared_Fe_sed - 1) .* rmsd_Fe_sed, - (rsquared_S_sed - 1) .* rmsd_S_sed, - (rsquared_P_Fe_sed - 1) .* rmsd_P_Fe_sed, - (rsquared_P_Ca_sed - 1) .* rmsd_P_Ca_sed, - (rsquared_POP_sed - 1) .* rmsd_POP_sed])
+    res = sum([- (rsquared_TOTP - 1) .* rmsd_TOTP, - (rsquared_Chl - 1) .* rmsd_Chl * k_chl, - (rsquared_PO4 - 1) .* rmsd_PO4, - (rsquared_PP - 1) .* rmsd_PP, mean(- (rsquared_O2 - 1) .* rmsd_O2), - (rsquared_PO4_sed - 1) .* rmsd_PO4_sed, - (rsquared_Ca_sed - 1) .* rmsd_Ca_sed, - (rsquared_Fe_sed - 1) .* rmsd_Fe_sed, - (rsquared_S_sed - 1) .* rmsd_S_sed, - (rsquared_P_Fe_sed - 1) .* rmsd_P_Fe_sed, - (rsquared_P_Ca_sed - 1) .* rmsd_P_Ca_sed, - (rsquared_POP_sed - 1) .* rmsd_POP_sed, - (rsquared_P_Al_sed - 1) .* rmsd_P_Al_sed])
 
 
 
