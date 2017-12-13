@@ -50,7 +50,7 @@ save_initial_conditions = false; % save final concentrations as initial for the 
 
 % Ecomac-2 results "-RMSD*(R^2 - 1) = 42" % ====================================================
 % file_name = 'IO/test.mat'
-% % file_name = 'IO/ecomac_2_RMSDxR_2017_11_10.mat'
+% file_name = 'IO/ecomac_2_RMSDxR_2017_11_10.mat'
 % x = [0.0509799553636229; 0.112442493655332; 1.28362330332034; 1.36809570914136; 0.0501864460452149; 0.108370399688849; 1.46968213451174; 1.53127867204317; 0.0473597449781419; 2.37096381881603e-05; 3.26782527521984e-05; 0.0449499936004535; 0.0403445049032881; 20.3036606042011; 0.622744575375964];
 
 
@@ -69,7 +69,7 @@ save_initial_conditions = false; % save final concentrations as initial for the 
 % lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
 % sediment_params{52} = x(14); % 65.1237e+000   %    accel
 % lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
-% % =====================================================================================================================
+% =====================================================================================================================
 
 
 % Ecomac results "-(R^2 - 1) = 4.8027" % ====================================================
@@ -122,49 +122,135 @@ save_initial_conditions = false; % save final concentrations as initial for the 
 % % =====================================================================================================================
 
 
-% Niva sediment cores & inputs scaled & k_chl=3; err= r^2*RMSD, res=229.34  % ====================================================
-file_name = 'IO/test.mat'
-x = [0.292867131719439; 0.152596930300795; 1.35441691707732; 0.404760282391585; 0.490917403675707; 0.258956557269084; 1.33413227748294; 0.622799283023575; 0.416602967265499; 1.07101519222963e-05; 2.32178478578498e-05; 0.0339306144766581; 0.0299736636364725; 28.2162698311715; 0.935456804191259; 0.395784453077929; 0.0121700676481273; 0.0783899484741691; 0.0834067833948156; 0.0269273099451162; 0.547585590824826; 30.4046816190090; 65.1459885997294; 84.4123799839751; 1.63199703067483; 9.65075155669598; 94.5194422916262; 59.8123208815519; 11.7793522493300; 56.8609132402850; 21.4807095781679; 37.1702379722574; 1.03583807872418];
+% Niva sediment cores & inputs scaled & k_chl=3; err= r^2*RMSD, res=960.4  % ====================================================
+% file_name = 'IO/test.mat'
+% x = [0.292867131719439; 0.152596930300795; 1.35441691707732; 0.404760282391585; 0.490917403675707; 0.258956557269084; 1.33413227748294; 0.622799283023575; 0.416602967265499; 1.07101519222963e-05; 2.32178478578498e-05; 0.0339306144766581; 0.0299736636364725; 28.2162698311715; 0.935456804191259; 0.395784453077929; 0.0121700676481273; 0.0783899484741691; 0.0834067833948156; 0.0269273099451162; 0.547585590824826; 30.4046816190090; 65.1459885997294; 84.4123799839751; 1.63199703067483; 9.65075155669598; 94.5194422916262; 59.8123208815519; 11.7793522493300; 56.8609132402850; 21.4807095781679; 37.1702379722574; 1.03583807872418];
 
-lake_params{47} = x(1); % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
-lake_params{49} = x(2); % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
-lake_params{50} = x(3); % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
-lake_params{53} = x(4); % 638.9222e-003  % 53    Half saturation growth P level (mg/m3)
-lake_params{56} = x(5); % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
-lake_params{57} = x(6); % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
-lake_params{58} = x(7); % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
-lake_params{59} = x(8); % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
-lake_params{46} = x(9); % 53.9466e-003   % % 46  settling velocity for S (m day-1)
-lake_params{10} = x(10); % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-lake_params{54} = x(11); % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-lake_params{12} = x(12); % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
-lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
-sediment_params{52} = x(14); % 65.1237e+000   %    accel
-lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+% lake_params{47} = x(1); % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
+% lake_params{49} = x(2); % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
+% lake_params{50} = x(3); % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
+% lake_params{53} = x(4); % 638.9222e-003  % 53    Half saturation growth P level (mg/m3)
+% lake_params{56} = x(5); % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+% lake_params{57} = x(6); % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
+% lake_params{58} = x(7); % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+% lake_params{59} = x(8); % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
+% lake_params{46} = x(9); % 53.9466e-003   % % 46  settling velocity for S (m day-1)
+% lake_params{10} = x(10); % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{54} = x(11); % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{12} = x(12); % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
+% lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
+% sediment_params{52} = x(14); % 65.1237e+000   %    accel
+% lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 
-% new added for cores
-sediment_params{1} = x(16);  %   'k_Chl',                 %        % 1
-sediment_params{2} = x(17);  %  'k_POP',                 %        % 1
-sediment_params{3} = x(18);  % 'k_POC',                  %        % 0.01
-sediment_params{4} = x(19);  %  'k_DOP',                 %        % 1
-sediment_params{5} = x(20);  % 'k_DOC',                  %        % 1
-sediment_params{23} = x(21);  %     'k_pdesorb_a',         % 
-sediment_params{24} = x(22);  %     'k_pdesorb_b',         % 
+% % new added for cores
+% sediment_params{1} = x(16);  %   'k_Chl',                 %        % 1
+% sediment_params{2} = x(17);  %  'k_POP',                 %        % 1
+% sediment_params{3} = x(18);  % 'k_POC',                  %        % 0.01
+% sediment_params{4} = x(19);  %  'k_DOP',                 %        % 1
+% sediment_params{5} = x(20);  % 'k_DOC',                  %        % 1
+% sediment_params{23} = x(21);  %     'k_pdesorb_a',         % 
+% sediment_params{24} = x(22);  %     'k_pdesorb_b',         % 
 
-% for cores too (scaling unknown inputs):
-lake_params{18} = x(23);%    scaling factor for inflow concentration of C (-)
-lake_params{19} = x(24);%    scaling factor for inflow concentration of POC (-)
-lake_params{20} = x(25);%    scaling factor for inflow concentration of total P (-)
-lake_params{21} = x(26);%    scaling factor for inflow concentration of diss. organic P (-)
-lake_params{22} = x(27);%    scaling factor for inflow concentration of Chl a (-)
-lake_params{23} = x(28);%    scaling factor for inflow concentration of DOC  (-)
-lake_params{25} = x(29);%    Scaling factor for inflow concentration of O2 (-)
-lake_params{27} = x(30);%    Scaling factor for inflow concentration of NO3 (-)
-lake_params{34} = x(31);%    Scaling factor for inflow concentration of Fe3 (-)
-lake_params{35} = x(32);%    Scaling factor for inflow concentration of Al3 (-)
-lake_params{37} = x(33);%    Scaling factor for inflow concentration of CaCO3 (-)
-
+% % for cores too (scaling unknown inputs):
+% lake_params{18} = x(23);%    scaling factor for inflow concentration of C (-)
+% lake_params{19} = x(24);%    scaling factor for inflow concentration of POC (-)
+% lake_params{20} = x(25);%    scaling factor for inflow concentration of total P (-)
+% lake_params{21} = x(26);%    scaling factor for inflow concentration of diss. organic P (-)
+% lake_params{22} = x(27);%    scaling factor for inflow concentration of Chl a (-)
+% lake_params{23} = x(28);%    scaling factor for inflow concentration of DOC  (-)
+% lake_params{25} = x(29);%    Scaling factor for inflow concentration of O2 (-)
+% lake_params{27} = x(30);%    Scaling factor for inflow concentration of NO3 (-)
+% lake_params{34} = x(31);%    Scaling factor for inflow concentration of Fe3 (-)
+% lake_params{35} = x(32);%    Scaling factor for inflow concentration of Al3 (-)
+% lake_params{37} = x(33);%    Scaling factor for inflow concentration of CaCO3 (-)
 % % =====================================================================================================================
+
+
+% Niva sediment cores & inputs scaled & k_chl=3; err= r^2*RMSD, res=415  % ====================================================
+% file_name = 'IO/ecomac-2_.mat'
+% x = [0.0954507159077614; 0.200583020651291; 1.44777416925993; 0.444680762956579; 0.0500000000000000; 0.209087437993630; 1.26668516980844; 1.20000000000000; 0.0765004968774690; 1.00000000000000e-05; 1.00000000000000e-05; 0.0108503379659131; 0.0208594885646256; 2; 1; 0.111452954004814; 0.0756702079558015; 0.0633637582049403; 0.100000000000000; 0.0957726460081909; 1.96425357122318; 19.1927004493911; 63.3645672158996; 82.0717029692034; 1.58775222593736; 1; 71.8011131097223; 29.5660628177359; 1.06765260957026; 0.206574107548012; 1; 3.94332721070197; 1.69575727538507];
+
+% lake_params{47} = x(1); % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
+% lake_params{49} = x(2); % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
+% lake_params{50} = x(3); % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
+% lake_params{53} = x(4); % 638.9222e-003  % 53    Half saturation growth P level (mg/m3)
+% lake_params{56} = x(5); % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+% lake_params{57} = x(6); % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
+% lake_params{58} = x(7); % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+% lake_params{59} = x(8); % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
+% lake_params{46} = x(9); % 53.9466e-003   % % 46  settling velocity for S (m day-1)
+% lake_params{10} = x(10); % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{54} = x(11); % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{12} = x(12); % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
+% lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
+% sediment_params{52} = x(14); % 65.1237e+000   %    accel
+% lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+
+% % new added for cores
+% sediment_params{1} = x(16);  %   'k_Chl',                 %        % 1
+% sediment_params{2} = x(17);  %  'k_POP',                 %        % 1
+% sediment_params{3} = x(18);  % 'k_POC',                  %        % 0.01
+% sediment_params{4} = x(19);  %  'k_DOP',                 %        % 1
+% sediment_params{5} = x(20);  % 'k_DOC',                  %        % 1
+% sediment_params{23} = x(21);  %     'k_pdesorb_a',         % 
+% sediment_params{24} = x(22);  %     'k_pdesorb_b',         % 
+
+% % for cores too (scaling unknown inputs):
+% lake_params{18} = x(23);%    scaling factor for inflow concentration of C (-)
+% lake_params{19} = x(24);%    scaling factor for inflow concentration of POC (-)
+% lake_params{20} = x(25);%    scaling factor for inflow concentration of total P (-)
+% lake_params{21} = x(26);%    scaling factor for inflow concentration of diss. organic P (-)
+% lake_params{22} = x(27);%    scaling factor for inflow concentration of Chl a (-)
+% lake_params{23} = x(28);%    scaling factor for inflow concentration of DOC  (-)
+% lake_params{25} = x(29);%    Scaling factor for inflow concentration of O2 (-)
+% lake_params{27} = x(30);%    Scaling factor for inflow concentration of NO3 (-)
+% lake_params{34} = x(31);%    Scaling factor for inflow concentration of Fe3 (-)
+% lake_params{35} = x(32);%    Scaling factor for inflow concentration of Al3 (-)
+% lake_params{37} = x(33);%    Scaling factor for inflow concentration of CaCO3 (-)
+% % % =====================================================================================================================
+
+% Niva sediment cores & inputs scaled & k_chl=3; err= r^2*RMSD, res=213  % ====================================================
+% file_name = 'IO/niva_cores_inputs_2017_12_11.mat'
+% x = [0.0500000000000000; 0.100000000000000; 1; 1.20000000000000; 0.0500000000000000; 0.211177491633875; 1; 2; 1; 0.000100000000000000; 1.00000000000000e-05; 0.00500000000000000; 0.0394039349761114; 35.7967175968888; 0; 0.0100000000000000; 0.0148658880420987; 0.00100000000000000; 0.0564425412638617; 0.100000000000000; 0.152903147742124; 1.00100000000000; 74.8258807476834; 35.9440655491842; 0; 2; 48.7137529836835; 0.962954178292867; 1.09937378894996; 0.861282785490013; 11.3758119915549; 0; 0.250000000000000];
+
+% lake_params{47} = x(1); % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
+% lake_params{49} = x(2); % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
+% lake_params{50} = x(3); % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
+% lake_params{53} = x(4); % 638.9222e-003  % 53    Half saturation growth P level (mg/m3)
+% lake_params{56} = x(5); % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+% lake_params{57} = x(6); % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
+% lake_params{58} = x(7); % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+% lake_params{59} = x(8); % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
+% lake_params{46} = x(9); % 53.9466e-003   % % 46  settling velocity for S (m day-1)
+% lake_params{10} = x(10); % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{54} = x(11); % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{12} = x(12); % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
+% lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
+% sediment_params{52} = x(14); % 65.1237e+000   %    accel
+% lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+
+% % new added for cores
+% sediment_params{1} = x(16);  %   'k_Chl',                 %        % 1
+% sediment_params{2} = x(17);  %  'k_POP',                 %        % 1
+% sediment_params{3} = x(18);  % 'k_POC',                  %        % 0.01
+% sediment_params{4} = x(19);  %  'k_DOP',                 %        % 1
+% sediment_params{5} = x(20);  % 'k_DOC',                  %        % 1
+% sediment_params{23} = x(21);  %     'k_pdesorb_a',         % 
+% sediment_params{24} = x(22);  %     'k_pdesorb_b',         % 
+
+% % for cores too (scaling unknown inputs):
+% lake_params{18} = x(23);%    scaling factor for inflow concentration of C (-)
+% lake_params{19} = x(24);%    scaling factor for inflow concentration of POC (-)
+% lake_params{20} = x(25);%    scaling factor for inflow concentration of total P (-)
+% lake_params{21} = x(26);%    scaling factor for inflow concentration of diss. organic P (-)
+% lake_params{22} = x(27);%    scaling factor for inflow concentration of Chl a (-)
+% lake_params{23} = x(28);%    scaling factor for inflow concentration of DOC  (-)
+% lake_params{25} = x(29);%    Scaling factor for inflow concentration of O2 (-)
+% lake_params{27} = x(30);%    Scaling factor for inflow concentration of NO3 (-)
+% lake_params{34} = x(31);%    Scaling factor for inflow concentration of Fe3 (-)
+% lake_params{35} = x(32);%    Scaling factor for inflow concentration of Al3 (-)
+% lake_params{37} = x(33);%    Scaling factor for inflow concentration of CaCO3 (-)
+% % % % =====================================================================================================================
 
 % try
 run_ID = 0;
