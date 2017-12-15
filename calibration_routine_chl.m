@@ -97,7 +97,7 @@ try
 
     load 'obs/store_obs/TOTP.dat' % measured
     load 'obs/store_obs/Cha.dat' % measured
-    % load 'obs/store_obs/Cha_aquaM_march_2017.dat' % It could be that this one are wrong!!!
+    % load 'obs/store_obs/Cha_aquaM_march_2017.dat' % It could be that this one is wrong!!!
     load 'obs/store_obs/PO4.dat' % measured
     load 'obs/store_obs/Part.dat' % measured
 
@@ -107,9 +107,9 @@ try
     rsquared_TOTP = rsquared(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
 
 
-    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha_aquaM_march_2017(:,1)));
-    rmsd_Chl = rmsd(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
-    rsquared_Chl = rsquared(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha(:,1)));
+    rmsd_Chl = rmsd(Chl_mod(loc_sim, 1), Cha(loc_obs, 2));
+    rsquared_Chl = rsquared(Chl_mod(loc_sim, 1), Cha(loc_obs, 2));
 
 
     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
