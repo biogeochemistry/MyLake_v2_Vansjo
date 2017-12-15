@@ -152,5 +152,5 @@ sediment_params = {
     30,     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
     48,     'n_ts',                 % 73           % (48 is the minimum, 24 for calibration) number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
     0,      'pH algorithm',         % 74           % 0. Disabled  % 1. Phreeqc  % 2. Electro-neutrality Equation
-    0.1,    'SO4 flux',             % 75           % deafault 0; flux of sulphate from bottom of the sediment. Custom boundary condition for Lake Vansjo only
+    0.1,    'SO4 flux',             % 75           % default 0; flux of sulphate from bottom of the sediment. Custom boundary condition for Lake Vansjo only
     };

@@ -20,19 +20,20 @@ file_name = 'IO/test.mat'
 [lake_params, sediment_params] = load_params();
 
 % NIVA chl run err=333;
-lake_params{47} =  0.0885; % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
-lake_params{49} =  0.2553; % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
-lake_params{50} =  1.0226; % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
-lake_params{53} =  1.6529; % 638.9222e-003  % 53    Half saturation growth P level (mg/m3)
-lake_params{56} =  0.0795; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
-lake_params{57} =  0.1205; % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
-lake_params{58} =  1.1221; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
-lake_params{59} =  1.0316; % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
-lake_params{46} =  0.1372; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
-lake_params{10} =  0.0001;  % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-lake_params{54} =  0.0001;  % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-lake_params{12} =  0.0376;  % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
-lake_params{55} =  0.0345;  % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
+% lake_params{47} =  0.0546; % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
+% lake_params{49} =  0.1000; % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
+% lake_params{50} =  1.0625; % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
+% lake_params{53} =  0.7331; % 638.9222e-003  % 53    Half saturation growth P level (mg/m3)
+% lake_params{56} =  0.0656; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+% lake_params{57} =  0.1072; % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
+% lake_params{58} =  1.3770; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+% lake_params{59} =  1.9531; % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
+% lake_params{46} =  0.0100; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
+% lake_params{10} =  0.0001;  % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{54} =  0.0001;  % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+% lake_params{12} =  0.0162;  % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
+% lake_params{55} =  0.0450;  % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
+
 
 
 % try

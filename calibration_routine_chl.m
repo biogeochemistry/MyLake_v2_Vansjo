@@ -96,8 +96,8 @@ try
     POP_mod = mean((MyLake_results.basin1.concentrations.POP(zinx,:) + MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
 
     load 'obs/store_obs/TOTP.dat' % measured
-    % load 'obs/store_obs/Cha.dat' % measured
-    load 'obs/store_obs/Cha_aquaM_march_2017.dat' % measured
+    load 'obs/store_obs/Cha.dat' % measured
+    % load 'obs/store_obs/Cha_aquaM_march_2017.dat' % It could be that this one are wrong!!!
     load 'obs/store_obs/PO4.dat' % measured
     load 'obs/store_obs/Part.dat' % measured
 
