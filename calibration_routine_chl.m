@@ -47,7 +47,8 @@ lake_params{54} = x(11); % 75.5867e-006  % 16    PAR saturation level for phytop
 lake_params{12} = x(12); % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
 lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
 
-
+% inacurate calibration (faster):
+sediment_params{73} = 24;
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
 clim_ID = run_ID;
@@ -174,7 +175,7 @@ try
     % res = sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2])
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
 
-    k_chl = 4;
+    k_chl = 1;
 
     res = sum([- (rsquared_TOTP - 1) .* rmsd_TOTP, - (rsquared_Chl - 1) .* rmsd_Chl * k_chl, - (rsquared_PO4 - 1) .* rmsd_PO4, - (rsquared_PP - 1) .* rmsd_PP, mean(- (rsquared_O2 - 1) .* rmsd_O2)])
 
