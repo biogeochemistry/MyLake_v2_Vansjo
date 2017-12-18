@@ -68,6 +68,9 @@ lake_params{40} = x(19);%    k_viv_pre
 lake_params{41} = x(20);%    k_viv_pre
 
 
+% inacurate but faster:
+sediment_params{73} = 24;
+
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
 clim_ID = run_ID;
 m_start=[2000, 1, 1]; % Do not change this date if you are calibrating the cores (using relative dates in the code)
@@ -115,8 +118,7 @@ try
     POP_mod = mean((MyLake_results.basin1.concentrations.POP(zinx,:) + MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
 
     load 'obs/store_obs/TOTP.dat' % measured
-    % load 'obs/store_obs/Cha.dat' % measured
-    load 'obs/store_obs/Cha_aquaM_march_2017.dat' % measured
+    load 'obs/store_obs/Cha.dat' % measured
     load 'obs/store_obs/PO4.dat' % measured
     load 'obs/store_obs/Part.dat' % measured
 
@@ -126,9 +128,9 @@ try
     rsquared_TOTP = rsquared(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
 
 
-    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha_aquaM_march_2017(:,1)));
-    rmsd_Chl = rmsd(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
-    rsquared_Chl = rsquared(Chl_mod(loc_sim, 1), Cha_aquaM_march_2017(loc_obs, 2));
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha(:,1)));
+    rmsd_Chl = rmsd(Chl_mod(loc_sim, 1), Cha(loc_obs, 2));
+    rsquared_Chl = rsquared(Chl_mod(loc_sim, 1), Cha(loc_obs, 2));
 
 
     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
@@ -196,9 +198,10 @@ try
     % res = sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2])
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
 
-    k_chl = 3;
+    % k_chl = 3;
 
-    res = sum([- (rsquared_TOTP - 1) .* rmsd_TOTP, - (rsquared_Chl - 1) .* rmsd_Chl * k_chl, - (rsquared_PO4 - 1) .* rmsd_PO4, - (rsquared_PP - 1) .* rmsd_PP, mean(- (rsquared_O2 - 1) .* rmsd_O2), - (rsquared_PO4_sed - 1) .* rmsd_PO4_sed, - (rsquared_Ca_sed - 1) .* rmsd_Ca_sed, - (rsquared_Fe_sed - 1) .* rmsd_Fe_sed, - (rsquared_S_sed - 1) .* rmsd_S_sed, - (rsquared_P_Fe_sed - 1) .* rmsd_P_Fe_sed, - (rsquared_P_Ca_sed - 1) .* rmsd_P_Ca_sed, - (rsquared_POP_sed - 1) .* rmsd_POP_sed, - (rsquared_P_Al_sed - 1) .* rmsd_P_Al_sed])
+    % just rmsd
+    res = sum([rmsd_TOTP, rmsd_Chl, rmsd_PO4, rmsd_PP, mean(rmsd_O2), rmsd_PO4_sed, rmsd_Ca_sed, rmsd_Fe_sed, rmsd_S_sed, rmsd_P_Fe_sed, rmsd_P_Ca_sed, rmsd_POP_sed, rmsd_P_Al_sed])
 
 
 

@@ -47,7 +47,7 @@ lake_params{54} = x(11); % 75.5867e-006  % 16    PAR saturation level for phytop
 lake_params{12} = x(12); % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
 lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
 
-% inacurate calibration (faster):
+% inacurate but faster:
 sediment_params{73} = 24;
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
