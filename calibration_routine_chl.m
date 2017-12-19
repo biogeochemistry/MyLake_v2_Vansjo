@@ -12,9 +12,9 @@ format compact
 [lake_params, sediment_params] = load_params();
 
 
-x  = [0.4724167, 0.192808, 1,          0.8064479, 0.01,   0.1,  1,      1.87650, 0.03   , 0.0001,  1.0e-05,  0.00507710, 0.0380006];
-lb = [0.05     , 0.1     , 1           , 0.2    , 0.05 ,  0.1,  1      , 0.2   , 0.01   , 1e-5      , 1e-5    , 0.005 ,    0.005];
-ub = [0.5      , 0.3     , 1.5         , 2      , 0.5  ,  0.3 , 1.5    , 2     , 2      , 1e-4      , 1e-4    , 0.045 ,    0.045];
+x  = [0.4724167, 0.192808, 1,          0.8064479, 0.01,   0.1,  1,      1.87650, 0.03   , 0.0001,  1.0e-05,  0.00507710, 0.0380006, 20.3036; 0.6227];
+lb = [0.05     , 0.1     , 1           , 0.2    , 0.05 ,  0.1,  1      , 0.2   , 0.01   , 1e-5      , 1e-5    , 0.005 ,    0.005, 1   , 0];
+ub = [0.5      , 0.3     , 1.5         , 2      , 0.5  ,  0.3 , 1.5    , 2     , 2      , 1e-4      , 1e-4    , 0.045 ,    0.045, 100 , 1];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
@@ -46,6 +46,8 @@ lake_params{10} = x(10); % 24.5705e-006  % 10    PAR saturation level for phytop
 lake_params{54} = x(11); % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 lake_params{12} = x(12); % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
 lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
+sediment_params{52} = x(14); % 65.1237e+000   %    accel
+lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 
 % inacurate but faster:
 sediment_params{73} = 24;
