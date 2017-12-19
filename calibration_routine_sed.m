@@ -82,7 +82,7 @@ is_save_results = false;
 
 % disp(datetime('now'));
 
-try
+% try
 
     [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
 
@@ -198,8 +198,6 @@ try
     % res = sum([3*nrmsd_TOTP, 3*nrmsd_Chl, 3*nrmsd_PO4, 3*nrmsd_PP, nrmsd_O2])
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
 
-    % k_chl = 3;
-
     % just nrmsd
     res = sum([nrmsd_TOTP, nrmsd_Chl, nrmsd_PO4, nrmsd_PP, mean(nrmsd_O2), nrmsd_PO4_sed, nrmsd_Ca_sed, nrmsd_Fe_sed, nrmsd_S_sed, nrmsd_P_Fe_sed, nrmsd_P_Ca_sed, nrmsd_POP_sed, nrmsd_P_Al_sed])
 
@@ -207,15 +205,15 @@ try
 
 
 
-catch ME
-    fprintf('\tID: %s\n', ME.identifier)
-    fprintf('\tMessage: %s\n', ME.message)
-    fprintf('\tStack::\n')
-    for k=1:length(ME.stack)
-        disp(ME.stack(k))
-    end
-    res = NaN
-end
+% catch ME
+%     fprintf('\tID: %s\n', ME.identifier)
+%     fprintf('\tMessage: %s\n', ME.message)
+%     fprintf('\tStack::\n')
+%     for k=1:length(ME.stack)
+%         disp(ME.stack(k))
+%     end
+%     res = NaN
+% end
 
 
 
