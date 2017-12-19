@@ -71,7 +71,7 @@ try
     load('Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
 
     depths = [5;10;15;20;25;30;35;40];
-    rmsd_O2 = 0;
+    nrmsd_O2 = 0;
     rsquared_O2 = 0;
 
 
