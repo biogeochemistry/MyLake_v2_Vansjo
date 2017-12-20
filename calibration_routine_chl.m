@@ -11,10 +11,9 @@ format compact
 
 [lake_params, sediment_params] = load_params();
 
-
-x  = [0.4724167, 0.192808, 1,          0.8064479, 0.01,   0.1,  1,      1.87650, 0.03   , 0.0001,  1.0e-05,  0.00507710, 0.0380006, 20.3036, 0.6227];
-lb = [0.05     , 0.1     , 1           , 0.2    , 0.05 ,  0.1,  1      , 0.2   , 0.01   , 1e-5      , 1e-5    , 0.005 ,    0.005, 1   , 0];
-ub = [0.5      , 0.3     , 1.5         , 2      , 0.5  ,  0.3 , 1.5    , 2     , 2      , 1e-4      , 1e-4    , 0.045 ,    0.045, 100 , 1];
+x  = [1.8772e-01, 1.9668e-01, 1.4858e+00, 1.7330e+00, 8.0391e-02, 1.6195e-01, 1.4877e+00, 1.0889e+00, 1.1327e-01, 8.6703e-05, 5.0520e-05, 4.5000e-02, 4.5000e-02, 2.0000e+00, 5.0100e-01, 1]
+lb = [0.05     , 0.1     , 1           , 0.2    , 0.05 ,  0.1,  1      , 0.2   , 0.01   , 1e-5      , 1e-5    , 0.005 ,    0.005, 1   , 0, 0];
+ub = [0.5      , 0.3     , 1.5         , 2      , 0.5  ,  0.3 , 1.5    , 2     , 2      , 1e-4      , 1e-4    , 0.045 ,    0.045, 100 , 2, 2];
 
 
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
@@ -48,6 +47,7 @@ lake_params{12} = x(12); % 45.0000e-003  % 12    Optical cross_section of chloro
 lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
 sediment_params{52} = x(14); % 65.1237e+000   %    accel
 lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{20} = x(16); % 1   % 20    scaling factor for inflow concentration of TP (-)
 
 % inacurate but faster:
 sediment_params{73} = 24;
