@@ -11,6 +11,27 @@ format compact
 
 [lake_params, sediment_params] = load_params();
 
+calib_res = [0.0865681634702761; 0.161705696258267; 1.23114894752963; 1.66632346919548; 0.217316646052962; 0.184295158144136; 1.50000000000000; 1.44746872184578; 0.0609313437550716; 2.26727837370864e-05; 3.06302033352011e-05; 0.0450000000000000; 0.0321267784864950; 19.3181501625625; 1.15335807117479; 0.718058521202605];
+
+% Chl better predictions:
+lake_params{47} = calib_res(1); % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
+lake_params{49} = calib_res(2); % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
+lake_params{50} = calib_res(3); % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
+lake_params{53} = calib_res(4); % 638.9222e-003  % 53    Half saturation growth P level (mg/m3)
+lake_params{56} = calib_res(5); % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+lake_params{57} = calib_res(6); % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
+lake_params{58} = calib_res(7); % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+lake_params{59} = calib_res(8); % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
+lake_params{46} = calib_res(9); % 53.9466e-003   % % 46  settling velocity for S (m day-1)
+lake_params{10} = calib_res(10); % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{54} = calib_res(11); % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{12} = calib_res(12); % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
+lake_params{55} = calib_res(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
+sediment_params{52} = calib_res(14); % 65.1237e+000   %    accel
+lake_params{24} = calib_res(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{20} = calib_res(16); % 1   % 20    scaling factor for inflow concentration of TP (-)
+
+
 % Niva sediment cores & inputs scaled & k_chl=3; err= r^2*RMSD, res=~850.34  % ====================================================
 x = [50; 0.111452954004814; 0.0756702079558015; 0.0633637582049403; 0.100000000000000; 0.0957726460081909; 1.96425357122318; 19.1927004493911; 19.1927004493911; 0.1; 1; 1; 1; 1; 1; 1; 0.00037; 0.37; 0.00037; 0.37];
 
