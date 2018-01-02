@@ -89,8 +89,9 @@ lake_params{40} = x(19);%    k_viv_pre
 lake_params{41} = x(20);%    k_viv_pre
 
 
-% inaccurate but faster:
-sediment_params{73} = 24;
+% modifications:
+sediment_params{73} = 48;
+sediment_params{74} = 1;
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
 clim_ID = run_ID;
@@ -220,7 +221,7 @@ is_save_results = false;
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
 
     % just nrmsd
-    res = sum([nrmsd_TOTP, nrmsd_Chl, nrmsd_PO4, nrmsd_PP, mean(nrmsd_O2), nrmsd_PO4_sed, nrmsd_Ca_sed, nrmsd_Fe_sed, nrmsd_S_sed, nrmsd_P_Fe_sed, nrmsd_P_Ca_sed, nrmsd_POP_sed, nrmsd_P_Al_sed])
+    res = sum([nrmsd_TOTP, nrmsd_Chl, nrmsd_PO4, nrmsd_PP, mean(nrmsd_O2), 3*nrmsd_PO4_sed, 2*nrmsd_Ca_sed, nrmsd_Fe_sed, 3*nrmsd_S_sed, 3*nrmsd_P_Fe_sed, 3*nrmsd_P_Ca_sed, 3*nrmsd_POP_sed, 3*nrmsd_P_Al_sed])
 
 
 
