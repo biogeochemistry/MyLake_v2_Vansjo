@@ -91,7 +91,7 @@ lake_params{41} = x(20);%    k_viv_pre
 
 % modifications:
 sediment_params{73} = 48;
-sediment_params{74} = 1;
+sediment_params{74} = 2;
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
 clim_ID = run_ID;
