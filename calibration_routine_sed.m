@@ -104,7 +104,7 @@ is_save_results = false;
 
 % disp(datetime('now'));
 
-% try
+try
 
     [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
 
@@ -227,15 +227,15 @@ is_save_results = false;
 
 
 
-% catch ME
-%     fprintf('\tID: %s\n', ME.identifier)
-%     fprintf('\tMessage: %s\n', ME.message)
-%     fprintf('\tStack::\n')
-%     for k=1:length(ME.stack)
-%         disp(ME.stack(k))
-%     end
-%     res = NaN
-% end
+catch ME
+    fprintf('\tID: %s\n', ME.identifier)
+    fprintf('\tMessage: %s\n', ME.message)
+    fprintf('\tStack::\n')
+    for k=1:length(ME.stack)
+        disp(ME.stack(k))
+    end
+    res = NaN
+end
 
 
 
