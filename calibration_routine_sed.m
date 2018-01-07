@@ -11,25 +11,28 @@ format compact
 
 [lake_params, sediment_params] = load_params();
 
-calib_res = [0.0865681634702761; 0.161705696258267; 1.23114894752963; 1.66632346919548; 0.217316646052962; 0.184295158144136; 1.50000000000000; 1.44746872184578; 0.0609313437550716; 2.26727837370864e-05; 3.06302033352011e-05; 0.0450000000000000; 0.0321267784864950; 19.3181501625625; 1.15335807117479; 0.718058521202605];
-
-% Chl better predictions:
-lake_params{47} = calib_res(1); % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
-lake_params{49} = calib_res(2); % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
-lake_params{50} = calib_res(3); % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
-lake_params{53} = calib_res(4); % 638.9222e-003  % 53    Half saturation growth P level (mg/m3)
-lake_params{56} = calib_res(5); % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
-lake_params{57} = calib_res(6); % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
-lake_params{58} = calib_res(7); % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
-lake_params{59} = calib_res(8); % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
-lake_params{46} = calib_res(9); % 53.9466e-003   % % 46  settling velocity for S (m day-1)
-lake_params{10} = calib_res(10); % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-lake_params{54} = calib_res(11); % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-lake_params{12} = calib_res(12); % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
-lake_params{55} = calib_res(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
-sediment_params{52} = calib_res(14); % 65.1237e+000   %    accel
-lake_params{24} = calib_res(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
-lake_params{20} = calib_res(16); % 1   % 20    scaling factor for inflow concentration of TP (-)
+% NIVA latest RMSD only Chl result (++++Best so far++++):
+x = [0.0865681634702761; 0.161705696258267; 1.23114894752963; 1.66632346919548; 0.217316646052962; 0.184295158144136; 1.50000000000000; 1.44746872184578; 0.0609313437550716; 2.26727837370864e-05; 3.06302033352011e-05; 0.0450000000000000; 0.0321267784864950; 19.3181501625625; 1.15335807117479; 0.718058521202605];
+% ======================================================================
+% file_name = 'IO/chl_rmsd.mat'
+% chl calibration RMSD
+lake_params{47} = x(1); % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
+lake_params{49} = x(2); % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
+lake_params{50} = x(3); % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
+lake_params{53} = x(4); % 638.9222e-003  % 53    Half saturation growth P level (mg/m3)
+lake_params{56} = x(5); % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+lake_params{57} = x(6); % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
+lake_params{58} = x(7); % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+lake_params{59} = x(8); % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
+lake_params{46} = x(9); % 53.9466e-003   % % 46  settling velocity for S (m day-1)
+lake_params{10} = x(10); % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{54} = x(11); % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{12} = x(12); % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
+lake_params{55} = x(13); % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
+sediment_params{52} = x(14); % 65.1237e+000   %    accel
+lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{20} = x(16); % 1   % 20    scaling factor for inflow concentration of TP (-)
+% ======================================================================
 
 
 % Niva sediment cores & inputs scaled & k_chl=3; err= r^2*RMSD, res=~850.34  % ====================================================
@@ -221,7 +224,7 @@ try
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
 
     % just nrmsd
-    res = sum([nrmsd_TOTP, nrmsd_Chl, nrmsd_PO4, nrmsd_PP, mean(nrmsd_O2), 3*nrmsd_PO4_sed, 2*nrmsd_Ca_sed, nrmsd_Fe_sed, 3*nrmsd_S_sed, 3*nrmsd_P_Fe_sed, 3*nrmsd_P_Ca_sed, 3*nrmsd_P_Al_sed])
+    res = sum([nrmsd_TOTP, nrmsd_Chl, nrmsd_PO4, nrmsd_PP, mean(nrmsd_O2), nrmsd_PO4_sed, nrmsd_Ca_sed, nrmsd_Fe_sed, nrmsd_S_sed, nrmsd_P_Fe_sed, nrmsd_P_Ca_sed, nrmsd_P_Al_sed])
 
 
 
