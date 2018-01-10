@@ -186,7 +186,7 @@ lake_params{20} = x(16); % 1   % 20    scaling factor for inflow concentration o
 % Niva res. NIVA: calibration of sed. with ts=24 and custom weights (1x) + nrmsd + pH 8, no POP
 % res ~= 132
 file_name = 'IO/niva_pH_8_NRMSD_chl_1x_weights.mat'
-x = [9.9259e+01, 1.0000e-02, 1.0000e-03, 7.4466e-02, 8.8164e-02, 1.5672e-03, 2.9609e+00, 4.0020e+01, 1.4153e-01, 4.7362e+01, 1.9585e+01,         0,         0, 6.1781e-01, 1.2500e+00, 3.5000e+00, 3.4012e+00, 1.2781e+00, 1.6830e+00, 9.2443e+00];
+x = [9.9259e+01, 1.0000e-02, 1.0000e-03, 7.4466e-02, 8.8164e-02, 1.5672e-03, 1.9609e+00, 4.0020e+01, 1.4153e-01, 4.7362e+01, 1.9585e+01, 0, 0, 6.1781e-01, 1.2500e+00, 2.5000e+00, 2.4012e+00, 1.2781e+00, 1.6830e+00, 9.2443e+00];
 
 sediment_params{1} = x(1); % 65.1237e+000   %    accel
 sediment_params{1} = x(2);  %   'k_Chl',                 %        % 1

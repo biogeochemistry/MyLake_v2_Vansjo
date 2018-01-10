@@ -224,7 +224,7 @@ try
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
 
     % just nrmsd
-    res = sum([nrmsd_TOTP, nrmsd_Chl, nrmsd_PO4, nrmsd_PP, mean(nrmsd_O2), nrmsd_PO4_sed, nrmsd_Ca_sed, nrmsd_Fe_sed, nrmsd_S_sed, nrmsd_P_Fe_sed, nrmsd_P_Ca_sed, nrmsd_P_Al_sed])
+    res = sum([nrmsd_TOTP, nrmsd_Chl, nrmsd_PO4, nrmsd_PP, mean(nrmsd_O2), 2*nrmsd_PO4_sed, 2*nrmsd_Ca_sed, 2*nrmsd_Fe_sed, nrmsd_S_sed, 2*nrmsd_P_Fe_sed, 2*nrmsd_P_Ca_sed, nrmsd_P_Al_sed])
 
 
 
