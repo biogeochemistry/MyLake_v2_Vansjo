@@ -44,6 +44,7 @@ lb = [1; 0.01; 0.001; 0.001; 0.001; 0.001; 0.001; 0.001; 0.001;   0;    0; 0;   
 ub = [100;  1;   0.1;   0.1;   0.1;   0.1;   100;   100;   100; 100;  100; 2;  100; 100; 100; 100;   10;   10;   10;   10];
 
 
+
 fcns = {@gaplotscorediversity, @gaplotstopping, @gaplotgenealogy, @gaplotscores, @gaplotdistance, @gaplotselection, @gaplotmaxconstr, @gaplotbestf, @gaplotbestindiv, @gaplotexpectation, @gaplotrange, @gaplotpareto, @gaplotparetodistance, @gaplotrankhist, @gaplotspread};
 
 population_size = 72;  % Populations size for each generation of the genetic algorithm
@@ -108,8 +109,8 @@ is_save_results = false;
 % disp(datetime('now'));
 
 try
-
-    [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
+    name_of_scenario = 'IO/store_INCAP_input_baseline_mod.txt';
+    [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, name_of_scenario, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
 
 
     load('Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
