@@ -148,7 +148,11 @@ def find_element_name(element):
 
 
 def load_data(f):
-    mat_contents = sio.loadmat(f)
+    try:
+        mat_contents = sio.loadmat(f)
+    except NotImplementedError:
+        import hdf5storage
+        mat_contents = hdf5storage.loadmat(f)
     MyLake_results = mat_contents['MyLake_results']
     Sediment_results = mat_contents['Sediment_results']
     return MyLake_results, Sediment_results

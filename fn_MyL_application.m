@@ -1,9 +1,9 @@
-function [MyLake_results, Sediment_results] = fn_MyL_application(m_start,m_stop, K_sediments, K_lake, use_INCA, run_INCA, run_ID, clim_ID, is_save_results)
+function [MyLake_results, Sediment_results] = fn_MyL_application(m_start,m_stop, K_sediments, K_lake, name_of_scenario, use_INCA, run_INCA, run_ID, clim_ID, is_save_results)
 global sed_par_file lake_par_file Eevapor
 % This is the main MyLake application configuration file. INCA is a switch
 % It is made to run a after the parameter are set by Set_Prior
 
-Eevapor=0;    
+Eevapor=0;
 % disp('init ...');
 
 calibration_k_values = [(1:length(K_sediments))',cell2mat(K_sediments(:,1)) ]; % writing sediments parameters file
@@ -61,7 +61,7 @@ initfile='IO/mylake_initial_concentrations.txt';
 
 
 if use_INCA == 0
-    inputfile='IO/store_INCAP_input_baseline_mod.txt';
+    inputfile=name_of_scenario;
     % inputfile='IO/store_constant_input.txt';
     % disp('Using existing input')
 elseif use_INCA == 1
