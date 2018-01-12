@@ -66,6 +66,7 @@ species_formulas = {
     'H_sw': r'$Hsw$',
     'H_sw_2': r'$Hsw_2$',
     'T': r'T',
+    'K': r'Kz',
     'pH': r'pH',
     'OMS': r'OMS'
 }
@@ -438,6 +439,119 @@ class ResultsPlotter:
         if elem[0] == 'H_sw_zt_2':
             cbar.ax.set_ylabel('Light limiting function(group 2), [-]')
         plt.show()
+
+    def custom_contour_plot(self,
+                            z,
+                            cmap=ListedColormap(sns.color_palette("Blues",
+                                                                  51))):
+
+        results = self.env_getter('water')
+        plt.figure(figsize=(6, 4), dpi=192)
+        start = int(-365)
+        end = int(-1)
+        X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 365,
+                           -results['z'][0, 0][0:-1])
+
+        vmin = -3.7#-np.max(np.abs([z.min(), z.max()]))
+        vmax = 3.7#np.max(np.abs([z.min(), z.max()]))
+        v = np.linspace(vmin, vmax, 51, endpoint=True)
+        CS = plt.contourf(
+            X,
+            Y,
+            z,
+            v,
+            cmap=cmap,
+            origin='lower',
+            vmin=vmin,
+            vmax=vmax)
+        cbar = plt.colorbar(CS)
+
+        plt.ylabel('Depth, [cm]')
+        plt.ylim(Y.min(), 0)
+
+        plt.ylabel('Depth, [m]')
+
+        ax = plt.gca()
+        ax.ticklabel_format(useOffset=False)
+        ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%b'))
+        plt.show()
+
+    def contour_plot_mean_several_years(self,
+                                        env,
+                                        elem,
+                                        convert_units=False,
+                                        years_ago=0.,
+                                        years=1,
+                                        cmap=ListedColormap(
+                                            sns.color_palette("Blues", 51))):
+        results = self.env_getter(env)
+        plt.figure(figsize=(6, 4), dpi=192)
+        start = int(-365 * (years_ago + 1))
+        end = int(-365 * years_ago - 1)
+        X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 365,
+                           -results['z'][0, 0][0:-1])
+        z = 0
+        for e in elem:
+            coef, units = self.unit_converter(convert_units, env, e)
+            for y in range(0, years):
+                try:
+                    z += results['concentrations'][0, 0][e][0, 0][
+                        0:-1, start - (y * 365):end - (y * 365)] * coef
+                except:
+                    z += results[e][0, 0][0:-1, start - (y * 365):end -
+                                          (y * 365)] * coef
+            z /= years
+        v = np.linspace(0, z.max(), 51, endpoint=True)
+        CS = plt.contourf(
+            X, Y, z, v, cmap=cmap, origin='lower', vmin=0,
+            vmax=z.max()) # v, vmin=0, vmax=z.max()
+        cbar = plt.colorbar(CS)
+
+        plt.ylabel('Depth, [cm]')
+        plt.ylim(Y.min(), 0)
+        ice_thickness = 0
+        TCz = 0
+        if env == 'water':
+            for y in range(0, years):
+                ice_thickness += results['His'][0, 0][0, start - (y * 365):end -
+                                                      (y * 365)]
+                TCz += results['MixStat'][0, 0][11, start - (y * 365):end -
+                                                (y * 365)]
+            ice_thickness /= years
+            TCz /= years
+            plt.fill_between(
+                results['days'][0, 0][0][start:end] - 366,
+                0,
+                -ice_thickness,
+                where=-ice_thickness <= 0,
+                facecolor='red',
+                interpolate=True)
+            plt.plot(
+                results['days'][0, 0][0][start:end] - 366,
+                -TCz * (TCz > 1),
+                lw=0.2,
+                c='k')
+            plt.ylabel('Depth, [m]')
+
+        ax = plt.gca()
+        ax.ticklabel_format(useOffset=False)
+        ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
+        lbl = ''
+        for e in elem:
+            lbl += find_element_name(e) + ', '
+        cbar.ax.set_ylabel(lbl + units)
+        if elem[0] == 'T':
+            cbar.ax.set_ylabel('Temperature, [C]')
+        if elem[0] == 'H_sw_zt':
+            cbar.ax.set_ylabel('Light limiting function (group 1), [-]')
+        if elem[0] == 'H_sw_zt_2':
+            cbar.ax.set_ylabel('Light limiting function(group 2), [-]')
+        plt.show()
+        return z
+
+
 
     def rate(self,
              env,

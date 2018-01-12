@@ -27,7 +27,7 @@ for scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_
 
 
     % inaccurate but faster:
-    sediment_params{73} = 96;
+    sediment_params{73} = 192;
     sediment_params{74} = 0;
 
     % ======================================================================

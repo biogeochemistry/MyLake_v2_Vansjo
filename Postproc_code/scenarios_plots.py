@@ -1,4 +1,3 @@
-import datetime
 from calendar import timegm
 from datetime import datetime
 
@@ -52,8 +51,8 @@ def plot_wc(model_results,
     # ax.ticklabel_format(useOffset=False)
     ax.grid(linestyle='-', linewidth=0.2)
     plt.tight_layout()
-    dend = datetime.datetime.strptime(dend, '%Y-%m-%d')
-    dstart = datetime.datetime.strptime(dstart, '%Y-%m-%d')
+    dend = datetime.strptime(dend, '%Y-%m-%d')
+    dstart = datetime.strptime(dstart, '%Y-%m-%d')
     plt.xlim(dstart, dend)
     ax.set_xlabel('Date')
     ax.set_ylabel(lbl)
