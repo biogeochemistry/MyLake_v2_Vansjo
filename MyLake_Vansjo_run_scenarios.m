@@ -3,7 +3,7 @@ scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4
 parfor s = 1:5
 
     name_of_scenario = strcat('IO/airT_Scenarios/', scen{s}, '.txt')
-    file_name = strcat('IO/airT_Scenarios/96ts_', scen{s}, '.mat')
+    file_name = strcat('IO/airT_Scenarios/48ts_', scen{s}, '.mat')
 
 
 
@@ -26,7 +26,7 @@ parfor s = 1:5
 
 
     % inaccurate but faster:
-    sediment_params{73} = 96;
+    sediment_params{73} = 48;
     sediment_params{74} = 0; % pH algo disabled;
     % sediment_params{72} = 0; % effective depth test
 
@@ -235,7 +235,7 @@ parfor s = 1:5
 
 
     disp('Saving results...')
-    save(file_name, 'MyLake_results', 'Sediment_results')
+    parsave(file_name, 'MyLake_results', 'Sediment_results')
     disp('Finished at:')
     disp(datetime('now'));
 
