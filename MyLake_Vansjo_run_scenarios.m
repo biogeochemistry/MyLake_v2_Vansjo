@@ -4,7 +4,7 @@ for scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_
 
 
     name_of_scenario = strcat('IO/airT_Scenarios/', scen{1}, '.txt')
-    file_name = strcat('IO/airT_Scenarios/', scen{1}, '.mat')
+    file_name = strcat('IO/airT_Scenarios/96ts_', scen{1}, '.mat')
 
 
 
@@ -27,8 +27,9 @@ for scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_
 
 
     % inaccurate but faster:
-    sediment_params{73} = 192;
-    sediment_params{74} = 0;
+    sediment_params{73} = 96;
+    sediment_params{74} = 0; % pH algo disabled;
+    % sediment_params{72} = 0; % effective depth test
 
     % ======================================================================
     % file_name = 'IO/test.mat'

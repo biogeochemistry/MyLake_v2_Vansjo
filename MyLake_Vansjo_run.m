@@ -22,7 +22,7 @@ name_of_scenario = 'IO/airT_Scenarios/T_only_full_scen_base_historical_20y.txt'
 
 
 % inaccurate but faster:
-sediment_params{73} = 24;
+sediment_params{73} = 48;
 sediment_params{74} = 0;
 
 % ======================================================================
@@ -53,7 +53,7 @@ sediment_params{74} = 0;
 % NIVA latest RMSD only result (++++Best so far++++):
 x = [0.0865681634702761; 0.161705696258267; 1.23114894752963; 1.66632346919548; 0.217316646052962; 0.184295158144136; 1.50000000000000; 1.44746872184578; 0.0609313437550716; 2.26727837370864e-05; 3.06302033352011e-05; 0.0450000000000000; 0.0321267784864950; 19.3181501625625; 1.15335807117479; 0.718058521202605];
 % ======================================================================
-% file_name = 'IO/chl_rmsd.mat'
+file_name = 'IO/48ts_chl_rmsd.mat'
 % chl calibration RMSD
 lake_params{47} = x(1); % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
 lake_params{49} = x(2); % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
@@ -185,35 +185,37 @@ lake_params{20} = x(16); % 1   % 20    scaling factor for inflow concentration o
 
 % Niva res. NIVA: calibration of sed. with ts=24 and custom weights (1x) + nrmsd + pH 8, no POP
 % res ~= 132
-file_name = 'IO/niva_pH_8_NRMSD_chl_1x_weights.mat'
-x = [9.9259e+01, 1.0000e-02, 1.0000e-03, 7.4466e-02, 8.8164e-02, 1.5672e-03, 1.9609e+00, 4.0020e+01, 1.4153e-01, 4.7362e+01, 1.9585e+01, 0, 0, 6.1781e-01, 1.2500e+00, 2.5000e+00, 2.4012e+00, 1.2781e+00, 1.6830e+00, 9.2443e+00];
+% file_name = 'IO/niva_pH_8_NRMSD_chl_2x3x_weights.mat'
+% % x = [9.9259e+01, 1.0000e-02, 1.0000e-03, 7.4466e-02, 8.8164e-02, 1.5672e-03, 1.9609e+00, 4.0020e+01, 1.4153e-01, 4.7362e+01, 1.9585e+01, 0, 0, 6.1781e-01, 1.2500e+00, 2.5000e+00, 2.4012e+00, 1.2781e+00, 1.6830e+00, 9.2443e+00];
+% bad esults with ts48:
+% x = [1.4204e+01, 6.3673e-01, 2.5029e-03, 2.8346e-02, 3.1492e-02, 1.0914e-02, 7.7227e-01, 2.5138e-01, 1.0000e-03, 5.5915e+01, 0, 1.1957e+00, 1.0689e+01, 8.3924e-01, 5.9617e+01, 2.0000e+00, 8.2241e+00, 2.0000e+00, 9.5658e-01, 2.1860e+00]
 
-sediment_params{1} = x(1); % 65.1237e+000   %    accel
-sediment_params{1} = x(2);  %   'k_Chl',                 %        % 1
-sediment_params{2} = x(3);  %  'k_POP',                 %        % 1
-sediment_params{3} = x(4);  % 'k_POC',                  %        % 0.01
-sediment_params{4} = x(5);  %  'k_DOP',                 %        % 1
-sediment_params{5} = x(6);  % 'k_DOC',                  %        % 1
-sediment_params{23} = x(7);  %     'k_pdesorb_a',         %
-sediment_params{24} = x(8);  %     'k_pdesorb_b',         %
-sediment_params{54} = x(9);  %     'k_pdesorb_c',         %
+% sediment_params{1} = x(1); % 65.1237e+000   %    accel
+% sediment_params{1} = x(2);  %   'k_Chl',                 %        % 1
+% sediment_params{2} = x(3);  %  'k_POP',                 %        % 1
+% sediment_params{3} = x(4);  % 'k_POC',                  %        % 0.01
+% sediment_params{4} = x(5);  %  'k_DOP',                 %        % 1
+% sediment_params{5} = x(6);  % 'k_DOC',                  %        % 1
+% sediment_params{23} = x(7);  %     'k_pdesorb_a',         %
+% sediment_params{24} = x(8);  %     'k_pdesorb_b',         %
+% sediment_params{54} = x(9);  %     'k_pdesorb_c',         %
 
-% SO4 boundary
-lake_params{75} = x(10);%    % flux of sulphate from bottom of the sediment. Custom boundary condition for Vansjo
+% % SO4 boundary
+% lake_params{75} = x(10);%    % flux of sulphate from bottom of the sediment. Custom boundary condition for Vansjo
 
-% for cores too (scaling unknown inputs):
-lake_params{22} = x(11);%    scaling factor for inflow concentration of Chl a (-)
-lake_params{25} = x(12);%    Scaling factor for inflow concentration of O2 (-)
-lake_params{27} = x(13);%    Scaling factor for inflow concentration of NO3 (-)
-lake_params{34} = x(14);%    Scaling factor for inflow concentration of Fe3 (-)
-lake_params{35} = x(15);%    Scaling factor for inflow concentration of Al3 (-)
-lake_params{37} = x(16);%    Scaling factor for inflow concentration of CaCO3 (-)
+% % for cores too (scaling unknown inputs):
+% lake_params{22} = x(11);%    scaling factor for inflow concentration of Chl a (-)
+% lake_params{25} = x(12);%    Scaling factor for inflow concentration of O2 (-)
+% lake_params{27} = x(13);%    Scaling factor for inflow concentration of NO3 (-)
+% lake_params{34} = x(14);%    Scaling factor for inflow concentration of Fe3 (-)
+% lake_params{35} = x(15);%    Scaling factor for inflow concentration of Al3 (-)
+% lake_params{37} = x(16);%    Scaling factor for inflow concentration of CaCO3 (-)
 
-% P minerals:
-lake_params{31} = x(17);%    k_apa_pre
-lake_params{32} = x(18);%    k_apa_pre
-lake_params{40} = x(19);%    k_viv_pre
-lake_params{41} = x(20);%    k_viv_pre
+% % P minerals:
+% lake_params{31} = x(17);%    k_apa_pre
+% lake_params{32} = x(18);%    k_apa_pre
+% lake_params{40} = x(19);%    k_viv_pre
+% lake_params{41} = x(20);%    k_viv_pre
 % ======================================================================
 
 

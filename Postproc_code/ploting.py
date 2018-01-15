@@ -66,6 +66,7 @@ species_formulas = {
     'H_sw': r'$Hsw$',
     'H_sw_2': r'$Hsw_2$',
     'T': r'T',
+    'rho': r'\rho',
     'K': r'Kz',
     'pH': r'pH',
     'OMS': r'OMS'
@@ -442,6 +443,8 @@ class ResultsPlotter:
 
     def custom_contour_plot(self,
                             z,
+                            vmin=-3.7,
+                            vmax=-3.7,
                             cmap=ListedColormap(sns.color_palette("Blues",
                                                                   51))):
 
@@ -452,18 +455,11 @@ class ResultsPlotter:
         X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 365,
                            -results['z'][0, 0][0:-1])
 
-        vmin = -3.7#-np.max(np.abs([z.min(), z.max()]))
-        vmax = 3.7#np.max(np.abs([z.min(), z.max()]))
+        # vmin = -3.7#-np.max(np.abs([z.min(), z.max()]))
+        # vmax = 3.7#np.max(np.abs([z.min(), z.max()]))
         v = np.linspace(vmin, vmax, 51, endpoint=True)
         CS = plt.contourf(
-            X,
-            Y,
-            z,
-            v,
-            cmap=cmap,
-            origin='lower',
-            vmin=vmin,
-            vmax=vmax)
+            X, Y, z, v, cmap=cmap, origin='lower', vmin=vmin, vmax=vmax)
         cbar = plt.colorbar(CS)
 
         plt.ylabel('Depth, [cm]')
@@ -514,10 +510,11 @@ class ResultsPlotter:
         TCz = 0
         if env == 'water':
             for y in range(0, years):
-                ice_thickness += results['His'][0, 0][0, start - (y * 365):end -
-                                                      (y * 365)]
-                TCz += results['MixStat'][0, 0][11, start - (y * 365):end -
-                                                (y * 365)]
+                ice_thickness += results['His'][0, 0][0, start - (y * 365):end - (y * 365)]
+                tcline = results['MixStat'][0, 0][11, start - (y * 365):end -
+                                                  (y * 365)]
+                tcline[tcline == np.nan] = 0
+                TCz += tcline
             ice_thickness /= years
             TCz /= years
             plt.fill_between(
