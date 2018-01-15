@@ -1,10 +1,9 @@
-% for i = 1:1000
+scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL'}
 
-for scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL'}
+parfor s = 1:5
 
-
-    name_of_scenario = strcat('IO/airT_Scenarios/', scen{1}, '.txt')
-    file_name = strcat('IO/airT_Scenarios/96ts_', scen{1}, '.mat')
+    name_of_scenario = strcat('IO/airT_Scenarios/', scen{s}, '.txt')
+    file_name = strcat('IO/airT_Scenarios/96ts_', scen{s}, '.mat')
 
 
 
@@ -192,35 +191,35 @@ for scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_
     % Niva res. NIVA: calibration of sed. with ts=24 and custom weights (1x) + nrmsd + pH 8, no POP
     % res ~= 132
     % file_name = 'IO/niva_pH_8_NRMSD_chl_1x_weights.mat'
-    x = [9.9259e+01, 1.0000e-02, 1.0000e-03, 7.4466e-02, 8.8164e-02, 1.5672e-03, 1.9609e+00, 4.0020e+01, 1.4153e-01, 4.7362e+01, 1.9585e+01, 0, 0, 6.1781e-01, 1.2500e+00, 2.5000e+00, 2.4012e+00, 1.2781e+00, 1.6830e+00, 9.2443e+00];
+    % x = [9.9259e+01, 1.0000e-02, 1.0000e-03, 7.4466e-02, 8.8164e-02, 1.5672e-03, 1.9609e+00, 4.0020e+01, 1.4153e-01, 4.7362e+01, 1.9585e+01, 0, 0, 6.1781e-01, 1.2500e+00, 2.5000e+00, 2.4012e+00, 1.2781e+00, 1.6830e+00, 9.2443e+00];
 
-    sediment_params{1} = x(1); % 65.1237e+000   %    accel
-    sediment_params{1} = x(2);  %   'k_Chl',                 %        % 1
-    sediment_params{2} = x(3);  %  'k_POP',                 %        % 1
-    sediment_params{3} = x(4);  % 'k_POC',                  %        % 0.01
-    sediment_params{4} = x(5);  %  'k_DOP',                 %        % 1
-    sediment_params{5} = x(6);  % 'k_DOC',                  %        % 1
-    sediment_params{23} = x(7);  %     'k_pdesorb_a',         %
-    sediment_params{24} = x(8);  %     'k_pdesorb_b',         %
-    sediment_params{54} = x(9);  %     'k_pdesorb_c',         %
+    % sediment_params{1} = x(1); % 65.1237e+000   %    accel
+    % sediment_params{1} = x(2);  %   'k_Chl',                 %        % 1
+    % sediment_params{2} = x(3);  %  'k_POP',                 %        % 1
+    % sediment_params{3} = x(4);  % 'k_POC',                  %        % 0.01
+    % sediment_params{4} = x(5);  %  'k_DOP',                 %        % 1
+    % sediment_params{5} = x(6);  % 'k_DOC',                  %        % 1
+    % sediment_params{23} = x(7);  %     'k_pdesorb_a',         %
+    % sediment_params{24} = x(8);  %     'k_pdesorb_b',         %
+    % sediment_params{54} = x(9);  %     'k_pdesorb_c',         %
 
-    % SO4 boundary
-    lake_params{75} = x(10);%    % flux of sulphate from bottom of the sediment. Custom boundary condition for Vansjo
+    % % SO4 boundary
+    % lake_params{75} = x(10);%    % flux of sulphate from bottom of the sediment. Custom boundary condition for Vansjo
 
-    % for cores too (scaling unknown inputs):
-    lake_params{22} = x(11);%    scaling factor for inflow concentration of Chl a (-)
-    lake_params{25} = x(12);%    Scaling factor for inflow concentration of O2 (-)
-    lake_params{27} = x(13);%    Scaling factor for inflow concentration of NO3 (-)
-    lake_params{34} = x(14);%    Scaling factor for inflow concentration of Fe3 (-)
-    lake_params{35} = x(15);%    Scaling factor for inflow concentration of Al3 (-)
-    lake_params{37} = x(16);%    Scaling factor for inflow concentration of CaCO3 (-)
+    % % for cores too (scaling unknown inputs):
+    % lake_params{22} = x(11);%    scaling factor for inflow concentration of Chl a (-)
+    % lake_params{25} = x(12);%    Scaling factor for inflow concentration of O2 (-)
+    % lake_params{27} = x(13);%    Scaling factor for inflow concentration of NO3 (-)
+    % lake_params{34} = x(14);%    Scaling factor for inflow concentration of Fe3 (-)
+    % lake_params{35} = x(15);%    Scaling factor for inflow concentration of Al3 (-)
+    % lake_params{37} = x(16);%    Scaling factor for inflow concentration of CaCO3 (-)
 
-    % P minerals:
-    lake_params{31} = x(17);%    k_apa_pre
-    lake_params{32} = x(18);%    k_apa_pre
-    lake_params{40} = x(19);%    k_viv_pre
-    lake_params{41} = x(20);%    k_viv_pre
-    % ======================================================================
+    % % P minerals:
+    % lake_params{31} = x(17);%    k_apa_pre
+    % lake_params{32} = x(18);%    k_apa_pre
+    % lake_params{40} = x(19);%    k_viv_pre
+    % lake_params{41} = x(20);%    k_viv_pre
+    % % ======================================================================
 
 
     % try
@@ -240,65 +239,65 @@ for scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_
     disp('Finished at:')
     disp(datetime('now'));
 
-    if is_metrics == true
+    % if is_metrics == true
 
-        load('Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
+    %     load('Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
 
-        depths = [5;10;15;20;25;30;35;40];
-        rmsd_O2 = 0;
-
-
-        for i=1:size(depths,1)
-            d = depths(i);
-            zinx=find(MyLake_results.basin1.z == d);
-            O2_measured = res.T(res.depth1 == d);
-            day_measured = res.date(res.depth1 == d);
-            day_measured = day_measured(~isnan(O2_measured));
-            O2_measured = O2_measured(~isnan(O2_measured));
-
-            O2_mod = MyLake_results.basin1.concentrations.O2(zinx,:)'/1000;
-            [T_date,loc_sim, loc_obs] = intersect(MyLake_results.basin1.days, day_measured);
-
-            % rmsd_O2 = rmsd_O2 + RMSE(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
-            rmsd_O2 = rmsd_O2 + sqrt(mean((O2_mod(loc_sim, 1)-O2_measured(loc_obs, 1)).^2));
-        end
-
-        zinx=find(MyLake_results.basin1.z<4);
-        TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.DOP(zinx,:) + MyLake_results.basin1.concentrations.POP(zinx,:))', 2);
-        Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
-        P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
-        POP_mod = mean((MyLake_results.basin1.concentrations.POP(zinx,:) + MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
-
-        load 'obs/store_obs/TOTP.dat' % measured
-        load 'obs/store_obs/Cha.dat' % measured
-        load 'obs/store_obs/PO4.dat' % measured
-        load 'obs/store_obs/Part.dat' % measured
+    %     depths = [5;10;15;20;25;30;35;40];
+    %     rmsd_O2 = 0;
 
 
-        [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, TOTP(:,1)));
-        rmsd_TOTP = sqrt(mean((TP_mod(loc_sim, 1)-TOTP(loc_obs, 2)).^2));
+    %     for i=1:size(depths,1)
+    %         d = depths(i);
+    %         zinx=find(MyLake_results.basin1.z == d);
+    %         O2_measured = res.T(res.depth1 == d);
+    %         day_measured = res.date(res.depth1 == d);
+    %         day_measured = day_measured(~isnan(O2_measured));
+    %         O2_measured = O2_measured(~isnan(O2_measured));
+
+    %         O2_mod = MyLake_results.basin1.concentrations.O2(zinx,:)'/1000;
+    %         [T_date,loc_sim, loc_obs] = intersect(MyLake_results.basin1.days, day_measured);
+
+    %         % rmsd_O2 = rmsd_O2 + RMSE(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
+    %         rmsd_O2 = rmsd_O2 + sqrt(mean((O2_mod(loc_sim, 1)-O2_measured(loc_obs, 1)).^2));
+    %     end
+
+    %     zinx=find(MyLake_results.basin1.z<4);
+    %     TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.DOP(zinx,:) + MyLake_results.basin1.concentrations.POP(zinx,:))', 2);
+    %     Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
+    %     P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
+    %     POP_mod = mean((MyLake_results.basin1.concentrations.POP(zinx,:) + MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
+
+    %     load 'obs/store_obs/TOTP.dat' % measured
+    %     load 'obs/store_obs/Cha.dat' % measured
+    %     load 'obs/store_obs/PO4.dat' % measured
+    %     load 'obs/store_obs/Part.dat' % measured
 
 
-        [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha(:,1)));
-        rmsd_Chl = sqrt(mean((Chl_mod(loc_sim, 1)-Cha(loc_obs, 2)).^2));
+    %     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, TOTP(:,1)));
+    %     rmsd_TOTP = sqrt(mean((TP_mod(loc_sim, 1)-TOTP(loc_obs, 2)).^2));
 
 
-        [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
-        rmsd_PO4 = sqrt(mean((P_mod(loc_sim, 1)-PO4(loc_obs, 2)).^2));
+    %     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha(:,1)));
+    %     rmsd_Chl = sqrt(mean((Chl_mod(loc_sim, 1)-Cha(loc_obs, 2)).^2));
 
 
-        [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Part(:,1)));
-        rmsd_PP = sqrt(mean((POP_mod(loc_sim, 1)-Part(loc_obs, 2)).^2));
+    %     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
+    %     rmsd_PO4 = sqrt(mean((P_mod(loc_sim, 1)-PO4(loc_obs, 2)).^2));
 
 
-        disp('RMSD 3xRMSE(P)+RMSE(O2):')
-        disp(sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2]))
-        disp('RMSD = RMSE(P)+RMSE(O2):')
-        disp(sum([rmsd_TOTP, rmsd_Chl, rmsd_PO4, rmsd_PP, rmsd_O2]))
-    end
+    %     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Part(:,1)));
+    %     rmsd_PP = sqrt(mean((POP_mod(loc_sim, 1)-Part(loc_obs, 2)).^2));
 
 
-    toc
+    %     disp('RMSD 3xRMSE(P)+RMSE(O2):')
+    %     disp(sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2]))
+    %     disp('RMSD = RMSE(P)+RMSE(O2):')
+    %     disp(sum([rmsd_TOTP, rmsd_Chl, rmsd_PO4, rmsd_PP, rmsd_O2]))
+    % end
+
+
+    % toc
 
 
 
