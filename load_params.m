@@ -85,9 +85,9 @@ sediment_params = {
     0.02, 'k_DOC',                  % 5       % 1
     0.008, 'Km_O2',                 % 6       % Canavan, R. W (2006) rho=2.5
     0.01,  'Km_NO3',                % 7       % Canavan, R. W (2006) rho=2.5
-    0.08,  'Km_Fe(OH)3',         % 8       % Canavan, R. W (2006) rho=2.5
-    0.08,  'Km_FeOOH',           % 9       % Canavan, R. W (2006) rho=2.5
-    0.1,  'Km_SO4',                 % 10       % Canavan, R. W (2006 rho=2.5
+    100/2.5,  'Km_Fe(OH)3',         % 8       % Cappellen, R. W (1996) rho=2.5
+    100/2.5,  'Km_FeOOH',           % 9       % Cappellen, R. W (1996) rho=2.5
+    1.5,  'Km_SO4',                 % 10       % Cappellen, R. W (1996 rho=2.5
     0.001,'Km_oxao',                % 11       % the same as Km rho=2.5
     0.1,  'Km_amao',                % 12       % the same as Km rho=2.5
     0.008, 'Kin_O2',                % 13       % the same as Km rho=2.5
@@ -100,8 +100,8 @@ sediment_params = {
     2500,  'k_Spre',                % 20       %
     3.3,   'k_FeS2pre',             % 21       % Canavan (2006)
     0.1,   'k_alum',                % 22
-    2,     'k_pdesorb_a',         % 23
-    10,     'k_pdesorb_b',         % 24
+    100,     'k_pdesorb_a',         % 23
+    100,     'k_pdesorb_b',         % 24
     20000,  'k_fesox',              % 25        % R23 %Canava
     1000,   'k_fes2ox',             % 26        % R23 % Katsev (2013)
     8,      'k_tS_Fe',              % 27      % Cappellen (1996) in Canavan, R. W (2006) the reaction is different
