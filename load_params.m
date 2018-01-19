@@ -29,7 +29,7 @@ lake_params = {
     1, 'I_scPOP',              % 24    scaling factor for inflow concentration of POP  (-)
     1, 'I_scO',                % 25    Scaling factor for inflow concentration of O2 (-)
     1, 'I_scDIC',             % 26    Scaling factor for inflow concentration of DIC  (-)
-    1,  'I_scNO3',             % 27    Scaling factor for inflow concentration of NO3 (-)
+    0.75,  'I_scNO3',          % 27    Scaling factor for inflow concentration of NO3 (-)
     1,  'I_scNH4',             % 28    Scaling factor for inflow concentration of NH4 (-)
     1,  'I_scSO4',             % 29    Scaling factor for inflow concentration of SO4 (-)
     1,  'I_scFe2',             % 30    Scaling factor for inflow concentration of Fe2 (-)
