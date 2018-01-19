@@ -1,4 +1,4 @@
-scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL'}
+scen = {'T_only_RCP45_NorESM', 'T_only_RCP60_NorESM', 'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL'}
 
 parfor s = 1:5
 
