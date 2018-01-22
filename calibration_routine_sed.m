@@ -102,7 +102,7 @@ sediment_params{74} = 0; % pH module off, const pH = 8
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
 clim_ID = run_ID;
-m_start=[2000, 1, 1]; % Do not change this date if you are calibrating the cores (using relative dates in the code)
+m_start=[2000, 1, 1]; % Do not change this date if you are calibrating the cores (using relative dates in the code) or check it
 m_stop=[2013, 10, 31]; %
 run_INCA = 0; % 1- MyLake will run INCA, 0- No run
 use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
@@ -119,7 +119,7 @@ try
     load('Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
 
     depths = [5;10;15;20;25;30;35;40];
-    nrmsd_O2 = 0;
+    nrmsd_mean_O2 = 0;
     rsquared_O2 = 0;
 
 
@@ -134,9 +134,9 @@ try
         O2_mod = MyLake_results.basin1.concentrations.O2(zinx,:)'/1000;
         [T_date,loc_sim, loc_obs] = intersect(MyLake_results.basin1.days, day_measured);
 
-        nrmsd_O2(i) = nrmsd(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
+        nrmsd_mean_O2(i) = nrmsd_mean(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
         rsquared_O2(i) = rsquared(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
-        % nrmsd_O2 = nrmsd_O2 + sqrt(mean((O2_mod(loc_sim, 1)-O2_measured(loc_obs, 1)).^2));
+        % nrmsd_mean_O2 = nrmsd_mean_O2 + sqrt(mean((O2_mod(loc_sim, 1)-O2_measured(loc_obs, 1)).^2));
     end
 
     % P forms measured in water-column
@@ -153,22 +153,22 @@ try
 
 
     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, TOTP(:,1)));
-    nrmsd_TOTP = nrmsd(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
+    nrmsd_mean_TOTP = nrmsd_mean(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
     rsquared_TOTP = rsquared(TP_mod(loc_sim, 1), TOTP(loc_obs, 2));
 
 
     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha(:,1)));
-    nrmsd_Chl = nrmsd(Chl_mod(loc_sim, 1), Cha(loc_obs, 2));
+    nrmsd_mean_Chl = nrmsd_mean(Chl_mod(loc_sim, 1), Cha(loc_obs, 2));
     rsquared_Chl = rsquared(Chl_mod(loc_sim, 1), Cha(loc_obs, 2));
 
 
     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
-    nrmsd_PO4 = nrmsd(P_mod(loc_sim, 1), PO4(loc_obs, 2));
+    nrmsd_mean_PO4 = nrmsd_mean(P_mod(loc_sim, 1), PO4(loc_obs, 2));
     rsquared_PO4 = rsquared(P_mod(loc_sim, 1), PO4(loc_obs, 2));
 
 
     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Part(:,1)));
-    nrmsd_PP = nrmsd(POP_mod(loc_sim, 1), Part(loc_obs, 2));
+    nrmsd_mean_PP = nrmsd_mean(POP_mod(loc_sim, 1), Part(loc_obs, 2));
     rsquared_PP = rsquared(POP_mod(loc_sim, 1), Part(loc_obs, 2));
 
     % Sediment cores measured in October 2013
@@ -190,19 +190,19 @@ try
     [~,idx_date_sed_cores,~] = intersect(MyLake_results.basin1.days, 735523);
     idx_depthx_sed_cores =  floor(PO4_sed(:,1)/Sediment_results.basin1.z(end)*(Sediment_results.basin1.params.n-1));
 
-    nrmsd_PO4_sed = nrmsd(30.973*Sediment_results.basin1.concentrations.PO4(idx_depthx_sed_cores,idx_date_sed_cores), PO4_sed(:,2)+P_H2O_sed(:,2));
+    nrmsd_mean_PO4_sed = nrmsd_mean(30.973*Sediment_results.basin1.concentrations.PO4(idx_depthx_sed_cores,idx_date_sed_cores), PO4_sed(:,2)+P_H2O_sed(:,2));
     rsquared_PO4_sed = rsquared(30.973*Sediment_results.basin1.concentrations.PO4(idx_depthx_sed_cores,idx_date_sed_cores), PO4_sed(:,2)+P_H2O_sed(:,2));
 
-    nrmsd_Ca_sed = nrmsd(40.0784*Sediment_results.basin1.concentrations.Ca2(idx_depthx_sed_cores,idx_date_sed_cores), Ca_sed(:,2));
+    nrmsd_mean_Ca_sed = nrmsd_mean(40.0784*Sediment_results.basin1.concentrations.Ca2(idx_depthx_sed_cores,idx_date_sed_cores), Ca_sed(:,2));
     rsquared_Ca_sed = rsquared(40.0784*Sediment_results.basin1.concentrations.Ca2(idx_depthx_sed_cores,idx_date_sed_cores), Ca_sed(:,2));
 
-    nrmsd_Fe_sed = nrmsd(55.8452*Sediment_results.basin1.concentrations.Fe2(idx_depthx_sed_cores,idx_date_sed_cores), Fe2_sed(:,2));
+    nrmsd_mean_Fe_sed = nrmsd_mean(55.8452*Sediment_results.basin1.concentrations.Fe2(idx_depthx_sed_cores,idx_date_sed_cores), Fe2_sed(:,2));
     rsquared_Fe_sed = rsquared(55.8452*Sediment_results.basin1.concentrations.Fe2(idx_depthx_sed_cores,idx_date_sed_cores), Fe2_sed(:,2));
 
-    nrmsd_S_sed = nrmsd(32.0655*Sediment_results.basin1.concentrations.SO4(idx_depthx_sed_cores,idx_date_sed_cores), S_sed(:,2));
+    nrmsd_mean_S_sed = nrmsd_mean(32.0655*Sediment_results.basin1.concentrations.SO4(idx_depthx_sed_cores,idx_date_sed_cores), S_sed(:,2));
     rsquared_S_sed = rsquared(32.0655*Sediment_results.basin1.concentrations.SO4(idx_depthx_sed_cores,idx_date_sed_cores), S_sed(:,2));
 
-    nrmsd_P_Fe_sed = nrmsd(...
+    nrmsd_mean_P_Fe_sed = nrmsd_mean(...
         30.973*Sediment_results.basin1.concentrations.PO4adsa(idx_depthx_sed_cores,idx_date_sed_cores) + ...
         30.973*Sediment_results.basin1.concentrations.PO4adsb(idx_depthx_sed_cores,idx_date_sed_cores) + ...
         2*30.973*Sediment_results.basin1.concentrations.Fe3PO42(idx_depthx_sed_cores,idx_date_sed_cores), ...
@@ -213,22 +213,22 @@ try
         2*30.973*Sediment_results.basin1.concentrations.Fe3PO42(idx_depthx_sed_cores,idx_date_sed_cores), ...
         P_Fe_sed(:,2));
 
-    nrmsd_P_Ca_sed = nrmsd(2*30.973*Sediment_results.basin1.concentrations.Ca3PO42(idx_depthx_sed_cores,idx_date_sed_cores), P_Ca_sed(:,2));
+    nrmsd_mean_P_Ca_sed = nrmsd_mean(2*30.973*Sediment_results.basin1.concentrations.Ca3PO42(idx_depthx_sed_cores,idx_date_sed_cores), P_Ca_sed(:,2));
     rsquared_P_Ca_sed = rsquared(2*30.973*Sediment_results.basin1.concentrations.Ca3PO42(idx_depthx_sed_cores,idx_date_sed_cores), P_Ca_sed(:,2));
 
-    % nrmsd_POP_sed = nrmsd(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.POP(idx_depthx_sed_cores,idx_date_sed_cores), P_Org_sed(:,2));
+    % nrmsd_mean_POP_sed = nrmsd_mean(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.POP(idx_depthx_sed_cores,idx_date_sed_cores), P_Org_sed(:,2));
     % rsquared_POP_sed = rsquared(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.POP(idx_depthx_sed_cores,idx_date_sed_cores), P_Org_sed(:,2));
 
-    nrmsd_P_Al_sed = nrmsd(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.PO4adsc(idx_depthx_sed_cores,idx_date_sed_cores), P_Al_sed(:,2));
-    rsquared_P_Al_sed = nrmsd(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.PO4adsc(idx_depthx_sed_cores,idx_date_sed_cores), P_Al_sed(:,2));
+    nrmsd_mean_P_Al_sed = nrmsd_mean(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.PO4adsc(idx_depthx_sed_cores,idx_date_sed_cores), P_Al_sed(:,2));
+    rsquared_P_Al_sed = nrmsd_mean(30.973*Sediment_results.basin1.params.Pz1*Sediment_results.basin1.concentrations.PO4adsc(idx_depthx_sed_cores,idx_date_sed_cores), P_Al_sed(:,2));
 
     x'
 
-    % res = sum([3*nrmsd_TOTP, 3*nrmsd_Chl, 3*nrmsd_PO4, 3*nrmsd_PP, nrmsd_O2])
+    % res = sum([3*nrmsd_mean_TOTP, 3*nrmsd_mean_Chl, 3*nrmsd_mean_PO4, 3*nrmsd_mean_PP, nrmsd_mean_O2])
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
 
-    % just nrmsd
-    res = sum([nrmsd_TOTP, 10*nrmsd_Chl, 10*nrmsd_PO4, nrmsd_PP, 5*mean(nrmsd_O2), 10*nrmsd_PO4_sed, nrmsd_Ca_sed, 5*nrmsd_Fe_sed, 15*nrmsd_S_sed, 10*nrmsd_P_Fe_sed, nrmsd_P_Ca_sed, nrmsd_P_Al_sed])
+    % just nrmsd_mean
+    res = sum([nrmsd_mean_TOTP, 3*nrmsd_mean_Chl, 3*nrmsd_mean_PO4, nrmsd_mean_PP, mean(nrmsd_mean_O2), nrmsd_mean_PO4_sed, nrmsd_mean_Ca_sed, nrmsd_mean_Fe_sed, nrmsd_mean_S_sed, nrmsd_mean_P_Fe_sed, nrmsd_mean_P_Ca_sed, nrmsd_mean_P_Al_sed])
 
 
 
