@@ -1,9 +1,9 @@
-scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP60_NorESM'}
+scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
 
 parfor s = 1:size(scen,2)
 
     name_of_scenario = strcat('IO/airT_Scenarios/', scen{s}, '.txt')
-    file_name = strcat('IO/airT_Scenarios/96ts_', scen{s}, '.mat')
+    file_name = strcat('IO/airT_Scenarios/24ts_', scen{s}, '.mat')
 
 
 
@@ -13,8 +13,8 @@ parfor s = 1:size(scen,2)
 
     is_metrics = true; % print metrics in the end
 
-    m_start=[1995, 1, 1]; %
-    m_stop=[2050, 12, 31]; %
+    m_start=[2015, 1, 1]; %
+    m_stop=[2070, 12, 31]; %
     % big_results = cell(1,no_runs);  % collects the results
     % big_inputs = cell(1,no_runs);   % collects the inputs
     save_initial_conditions = false; % save final concentrations as initial for the next run
@@ -26,7 +26,7 @@ parfor s = 1:size(scen,2)
 
 
     % inaccurate but faster:
-    sediment_params{73} = 96;
+    sediment_params{73} = 24;
     sediment_params{74} = 0; % pH algo disabled;
     % sediment_params{72} = 0; % effective depth test
 

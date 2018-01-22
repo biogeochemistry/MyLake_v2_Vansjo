@@ -85,9 +85,9 @@ sediment_params = {
     0.02, 'k_DOC',                  % 5       % 1
     0.008, 'Km_O2',                 % 6       % Canavan, R. W (2006) rho=2.5
     0.01,  'Km_NO3',                % 7       % Canavan, R. W (2006) rho=2.5
-    100/2.5,  'Km_Fe(OH)3',         % 8       % Cappellen, R. W (1996) rho=2.5
-    100/2.5,  'Km_FeOOH',           % 9       % Cappellen, R. W (1996) rho=2.5
-    1.5,  'Km_SO4',                 % 10       % Cappellen, R. W (1996 rho=2.5
+    100/2.5,  'Km_Fe(OH)3',         % 8       % Cappellen, 1996  rho=2.5
+    100/2.5,  'Km_FeOOH',           % 9       % Cappellen, 1996  rho=2.5
+    1.5,  'Km_SO4',                 % 10       % Cappellen, 1996 rho=2.5
     0.001,'Km_oxao',                % 11       % the same as Km rho=2.5
     0.1,  'Km_amao',                % 12       % the same as Km rho=2.5
     0.008, 'Kin_O2',                % 13       % the same as Km rho=2.5
