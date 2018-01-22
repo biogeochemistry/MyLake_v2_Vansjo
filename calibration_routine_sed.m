@@ -97,7 +97,7 @@ sediment_params{9} = x(22);%    Km FeOOH
 
 
 % modifications:
-sediment_params{73} = 48;
+sediment_params{73} = 24;
 sediment_params{74} = 0; % pH module off, const pH = 8
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
@@ -228,7 +228,7 @@ try
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
 
     % just nrmsd
-    res = sum([nrmsd_TOTP, 3*nrmsd_Chl, 3*nrmsd_PO4, nrmsd_PP, mean(nrmsd_O2), nrmsd_PO4_sed, nrmsd_Ca_sed, nrmsd_Fe_sed, nrmsd_S_sed, nrmsd_P_Fe_sed, nrmsd_P_Ca_sed, nrmsd_P_Al_sed])
+    res = sum([nrmsd_TOTP, 10*nrmsd_Chl, 10*nrmsd_PO4, nrmsd_PP, 5*mean(nrmsd_O2), 10*nrmsd_PO4_sed, nrmsd_Ca_sed, 5*nrmsd_Fe_sed, 15*nrmsd_S_sed, 10*nrmsd_P_Fe_sed, nrmsd_P_Ca_sed, nrmsd_P_Al_sed])
 
 
 
