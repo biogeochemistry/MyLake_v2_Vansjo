@@ -1,9 +1,9 @@
 scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP60_NorESM'}
 
-parfor s = 1:5
+parfor s = 1:size(scen,2)
 
     name_of_scenario = strcat('IO/airT_Scenarios/', scen{s}, '.txt')
-    file_name = strcat('IO/airT_Scenarios/192ts_', scen{s}, '.mat')
+    file_name = strcat('IO/airT_Scenarios/96ts_', scen{s}, '.mat')
 
 
 
@@ -26,7 +26,7 @@ parfor s = 1:5
 
 
     % inaccurate but faster:
-    sediment_params{73} = 192;
+    sediment_params{73} = 96;
     sediment_params{74} = 0; % pH algo disabled;
     % sediment_params{72} = 0; % effective depth test
 
