@@ -36,8 +36,8 @@ lake_params{20} = x(16); % 1   % 20    scaling factor for inflow concentration o
 
 
 % Niva sediment cores & inputs scaled & k_chl=3; err= r^2*RMSD, res=~850.34  % ====================================================
-x = [50; 0.111452954004814; 0.0756702079558015; 0.0633637582049403; 0.100000000000000; 0.0957726460081909; 1.96425357122318; 19.1927004493911; 19.1927004493911; 0.1; 1; 1; 1; 1; 1; 1; 0.00037; 0.37; 0.00037; 0.37; 100/2.5; 100/2.5];
-
+% x = [50; 0.111452954004814; 0.0756702079558015; 0.0633637582049403; 0.100000000000000; 0.0957726460081909; 1.96425357122318; 19.1927004493911; 19.1927004493911; 0.1; 1; 1; 1; 1; 1; 1; 0.00037; 0.37; 0.00037; 0.37; 100/2.5; 100/2.5];
+x = [87.9276e+000, 991.0120e-003, 4.4807e-003, 90.5585e-003, 6.8858e-003, 78.6134e-003, 1.0000e-003, 22.9503e+000, 96.4429e+000, 85.3942e+000, 48.1857e+000, 1.6762e+000, 49.9515e+000, 54.4013e+000, 0.0000e+000, 20.9242e+000, 6.4103e+000, 7.1804e+000, 1.9169e+000, 7.5492e+000, 1.2500e+000, 489.5819e+000];
 
 
 lb = [1; 0.01; 0.001; 0.001; 0.001; 0.001; 0.001; 0.001; 0.001;   0;    0; 0;    0;   0;   0;   0; 1e-6; 1e-6; 1e-6; 1e-6; 1; 1];
@@ -228,7 +228,7 @@ try
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
 
     % just nrmsd_mean
-    res = sum([nrmsd_mean_TOTP, 3*nrmsd_mean_Chl, 3*nrmsd_mean_PO4, nrmsd_mean_PP, mean(nrmsd_mean_O2), nrmsd_mean_PO4_sed, nrmsd_mean_Ca_sed, nrmsd_mean_Fe_sed, nrmsd_mean_S_sed, nrmsd_mean_P_Fe_sed, nrmsd_mean_P_Ca_sed, nrmsd_mean_P_Al_sed])
+    res = sum([nrmsd_mean_TOTP, 10*nrmsd_mean_Chl, 10*nrmsd_mean_PO4, nrmsd_mean_PP, mean(nrmsd_mean_O2), nrmsd_mean_PO4_sed, nrmsd_mean_Ca_sed, 5*nrmsd_mean_Fe_sed, nrmsd_mean_S_sed, 3*nrmsd_mean_P_Fe_sed, nrmsd_mean_P_Ca_sed, nrmsd_mean_P_Al_sed])
 
 
 
