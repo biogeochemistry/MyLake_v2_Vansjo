@@ -1,10 +1,26 @@
-scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
+
+scen = {'P_2016_cutoff.txt', 'P_2016_pulse.txt', 'P_gradual_increase_2050_cutoff.txt', 'P_gradual_increase.txt'}
+% scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
+
+% start = {}
+
 
 parfor s = 1:size(scen,2)
 
-    name_of_scenario = strcat('IO/airT_Scenarios/', scen{s}, '.txt')
-    file_name = strcat('IO/airT_Scenarios/24ts_', scen{s}, '.mat')
+    m_start=[2000, 1, 1]; %
+    m_stop=[2050, 12, 31]; %
 
+    [lake_params, sediment_params] = load_params();
+    % name_of_scenario = 'IO/airT_Scenarios/T_only_RCP4_IPSL.txt'
+    % file_name = 'IO/airT_Scenarios/T_only_RCP4_IPSL.mat'
+
+    % inaccurate but faster:
+    sediment_params{73} = 192;
+    sediment_params{74} = 0; % pH algo disabled;
+    % sediment_params{72} = 0; % effective depth test
+
+    name_of_scenario = strcat('IO/Scenarios/', scen{s}, '.txt')
+    file_name = strcat('IO/Scenarios/', sediment_params{73},'ts_', scen{s}, '.mat')
 
 
     tic
@@ -12,23 +28,10 @@ parfor s = 1:size(scen,2)
     disp(datetime('now'));
 
     is_metrics = true; % print metrics in the end
-
-    m_start=[2015, 1, 1]; %
-    m_stop=[2070, 12, 31]; %
-    % big_results = cell(1,no_runs);  % collects the results
-    % big_inputs = cell(1,no_runs);   % collects the inputs
     save_initial_conditions = false; % save final concentrations as initial for the next run
 
 
-    [lake_params, sediment_params] = load_params();
-    % name_of_scenario = 'IO/airT_Scenarios/T_only_RCP4_IPSL.txt'
-    % file_name = 'IO/airT_Scenarios/T_only_RCP4_IPSL.mat'
 
-
-    % inaccurate but faster:
-    sediment_params{73} = 24;
-    sediment_params{74} = 0; % pH algo disabled;
-    % sediment_params{72} = 0; % effective depth test
 
     % ======================================================================
     % file_name = 'IO/test.mat'
