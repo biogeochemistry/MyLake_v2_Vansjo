@@ -1,5 +1,5 @@
 
-scen = {'P_2016_cutoff.txt', 'P_2016_pulse.txt', 'P_gradual_increase_2050_cutoff.txt', 'P_gradual_increase.txt'}
+scen = {'P_2016_cutoff', 'P_2016_pulse', 'P_gradual_increase_2050_cutoff', 'P_gradual_increase'}
 % scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
 
 % start = {}
