@@ -1,16 +1,19 @@
 
-scen = {'C_2016_cutoff', 'C_2016_pulse', 'C_gradual_increase', 'Fe_2016_cutoff', 'Fe_2016_pulse', 'Fe_gradual_increase', 'P_2016_cutoff', 'P_2016_pulse', 'P_gradual_increase'}
+% scen = {'C_2016_cutoff', 'C_2016_pulse', 'C_gradual_increase', 'Fe_2016_cutoff', 'Fe_2016_pulse', 'Fe_gradual_increase', 'P_2016_cutoff', 'P_2016_pulse', 'P_gradual_increase'}
 
 
 
-% scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
+scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
 % start = {}
 
 
 parfor s = 1:size(scen,2)
 
-    m_start=[1985, 1, 1]; %
-    m_stop=[2040, 12, 31]; %
+    % m_start=[1985, 1, 1]; %
+    % m_stop=[2040, 12, 31]; %
+    m_start=[2015, 1, 1]; %
+    m_stop=[2070, 12, 31]; %
+
 
     [lake_params, sediment_params] = load_params();
     % name_of_scenario = 'IO/airT_Scenarios/T_only_RCP4_IPSL.txt'
@@ -22,7 +25,8 @@ parfor s = 1:size(scen,2)
     % sediment_params{72} = 0; % effective depth test
 
     name_of_scenario = strcat('IO/Scenarios/', scen{s}, '.txt')
-    file_name = strcat('IO/Scenarios/', sediment_params{73},'ts_', scen{s}, '1985_2040.mat')
+    % file_name = strcat('IO/Scenarios/', sediment_params{73},'ts_', scen{s}, '1985_2040.mat')
+    file_name = strcat('IO/Scenarios/', sediment_params{73},'ts_IceOff_', scen{s}, '.mat')
 
 
     tic
