@@ -76,7 +76,7 @@ sediment_params{24} = x(8);  %     'k_pdesorb_b',         %
 sediment_params{54} = x(9);  %     'k_pdesorb_c',         %
 
 % SO4 boundary
-lake_params{75} = x(10);%    % flux of sulphate from bottom of the sediment. Custom boundary condition for Vansjo
+sediment_params{75} = x(10);%    % flux of sulphate from bottom of the sediment. Custom boundary condition for Vansjo
 
 % for cores too (scaling unknown inputs):
 lake_params{22} = x(11);%    scaling factor for inflow concentration of Chl a (-)
@@ -87,10 +87,10 @@ lake_params{35} = x(15);%    Scaling factor for inflow concentration of Al3 (-)
 lake_params{37} = x(16);%    Scaling factor for inflow concentration of CaCO3 (-)
 
 % P minerals:
-lake_params{31} = x(17);%    k_apa_pre
-lake_params{32} = x(18);%    k_apa_pre
-lake_params{40} = x(19);%    k_viv_pre
-lake_params{41} = x(20);%    k_viv_pre
+sediment_params{31} = x(17);%    k_apa_pre
+sediment_params{32} = x(18);%    k_apa_pre
+sediment_params{40} = x(19);%    k_viv_pre
+sediment_params{41} = x(20);%    k_viv_pre
 
 sediment_params{8} = x(21);%    Km FeOH3
 sediment_params{9} = x(22);%    Km FeOOH
