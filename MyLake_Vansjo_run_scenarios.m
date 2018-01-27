@@ -26,7 +26,7 @@ parfor s = 1:size(scen,2)
 
     name_of_scenario = strcat('IO/Scenarios/', scen{s}, '.txt')
     % file_name = strcat('IO/Scenarios/', sediment_params{73},'ts_', scen{s}, '1985_2040.mat')
-    file_name = strcat('IO/Scenarios/', sediment_params{73},'ts_IceOff_', scen{s}, '.mat')
+    file_name = strcat('IO/Scenarios/', sediment_params{73},'ts_IceOff_Q10off', scen{s}, '.mat')
 
 
     tic
