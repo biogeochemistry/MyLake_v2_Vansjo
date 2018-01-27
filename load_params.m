@@ -72,7 +72,7 @@ lake_params = {
     1, 'theta_sod_ice',        % 67    NOTE: NOT USED: Temperature adjustment coefficient for SOD, T < 10 °C
     4, 'BOD_temp_switch',      % 68    NOTE: NOT USED: Threshold for bod or bod_ice °C
     7.5, 'pH',                 % 69    Lake water pH
-    2, 'Q10_wc',               % 70    Q10 for reactions of respiration
+    1, 'Q10_wc',               % 70    Q10 for reactions of respiration
     1, 'wc_factor',            % 71    Scaling factor for rates in WC
     4.84970, 'T_ref_wc'};       % 72    Reference Temperature for rates
 
