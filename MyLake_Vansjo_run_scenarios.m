@@ -1,5 +1,5 @@
 
-scen = {'C_2016_cutoff', 'C_2016_pulse', 'C_gradual_increase', 'Fe_2016_cutoff', 'Fe_2016_pulse', 'Fe_gradual_increase', 'P_2016_cutoff', 'P_2016_pulse', 'P_gradual_increase'}
+scen = {'T_only_full_scen_base_historical_20y', 'Fe_2016_cutoff', 'Fe_2016_pulse', 'Fe_gradual_increase', 'P_2016_cutoff', 'P_2016_pulse', 'P_gradual_increase', 'C_2016_cutoff', 'C_2016_pulse', 'C_gradual_increase'}
 
 
 
@@ -12,7 +12,7 @@ parfor s = 1:size(scen,2)
     % m_start=[1985, 1, 1]; %
     % m_stop=[2040, 12, 31]; %
     m_start=[1985, 1, 1]; %
-    m_stop=[2070, 12, 31]; %
+    m_stop=[2099, 12, 31]; %
 
 
     [lake_params, sediment_params] = load_params();
@@ -25,7 +25,7 @@ parfor s = 1:size(scen,2)
     % sediment_params{72} = 0; % effective depth test
 
     name_of_scenario = strcat('IO/Scenarios/', scen{s}, '.txt')
-    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}),'ts_', scen{s}, '1985_2070.mat')
+    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}),'ts_', scen{s}, '1985_2100.mat')
     % file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_Q10off', scen{s}, '.mat')
 
 
