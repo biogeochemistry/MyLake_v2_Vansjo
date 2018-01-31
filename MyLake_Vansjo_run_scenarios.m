@@ -25,7 +25,7 @@ parfor s = 1:size(scen,2)
     % sediment_params{72} = 0; % effective depth test
 
     name_of_scenario = strcat('IO/Scenarios/', scen{s}, '.txt')
-    file_name = strcat('IO/Scenarios/', sediment_params{73},'ts_', scen{s}, '1985_2070.mat')
+    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}),'ts_', scen{s}, '1985_2070.mat')
     % file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_Q10off', scen{s}, '.mat')
 
 
