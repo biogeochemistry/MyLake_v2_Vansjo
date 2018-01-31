@@ -20,7 +20,7 @@ parfor s = 1:size(scen,2)
     % file_name = 'IO/airT_Scenarios/T_only_RCP4_IPSL.mat'
 
     % inaccurate but faster:
-    sediment_params{73} = 48;
+    sediment_params{73} = 192;
     sediment_params{74} = 0; % pH algo disabled;
     % sediment_params{72} = 0; % effective depth test
 
