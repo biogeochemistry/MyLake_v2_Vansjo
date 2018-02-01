@@ -1,5 +1,5 @@
 
-scen = {'T_only_full_scen_base_historical_20y', 'Fe_2016_cutoff', 'Fe_2016_pulse', 'Fe_gradual_increase', 'P_2016_cutoff', 'P_2016_pulse', 'P_gradual_increase', 'C_2016_cutoff', 'C_2016_pulse', 'C_gradual_increase'}
+scen = {'T_only_full_scen_base_historical_20y', 'Fe_2016_cutoff', 'Fe_2016_pulse', 'Fe_gradual_increase', 'Fe_gradual_increase_2050_cutoff','P_2016_cutoff', 'P_2016_pulse', 'P_gradual_increase', 'P_gradual_increase_2050_cutoff', 'C_2016_cutoff', 'C_2016_pulse', 'C_gradual_increase', 'C_gradual_increase_2050_cutoff'}
 
 
 
