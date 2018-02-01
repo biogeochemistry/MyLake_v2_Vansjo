@@ -36,7 +36,7 @@ lake_params{20} = x(16); % 1   % 20    scaling factor for inflow concentration o
 
 
 % Niva sediment cores & inputs scaled & k_chl=3; err= r^2*RMSD, res=~850.34  % ====================================================
-x = [50; 0.111452954004814; 0.0756702079558015; 0.0633637582049403; 0.100000000000000; 0.0957726460081909; 1.96425357122318; 19.1927004493911; 19.1927004493911; 0.1; 1; 1; 1; 1; 1; 1; 0.00037; 0.37; 0.00037; 0.37; 100/2.5; 100/2.5; 1.15335807117479; 0.718058521202605; 0.0865681634702761; 0.161705696258267; 1.23114894752963; 1.66632346919548; 0.217316646052962; 0.184295158144136; 1.50000000000000; 1.44746872184578; 0.0609313437550716; 2.26727837370864e-05; 3.06302033352011e-05; 0.0450000000000000; 0.0321267784864950; 19.3181501625625];
+x = [1.2500e+00, 1.0000e+00, 1.0000e-03, 4.0208e-02, 9.2617e-02, 7.9615e-02, 3.8551e-01, 2.5100e-01, 1.0000e-03, 8.5638e+01, 3.7529e+01, 5.1762e-01, 0, 0, 6.5637e+01, 8.2495e-02, 1.0000e-06, 1.0000e+00, 1.0000e-06, 9.7426e+00, 2.0148e+00, 6.9604e+02, 3.6899e-01, 4.4193e-01, 5.0000e-02, 1.8185e-01, 1.0000e+00, 1.4125e+00, 3.6347e-01, 3.0000e-01, 1.0000e+00, 1.4462e+00, 8.8260e-01, 1.0000e-05, 1.0000e-04, 4.5000e-02, 5.0000e-03, 1.1273e-01];
 
 
 lb = [1; 0.01; 0.001; 0.001; 0.001; 0.001; 0.001; 0.001; 0.001;   0;    0; 0;    0;   0;   0;   0; 1e-6; 1e-6; 1e-6; 1e-6; 1; 1;0 ; 0; 0.05 ; 0.1 ; 1   ; 0.2 ; 0.05 ; 0.1 ; 1   ; 0.2 ; 0.01 ; 1e-5 ; 1e-5 ; 0.005 ; 0.005 ];
@@ -116,7 +116,7 @@ sediment_params{74} = 0; % pH module off, const pH = 8
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
 clim_ID = run_ID;
-m_start=[2000, 1, 1]; % Do not change this date if you are calibrating the cores (using relative dates in the code) or check it
+m_start=[1985, 1, 1]; % Do not change this date if you are calibrating the cores (using relative dates in the code) or check it
 m_stop=[2013, 10, 31]; %
 run_INCA = 0; % 1- MyLake will run INCA, 0- No run
 use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
@@ -242,7 +242,7 @@ try
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
 
     % just nrmsd_mean
-    res = sum([nrmsd_mean_TOTP, 10*nrmsd_mean_Chl, 10*nrmsd_mean_PO4, nrmsd_mean_PP, mean(nrmsd_mean_O2), nrmsd_mean_PO4_sed, nrmsd_mean_Ca_sed, 5*nrmsd_mean_Fe_sed, nrmsd_mean_S_sed, 3*nrmsd_mean_P_Fe_sed, nrmsd_mean_P_Ca_sed, nrmsd_mean_P_Al_sed])
+    res = sum([5*nrmsd_mean_TOTP, 10*nrmsd_mean_Chl, 10*nrmsd_mean_PO4, 10*nrmsd_mean_PP, 3*mean(nrmsd_mean_O2), 3*nrmsd_mean_PO4_sed, nrmsd_mean_Ca_sed, 10*nrmsd_mean_Fe_sed, 3*nrmsd_mean_S_sed, 5*nrmsd_mean_P_Fe_sed, nrmsd_mean_P_Ca_sed, nrmsd_mean_P_Al_sed])
 
 
 
