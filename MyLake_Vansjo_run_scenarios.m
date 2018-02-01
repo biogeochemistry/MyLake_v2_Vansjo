@@ -1,7 +1,5 @@
 
-scen = {'T_only_full_scen_base_historical_20y', 'P_gradual_increase', 'P_gradual_increase_2050_cutoff', 'P_gradual_increase_2050_cutoff_to_hist', 'P_2016_pulse', 'P_2016_cutoff', 'Fe_gradual_increase', 'Fe_gradual_increase_2050_cutoff', 'Fe_gradual_increase_2050_cutoff_to_hist', 'Fe_2016_pulse', 'Fe_2016_cutoff', 'C_gradual_increase', 'C_gradual_increase_2050_cutoff', 'C_gradual_increase_2050_cutoff_to_hist', 'C_2016_pulse', 'C_2016_cutoff'}
-
-
+scen = {'T_only_full_scen_base_historical_20y', 'P_2016_cutoff', 'P_2016_pulse', 'P_gradual_increase_2020_cutoff_to_hist', 'P_gradual_increase_2025_cutoff_to_hist', 'P_gradual_increase_2030_cutoff_to_hist', 'P_gradual_increase_2035_cutoff_to_hist', 'P_gradual_increase_2040_cutoff_to_hist', 'P_gradual_increase_2045_cutoff_to_hist', 'P_gradual_increase_2050_cutoff_to_hist', 'P_gradual_increase_2050_cutoff', 'P_gradual_increase'}
 
 % scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
 % start = {}
