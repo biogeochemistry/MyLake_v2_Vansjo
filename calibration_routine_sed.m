@@ -1,4 +1,4 @@
-function x = calibration_routine()
+function x = calibration_routine_sed()
 tic
 format shortEng
 format compact
@@ -116,7 +116,7 @@ sediment_params{74} = 0; % pH module off, const pH = 8
 
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
 clim_ID = run_ID;
-m_start=[1985, 1, 1]; % Do not change this date if you are calibrating the cores (using relative dates in the code) or check it
+m_start=[2000, 1, 1]; % Do not change this date if you are calibrating the cores (using relative dates in the code) or check it
 m_stop=[2013, 10, 31]; %
 run_INCA = 0; % 1- MyLake will run INCA, 0- No run
 use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
