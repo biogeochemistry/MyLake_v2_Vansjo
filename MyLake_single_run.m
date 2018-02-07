@@ -1,4 +1,4 @@
-for i=1:1000
+% for i=1:1000
 tic
 disp('Started at:')
 disp(datetime('now'));
@@ -9,16 +9,17 @@ use_INCA = 0; % 1- MyLake will take written INCA input, either written just now 
 
 is_metrics = true; % print metrics in the end
 
-m_start=[1995, 1, 1]; %
+m_start=[2000, 1, 1]; %
 m_stop=[2013, 12, 31]; %
 
 save_initial_conditions = false; % save final concentrations as initial for the next run
 
 
 [lake_params, sediment_params] = load_params();
+name_of_scenario = 'IO/Scenarios/P_2016_cutoff.txt'
 
 % Niva results RMSD = 130 =======================================
-file_name = 'IO/niva_calibrated_old.mat'
+file_name = 'IO/niva_calibrated_old_2.mat'
 lake_params{47} = 58.3842e-003; % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
 lake_params{49} = 128.2949e-003; % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
 lake_params{50} = 1.4988e+000; % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
@@ -38,6 +39,10 @@ lake_params{24} = 373.1228e-003; % 390.1162e-003   % 24    scaling factor for in
 
 % Trials:
 lake_params{24} = 1; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{47} = 0.07; % 47     settling velocity for Chl1 a (m day-1)
+lake_params{46} = 0.05; % 46  settling velocity for S (m day-1)
+lake_params{56} = 0.07; % 56    Settling velocity for Chl2 a (m day-1)
+sediment_params{52} = 100; % 65.1237e+000   %    accel
 % =====================================================================================================================
 
 
@@ -256,7 +261,7 @@ lake_params{24} = 1; % 390.1162e-003   % 24    scaling factor for inflow concent
 % try
 run_ID = 0;
 clim_ID = 0;
-[MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, save_initial_conditions); % runs the model and outputs obs and sim
+[MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, name_of_scenario, use_INCA, run_INCA, run_ID, clim_ID, save_initial_conditions); % runs the model and outputs obs and sim % runs the model and outputs obs and sim
 
 
 disp('Saving results...')
@@ -326,5 +331,5 @@ toc
 
 
 
-end
+% end
 %

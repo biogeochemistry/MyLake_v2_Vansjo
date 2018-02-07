@@ -9,6 +9,7 @@ import scipy.io as sio
 from matplotlib import rc
 from scipy.interpolate import UnivariateSpline
 import datetime
+import h5py
 
 sns.set_style("whitegrid")
 sns.set_style("ticks")
@@ -164,16 +165,18 @@ class ResultsPlotter:
     """docstring for ResultsPlotter"""
 
     def __init__(self, years_ago=0., f='../IO/MyLakeResults.mat'):
-        MyLake_results, Sediment_results = load_data(f)
-        self.my_lake_results = MyLake_results
-        self.sediment_results = Sediment_results
+        self.mat_contents = h5py.File(f)
+        # self.my_lake_results = MyLake_results
+        # self.sediment_results = Sediment_results
         years_ago = years_ago + 1
 
     def env_getter(self, env, basin=1):
         if env == 'sediment':
-            results = self.sediment_results['basin' + str(basin)][0, 0]
+            results = self.mat_contents['Sediment_results']['basin'
+                                                            + str(basin)]
         elif env == 'water':
-            results = self.my_lake_results['basin' + str(basin)][0, 0]
+            results = self.mat_contents['MyLake_results']['basin'
+                                                          + str(basin)]
         return results
 
     def unit_converter(self, convert_units, env, elem):
@@ -203,8 +206,8 @@ class ResultsPlotter:
         plt.figure(figsize=(6, 4), dpi=192)
         start = int(-365 * (years_ago + 1))
         end = int(-365 * years_ago - 1)
-        x = results['days'][0, 0][0][start:end] - 366
-        y = results['sediment_transport_fluxes'][0, 0][elem][0, 0][0][start:end]
+        x = results['days'][start:end] - 366
+        y = results['sediment_transport_fluxes'][elem][start:end]
         total = {}
         lines = {}
         if convert_units:
@@ -225,7 +228,7 @@ class ResultsPlotter:
                 x, y, sns.xkcd_rgb["denim blue"], lw=3, label='Transport')
 
         try:
-            b = results['Bioirrigation_fx_zt'][0, 0][elem][0, 0][0][start:end]
+            b = results['Bioirrigation_fx_zt'][elem][start:end]
             if convert_units:
                 b = b / (molar_masses[elem] * 10**4 / 365 / 10**6)
             lines['B'], = plt.plot(
@@ -252,8 +255,8 @@ class ResultsPlotter:
         ax.xaxis.set_major_locator(mdates.MonthLocator(interval=2))
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%b\n%Y'))
         ax.set_xlim([
-            results['days'][0, 0][0][start:end][0] - 366,
-            results['days'][0, 0][0][start:end][-1] - 366
+            results['days'][start:end][0] - 366,
+            results['days'][start:end][-1] - 366
         ])
         ax.grid(linestyle='-', linewidth=0.2)
         ax.legend(loc=1)
@@ -275,18 +278,18 @@ class ResultsPlotter:
         plt.figure(figsize=(6, 4), dpi=192)
 
         end = int(-365 * years_ago - 1)
-        z = results['z'][0, 0][:, -1]
+        z = results['z'][:, -1]
         mass_per_area = {}
         lines = {}
 
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
-            y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef
+            y = results['concentrations'][e][:, -1 + end] * coef
             if log_scale:
                 y = np.log10(y)
             lines[e], = plt.plot(y, -z, lw=3, label=find_element_name(e))
             if convert_units and env == 'sediment':
-                fi = results['params'][0, 0]['phi'][0, 0][:, -1]
+                fi = results['params']['phi'][:, -1]
                 if e in solid:
                     theta = 1 - fi
                 else:
@@ -300,7 +303,7 @@ class ResultsPlotter:
                 mass_per_area[e] = np.trapz(y, z)
                 lbl = r'$mg / m^2$'
             elif not convert_units and env == 'sediment':
-                fi = results['params'][0, 0]['phi'][0, 0][:, -1]
+                fi = results['params']['phi'][:, -1]
                 if e in solid:
                     theta = 1 - fi
                 else:
@@ -329,84 +332,9 @@ class ResultsPlotter:
         plt.legend(loc=1, frameon=1)
         if not log_scale:
             plt.gca().add_artist(leg1)
-        plt.ylim([-results['z'][0, 0][-1], -results['z'][0, 0][0]])
+        plt.ylim([-results['z'][-1], -results['z'][0]])
         plt.tight_layout()
-        date = results['days'][0, 0][0][-1 + end]
-        date = datetime.datetime.fromordinal(date - 365)
-        plt.title('Profiles on ' + date.strftime('%B %d, %Y'))
-        return ax
-
-    def profile_with_sum(self,
-                         env,
-                         elem,
-                         convert_units=False,
-                         years_ago=0.,
-                         log_scale=False):
-        results = self.env_getter(env)
-        plt.figure(figsize=(6, 4), dpi=192)
-
-        end = int(-365 * years_ago - 1)
-        z = results['z'][0, 0][:, -1]
-        mass_per_area = {}
-        lines = {}
-
-        sum_of_elem = 0
-
-        for e in elem:
-            coef, units = self.unit_converter(convert_units, env, e)
-            y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef
-            sum_of_elem += y
-            if log_scale:
-                y = np.log10(y)
-            lines[e], = plt.plot(y, -z, lw=3, label=find_element_name(e))
-            if convert_units and env == 'sediment':
-                fi = results['params'][0, 0]['phi'][0, 0][:, -1]
-                if e in solid:
-                    theta = 1 - fi
-                else:
-                    theta = fi
-                mass_per_area[e] = np.trapz(y * theta, z / 100)
-                lbl = r'$mg / m^2$'
-            elif convert_units and env == 'water':
-                mass_per_area[e] = np.trapz(y, z * 100)
-                lbl = r'$umol/cm^{2}$'
-            elif not convert_units and env == 'water':
-                mass_per_area[e] = np.trapz(y, z)
-                lbl = r'$mg / m^2$'
-            elif not convert_units and env == 'sediment':
-                fi = results['params'][0, 0]['phi'][0, 0][:, -1]
-                if e in solid:
-                    theta = 1 - fi
-                else:
-                    theta = fi
-                mass_per_area[e] = np.trapz(y * theta, z)
-                lbl = r'$umol/cm^{2}$'
-            if e is 'pH':
-                units = r'pH'
-            if e is 'Temperature':
-                units = r'Temperature, C'
-        if not log_scale:
-            leg1 = plt.legend(
-                [lines[e] for e in elem],
-                ["{:.2f} ".format(mass_per_area[e]) + lbl for e in elem],
-                loc=4,
-                frameon=1,
-                title="Integrated over depth")
-        plt.plot(sum_of_elem, -z, 'k-.')
-        plt.xlabel(units)
-        if env == 'water':
-            plt.ylabel('Depth, [m]')
-        else:
-            plt.ylabel('Depth, [cm]')
-        ax = plt.gca()
-        ax.ticklabel_format(useOffset=False)
-        ax.grid(linestyle='-', linewidth=0.2)
-        plt.legend(loc=1, frameon=1)
-        if not log_scale:
-            plt.gca().add_artist(leg1)
-        plt.ylim([-results['z'][0, 0][-1], -results['z'][0, 0][0]])
-        plt.tight_layout()
-        date = results['days'][0, 0][0][-1 + end]
+        date = results['days'][-1 + end]
         date = datetime.datetime.fromordinal(date - 365)
         plt.title('Profiles on ' + date.strftime('%B %d, %Y'))
         return ax
@@ -415,16 +343,16 @@ class ResultsPlotter:
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
         end = int(-365 * years_ago - 1)
-        z = results['z'][0, 0][:, -1]
+        z = results['z'][:, -1]
         rate_per_area = {}
         lines = {}
         for rate in rates:
-            y = results['rates'][0, 0][rate][0, 0][:, -1 + end]
+            y = results['rates'][rate][:, -1 + end]
             lines[rate], = plt.plot(y, -z, lw=3, label=rate)
             if env == 'water':
                 rate_per_area[rate] = np.trapz(y, z * 100)
             elif env == 'sediment':
-                fi = results['params'][0, 0]['phi'][0, 0][:, -1]
+                fi = results['params']['phi'][:, -1]
                 if rate in solid_rates:
                     theta = 1 - fi
                 elif rate in aqueous_rates:
@@ -450,7 +378,7 @@ class ResultsPlotter:
         ax.grid(linestyle='-', linewidth=0.2)
         plt.legend(loc=1, frameon=1)
         plt.gca().add_artist(leg1)
-        plt.ylim([-results['z'][0, 0][-1], -results['z'][0, 0][0]])
+        plt.ylim([-results['z'][-1], -results['z'][0]])
         plt.tight_layout()
         plt.show()
 
@@ -460,20 +388,21 @@ class ResultsPlotter:
                      convert_units=False,
                      years_ago=0.,
                      cmap=ListedColormap(sns.color_palette("Blues", 51))):
+
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
         start = int(-365 * (years_ago + 1))
         end = int(-365 * years_ago - 1)
-        X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 365,
-                           -results['z'][0, 0][0:-1])
+        X, Y = np.meshgrid(results['days'][start:end] - 365,
+                           -results['z'][0:-1])
         z = 0
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
             try:
-                z += results['concentrations'][0, 0][e][0, 0][0:-1, start:
+                z += results['concentrations'][e][0:-1, start:
                                                               end] * coef
             except:
-                z += results[e][0, 0][0:-1, start:end] * coef
+                z += results[e][0:-1, start:end] * coef
 
         v = np.linspace(0, z.max(), 51, endpoint=True)
         CS = plt.contourf(
@@ -484,17 +413,17 @@ class ResultsPlotter:
         plt.ylabel('Depth, [cm]')
         plt.ylim(Y.min(), 0)
         if env == 'water':
-            ice_thickness = results['His'][0, 0][0, start:end]
+            ice_thickness = results['His'][0, start:end]
             plt.fill_between(
-                results['days'][0, 0][0][start:end] - 366,
+                results['days'][start:end] - 366,
                 0,
                 -ice_thickness,
                 where=-ice_thickness <= 0,
                 facecolor='red',
                 interpolate=True)
-            TCz = results['MixStat'][0, 0][11, start:end]
+            TCz = results['MixStat'][11, start:end]
             plt.plot(
-                results['days'][0, 0][0][start:end] - 366,
+                results['days'][start:end] - 366,
                 -TCz * (TCz > 1),
                 lw=0.2,
                 c='k')
@@ -527,8 +456,8 @@ class ResultsPlotter:
         plt.figure(figsize=(6, 4), dpi=192)
         start = int(-365)
         end = int(-1)
-        X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 365,
-                           -results['z'][0, 0][0:-1])
+        X, Y = np.meshgrid(results['days'][start:end] - 365,
+                           -results['z'][0:-1])
 
         # vmin = -3.7#-np.max(np.abs([z.min(), z.max()]))
         # vmax = 3.7#np.max(np.abs([z.min(), z.max()]))
@@ -560,17 +489,17 @@ class ResultsPlotter:
         plt.figure(figsize=(6, 4), dpi=192)
         start = int(-365 * (years_ago + 1))
         end = int(-365 * years_ago - 1)
-        X, Y = np.meshgrid(results['days'][0, 0][0][start:end] - 365,
-                           -results['z'][0, 0][0:-1])
+        X, Y = np.meshgrid(results['days'][start:end] - 365,
+                           -results['z'][0:-1])
         z = 0
         for e in elem:
             coef, units = self.unit_converter(convert_units, env, e)
             for y in range(0, years):
                 try:
-                    z += results['concentrations'][0, 0][e][0, 0][
+                    z += results['concentrations'][e][
                         0:-1, start - (y * 365):end - (y * 365)] * coef
                 except:
-                    z += results[e][0, 0][0:-1, start - (y * 365):end -
+                    z += results[e][0:-1, start - (y * 365):end -
                                           (y * 365)] * coef
             z /= years
         v = np.linspace(0, z.max(), 51, endpoint=True)
@@ -585,23 +514,22 @@ class ResultsPlotter:
         TCz = 0
         if env == 'water':
             for y in range(0, years):
-                ice_thickness += results['His'][0, 0][0, start - (y * 365):end -
-                                                      (y * 365)]
-                tcline = results['MixStat'][0, 0][11, start - (y * 365):end -
+                ice_thickness += results['His'][0, start - (y * 365):end - (y * 365)]
+                tcline = results['MixStat'][11, start - (y * 365):end -
                                                   (y * 365)]
                 tcline[tcline == np.nan] = 0
                 TCz += tcline
             ice_thickness /= years
             TCz /= years
             plt.fill_between(
-                results['days'][0, 0][0][start:end] - 366,
+                results['days'][start:end] - 366,
                 0,
                 -ice_thickness,
                 where=-ice_thickness <= 0,
                 facecolor='red',
                 interpolate=True)
             plt.plot(
-                results['days'][0, 0][0][start:end] - 366,
+                results['days'][start:end] - 366,
                 -TCz * (TCz > 1),
                 lw=0.2,
                 c='k')
@@ -624,6 +552,8 @@ class ResultsPlotter:
         plt.show()
         return z
 
+
+
     def rate(self,
              env,
              elem,
@@ -634,11 +564,11 @@ class ResultsPlotter:
         plt.figure(figsize=(6, 4), dpi=192)
         start = int(-365 * (years_ago + 1))
         end = int(-365 * years_ago - 1)
-        X, Y = np.meshgrid(results['days'][0, 0][0][start:end],
-                           -results['z'][0, 0])
+        X, Y = np.meshgrid(results['days'][start:end],
+                           -results['z'])
         z = 0
         for e in elem:
-            z += results['dcdt'][0, 0][e][0, 0][:, start:end]
+            z += results['dcdt'][e][:, start:end]
         # CS = plt.contourf(X, Y, z, 51, cmap=cmap, origin='lower')
         lim = np.max(np.abs(z))
         lim = np.linspace(-lim - 1e-16, +lim + 1e-16, 51)
@@ -659,7 +589,7 @@ class ResultsPlotter:
         if env == 'water':
             ice_thickness = results['His'][0, 0][0, start:end]
             plt.fill_between(
-                results['days'][0, 0][0][start:end],
+                results['days'][0, 0][start:end],
                 0,
                 -ice_thickness,
                 where=-ice_thickness <= 0,
@@ -732,7 +662,7 @@ class ResultsPlotter:
         plt.gca().add_artist(leg1)
         plt.ylim([-results['z'][0, 0][-1], -results['z'][0, 0][0]])
         plt.tight_layout()
-        date = results['days'][0, 0][0][-1 + end]
+        date = results['days'][0, 0][-1 + end]
         date = datetime.datetime.fromordinal(date - 365)
         plt.title('Bulk profiles on ' + date.strftime('%B %d, %Y'))
         plt.show()
