@@ -194,9 +194,12 @@ parfor s = 1:size(scen,2)
     sediment_params{75} = 0.7; % 9.0;%    % flux of SO4  Vansjo
 
 
+    % Q10 off
+    lake_params{70} = 1,  % 70    Q10 for reactions of respiration
+
     name_of_scenario = strcat('IO/Scenarios/', scen{s}, '.txt')
-    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}),'ts_', scen{s}, '2015_2070.mat')
-    % file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_Q10off', scen{s}, '.mat')
+    % file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}),'ts_', scen{s}, '2015_2070.mat')
+    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_Q10off_', scen{s}, '_2015_2070.mat')
 
 
     tic
