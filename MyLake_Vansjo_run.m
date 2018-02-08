@@ -23,8 +23,8 @@ name_of_scenario = 'IO/store_INCAP_input_baseline_mod.txt'
 
 
 % inaccurate but faster:
-sediment_params{73} = 48; %ts
-sediment_params{74} = 1; %pH
+sediment_params{73} = 96; %ts
+sediment_params{74} = 0; %pH
 
 % Niva res. NIVA: calibration of sed. with ts=24 and custom weights (3x,1x), nrmsd, pH 8, no POP, Km_Fe
 % res ~= 21
@@ -94,7 +94,7 @@ lake_params{59} = 10; % 1.5525e+000   % 59    Half saturation growth P level Chl
 
 lake_params{10} = 1.03890e-05; % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 lake_params{54} = 1.03357e-05; % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-lake_params{19} = 150;              % 19    scaling factor for inflow concentration of POC (-)
+lake_params{19} = 120;              % 19    scaling factor for inflow concentration of POC (-)
 
 
 lake_params{18} = 10; % 1.5525e+000   % 18    Isc C
@@ -102,23 +102,25 @@ lake_params{22} = 10; % 1.5525e+000   % 22    Isc Chl
 
 
 % Sediment cores:
-sediment_params{8} = 250;%    Km FeOH3
-sediment_params{9} = 5000;%    Km FeOOH
+lake_params{24} = 1.0; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+
+sediment_params{8} = 40000;%    Km FeOH3
+sediment_params{9} = 60000;%    Km FeOOH
 sediment_params{10} = 1;%    Km SO4
-lake_params{34} = 180; %    Scaling factor for inflow concentration of Fe3 (-)
-lake_params{31} =  0.1; %  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
-lake_params{37} = 0.1; % Isc CaCO3
+lake_params{34} = 350; %    Scaling factor for inflow concentration of Fe3 (-)
+lake_params{31} =  0.2; %  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
+lake_params{37} = 0.2; % Isc CaCO3
 sediment_params{31} = 0.00037; %  'k_apa_pre',          % 31
 
-sediment_params{23} = 0.5;  %     'k_pdesorb_a',         %
-sediment_params{24} = 0.05;  %     'k_pdesorb_b',         %
-sediment_params{54} = 0.01;  %     'k_pdesorb_c',         %
-lake_params{35} = 0.00001;%    Scaling factor for inflow concentration of Al3 (-)
+sediment_params{23} = 10;  %     'k_pdesorb_a',         %
+sediment_params{24} = 1;  %     'k_pdesorb_b',         %
+sediment_params{54} = 1;  %     'k_pdesorb_c',         %
+lake_params{35} = 0.001;%    Scaling factor for inflow concentration of Al3 (-)
 
 % -> FeS -> FeS2 -> FeOOH
 sediment_params{30} = 0.04;  %     'k_fe_pre',         %
 sediment_params{45} = 0.12;  %   'k_FeSpre',         %
-sediment_params{75} = 2.8;%    % flux of SO4  Vansjo
+sediment_params{75} = 0.2; % 9.0;%    % flux of SO4  Vansjo
 
 
 % try
