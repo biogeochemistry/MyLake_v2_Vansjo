@@ -7,7 +7,7 @@ disp(datetime('now'));
 is_metrics = true; % print metrics in the end
 
 m_start=[2006, 1, 1]; %
-m_stop=[2014, 12, 31]; %
+m_stop=[2007, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
 save_initial_conditions = true; % save final concentrations as initial for the next run
@@ -102,27 +102,37 @@ lake_params{22} = 10; % 1.5525e+000   % 22    Isc Chl
 
 
 % Sediment cores:
-lake_params{24} = 2; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{24} = 1.6; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 lake_params{46} = 0.1; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
-lake_params{19} = 50;              % 19    scaling factor for inflow concentration of POC (-)
+lake_params{19} = 70;              % 19    scaling factor for inflow concentration of POC (-)
 
-sediment_params{8} = 60000;%    Km FeOH3
-sediment_params{9} = 80000;%    Km FeOOH
+
+sediment_params{8} = 80000;%    Km FeOH3
+sediment_params{9} = 100000;%    Km FeOOH
 sediment_params{10} = 1;%    Km SO4
 lake_params{34} = 350; %    Scaling factor for inflow concentration of Fe3 (-)
-lake_params{31} =  0.4; %  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
-lake_params{37} = 0.4; % Isc CaCO3
+lake_params{31} =  2; %  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
+lake_params{37} = 2; % Isc CaCO3
 sediment_params{31} = 0.00037; %  'k_apa_pre',          % 31
+sediment_params{62} = 0; %   'alfa0',                % 62
 
-sediment_params{23} = 20;  %     'k_pdesorb_a',         %
+
+sediment_params{23} = 10;  %     'k_pdesorb_a',         %
 sediment_params{24} = 1;  %     'k_pdesorb_b',         %
-sediment_params{54} = 15;  %     'k_pdesorb_c',         %
+sediment_params{54} = 1;  %     'k_pdesorb_c',         %
 lake_params{35} = 0.001;%    Scaling factor for inflow concentration of Al3 (-)
 
 % -> FeS -> FeS2 -> FeOOH
 sediment_params{30} = 0.04;  %     'k_fe_pre',         %
 sediment_params{45} = 0.12;  %   'k_FeSpre',         %
 sediment_params{75} = 0.5; % 9.0;%    % flux of SO4  Vansjo
+
+% Apatite:
+sediment_params{33} = 10^-10.22;
+
+% NOTE: Chl changed here
+lake_params{50} = 2.0; % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
+lake_params{58} = 2.0; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
 
 
 % try
