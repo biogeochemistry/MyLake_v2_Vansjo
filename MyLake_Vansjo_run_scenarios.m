@@ -1,20 +1,20 @@
 
 % scen = {'T_only_full_scen_base_historical_20y', 'P_2016_cutoff', 'P_2016_pulse', 'P_gradual_increase_2020_cutoff_to_hist', 'P_gradual_increase_2025_cutoff_to_hist', 'P_gradual_increase_2030_cutoff_to_hist', 'P_gradual_increase_2035_cutoff_to_hist', 'P_gradual_increase_2040_cutoff_to_hist', 'P_gradual_increase_2045_cutoff_to_hist', 'P_gradual_increase_2050_cutoff_to_hist', 'P_gradual_increase_2050_cutoff', 'P_gradual_increase'}
 
-% scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
+scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
 % start = {}
 
-scen = {'P_gradual_increase_2050_cutoff_to_0', 'P_gradual_increase_2045_cutoff_to_0', 'P_gradual_increase_2040_cutoff_to_0', 'P_gradual_increase_2035_cutoff_to_0', 'P_gradual_increase_2030_cutoff_to_0', 'P_gradual_increase_2025_cutoff_to_0', 'P_gradual_increase_2020_cutoff_to_0', 'P_gradual_increase_2015_cutoff_to_0'}
+% scen = {'P_gradual_increase_2050_cutoff_to_0', 'P_gradual_increase_2045_cutoff_to_0', 'P_gradual_increase_2040_cutoff_to_0', 'P_gradual_increase_2035_cutoff_to_0', 'P_gradual_increase_2030_cutoff_to_0', 'P_gradual_increase_2025_cutoff_to_0', 'P_gradual_increase_2020_cutoff_to_0', 'P_gradual_increase_2015_cutoff_to_0'}
 
-% scen = {'P_gradual_increase_2030_cutoff_to_0', 'P_gradual_increase_2015_cutoff_to_0'}
+% scen = {'P_gradual_increase_2015_cutoff_to_0'}
 
 
 parfor s = 1:size(scen,2)
 
     % m_start=[1985, 1, 1]; %
     % m_stop=[2040, 12, 31]; %
-    m_start=[2000, 1, 1]; %
-    m_stop=[2099, 12, 31]; %
+    m_start=[2015, 1, 1]; %
+    m_stop=[2070, 12, 31]; %
 
 
     [lake_params, sediment_params] = load_params();
@@ -210,8 +210,8 @@ lake_params{58} = 2.0; % 1.0985e+000   % 58    Specific growth rate (1/day) at 2
     % lake_params{70} = 1,  % 70    Q10 for reactions of respiration
 
     name_of_scenario = strcat('IO/Scenarios/', scen{s}, '.txt')
-    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}),'ts_', scen{s}, '2000_2099.mat')
-    % file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_Q10off_', scen{s}, '_2015_2070.mat')
+    % file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}),'ts_', scen{s}, '2000_2030.mat')
+    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_IceOff_', scen{s}, '_2015_2070.mat')
 
 
     tic
