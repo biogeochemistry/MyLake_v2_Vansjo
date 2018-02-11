@@ -88,8 +88,8 @@ sediment_params = {
     100/2.5,  'Km_Fe(OH)3',         % 8       % Cappellen, 1996  rho=2.5
     100/2.5,  'Km_FeOOH',           % 9       % Cappellen, 1996  rho=2.5
     1.5,  'Km_SO4',                 % 10       % Cappellen, 1996 rho=2.5
-    0.001,'Km_oxao',                % 11       % the same as Km rho=2.5
-    0.1,  'Km_amao',                % 12       % the same as Km rho=2.5
+    0.001,'Km_oxao',                % 11       NOTE note used % the same as Km rho=2.5
+    0.1,  'Km_amao',                % 12       NOTE note used, % the same as Km rho=2.5
     0.008, 'Kin_O2',                % 13       % the same as Km rho=2.5
     0.01,  'Kin_NO3',               % 14       % the same as Km rho=2.5
     0.08,   'Kin_FeOH3',         % 15       % the same as Km rho=2.5
@@ -119,7 +119,7 @@ sediment_params = {
     3.98107170553497e-09,  'K_FeCO3',          % 39      % Cappellen (1996)
     0.00037,  'k_viv_pre',          % 40
     0.37,  'k_viv_dis',             % 41
-    1.88929597786807e-05, 'K_viv',          % 42     % linl.dat PHREEQC
+    1.88929597786807e-05, 'K_viv',          % 42     % llnl.dat PHREEQC
     1.0e-06,  'k_oms',                 % 43
     10000,   'k_tsox',                % 44     % Canavan, R. W (2006)
     0.12, 'k_FeSpre',            % 45     % from "Non-steady state diagenesis of organic and inorganic sulfur in lake sediments Raoul-Marie Couture, Rachele Fischer b, Philippe Van Cappellen b, Charles Gobeil c
@@ -130,7 +130,7 @@ sediment_params = {
     32.5,     'w_CH4g',                % 50     % Rising velocity of methane
     0.034,  'Kh_CO2',               % 51     % Henry cobstant M/atm
     32.5,  'accel',                 % 52
-    1.0e-06,   'f_pfe',              % 53 NOTE: note used
+    1.0e-06,   'f_pfe',              % 53 NOTE: not used
     1.35,   'k_pdesorb_c',          % 54
     0.95,   'fi_in',                % 55
     0.85,   'fi_f',                 % 56
@@ -150,7 +150,7 @@ sediment_params = {
     0.1,    'Ny3',                  % 70           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0,      'Pz3',                  % 71           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     30,     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
-    48,     'n_ts',                 % 73           % (48 is the minimum, 24 for calibration) number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
+    48,     'n_ts',                 % 73           % (96 is the minimum, 48 for calibration) number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
     0,      'pH algorithm',         % 74           % 0. Disabled pH=7 % 1. Phreeqc  % 2. Electro-neutrality Equation
     0.1,    'SO4 flux',             % 75           % default 0; flux of sulphate from bottom of the sediment. Custom boundary condition for Lake Vansjo only
     };

@@ -6,8 +6,8 @@ disp(datetime('now'));
 
 is_metrics = true; % print metrics in the end
 
-m_start=[2006, 1, 1]; %
-m_stop=[2007, 12, 31]; %
+m_start=[2000, 1, 1]; %
+m_stop=[2013, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
 save_initial_conditions = true; % save final concentrations as initial for the next run
@@ -24,7 +24,7 @@ name_of_scenario = 'IO/store_INCAP_input_baseline_mod.txt'
 
 % inaccurate but faster:
 sediment_params{73} = 96; %ts
-sediment_params{74} = 0; %pH
+sediment_params{74} = 1; %pH
 
 % Niva res. NIVA: calibration of sed. with ts=24 and custom weights (3x,1x), nrmsd, pH 8, no POP, Km_Fe
 % res ~= 21
@@ -94,7 +94,7 @@ lake_params{59} = 10; % 1.5525e+000   % 59    Half saturation growth P level Chl
 
 lake_params{10} = 1.03890e-05; % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 lake_params{54} = 1.03357e-05; % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-lake_params{19} = 150;              % 19    scaling factor for inflow concentration of POC (-)
+lake_params{19} = 100;              % 19    scaling factor for inflow concentration of POC (-)
 
 
 lake_params{18} = 10; % 1.5525e+000   % 18    Isc C
@@ -102,38 +102,56 @@ lake_params{22} = 10; % 1.5525e+000   % 22    Isc Chl
 
 
 % Sediment cores:
-lake_params{24} = 1.6; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
-lake_params{46} = 0.1; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
-lake_params{19} = 70;              % 19    scaling factor for inflow concentration of POC (-)
+lake_params{24} = 2; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{46} = 0.12; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
+lake_params{19} = 100;              % 19    scaling factor for inflow concentration of POC (-)
 
 
-sediment_params{8} = 80000;%    Km FeOH3
-sediment_params{9} = 100000;%    Km FeOOH
-sediment_params{10} = 1;%    Km SO4
-lake_params{34} = 350; %    Scaling factor for inflow concentration of Fe3 (-)
-lake_params{31} =  2; %  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
-lake_params{37} = 2; % Isc CaCO3
-sediment_params{31} = 0.00037; %  'k_apa_pre',          % 31
-sediment_params{62} = 0; %   'alfa0',                % 62
+sediment_params{8} = 1.5*100*100*2.5;%    Km FeOH3 pvc 100, umol/g, rho = 2.5
+sediment_params{9} = 1.5*100*100*2.5;%    Km FeOOH
+sediment_params{15} = sediment_params{8};%   'Kin_FeOH3',         % 15       % the same as Km rho=2.5
+sediment_params{16} = sediment_params{9};%   'Kin_FeOOH',         % 16       % the same as Km rho=2.5
+lake_params{34} = 650; %    Scaling factor for inflow concentration of Fe3 (-)
+lake_params{31} =  0.1; %  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
+lake_params{37} = 0.1; % Isc CaCO3
+% sediment_params{31} = 0.00037; %  'k_apa_pre',          % 31
+% sediment_params{62} = 0; % 7.2; %   'alfa0',                % 62
 
 
-sediment_params{23} = 10;  %     'k_pdesorb_a',         %
-sediment_params{24} = 1;  %     'k_pdesorb_b',         %
-sediment_params{54} = 1;  %     'k_pdesorb_c',         %
+sediment_params{23} = 20;  %     'k_pdesorb_a',         %
+sediment_params{24} = 20;  %     'k_pdesorb_b',         %
+sediment_params{54} = 10;  %     'k_pdesorb_c',         %
 lake_params{35} = 0.001;%    Scaling factor for inflow concentration of Al3 (-)
 
 % -> FeS -> FeS2 -> FeOOH
-sediment_params{30} = 0.04;  %     'k_fe_pre',         %
+sediment_params{30} = 0.04 * 100;  %     'k_fe_pre',         %
 sediment_params{45} = 0.12;  %   'k_FeSpre',         %
-sediment_params{75} = 0.5; % 9.0;%    % flux of SO4  Vansjo
+sediment_params{75} = 1; % 9.0;%    % flux of SO4  Vansjo
+sediment_params{10} = 20;%    Km SO4
 
 % Apatite:
 sediment_params{33} = 10^-10.22;
+% disabled:
+sediment_params{31} = 0; % apa_pre
+sediment_params{32} = 0; %  apa_dis
+
+
+% % Vivenite
+sediment_params{40} = 0.00037; % 0.00037; %,  'k_viv_pre',          % 40
+sediment_params{41} = 0.37; % 0.37; %,  'k_viv_dis',             % 41
+
 
 % NOTE: Chl changed here
 lake_params{50} = 2.0; % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
 lake_params{58} = 2.0; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
 
+% changed OM rates:
+sediment_params{52} = 40;%    accel
+sediment_params{1} = 1.0549e-01;  %   'k_Chl',                 %        % 1
+sediment_params{2} = 1.2624e-02;  %  'k_POP',                 %        % 1
+sediment_params{3} = 5.2341e-02;  % 'k_POC',                  %        % 0.01
+sediment_params{4} = 1.2941e-02;  %  'k_DOP',                 %        % 1
+sediment_params{5} = 8.7662e-02;  % 'k_DOC',                  %        % 1
 
 % try
 run_ID = 0;
