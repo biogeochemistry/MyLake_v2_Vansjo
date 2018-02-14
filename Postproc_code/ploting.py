@@ -135,13 +135,18 @@ disolved = [
 ]
 
 solid_rates = [
-    'R1a', 'R1b', 'R1f', 'R2a', 'R2b', 'R2f', 'R3a', 'R3b', 'R3f', 'R4a', 'R4b',
-    'R4f', 'R5a', 'R5b', 'R5f', 'R6a', 'R6b', 'R6f', 'Ra', 'Rb', 'Rf'
+    'R1a', 'R2a', 'R3a', 'R4a', 'R5a', 'R6a', 'Ra', 'R1b', 'R2b', 'R3b', 'R4b',
+    'R5b', 'R6b', 'Rb', 'R1f', 'R2f', 'R3f', 'R4f', 'R5f', 'R6f', 'Rf', 'R21f',
+    'R21a', 'R21b', 'R12', 'R25', 'R27b', 'R28b', 'R22b', 'R29b', 'R31a',
+    'R32a', 'R35a', 'R34b', 'R3a_Fe', 'R3a_P', 'R4a_Fe', 'R4a_P', 'R3b_Fe',
+    'R3b_P', 'R4b_Fe', 'R4b_P', 'R3f_Fe', 'R3f_P', 'R4f_Fe', 'R4f_P', 'R33b'
 ]
 
 aqueous_rates = [
     'R1c', 'R2c', 'R3c', 'R4c', 'R5c', 'R6c', 'Rc', 'R1d', 'R2d', 'R3d', 'R4d',
-    'R5d', 'R6d', 'Rd'
+    'R5d', 'R6d', 'Rd', 'R21d', 'R11', 'R13', 'R14', 'R15', 'R16', 'R21c',
+    'R23', 'R24', 'R26', 'R27a', 'R22a', 'R28a', 'R29a', 'R35b', 'R34a', 'R33a',
+    'R3c_Fe', 'R3d_Fe', 'R3c_P', 'R3d_P', 'R4c_Fe', 'R4d_Fe', 'R4c_P', 'R4d_P'
 ]
 
 
