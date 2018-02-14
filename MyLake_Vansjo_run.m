@@ -28,7 +28,7 @@ sediment_params{74} = 1; %pH
 
 % Niva res. NIVA: calibration of sed. with ts=24 and custom weights (3x,1x), nrmsd, pH 8, no POP, Km_Fe
 % res ~= 21
-file_name = 'IO/niva_pH_8_NRMSD_chl_3x1x_weights_KmFe.mat'
+file_name = 'IO/niva_pH_8_NRMSD_chl_3x1x_weights_KmFe_2.mat'
 
 
 % new added for cores
@@ -102,7 +102,7 @@ lake_params{22} = 10; % 1.5525e+000   % 22    Isc Chl
 
 
 % Sediment cores:
-lake_params{24} = 2; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{24} = 2.2; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 lake_params{46} = 0.12; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
 lake_params{19} = 100;              % 19    scaling factor for inflow concentration of POC (-)
 
@@ -111,34 +111,41 @@ sediment_params{8} = 1.5*100*100*2.5;%    Km FeOH3 pvc 100, umol/g, rho = 2.5
 sediment_params{9} = 1.5*100*100*2.5;%    Km FeOOH
 sediment_params{15} = sediment_params{8};%   'Kin_FeOH3',         % 15       % the same as Km rho=2.5
 sediment_params{16} = sediment_params{9};%   'Kin_FeOOH',         % 16       % the same as Km rho=2.5
-lake_params{34} = 650; %    Scaling factor for inflow concentration of Fe3 (-)
-lake_params{31} =  0.1; %  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
-lake_params{37} = 0.1; % Isc CaCO3
+lake_params{34} = 550; %    Scaling factor for inflow concentration of Fe3 (-)
+lake_params{31} =  1; %  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
+lake_params{37} = 0.25; % Isc CaCO3
 % sediment_params{31} = 0.00037; %  'k_apa_pre',          % 31
 % sediment_params{62} = 0; % 7.2; %   'alfa0',                % 62
 
 
-sediment_params{23} = 20;  %     'k_pdesorb_a',         %
-sediment_params{24} = 20;  %     'k_pdesorb_b',         %
-sediment_params{54} = 10;  %     'k_pdesorb_c',         %
+sediment_params{23} = 40;  %     'k_pdesorb_a',         %
+sediment_params{24} = 40;  %     'k_pdesorb_b',         %
+sediment_params{54} = 40;  %     'k_pdesorb_c',         %
 lake_params{35} = 0.001;%    Scaling factor for inflow concentration of Al3 (-)
 
 % -> FeS -> FeS2 -> FeOOH
 sediment_params{30} = 0.04 * 100;  %     'k_fe_pre',         %
 sediment_params{45} = 0.12;  %   'k_FeSpre',         %
-sediment_params{75} = 1; % 9.0;%    % flux of SO4  Vansjo
-sediment_params{10} = 20;%    Km SO4
+sediment_params{75} = 0.5; % 9.0;%    % flux of SO4  Vansjo
+sediment_params{10} = 1000;%    Km SO4
 
 % Apatite:
 sediment_params{33} = 10^-10.22;
 % disabled:
-sediment_params{31} = 0; % apa_pre
-sediment_params{32} = 0; %  apa_dis
+sediment_params{31} = 0.000037/10/5; % apa_pre
+sediment_params{32} = 0.037; %  apa_dis
 
 
 % % Vivenite
-sediment_params{40} = 0.00037; % 0.00037; %,  'k_viv_pre',          % 40
+sediment_params{40} = 0.00037*10; % 0.00037; %,  'k_viv_pre',          % 40
 sediment_params{41} = 0.37; % 0.37; %,  'k_viv_dis',             % 41
+
+% FeCO3 and CaCO3
+sediment_params{37} = 180*3; %  'k_FeCO3_pre',        % 37      % Cappellen (1996)
+% sediment_params{38} = 0.25; %     'k_FeCO3_dis',        % 38      % Cappellen (1996)
+sediment_params{38} = 0.04; %0.04,  'k_CaCO3_pre',        % 34      % Katsev (2013)
+sediment_params{38} = 0.18; %0.05,  'k_CaCO3_dis',           % 35      % Katsev (2013)
+
 
 
 % NOTE: Chl changed here
@@ -152,6 +159,9 @@ sediment_params{2} = 1.2624e-02;  %  'k_POP',                 %        % 1
 sediment_params{3} = 5.2341e-02;  % 'k_POC',                  %        % 0.01
 sediment_params{4} = 1.2941e-02;  %  'k_DOP',                 %        % 1
 sediment_params{5} = 8.7662e-02;  % 'k_DOC',                  %        % 1
+
+% To play with this parameter
+sediment_params{72} = 25; %     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
 
 % try
 run_ID = 0;
