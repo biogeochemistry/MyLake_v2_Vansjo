@@ -215,7 +215,7 @@ sediment_params{40} = 0.00037*10; % 0.00037; %,  'k_viv_pre',          % 40
 sediment_params{41} = 0.37; % 0.37; %,  'k_viv_dis',             % 41
 
 % FeCO3 and CaCO3
-sediment_params{37} = 180*6; %  'k_FeCO3_pre',        % 37      % Cappellen (1996)
+sediment_params{37} = 180; %  'k_FeCO3_pre',        % 37      % Cappellen (1996)
 % sediment_params{38} = 0.25; %     'k_FeCO3_dis',        % 38      % Cappellen (1996)
 sediment_params{38} = 0.04; %0.04,  'k_CaCO3_pre',        % 34      % Katsev (2013)
 sediment_params{38} = 0.18; %0.05,  'k_CaCO3_dis',           % 35      % Katsev (2013)
