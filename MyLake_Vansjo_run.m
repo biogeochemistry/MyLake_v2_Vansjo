@@ -10,7 +10,7 @@ m_start=[2000, 1, 1]; %
 m_stop=[2013, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
-save_initial_conditions = true; % save final concentrations as initial for the next run
+save_initial_conditions = false; % save final concentrations as initial for the next run
 
 
 [lake_params, sediment_params] = load_params();
@@ -102,7 +102,7 @@ lake_params{22} = 10; % 1.5525e+000   % 22    Isc Chl
 
 
 % Sediment cores:
-lake_params{24} = 2.2; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{24} = 2.0; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 lake_params{46} = 0.12; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
 lake_params{19} = 100;              % 19    scaling factor for inflow concentration of POC (-)
 
@@ -141,7 +141,7 @@ sediment_params{40} = 0.00037*10; % 0.00037; %,  'k_viv_pre',          % 40
 sediment_params{41} = 0.37; % 0.37; %,  'k_viv_dis',             % 41
 
 % FeCO3 and CaCO3
-sediment_params{37} = 180*3; %  'k_FeCO3_pre',        % 37      % Cappellen (1996)
+sediment_params{37} = 180; %  'k_FeCO3_pre',        % 37      % Cappellen (1996)
 % sediment_params{38} = 0.25; %     'k_FeCO3_dis',        % 38      % Cappellen (1996)
 sediment_params{38} = 0.04; %0.04,  'k_CaCO3_pre',        % 34      % Katsev (2013)
 sediment_params{38} = 0.18; %0.05,  'k_CaCO3_dis',           % 35      % Katsev (2013)
@@ -161,7 +161,7 @@ sediment_params{4} = 1.2941e-02;  %  'k_DOP',                 %        % 1
 sediment_params{5} = 8.7662e-02;  % 'k_DOC',                  %        % 1
 
 % To play with this parameter
-sediment_params{72} = 25; %     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
+sediment_params{72} = 30; %     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
 
 % try
 run_ID = 0;
