@@ -1,5 +1,5 @@
 
-% scen = {'T_only_full_scen_base_historical_20y', 'P_2016_cutoff', 'P_2016_pulse', 'P_gradual_increase_2020_cutoff_to_hist', 'P_gradual_increase_2025_cutoff_to_hist', 'P_gradual_increase_2030_cutoff_to_hist', 'P_gradual_increase_2035_cutoff_to_hist', 'P_gradual_increase_2040_cutoff_to_hist', 'P_gradual_increase_2045_cutoff_to_hist', 'P_gradual_increase_2050_cutoff_to_hist', 'P_gradual_increase_2050_cutoff', 'P_gradual_increase'}
+% scen = {'T_only_full_scen_base_historical_20y', 'P_2016_pulse', 'P_gradual_increase_2020_cutoff_to_hist', 'P_gradual_increase_2030_cutoff_to_hist', 'P_gradual_increase_2040_cutoff_to_hist', 'P_gradual_increase_2050_cutoff_to_hist', 'P_gradual_increase', 'P_gradual_increase_2050_cutoff_to_0', 'P_gradual_increase_2040_cutoff_to_0', 'P_gradual_increase_2030_cutoff_to_0', 'P_gradual_increase_2020_cutoff_to_0', 'P_gradual_increase_2015_cutoff_to_0'}
 
 scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
 % start = {}
@@ -104,6 +104,7 @@ parfor s = 1:size(scen,2)
     % +++++++++++++ new values:
     % new added for cores
 
+
 % new added for cores
 sediment_params{1} = 1.0549e-01;  %   'k_Chl',                 %        % 1
 sediment_params{2} = 1.2624e-02;  %  'k_POP',                 %        % 1
@@ -175,7 +176,7 @@ lake_params{22} = 10; % 1.5525e+000   % 22    Isc Chl
 
 
 % Sediment cores:
-lake_params{24} = 2.2; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{24} = 2.0; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 lake_params{46} = 0.12; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
 lake_params{19} = 100;              % 19    scaling factor for inflow concentration of POC (-)
 
@@ -214,7 +215,7 @@ sediment_params{40} = 0.00037*10; % 0.00037; %,  'k_viv_pre',          % 40
 sediment_params{41} = 0.37; % 0.37; %,  'k_viv_dis',             % 41
 
 % FeCO3 and CaCO3
-sediment_params{37} = 180*3; %  'k_FeCO3_pre',        % 37      % Cappellen (1996)
+sediment_params{37} = 180*6; %  'k_FeCO3_pre',        % 37      % Cappellen (1996)
 % sediment_params{38} = 0.25; %     'k_FeCO3_dis',        % 38      % Cappellen (1996)
 sediment_params{38} = 0.04; %0.04,  'k_CaCO3_pre',        % 34      % Katsev (2013)
 sediment_params{38} = 0.18; %0.05,  'k_CaCO3_dis',           % 35      % Katsev (2013)
@@ -234,7 +235,7 @@ sediment_params{4} = 1.2941e-02;  %  'k_DOP',                 %        % 1
 sediment_params{5} = 8.7662e-02;  % 'k_DOC',                  %        % 1
 
 % To play with this parameter
-sediment_params{72} = 25; %     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
+sediment_params{72} = 30; %     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
 
     % Q10 off
     % lake_params{70} = 1,  % 70    Q10 for reactions of respiration
