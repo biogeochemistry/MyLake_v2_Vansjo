@@ -6,11 +6,11 @@ disp(datetime('now'));
 
 is_metrics = true; % print metrics in the end
 
-m_start=[2013, 1, 1]; %
-m_stop=[2013, 1, 31]; %
+m_start=[2000, 1, 1]; %
+m_stop=[2013, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
-save_initial_conditions = false; % save final concentrations as initial for the next run
+save_initial_conditions = true; % save final concentrations as initial for the next run
 
 
 [lake_params, sediment_params] = load_params();
@@ -28,7 +28,7 @@ sediment_params{74} = 1; %pH
 
 % Niva res. NIVA: calibration of sed. with ts=24 and custom weights (3x,1x), nrmsd, pH 8, no POP, Km_Fe
 % res ~= 21
-file_name = 'IO/niva_pH_8_NRMSD_chl_3x1x_weights_KmFe_3.mat'
+file_name = 'IO/niva_pH_8_NRMSD_chl_3x1x_weights_KmFe_4.mat'
 
 
 % new added for cores
@@ -102,7 +102,8 @@ lake_params{22} = 10; % 1.5525e+000   % 22    Isc Chl
 
 
 % Sediment cores:
-lake_params{24} = 2.5; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{24} = 1.5; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{20} = 1.6;  % 20    scaling factor for inflow concentration of TP (-)
 lake_params{46} = 0.1; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
 lake_params{19} = 100;              % 19    scaling factor for inflow concentration of POC (-)
 
@@ -137,7 +138,7 @@ sediment_params{32} = 0.037; %  apa_dis
 
 
 % % Vivenite
-sediment_params{40} = 0.00037*10*5; % 0.00037; %,  'k_viv_pre',          % 40
+sediment_params{40} = 0.00037*10*2.5*0.7; % 0.00037; %,  'k_viv_pre',          % 40
 sediment_params{41} = 0.37; % 0.37; %,  'k_viv_dis',             % 41
 
 % FeCO3 and CaCO3
