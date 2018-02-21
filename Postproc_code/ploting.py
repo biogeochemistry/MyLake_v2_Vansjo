@@ -10,6 +10,8 @@ from matplotlib import rc
 from scipy.interpolate import UnivariateSpline
 import datetime
 
+from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+
 sns.set_style("whitegrid")
 sns.set_style("ticks")
 
@@ -41,6 +43,7 @@ species_formulas = {
     'SO4': r'$SO_4^{2-}$',
     'NH4': r'$NH_4^+$',
     'Fe2': r'$Fe^{2+}$',
+    'Fe2d': r'$Fe^{2+}(dis)$',
     'H2S': r'$H_2S$',
     'HS': r'$HS$',
     'P': r'$PO_4-P$',
@@ -275,7 +278,8 @@ class ResultsPlotter:
                 elem,
                 convert_units=False,
                 years_ago=0.,
-                log_scale=False):
+                log_scale=False,
+                coef=1):
         results = self.env_getter(env)
         plt.figure(figsize=(6, 4), dpi=192)
 
@@ -285,8 +289,8 @@ class ResultsPlotter:
         lines = {}
 
         for e in elem:
-            coef, units = self.unit_converter(convert_units, env, e)
-            y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * coef
+            unit_conv_factor, units = self.unit_converter(convert_units, env, e)
+            y = results['concentrations'][0, 0][e][0, 0][:, -1 + end] * unit_conv_factor * coef
             if log_scale:
                 y = np.log10(y)
             lines[e], = plt.plot(y, -z, lw=3, label=find_element_name(e))
