@@ -10,7 +10,7 @@ m_start=[2005, 1, 1]; %
 m_stop=[2009, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
-save_initial_conditions = true; % save final concentrations as initial for the next run
+save_initial_conditions = false; % save final concentrations as initial for the next run
 
 
 [lake_params, sediment_params] = load_params();
@@ -113,7 +113,7 @@ sediment_params{15} = sediment_params{8};%   'Kin_FeOH3',         % 15       % t
 sediment_params{16} = sediment_params{9};%   'Kin_FeOOH',         % 16       % the same as Km rho=2.5
 lake_params{34} = 550; %    Scaling factor for inflow concentration of Fe3 (-)
 lake_params{31} =  1; %  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
-lake_params{37} = 0.25; % Isc CaCO3
+lake_params{37} = 3; % Isc CaCO3
 % sediment_params{31} = 0.00037; %  'k_apa_pre',          % 31
 % sediment_params{62} = 0; % 7.2; %   'alfa0',                % 62
 
@@ -131,20 +131,19 @@ sediment_params{10} = 1000;%    Km SO4
 
 % Apatite:
 sediment_params{33} = 10^-10.22;
-% disabled:
-sediment_params{31} = 0.000037/10/5; % apa_pre
+sediment_params{31} = 0.000037/10; %/10; % apa_pre
 sediment_params{32} = 0.037; %  apa_dis
 
 
 % % Vivenite
-sediment_params{40} = 0.00037*10; % 0.00037; %,  'k_viv_pre',          % 40
-sediment_params{41} = 0.37/5; % 0.37; %,  'k_viv_dis',             % 41
+sediment_params{40} = 0.00037*10/2; % 0.00037; %,  'k_viv_pre',          % 40
+sediment_params{41} = 0.37/7; % 0.37; %,  'k_viv_dis',             % 41
 
 % FeCO3 and CaCO3
-sediment_params{37} = 180; %  'k_FeCO3_pre',        % 37      % Cappellen (1996)
+% sediment_params{37} = 180; %  'k_FeCO3_pre',        % 37      % Cappellen (1996)
 % sediment_params{38} = 0.25; %     'k_FeCO3_dis',        % 38      % Cappellen (1996)
-sediment_params{38} = 0.04; %0.04,  'k_CaCO3_pre',        % 34      % Katsev (2013)
-sediment_params{38} = 0.18; %0.05,  'k_CaCO3_dis',           % 35      % Katsev (2013)
+% sediment_params{34} = 0.04; %0.04,  'k_CaCO3_pre',        % 34      % Katsev (2013)
+% sediment_params{35} = 0.05; %0.05,  'k_CaCO3_dis',           % 35      % Katsev (2013)
 
 
 
@@ -158,18 +157,24 @@ lake_params{59} = 15; % 1.5525e+000   % 59    Half saturation growth P level Chl
 
 
 % changed OM rates:
-sediment_params{52} = 100;%    accel
-sediment_params{1} = 1/8 * 0.1;  %   'k_Chl',                 %        % 1
-sediment_params{2} = 1/8 * 0.012;  %  'k_POP',                 %        % 1
-sediment_params{3} = 1/8 * 0.05;   % 'k_POC',                  %        % 0.01
-sediment_params{4} = 1/8 * 0.013;  %  'k_DOP',                 %        % 1
-sediment_params{5} = 1/8 * 0.088;  % 'k_DOC',                  %        % 1
+sediment_params{52} = 300;%    accel
+sediment_params{1} = 1/10 * 0.1;  %   'k_Chl',                 %        % 1
+sediment_params{2} = 1/10 * 0.012;  %  'k_POP',                 %        % 1
+sediment_params{3} = 1/10 * 0.05;   % 'k_POC',                  %        % 0.01
+sediment_params{4} = 1/10 * 0.013;  %  'k_DOP',                 %        % 1
+sediment_params{5} = 1/10 * 0.088;  % 'k_DOC',                  %        % 1
 % To play with this parameter
 sediment_params{72} = 30; %     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
 
 
 % Bioirrigation
-sediment_params{62} = 3; %7.2,   'alfa0',                % 62
+sediment_params{62} = 7.2; %7.2,   'alfa0',                % 62
+
+
+sediment_params{62} = 1; %0.15*0.5,   'Kd_fe2',           % 53
+
+
+% To improove fit of Ca2=>PO4, we can play with initial CaCO3 concentration;
 
 % try
 run_ID = 0;
