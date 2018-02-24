@@ -136,8 +136,10 @@ sediment_params{32} = 0.037; %  apa_dis
 
 
 % % Vivenite
-sediment_params{40} = 0.00037*10; % 0.00037; %,  'k_viv_pre',          % 40
+sediment_params{40} = 0.00037*10*1.5; % 0.00037; %,  'k_viv_pre',          % 40
 sediment_params{41} = 0.37/7; % 0.37; %,  'k_viv_dis',             % 41
+% sediment_params{40} = 0.00037*10*4; % 0.00037; %,  'k_viv_pre',          % 40
+% sediment_params{41} = 0.2; % 0.37; %,  'k_viv_dis',             % 41
 
 % FeCO3 and CaCO3
 % sediment_params{37} = 180; %  'k_FeCO3_pre',        % 37      % Cappellen (1996)
