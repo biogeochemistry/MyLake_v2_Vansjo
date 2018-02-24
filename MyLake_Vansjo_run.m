@@ -6,8 +6,8 @@ disp(datetime('now'));
 
 is_metrics = true; % print metrics in the end
 
-m_start=[2005, 1, 1]; %
-m_stop=[2009, 12, 31]; %
+m_start=[2000, 1, 1]; %
+m_stop=[2013, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
 save_initial_conditions = false; % save final concentrations as initial for the next run
@@ -113,7 +113,7 @@ sediment_params{15} = sediment_params{8};%   'Kin_FeOH3',         % 15       % t
 sediment_params{16} = sediment_params{9};%   'Kin_FeOOH',         % 16       % the same as Km rho=2.5
 lake_params{34} = 550; %    Scaling factor for inflow concentration of Fe3 (-)
 lake_params{31} =  1; %  'I_scCa2',             % 31    Scaling factor for inflow concentration of Ca2 (-)
-lake_params{37} = 3; % Isc CaCO3
+lake_params{37} = 5; % Isc CaCO3
 % sediment_params{31} = 0.00037; %  'k_apa_pre',          % 31
 % sediment_params{62} = 0; % 7.2; %   'alfa0',                % 62
 
@@ -131,12 +131,12 @@ sediment_params{10} = 1000;%    Km SO4
 
 % Apatite:
 sediment_params{33} = 10^-10.22;
-sediment_params{31} = 0.000037/10; %/10; % apa_pre
+sediment_params{31} = 0.000037/3; %/10; % apa_pre
 sediment_params{32} = 0.037; %  apa_dis
 
 
 % % Vivenite
-sediment_params{40} = 0.00037*10/2; % 0.00037; %,  'k_viv_pre',          % 40
+sediment_params{40} = 0.00037*10; % 0.00037; %,  'k_viv_pre',          % 40
 sediment_params{41} = 0.37/7; % 0.37; %,  'k_viv_dis',             % 41
 
 % FeCO3 and CaCO3
@@ -158,11 +158,11 @@ lake_params{59} = 15; % 1.5525e+000   % 59    Half saturation growth P level Chl
 
 % changed OM rates:
 sediment_params{52} = 300;%    accel
-sediment_params{1} = 1/10 * 0.1;  %   'k_Chl',                 %        % 1
-sediment_params{2} = 1/10 * 0.012;  %  'k_POP',                 %        % 1
-sediment_params{3} = 1/10 * 0.05;   % 'k_POC',                  %        % 0.01
-sediment_params{4} = 1/10 * 0.013;  %  'k_DOP',                 %        % 1
-sediment_params{5} = 1/10 * 0.088;  % 'k_DOC',                  %        % 1
+sediment_params{1} = 1/13 * 0.1;  %   'k_Chl',                 %        % 1
+sediment_params{2} = 1/13 * 0.012;  %  'k_POP',                 %        % 1
+sediment_params{3} = 1/13 * 0.05;   % 'k_POC',                  %        % 0.01
+sediment_params{4} = 1/13 * 0.013;  %  'k_DOP',                 %        % 1
+sediment_params{5} = 1/13 * 0.088;  % 'k_DOC',                  %        % 1
 % To play with this parameter
 sediment_params{72} = 30; %     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
 
