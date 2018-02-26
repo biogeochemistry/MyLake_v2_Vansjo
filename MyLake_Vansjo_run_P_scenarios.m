@@ -1,6 +1,8 @@
 
 scen = {'P_gradual_increase_2040_cutoff_to_0', 'P_gradual_increase_2030_cutoff_to_0', 'P_gradual_increase_2020_cutoff_to_0', 'P_gradual_increase_2015_cutoff_to_0', 'T_only_full_scen_base_historical_20y', 'P_2016_pulse', 'P_gradual_increase_2020_cutoff_to_hist', 'P_gradual_increase_2030_cutoff_to_hist', 'P_gradual_increase_2040_cutoff_to_hist', 'P_gradual_increase_2050_cutoff_to_hist', 'P_gradual_increase', 'P_gradual_increase_2050_cutoff_to_0', 'P_gradual_increase_2040_cutoff_to_0', 'P_gradual_increase_2030_cutoff_to_0', 'P_gradual_increase_2020_cutoff_to_0', 'P_gradual_increase_2015_cutoff_to_0'}
 
+% scen = {'P_gradual_increase_2015_cutoff_to_0_2200'}
+
 % scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
 % start = {}
 
@@ -14,7 +16,7 @@ parfor s = 1:size(scen,2)
     % m_start=[1985, 1, 1]; %
     % m_stop=[2040, 12, 31]; %
     m_start=[2000, 1, 1]; %
-    m_stop=[2099, 12, 31]; %
+    m_stop=[2099, 12, 1]; %
 
 
     [lake_params, sediment_params] = load_params();
@@ -22,7 +24,7 @@ parfor s = 1:size(scen,2)
     % file_name = 'IO/airT_Scenarios/T_only_RCP4_IPSL.mat'
 
     % inaccurate but faster:
-    sediment_params{73} = 96;
+    sediment_params{73} = 192;
     sediment_params{74} = 1; % pH algo disabled;
     % sediment_params{72} = 0; % effective depth test
 

@@ -487,7 +487,7 @@ class ResultsPlotter:
         v = np.linspace(0, z.max(), 51, endpoint=True)
         CS = plt.contourf(
             X, Y, z, v, cmap=cmap, origin='lower', vmin=0,
-            vmax=z.max()) # v, vmin=0, vmax=z.max()
+            vmax=z.max())  # v, vmin=0, vmax=z.max()
         cbar = plt.colorbar(CS)
 
         plt.ylabel('Depth, [cm]')
@@ -585,7 +585,7 @@ class ResultsPlotter:
         v = np.linspace(0, z.max(), 51, endpoint=True)
         CS = plt.contourf(
             X, Y, z, v, cmap=cmap, origin='lower', vmin=0,
-            vmax=z.max()) # v, vmin=0, vmax=z.max()
+            vmax=z.max())  # v, vmin=0, vmax=z.max()
         cbar = plt.colorbar(CS)
 
         plt.ylabel('Depth, [cm]')

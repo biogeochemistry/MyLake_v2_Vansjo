@@ -23,12 +23,12 @@ name_of_scenario = 'IO/store_INCAP_input_baseline_mod.txt'
 
 
 % inaccurate but faster:
-sediment_params{73} = 96; %ts
+sediment_params{73} = 192; %ts
 sediment_params{74} = 1; %pH
 
 % Niva res. NIVA: calibration of sed. with ts=24 and custom weights (3x,1x), nrmsd, pH 8, no POP, Km_Fe
 % res ~= 21
-file_name = 'IO/niva_pH_8_NRMSD_chl_3x1x_weights_KmFe_4.mat'
+file_name = 'IO/niva_pH_8_NRMSD_chl_3x1x_weights_KmFe_4_192.mat'
 
 
 % new added for cores
