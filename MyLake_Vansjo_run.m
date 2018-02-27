@@ -23,12 +23,12 @@ name_of_scenario = 'IO/store_INCAP_input_baseline_mod.txt'
 
 
 % inaccurate but faster:
-sediment_params{73} = 192; %ts
-sediment_params{74} = 1; %pH
+sediment_params{73} = 96; %ts
+sediment_params{74} = 0; %pH
 
 % Niva res. NIVA: calibration of sed. with ts=24 and custom weights (3x,1x), nrmsd, pH 8, no POP, Km_Fe
 % res ~= 21
-file_name = 'IO/niva_pH_8_NRMSD_chl_3x1x_weights_KmFe_4_192.mat'
+file_name = 'IO/equal_rates_96.mat'
 
 
 % new added for cores
@@ -176,6 +176,18 @@ sediment_params{62} = 7.2; %7.2,   'alfa0',                % 62
 sediment_params{62} = 1; %0.15*0.5,   'Kd_fe2',           % 53
 
 
+
+% rate of dissollution and precipitation should be equal for Viv and Apa
+% Apatite:
+sediment_params{33} = 10^-10.22;
+sediment_params{31} = 0.000037/3/10; %/10; % apa_pre
+sediment_params{32} = 0.037; %  apa_dis
+% % Vivenite
+sediment_params{40} = 0.00037*10*1.5*2; % 0.00037; %,  'k_viv_pre',          % 40
+sediment_params{41} = 0.37/7/10; % 0.37; %,  'k_viv_dis',             % 41
+
+lake_params{37} = 5/1.8; % Isc CaCO3
+lake_params{34} = 650; %    Scaling factor for inflow concentration of Fe3 (-)
 % To improove fit of Ca2=>PO4, we can play with initial CaCO3 concentration;
 
 % try
