@@ -180,7 +180,7 @@ sediment_params{62} = 1; %0.15*0.5,   'Kd_fe2',           % 53
 % rate of dissollution and precipitation should be equal for Viv and Apa
 % Apatite:
 sediment_params{33} = 10^-10.22;
-sediment_params{31} = 0.000037/3/10; %/10; % apa_pre
+sediment_params{31} = 0.000037/3/10*1.1; %/10; % apa_pre
 sediment_params{32} = 0.037; %  apa_dis
 % % Vivenite
 sediment_params{40} = 0.00037*10*1.5*2; % 0.00037; %,  'k_viv_pre',          % 40
@@ -190,9 +190,9 @@ lake_params{37} = 5/2; % Isc CaCO3
 lake_params{34} = 600; %    Scaling factor for inflow concentration of Fe3 (-)
 % To improove fit of Ca2=>PO4, we can play with initial CaCO3 concentration;
 
-sediment_params{23} = 30;  %     'k_pdesorb_a',         %
-sediment_params{24} = 30;  %     'k_pdesorb_b',         %
-sediment_params{54} = 30;  %     'k_pdesorb_c',         %
+sediment_params{23} = 5;  %     'k_pdesorb_a',         %
+sediment_params{24} = 5;  %     'k_pdesorb_b',         %
+sediment_params{54} = 5;  %     'k_pdesorb_c',         %
 
 
 % try
