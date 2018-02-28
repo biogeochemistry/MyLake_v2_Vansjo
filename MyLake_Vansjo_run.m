@@ -205,6 +205,8 @@ lake_params{59} = 15*0.8; % 1.5525e+000   % 59    Half saturation growth P level
 lake_params{24} = 1.4; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 lake_params{20} = 1.6;  % 20    scaling factor for inflow concentration of TP (-)
 
+sediment_params{53} = 0.087; % Fe2 Kd
+
 % try
 run_ID = 0;
 clim_ID = 0;
