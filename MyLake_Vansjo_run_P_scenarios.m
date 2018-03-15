@@ -16,7 +16,7 @@ parfor s = 1:size(scen,2)
     % m_start=[1985, 1, 1]; %
     % m_stop=[2040, 12, 31]; %
     m_start=[2000, 1, 1]; %
-    m_stop=[2199, 12, 1]; %
+    m_stop=[2198, 12, 1]; %
 
 
     [lake_params, sediment_params] = load_params();
