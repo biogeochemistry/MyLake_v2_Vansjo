@@ -11,7 +11,7 @@ scen = {'P_gradual_increase_no_chl_2015_cutoff_to_0_2200'}
 % scen = {'P_gradual_increase_2015_cutoff_to_0'}
 
 
-parfor s = 1:size(scen,2)
+for s = 1:size(scen,2)
 
     % m_start=[1985, 1, 1]; %
     % m_stop=[2040, 12, 31]; %
@@ -209,7 +209,7 @@ lake_params{20} = 1.6;  % 20    scaling factor for inflow concentration of TP (-
 
     name_of_scenario = strcat('IO/Scenarios/', scen{s}, '.txt')
     % file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}),'ts_', scen{s}, '2000_2030.mat')
-    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_', scen{s}, '_2000_2199.mat')
+    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_', scen{s}, '_TRUE_2000_2199.mat')
 
 
     tic
