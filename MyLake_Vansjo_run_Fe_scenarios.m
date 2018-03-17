@@ -1,11 +1,11 @@
-scen = {'Fe_20x_10mg_full_scen_base_historical_20y'}
+scen = {'Fe_20x_200g_full_scen_base_historical_20y'}
 
 
 for s = 1:size(scen,2)
 
     % m_start=[1985, 1, 1]; %
     % m_stop=[2040, 12, 31]; %
-    m_start=[2000, 1, 1]; %
+    m_start=[2015, 1, 1]; %
     m_stop=[2070, 12, 1]; %
 
 
@@ -199,7 +199,7 @@ lake_params{20} = 1.6;  % 20    scaling factor for inflow concentration of TP (-
 
     name_of_scenario = strcat('IO/Scenarios/', scen{s}, '.txt')
     % file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}),'ts_', scen{s}, '2000_2030.mat')
-    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_', scen{s}, '_2000_2070.mat')
+    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_', scen{s}, '_2015_2070.mat')
 
 
     tic

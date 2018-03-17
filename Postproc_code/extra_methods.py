@@ -4,6 +4,85 @@ Module with methods required for post processed data analysis
 import datetime
 import numpy as np
 import metrics
+import matplotlib.pyplot as plt
+
+
+def P_wc_rates(results):
+    start = -365 * 20
+    end = -1
+    z_wc = np.array(results['MyLake_results']['basin1']['z'])*100
+    res =  [\
+    np.trapz(np.mean(np.array(results['MyLake_results']['basin1']['rates']['Re'][start:end,:]),axis=0), z_wc[0]), \
+    np.trapz(np.mean(np.array(results['MyLake_results']['basin1']['rates']['Rc'][start:end,:]),axis=0), z_wc[0]), \
+    -np.trapz(np.mean(1/30973.762*np.multiply(np.array(results['MyLake_results']['basin1']['concentrations']['C'][start:end,:]), np.array(results['MyLake_results']['basin1']['rates']['Growth_bioz'][start:end,:])),axis=0), z_wc[0])+ \
+    -np.trapz(np.mean(1/30973.762*np.multiply(np.array(results['MyLake_results']['basin1']['concentrations']['Chl'][start:end,:]), np.array(results['MyLake_results']['basin1']['rates']['Growth_bioz_2'][start:end,:])),axis=0), z_wc[0]), \
+    np.trapz(np.mean(1/30973.762*np.multiply(np.array(results['MyLake_results']['basin1']['concentrations']['C'][start:end,:]), np.array(results['MyLake_results']['basin1']['rates']['Loss_bioz'][start:end,:])),axis=0), z_wc[0])+ \
+    np.trapz(np.mean(1/30973.762*np.multiply(np.array(results['MyLake_results']['basin1']['concentrations']['Chl'][start:end,:]), np.array(results['MyLake_results']['basin1']['rates']['Loss_bioz_2'][start:end,:])),axis=0), z_wc[0]), \
+    -np.trapz(np.mean(np.array(results['MyLake_results']['basin1']['rates']['R31a'][start:end,:]),axis=0), z_wc[0]), \
+    -np.trapz(np.mean(np.array(results['MyLake_results']['basin1']['rates']['R32a'][start:end,:]),axis=0), z_wc[0]), \
+    -2*np.trapz(np.mean(np.array(results['MyLake_results']['basin1']['rates']['R33a'][start:end,:]),axis=0), z_wc[0]), \
+    -2*np.trapz(np.mean(np.array(results['MyLake_results']['basin1']['rates']['R34a'][start:end,:]),axis=0), z_wc[0]), \
+    ]
+
+
+    rate_names = [
+        'Re', 'Rc', 'Growth_bioz', 'Loss_bioz', 'R31a', 'R32a', 'R33a', 'R34a'
+    ]
+
+    for rn, v in zip(rate_names, res):
+        print('{}: {:.3f}'.format(rn, v))
+
+    print('sum: {:.3f}'.format(sum(res)))
+
+
+def P_rates_sediments(results):
+    start=-365*20
+    end=-1
+    F = (1-0.92)/0.92
+    z = np.array(results['Sediment_results']['basin1']['z'])
+    R31a = -F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R31a'][start:end,:]),axis=0), z[0])
+    R32a = -F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R32a'][start:end,:]),axis=0), z[0])
+    R33a = -2*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R33a'][start:end,:]),axis=0), z[0])
+    R33b = +2*F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R33b'][start:end,:]),axis=0), z[0])
+    R34a = -2*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R34a'][start:end,:]),axis=0), z[0])
+    R34b = +2*F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R34b'][start:end,:]),axis=0), z[0])
+    R35a = -F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R35a'][start:end,:]),axis=0), z[0])
+    Ra = +F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['Ra'][start:end,:]),axis=0), z[0])
+    Rf = +F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['Rf'][start:end,:]),axis=0), z[0])
+    Rc = +np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['Rc'][start:end,:]),axis=0), z[0])
+    R3a_P = +200*4*F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R3a_P'][start:end,:]),axis=0), z[0])
+    R3b_P = +1*4*F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R3b_P'][start:end,:]),axis=0), z[0])
+    R3f_P = +116*4*F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R3f_P'][start:end,:]),axis=0), z[0])
+    R3c_P = +200*4*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R3c_P'][start:end,:]),axis=0), z[0])
+    R4a_P = +200*4*F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R4a_P'][start:end,:]),axis=0), z[0])
+    R4b_P = +1*4*F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R4b_P'][start:end,:]),axis=0), z[0])
+    R4f_P = +116*4*F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R4f_P'][start:end,:]),axis=0), z[0])
+    R4c_P = +200*4*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R4c_P'][start:end,:]),axis=0), z[0])
+    res = [R31a, R32a, R33a, R33b, R34a, R34b, R35a, Ra, Rf, Rc, R3a_P, R3b_P, R3f_P, R3c_P, R4a_P, R4b_P, R4f_P, R4c_P]
+
+    rate_names = ['R31a', 'R32a', 'R33a', 'R33b', 'R34a', 'R34b', 'R35a', 'Ra', 'Rf', 'Rc', 'R3a_P', 'R3b_P', 'R3f_P', 'R3c_P', 'R4a_P', 'R4b_P', 'R4f_P', 'R4c_P']
+
+    for rn, v in zip(rate_names, res):
+        print('{}: {:.3f}'.format(rn, v))
+
+    print('sum: {:.3f}'.format(sum(res)))
+
+
+def savefig(filename, **kwargs):
+    plt.savefig(
+        '/Users/imarkelo/Google Drive/GDocuments/Vansjo/latex version/img/{}.pgf'.
+        format(filename), **kwargs)
+    plt.savefig(
+        '/Users/imarkelo/Google Drive/GDocuments/Vansjo/latex version/img/{}.pdf'.
+        format(filename), **kwargs)
+    plt.savefig(
+        '/Users/imarkelo/Google Drive/GDocuments/Vansjo/tables and figures/img/{}.pgf'.
+        format(filename), **kwargs)
+    plt.savefig(
+        '/Users/imarkelo/Google Drive/GDocuments/Vansjo/tables and figures/img/{}.pdf'.
+        format(filename), **kwargs)
+
+
 
 
 def convert_timestamp_to_num(timestamp):
