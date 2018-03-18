@@ -214,7 +214,7 @@ lake_params{20} = 1.0;  % 20    scaling factor for inflow concentration of TP (-
 
     name_of_scenario = strcat('IO/Scenarios/', scen{s}, '.txt')
     % file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}),'ts_', scen{s}, '2000_2030.mat')
-    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_', scen{s}, '_TRUE_2000_2199.mat')
+    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_', scen{s}, '_TRUE_17m_thermo_2000_2199.mat')
 
 
     tic
