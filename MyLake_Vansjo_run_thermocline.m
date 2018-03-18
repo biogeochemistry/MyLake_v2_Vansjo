@@ -1,32 +1,33 @@
+% for i = 1:1000
 
-% scen = {'P_gradual_increase_2040_cutoff_to_0', 'P_gradual_increase_2030_cutoff_to_0', 'P_gradual_increase_2020_cutoff_to_0', 'P_gradual_increase_2015_cutoff_to_0', 'T_only_full_scen_base_historical_20y', 'P_2016_pulse', 'P_gradual_increase_2020_cutoff_to_hist', 'P_gradual_increase_2030_cutoff_to_hist', 'P_gradual_increase_2040_cutoff_to_hist', 'P_gradual_increase_2050_cutoff_to_hist', 'P_gradual_increase', 'P_gradual_increase_2050_cutoff_to_0', 'P_gradual_increase_2040_cutoff_to_0', 'P_gradual_increase_2030_cutoff_to_0', 'P_gradual_increase_2020_cutoff_to_0', 'P_gradual_increase_2015_cutoff_to_0'}
+tic
+disp('Started at:')
+disp(datetime('now'));
 
-scen = {'P_gradual_increase_no_chl_2015_cutoff_to_0_2200'}
+is_metrics = true; % print metrics in the end
 
-% scen = {'T_only_full_scen_base_historical_20y', 'T_only_RCP4_GFDL', 'T_only_RCP4_IPSL', 'T_only_RCP8_GFDL', 'T_only_RCP8_IPSL', 'T_only_RCP45_NorESM', 'T_only_RCP85_NorESM'}
-% start = {}
-
-% scen = {'P_gradual_increase_2050_cutoff_to_0', 'P_gradual_increase_2045_cutoff_to_0', 'P_gradual_increase_2040_cutoff_to_0', 'P_gradual_increase_2035_cutoff_to_0', 'P_gradual_increase_2030_cutoff_to_0', 'P_gradual_increase_2025_cutoff_to_0', 'P_gradual_increase_2020_cutoff_to_0', 'P_gradual_increase_2015_cutoff_to_0'}
-
-% scen = {'P_gradual_increase_2015_cutoff_to_0'}
-
-
-for s = 1:size(scen,2)
-
-    % m_start=[1985, 1, 1]; %
-    % m_stop=[2040, 12, 31]; %
-    m_start=[2000, 1, 1]; %
-    m_stop=[2198, 12, 1]; %
+m_start=[2005, 1, 1]; %
+m_stop=[2007, 12, 31]; %
+% big_results = cell(1,no_runs);  % collects the results
+% big_inputs = cell(1,no_runs);   % collects the inputs
+save_initial_conditions = false; % save final concentrations as initial for the next run
 
 
-    [lake_params, sediment_params] = load_params();
-    % name_of_scenario = 'IO/airT_Scenarios/T_only_RCP4_IPSL.txt'
-    % file_name = 'IO/airT_Scenarios/T_only_RCP4_IPSL.mat'
+[lake_params, sediment_params] = load_params();
 
-    % inaccurate but faster:
-    sediment_params{73} = 192;
-    sediment_params{74} = 0; % pH algo disabled;
-    % sediment_params{72} = 0; % effective depth test
+name_of_scenario = 'IO/Scenarios/P_gradual_increase_no_chl_2015_cutoff_to_0_2200.txt'
+% name_of_scenario = 'IO/Scenarios/P_2016_cutoff.txt'
+% file_name = 'IO/P_2016_cutoff_test.mat'
+% name_of_scenario = 'IO/airT_Scenarios/T_only_RCP4_IPSL.txt'
+% file_name = 'IO/airT_Scenarios/T_only_RCP4_IPSL.mat'
+
+
+% inaccurate but faster:
+sediment_params{73} = 192; %ts
+sediment_params{74} = 0; %pH
+
+file_name = 'IO/thermocline_sed.mat'
+
 
 % new added for cores
 sediment_params{1} = 1.0549e-01;  %   'k_Chl',                 %        % 1
@@ -207,104 +208,87 @@ lake_params{20} = 1.6;  % 20    scaling factor for inflow concentration of TP (-
 sediment_params{72} = 17; %     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
 lake_params{24} = 1.0; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 lake_params{20} = 1.0;  % 20    scaling factor for inflow concentration of TP (-)
+sediment_params{73} = 192; %ts
 
 
-    % Q10 off
-    % lake_params{70} = 1,  % 70    Q10 for reactions of respiration
+% try
+run_ID = 0;
+clim_ID = 0;
+run_INCA = 0; % 1- MyLake will run INCA, 0- No run
+use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
 
-    name_of_scenario = strcat('IO/Scenarios/', scen{s}, '.txt')
-    % file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}),'ts_', scen{s}, '2000_2030.mat')
-    file_name = strcat('IO/Scenarios/', num2str(sediment_params{73}), 'ts_', scen{s}, '_TRUE_2000_2199.mat')
-
-
-    tic
-    disp('Started at:')
-    disp(datetime('now'));
-
-    is_metrics = true; % print metrics in the end
-    save_initial_conditions = false; % save final concentrations as initial for the next run
-
-
-
-
-    % try
-    run_ID = 0;
-    clim_ID = 0;
-    run_INCA = 0; % 1- MyLake will run INCA, 0- No run
-    use_INCA = 0; % 1- MyLake will take written INCA input, either written just now or saved before, and prepare inputs from them. 0- MyLake uses hand-made input files
-
-    [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, name_of_scenario, use_INCA, run_INCA, run_ID, clim_ID, save_initial_conditions); % runs the model and outputs obs and sim
+[MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, name_of_scenario, use_INCA, run_INCA, run_ID, clim_ID, save_initial_conditions); % runs the model and outputs obs and sim
 
 
 
 
 
-    disp('Saving results...')
-    parsave(file_name, MyLake_results, Sediment_results)
-    disp('Finished at:')
-    disp(datetime('now'));
+disp('Saving results...')
+save(file_name, 'MyLake_results', 'Sediment_results')
+disp('Finished at:')
+disp(datetime('now'));
 
-    % if is_metrics == true
+if is_metrics == true
 
-    %     load('Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
+    load('Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
 
-    %     depths = [5;10;15;20;25;30;35;40];
-    %     rmsd_O2 = 0;
-
-
-    %     for i=1:size(depths,1)
-    %         d = depths(i);
-    %         zinx=find(MyLake_results.basin1.z == d);
-    %         O2_measured = res.T(res.depth1 == d);
-    %         day_measured = res.date(res.depth1 == d);
-    %         day_measured = day_measured(~isnan(O2_measured));
-    %         O2_measured = O2_measured(~isnan(O2_measured));
-
-    %         O2_mod = MyLake_results.basin1.concentrations.O2(zinx,:)'/1000;
-    %         [T_date,loc_sim, loc_obs] = intersect(MyLake_results.basin1.days, day_measured);
-
-    %         % rmsd_O2 = rmsd_O2 + RMSE(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
-    %         rmsd_O2 = rmsd_O2 + sqrt(mean((O2_mod(loc_sim, 1)-O2_measured(loc_obs, 1)).^2));
-    %     end
-
-    %     zinx=find(MyLake_results.basin1.z<4);
-    %     TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.DOP(zinx,:) + MyLake_results.basin1.concentrations.POP(zinx,:))', 2);
-    %     Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
-    %     P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
-    %     POP_mod = mean((MyLake_results.basin1.concentrations.POP(zinx,:) + MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
-
-    %     load 'obs/store_obs/TOTP.dat' % measured
-    %     load 'obs/store_obs/Cha.dat' % measured
-    %     load 'obs/store_obs/PO4.dat' % measured
-    %     load 'obs/store_obs/Part.dat' % measured
+    depths = [5;10;15;20;25;30;35;40];
+    rmsd_O2 = 0;
 
 
-    %     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, TOTP(:,1)));
-    %     rmsd_TOTP = sqrt(mean((TP_mod(loc_sim, 1)-TOTP(loc_obs, 2)).^2));
+    for i=1:size(depths,1)
+        d = depths(i);
+        zinx=find(MyLake_results.basin1.z == d);
+        O2_measured = res.T(res.depth1 == d);
+        day_measured = res.date(res.depth1 == d);
+        day_measured = day_measured(~isnan(O2_measured));
+        O2_measured = O2_measured(~isnan(O2_measured));
+
+        O2_mod = MyLake_results.basin1.concentrations.O2(zinx,:)'/1000;
+        [T_date,loc_sim, loc_obs] = intersect(MyLake_results.basin1.days, day_measured);
+
+        % rmsd_O2 = rmsd_O2 + RMSE(O2_mod(loc_sim, 1), O2_measured(loc_obs, 1));
+        rmsd_O2 = rmsd_O2 + sqrt(mean((O2_mod(loc_sim, 1)-O2_measured(loc_obs, 1)).^2));
+    end
+
+    zinx=find(MyLake_results.basin1.z<4);
+    TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.DOP(zinx,:) + MyLake_results.basin1.concentrations.POP(zinx,:))', 2);
+    Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
+    P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
+    POP_mod = mean((MyLake_results.basin1.concentrations.POP(zinx,:) + MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
+
+    load 'obs/store_obs/TOTP.dat' % measured
+    load 'obs/store_obs/Cha.dat' % measured
+    load 'obs/store_obs/PO4.dat' % measured
+    load 'obs/store_obs/Part.dat' % measured
 
 
-    %     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha(:,1)));
-    %     rmsd_Chl = sqrt(mean((Chl_mod(loc_sim, 1)-Cha(loc_obs, 2)).^2));
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, TOTP(:,1)));
+    rmsd_TOTP = sqrt(mean((TP_mod(loc_sim, 1)-TOTP(loc_obs, 2)).^2));
 
 
-    %     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
-    %     rmsd_PO4 = sqrt(mean((P_mod(loc_sim, 1)-PO4(loc_obs, 2)).^2));
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Cha(:,1)));
+    rmsd_Chl = sqrt(mean((Chl_mod(loc_sim, 1)-Cha(loc_obs, 2)).^2));
 
 
-    %     [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Part(:,1)));
-    %     rmsd_PP = sqrt(mean((POP_mod(loc_sim, 1)-Part(loc_obs, 2)).^2));
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, PO4(:,1)));
+    rmsd_PO4 = sqrt(mean((P_mod(loc_sim, 1)-PO4(loc_obs, 2)).^2));
 
 
-    %     disp('RMSD 3xRMSE(P)+RMSE(O2):')
-    %     disp(sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2]))
-    %     disp('RMSD = RMSE(P)+RMSE(O2):')
-    %     disp(sum([rmsd_TOTP, rmsd_Chl, rmsd_PO4, rmsd_PP, rmsd_O2]))
-    % end
+    [TP_date,loc_sim, loc_obs] = (intersect(MyLake_results.basin1.days, Part(:,1)));
+    rmsd_PP = sqrt(mean((POP_mod(loc_sim, 1)-Part(loc_obs, 2)).^2));
 
 
-    % toc
-
-
-
+    disp('RMSD 3xRMSE(P)+RMSE(O2):')
+    disp(sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2]))
+    disp('RMSD = RMSE(P)+RMSE(O2):')
+    disp(sum([rmsd_TOTP, rmsd_Chl, rmsd_PO4, rmsd_PP, rmsd_O2]))
 end
+
+
+toc
+
+
+
+
 % end
