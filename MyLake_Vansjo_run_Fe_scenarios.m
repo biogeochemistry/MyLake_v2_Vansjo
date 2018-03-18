@@ -192,7 +192,10 @@ lake_params{59} = 15*0.8; % 1.5525e+000   % 59    Half saturation growth P level
 lake_params{24} = 1.4; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 lake_params{20} = 1.6;  % 20    scaling factor for inflow concentration of TP (-)
 
-
+% % NOTE: setting up sediments below pycnocline:
+sediment_params{72} = 17; %     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
+lake_params{24} = 1.0; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
+lake_params{20} = 1.0;  % 20    scaling factor for inflow concentration of TP (-)
 
     % Q10 off
     % lake_params{70} = 1,  % 70    Q10 for reactions of respiration
