@@ -7,9 +7,50 @@ import metrics
 import matplotlib.pyplot as plt
 
 
-def P_wc_rates(results):
-    start = -365 * 20
-    end = -1
+def boundary_P_fluxes(results, start=-365 * 20, end=-1):
+    inflow_q = np.array(
+        results['MyLake_results']['basin1']['Inflw'][0, start:end])
+    surf_P = np.array(results['MyLake_results']['basin1']['concentrations']['P']
+                      [start:end, 0])
+    surf_POP = np.array(results['MyLake_results']['basin1']['concentrations'][
+        'POP'][start:end, 0])
+    surf_DOP = np.array(results['MyLake_results']['basin1']['concentrations'][
+        'DOP'][start:end, 0])
+    surf_PP = np.array(results['MyLake_results']['basin1']['concentrations'][
+        'PP'][start:end, 0])
+    surf_Phy = np.array(results['MyLake_results']['basin1']
+                        ['concentrations']['C'][start:end, 0]) + np.array(
+                            results['MyLake_results']['basin1']
+                            ['concentrations']['Chl'][start:end, 0])
+    inflow_POP = 1.4 * np.array(
+        results['MyLake_results']['basin1']['Inflw'][22, start:end])
+    inflow_TP = 1.6 * np.array(
+        results['MyLake_results']['basin1']['Inflw'][4, start:end])
+    inflow_DOP = np.array(
+        results['MyLake_results']['basin1']['Inflw'][5, start:end])
+    area = 2.38e+7
+
+    res = {}
+    res['P_outflow'] = np.mean(inflow_q * surf_P) / 31 * 1000 / area * 365 / 1e4
+    res['POP_outflow'] = np.mean(
+        inflow_q * surf_POP) / 31 * 1000 / area * 365 / 1e4
+    res['PP_outflow'] = np.mean(
+        inflow_q * surf_PP) / 31 * 1000 / area * 365 / 1e4
+    res['DOP_outflow'] = np.mean(
+        inflow_q * surf_DOP) / 31 * 1000 / area * 365 / 1e4
+    res['Phy_outflow'] = np.mean(
+        inflow_q * surf_Phy) / 31 * 1000 / area * 365 / 1e4
+    res['POP_inflow'] = np.mean(
+        inflow_q * inflow_POP) / 31 * 1000 / area * 365 / 1e4
+    res['DOP_inflow'] = np.mean(
+        inflow_q * inflow_DOP) / 31 * 1000 / area * 365 / 1e4
+    res['TP_inflow'] = np.mean(
+        inflow_q * inflow_TP) / 31 * 1000 / area * 365 / 1e4
+
+    return res
+
+
+def P_wc_rates(results, start=-365 * 20, end=-1):
     z_wc = np.array(results['MyLake_results']['basin1']['z'])*100
     res =  [\
     np.trapz(np.mean(np.array(results['MyLake_results']['basin1']['rates']['Re'][start:end,:]),axis=0), z_wc[0]), \
@@ -35,9 +76,7 @@ def P_wc_rates(results):
     print('sum: {:.3f}'.format(sum(res)))
 
 
-def P_rates_sediments(results):
-    start=-365*20
-    end=-1
+def P_rates_sediments(results, start=-365 * 20, end=-1):
     F = (1-0.92)/0.92
     z = np.array(results['Sediment_results']['basin1']['z'])
     R31a = -F*np.trapz(np.mean(np.array(results['Sediment_results']['basin1']['rates']['R31a'][start:end,:]),axis=0), z[0])
