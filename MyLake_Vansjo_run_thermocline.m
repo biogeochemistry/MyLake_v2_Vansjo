@@ -6,8 +6,8 @@ disp(datetime('now'));
 
 is_metrics = true; % print metrics in the end
 
-m_start=[1993, 1, 1]; %
-m_stop=[2013, 12, 31]; %
+m_start=[2015, 1, 1]; %
+m_stop=[2070, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
 save_initial_conditions = false; % save final concentrations as initial for the next run
@@ -15,7 +15,7 @@ save_initial_conditions = false; % save final concentrations as initial for the 
 
 [lake_params, sediment_params] = load_params();
 
-name_of_scenario = 'IO/Scenarios/P_gradual_increase_no_chl_2015_cutoff_to_0_2200.txt'
+name_of_scenario = 'IO/Scenarios/T_only_full_scen_base_historical_20y.txt'
 % name_of_scenario = 'IO/Scenarios/P_2016_cutoff.txt'
 % file_name = 'IO/P_2016_cutoff_test.mat'
 % name_of_scenario = 'IO/airT_Scenarios/T_only_RCP4_IPSL.txt'
