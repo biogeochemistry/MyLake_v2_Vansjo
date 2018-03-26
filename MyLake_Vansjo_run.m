@@ -7,7 +7,7 @@ disp(datetime('now'));
 is_metrics = true; % print metrics in the end
 
 m_start=[2005, 1, 1]; %
-m_stop=[2025, 12, 31]; %
+m_stop=[2009, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
 save_initial_conditions = false; % save final concentrations as initial for the next run
@@ -26,7 +26,7 @@ name_of_scenario = 'IO/Scenarios/P_gradual_increase_no_chl_2015_cutoff_to_0_2200
 sediment_params{73} = 192; %ts
 sediment_params{74} = 0; %pH
 
-file_name = 'IO/sed.mat'
+file_name = 'IO/anoxic_flux_0mg.mat'
 
 
 % new added for cores

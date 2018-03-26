@@ -1,51 +1,61 @@
 """
 Module with methods required for post processed data analysis
 """
+#%%
 import datetime
 import numpy as np
 import metrics
 import matplotlib.pyplot as plt
+import h5py
+
+
+def integrated_over_depth_masses(results, start=-365 * 20, end=-1):
+    res_wc = {}
+    # results = h5py.File('/Volumes/Igor EcoHDD/Scenarios/192ts_Fe_20x_200g_full_scen_base_historical_20y17m_sediment_2015_2100.mat','r')
+    # results.close()
+
+    z_wc = np.array(results['MyLake_results']['basin1']['z'])[0]*100
+
+    for elem in ['POP', 'DOP', 'PP', 'Chl', 'C', 'P']:
+        y = np.array(results['MyLake_results']['basin1']['concentrations'][elem][start:end, :])/31000
+        res_wc[elem] = np.mean(np.trapz(y, z_wc))
+    res_wc
+    res_sed = {}
+
+    z_sed = np.array(results['Sediment_results']['basin1']['z'])[0]
+    y = np.array(results['Sediment_results']['basin1']['concentrations']['PO4'][start:end, :])*0.92
+    res_sed['PO4'] = np.mean(np.trapz(y, z_sed))
+
+    for elem in ['POP', 'PO4adsa', 'PO4adsb', 'PO4adsc', 'Fe3PO42', 'Ca3PO42']:
+        y = np.array(results['Sediment_results']['basin1']['concentrations'][elem][start:end, :]) * (1 - 0.92)
+        res_sed[elem] = np.mean(np.trapz(y, z_sed))
+
+    return res_wc, res_sed
+
 
 
 def boundary_P_fluxes(results, start=-365 * 20, end=-1):
-    inflow_q = np.array(
-        results['MyLake_results']['basin1']['Inflw'][0, start:end])
-    surf_P = np.array(results['MyLake_results']['basin1']['concentrations']['P']
-                      [start:end, 0])
-    surf_POP = np.array(results['MyLake_results']['basin1']['concentrations'][
-        'POP'][start:end, 0])
-    surf_DOP = np.array(results['MyLake_results']['basin1']['concentrations'][
-        'DOP'][start:end, 0])
-    surf_PP = np.array(results['MyLake_results']['basin1']['concentrations'][
-        'PP'][start:end, 0])
-    surf_Phy = np.array(results['MyLake_results']['basin1']
-                        ['concentrations']['C'][start:end, 0]) + np.array(
-                            results['MyLake_results']['basin1']
-                            ['concentrations']['Chl'][start:end, 0])
-    inflow_POP = 1.4 * np.array(
-        results['MyLake_results']['basin1']['Inflw'][22, start:end])
-    inflow_TP = 1.6 * np.array(
-        results['MyLake_results']['basin1']['Inflw'][4, start:end])
-    inflow_DOP = np.array(
-        results['MyLake_results']['basin1']['Inflw'][5, start:end])
+    inflow_q = np.array(results['MyLake_results']['basin1']['Inflw'][0, start:end])
+    surf_P = np.array(results['MyLake_results']['basin1']['concentrations']['P'][start:end, 0])
+    surf_POP = np.array(results['MyLake_results']['basin1']['concentrations']['POP'][start:end, 0])
+    surf_DOP = np.array(results['MyLake_results']['basin1']['concentrations']['DOP'][start:end, 0])
+    surf_PP = np.array(results['MyLake_results']['basin1']['concentrations']['PP'][start:end, 0])
+    surf_Phy = np.array(results['MyLake_results']['basin1']['concentrations']['C'][start:end, 0]) + \
+        np.array(results['MyLake_results']['basin1']['concentrations']['Chl'][start:end, 0])
+    inflow_POP = np.array(results['MyLake_results']['basin1']['Inflw'][22, start:end])
+    inflow_TP = np.array(results['MyLake_results']['basin1']['Inflw'][4, start:end])
+    inflow_DOP = np.array(results['MyLake_results']['basin1']['Inflw'][5, start:end])
     area = 2.38e+7
 
     res = {}
     res['P_outflow'] = np.mean(inflow_q * surf_P) / 31 * 1000 / area * 365 / 1e4
-    res['POP_outflow'] = np.mean(
-        inflow_q * surf_POP) / 31 * 1000 / area * 365 / 1e4
-    res['PP_outflow'] = np.mean(
-        inflow_q * surf_PP) / 31 * 1000 / area * 365 / 1e4
-    res['DOP_outflow'] = np.mean(
-        inflow_q * surf_DOP) / 31 * 1000 / area * 365 / 1e4
-    res['Phy_outflow'] = np.mean(
-        inflow_q * surf_Phy) / 31 * 1000 / area * 365 / 1e4
-    res['POP_inflow'] = np.mean(
-        inflow_q * inflow_POP) / 31 * 1000 / area * 365 / 1e4
-    res['DOP_inflow'] = np.mean(
-        inflow_q * inflow_DOP) / 31 * 1000 / area * 365 / 1e4
-    res['TP_inflow'] = np.mean(
-        inflow_q * inflow_TP) / 31 * 1000 / area * 365 / 1e4
+    res['POP_outflow'] = np.mean(inflow_q * surf_POP) / 31 * 1000 / area * 365 / 1e4
+    res['PP_outflow'] = np.mean(inflow_q * surf_PP) / 31 * 1000 / area * 365 / 1e4
+    res['DOP_outflow'] = np.mean(inflow_q * surf_DOP) / 31 * 1000 / area * 365 / 1e4
+    res['Phy_outflow'] = np.mean(inflow_q * surf_Phy) / 31 * 1000 / area * 365 / 1e4
+    res['POP_inflow'] = np.mean(inflow_q * inflow_POP) / 31 * 1000 / area * 365 / 1e4
+    res['DOP_inflow'] = np.mean(inflow_q * inflow_DOP) / 31 * 1000 / area * 365 / 1e4
+    res['TP_inflow'] = np.mean(inflow_q * inflow_TP) / 31 * 1000 / area * 365 / 1e4
 
     return res
 
@@ -244,3 +254,7 @@ def generate_latex_table(days_sim, values_sim, days_obs, values_obs, calibration
         print('{0:0.2f}'.format(
             m(values_sim.take(idxs_sim_after), values_obs.take(idxs_obs_after))), end='')
     print(' \\\\')
+
+
+
+
