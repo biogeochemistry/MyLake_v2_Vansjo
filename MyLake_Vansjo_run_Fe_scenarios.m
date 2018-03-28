@@ -197,6 +197,9 @@ sediment_params{72} = 17; %     'effective_depth',     % 72           % depth be
 lake_params{24} = 1.0; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 lake_params{20} = 1.0;  % 20    scaling factor for inflow concentration of TP (-)
 
+% Different flashout rates of Fe(III) from sediment:
+sediment_params{18} = 1.6e+7; %  'k_Feox',                % 18
+
     % Q10 off
     % lake_params{70} = 1,  % 70    Q10 for reactions of respiration
 
