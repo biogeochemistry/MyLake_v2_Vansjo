@@ -6,8 +6,8 @@ disp(datetime('now'));
 
 is_metrics = true; % print metrics in the end
 
-m_start=[2015, 1, 1]; %
-m_stop=[2070, 12, 31]; %
+m_start=[2000, 1, 1]; %
+m_stop=[2013, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
 save_initial_conditions = false; % save final concentrations as initial for the next run
@@ -26,7 +26,8 @@ name_of_scenario = 'IO/Scenarios/T_only_full_scen_base_historical_20y.txt'
 sediment_params{73} = 192; %ts
 sediment_params{74} = 0; %pH
 
-file_name = 'IO/anoxic_flux_0mg.mat'
+file_name = 'IO/test.mat'
+% file_name = 'IO/P_flux_0mg.mat'
 
 
 % new added for cores
@@ -210,6 +211,21 @@ lake_params{24} = 1.0; % 390.1162e-003   % 24    scaling factor for inflow conce
 lake_params{20} = 1.0;  % 20    scaling factor for inflow concentration of TP (-)
 sediment_params{73} = 192; %ts
 
+
+% Oxic anoxic P fluxes
+% sediment_params{52} = 1;%    accel
+% sediment_params{8} = 1.5*10*100*2.5;%    Km FeOH3 pvc 100, umol/g, rho = 2.5
+% sediment_params{9} = 1.5*10*100*2.5;%    Km FeOOH
+
+
+% % changed OM rates:
+% sediment_params{1} = 200*1/13 * 0.1;  %   'k_Chl',                 %        % 1
+% sediment_params{2} = 200*1/13 * 0.01;  %  'k_POP',                 %        % 1
+% sediment_params{3} = 200*1/13 * 0.05;   % 'k_POC',                  %        % 0.01
+% sediment_params{4} = 200*1/13 * 0.013;  %  'k_DOP',                 %        % 1
+% sediment_params{5} = 200*1/13 * 0.088;  % 'k_DOC',                  %        % 1
+
+% sediment_params{18} = 1.6e+7; %  'k_Feox',                % 18
 
 % try
 run_ID = 0;

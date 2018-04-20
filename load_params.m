@@ -99,7 +99,7 @@ sediment_params = {
     0.1,   'k_Sdis',                % 19       %
     2500,  'k_Spre',                % 20       %
     3.3,   'k_FeS2pre',             % 21       % Canavan (2006)
-    0.1,   'k_alum',                % 22
+    0.1,   'k_alum',                % 22   % NOTE not used in the model
     100,     'k_pdesorb_a',         % 23
     100,     'k_pdesorb_b',         % 24
     20000,  'k_fesox',              % 25        % R23 %Canava
@@ -150,7 +150,7 @@ sediment_params = {
     0.1,    'Ny3',                  % 70           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     0,      'Pz3',                  % 71           % OM composition, it also defines rates of reaction (lower number - slower the reaction)
     30,     'effective_depth',     % 72           % depth below which the lake is affected by sediments, [m], if -1 (experimental) , then sediments below pycnocline
-    48,     'n_ts',                 % 73           % (96 is the minimum, 48 for calibration) number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
+    96,     'n_ts',                 % 73           % (96 is the minimum, 48 for calibration) number of time steps during 1 day (fixed time step of MyLake) for chemical and sediment module (the modules should be in sync)
     0,      'pH algorithm',         % 74           % 0. Disabled pH=7 % 1. Phreeqc  % 2. Electro-neutrality Equation
     0.1,    'SO4 flux',             % 75           % default 0; flux of sulphate from bottom of the sediment. Custom boundary condition for Lake Vansjo only
     };
