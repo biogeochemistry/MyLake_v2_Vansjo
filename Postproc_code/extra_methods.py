@@ -28,7 +28,7 @@ def integrated_over_depth_masses(results, start=-365 * 20, end=-1):
 
     for elem in ['POP', 'PO4adsa', 'PO4adsb', 'PO4adsc', 'Fe3PO42', 'Ca3PO42']:
         y = np.array(results['Sediment_results']['basin1']['concentrations'][elem][start:end, :]) * (1 - 0.92)
-        res_sed[elem] = np.mean(np.trapz(y, z_sed))
+        res_sed[elem+'_sed'] = np.mean(np.trapz(y, z_sed))
 
     return res_wc, res_sed
 
