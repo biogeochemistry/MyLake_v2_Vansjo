@@ -73,6 +73,7 @@ lake_params{24} = x(15); % 390.1162e-003   % 24    scaling factor for inflow con
 sediment_params{73}  = 48;
 
 
+name_of_scenario = 'IO/Scenarios/T_only_full_scen_base_historical_20y.txt'
 run_ID = 'Vansjo_Hist_M0' ; %  CALIBRATION RUN
 clim_ID = run_ID
 m_start=[2000, 1, 1]; %
@@ -88,7 +89,7 @@ disp(datetime('now'));
 
 try
 
-    [MyLake_results, Sediment_results]  = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
+    [MyLake_results, Sediment_results] = fn_MyL_application(m_start, m_stop, sediment_params, lake_params, name_of_scenario, use_INCA, run_INCA, run_ID, clim_ID, is_save_results); % runs the model and outputs obs and sim
 
 
     load('Postproc_code/Vansjo/VAN1_data_2017_02_28_10_55.mat')
@@ -119,7 +120,7 @@ try
     TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx, :) + MyLake_results.basin1.concentrations.PP(zinx, :) + MyLake_results.basin1.concentrations.DOP(zinx, :) + MyLake_results.basin1.concentrations.POP(zinx, :) + MyLake_results.basin1.concentrations.Chl(zinx, :) + MyLake_results.basin1.concentrations.C(zinx, :))', 2);
     Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
     P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
-    POP_mod = mean((MyLake_results.basin1.concentrations.POP(zinx,:) + MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
+    POP_mod = mean((MyLake_results.basin1.concentrations.POP(zinx, :) + MyLake_results.basin1.concentrations.Chl(zinx, :) + MyLake_results.basin1.concentrations.C(zinx, :))', 2);
 
     load 'obs/store_obs/TOTP.dat' % measured
     % load 'obs/store_obs/Cha.dat' % measured
@@ -150,9 +151,9 @@ try
 
     x'
 
-    % res = sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2])
+    res = sum([3*rmsd_TOTP, 3*rmsd_Chl, 3*rmsd_PO4, 3*rmsd_PP, rmsd_O2])
     % res = sum([- (rsquared_TOTP - 1), - (rsquared_Chl - 1), - (rsquared_PO4 - 1), - (rsquared_PP - 1), mean(- (rsquared_O2 + 1))])
-    res = sum([- (rsquared_TOTP - 1) .* rmsd_TOTP, - (rsquared_Chl - 1) .* rmsd_Chl, - (rsquared_PO4 - 1) .* rmsd_PO4, - (rsquared_PP - 1) .* rmsd_PP, mean(- (rsquared_O2 - 1) .* rmsd_O2)])
+    % res = sum([- (rsquared_TOTP - 1) .* rmsd_TOTP, - (rsquared_Chl - 1) .* rmsd_Chl, - (rsquared_PO4 - 1) .* rmsd_PO4, - (rsquared_PP - 1) .* rmsd_PP, mean(- (rsquared_O2 - 1) .* rmsd_O2)])
 
 catch ME
     fprintf('\tID: %s\n', ME.identifier)
