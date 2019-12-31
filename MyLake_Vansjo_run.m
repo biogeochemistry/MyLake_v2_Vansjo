@@ -6,8 +6,8 @@ disp(datetime('now'));
 
 is_metrics = true; % print metrics in the end
 
-m_start=[2005, 1, 1]; %
-m_stop=[2005, 1, 31]; %
+m_start=[2000, 1, 1]; %
+m_stop=[2014, 12, 31]; %
 % big_results = cell(1,no_runs);  % collects the results
 % big_inputs = cell(1,no_runs);   % collects the inputs
 save_initial_conditions = false; % save final concentrations as initial for the next run
@@ -15,18 +15,18 @@ save_initial_conditions = false; % save final concentrations as initial for the 
 
 [lake_params, sediment_params] = load_params();
 
-name_of_scenario = 'IO/Scenarios/P_gradual_increase_no_chl_2015_cutoff_to_0_2200.txt'
+% % name_of_scenario = 'IO/Scenarios/P_gradual_increase_no_chl_2015_cutoff_to_0_2200.txt'
 % name_of_scenario = 'IO/Scenarios/P_2016_cutoff.txt'
 % file_name = 'IO/P_2016_cutoff_test.mat'
-% name_of_scenario = 'IO/airT_Scenarios/T_only_RCP4_IPSL.txt'
-% file_name = 'IO/airT_Scenarios/T_only_RCP4_IPSL.mat'
+name_of_scenario = 'IO/Scenarios/T_only_full_scen_base_historical_20y.txt'
+file_name = 'IO/n_limitation.mat'
 
 
-% inaccurate but faster:
-sediment_params{73} = 192; %ts
+% inaccurate but faster?:
+sediment_params{73} = 96; %ts
 sediment_params{74} = 0; %pH
 
-file_name = 'IO/anoxic_flux_0mg.mat'
+% file_name = 'IO/ph_res.mat'
 
 
 % new added for cores
@@ -66,15 +66,15 @@ lake_params{47} = 1.6558e-01; % 50.0000e-003  % 47     settling velocity for Chl
 lake_params{49} = 1.7861e-01; % 110.6689e-003  % 49    loss rate (1/day) at 20 deg C
 lake_params{50} = 1.3772e+00; % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
 lake_params{53} = 2.9236e-01; % 638.9222e-003  % 53    Half saturation growth P level (mg/m3)
-lake_params{56} = 1.1681e-01; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
-lake_params{57} = 2.3063e-01; % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
-lake_params{58} = 1.4571e+00; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
-lake_params{59} = 3.2470e-01; % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
+lake_params{57} = 1.1681e-01; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+lake_params{58} = 2.3063e-01; % 167.6746e-003   % 57    Loss rate (1/day) at 20 deg C
+lake_params{59} = 1.4571e+00; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+lake_params{60} = 3.2470e-01; % 1.5525e+000   % 59    Half saturation growth P level (mg/m3)
 lake_params{46} = 7.7897e-02; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
 lake_params{10} = 8.3890e-05; % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-lake_params{54} = 7.3357e-05; % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{55} = 7.3357e-05; % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 lake_params{12} = 4.5000e-02; % 45.0000e-003  % 12    Optical cross_section of chlorophyll (m2 mg-1)
-lake_params{55} = 4.5000e-02; % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
+lake_params{56} = 4.5000e-02; % 29.6431e-003  % 17    Optical cross_section of chlorophyll (m2 mg-1)
 % ======================================================================
 
 % NOTE: trials
@@ -83,15 +83,15 @@ lake_params{20} = 1.0;  % 20    scaling factor for inflow concentration of TP (-
 sediment_params{52} = 40;%    accel
 lake_params{37} = 1;%    Scaling factor for inflow concentration of CaCO3 (-)
 lake_params{50} = 2.5; % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
-lake_params{58} = 2.5; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+lake_params{59} = 2.5; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
 lake_params{47} = 0.05; % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
-lake_params{56} = 0.05; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+lake_params{57} = 0.05; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
 lake_params{46} = 0.05; % 53.9466e-003   % % 46  settling velocity for S (m day-1)
 lake_params{53} = 10; % 638.9222e-003  % 53    Half saturation growth P level Chl1 (mg/m3)
-lake_params{59} = 10; % 1.5525e+000   % 59    Half saturation growth P level Chl2 (mg/m3)
+lake_params{60} = 10; % 1.5525e+000   % 59    Half saturation growth P level Chl2 (mg/m3)
 
 lake_params{10} = 1.03890e-05; % 24.5705e-006  % 10    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
-lake_params{54} = 1.03357e-05; % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
+lake_params{55} = 1.03357e-05; % 75.5867e-006  % 16    PAR saturation level for phytoplankton growth (mol(quanta) m-2 s-1)
 
 
 lake_params{18} = 10; % 1.5525e+000   % 18    Isc C
@@ -149,11 +149,11 @@ sediment_params{41} = 0.37/7; % 0.37; %,  'k_viv_dis',             % 41
 
 % NOTE: Chl changed here
 lake_params{50} = 2; % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
-lake_params{58} = 2; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+lake_params{59} = 2; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
 lake_params{47} = 0.05; % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
-lake_params{56} = 0.05; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+lake_params{57} = 0.05; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
 lake_params{53} = 15; % 638.9222e-003  % 53    Half saturation growth P level Chl1 (mg/m3)
-lake_params{59} = 15; % 1.5525e+000   % 59    Half saturation growth P level Chl2 (mg/m3)
+lake_params{60} = 15; % 1.5525e+000   % 59    Half saturation growth P level Chl2 (mg/m3)
 
 
 % changed OM rates:
@@ -195,11 +195,11 @@ sediment_params{54} = 5;  %     'k_pdesorb_c',         %
 
 % % NOTE: Chl changed here
 % lake_params{50} = 2*0.8; % 1.0000e+000  % 50    specific growth rate (1/day) at 20 deg C
-% lake_params{58} = 2*0.8; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
+% lake_params{59} = 2*0.8; % 1.0985e+000   % 58    Specific growth rate (1/day) at 20 deg C
 % lake_params{47} = 0.05*1.2; % 50.0000e-003  % 47     settling velocity for Chl1 a (m day-1)
-% lake_params{56} = 0.05*1.2; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
+% lake_params{57} = 0.05*1.2; % 204.8121e-003  % 56    Settling velocity for Chl2 a (m day-1)
 % lake_params{53} = 15*0.8; % 638.9222e-003  % 53    Half saturation growth P level Chl1 (mg/m3)
-% lake_params{59} = 15*0.8; % 1.5525e+000   % 59    Half saturation growth P level Chl2 (mg/m3)
+% lake_params{60} = 15*0.8; % 1.5525e+000   % 59    Half saturation growth P level Chl2 (mg/m3)
 % lake_params{24} = 1.4; % 390.1162e-003   % 24    scaling factor for inflow concentration of POP (-)
 % lake_params{20} = 1.6;  % 20    scaling factor for inflow concentration of TP (-)
 
