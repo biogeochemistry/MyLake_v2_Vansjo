@@ -231,7 +231,7 @@ def run_metrics(days_sim, values_sim, days_obs, values_obs, calibration_end_date
 
 
 def generate_latex_table(days_sim, values_sim, days_obs, values_obs, calibration_end_date='2010-01-01',
-                         methods=[metrics.mae, metrics.pc_bias, metrics.rmse, metrics.correlation, metrics.rsquared]):
+    methods=[metrics.mae, metrics.pc_bias, metrics.rmse, metrics.correlation, metrics.coefficient_of_determination]):
     """ run specific metrics for measured and simulated data
     Args:
         days_sim (array): matlabs datenum date

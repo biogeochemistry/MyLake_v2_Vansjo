@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.metrics import r2_score
-
+from scipy import stats
 
 def filter_nan(s, o):
     """
@@ -195,3 +195,7 @@ def coefficient_of_determination(s, o):
 
 def rsquared(s, o):
     return r2_score(o, s)
+
+def rsquared_scipy(s, o):
+    slope, intercept, r_value, p_value, std_err = stats.linregress(s, o)
+    return r_value

@@ -116,7 +116,7 @@ try
 
 
     zinx=find(MyLake_results.basin1.z<4);
-    TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:)+MyLake_results.basin1.concentrations.PP(zinx,:) + MyLake_results.basin1.concentrations.DOP(zinx,:) + MyLake_results.basin1.concentrations.POP(zinx,:))', 2);
+    TP_mod = mean((MyLake_results.basin1.concentrations.P(zinx, :) + MyLake_results.basin1.concentrations.PP(zinx, :) + MyLake_results.basin1.concentrations.DOP(zinx, :) + MyLake_results.basin1.concentrations.POP(zinx, :) + MyLake_results.basin1.concentrations.POP(zinx, :) + MyLake_results.basin1.concentrations.POP(zinx,:))', 2);
     Chl_mod = mean((MyLake_results.basin1.concentrations.Chl(zinx,:)+MyLake_results.basin1.concentrations.C(zinx,:))', 2);
     P_mod = mean((MyLake_results.basin1.concentrations.P(zinx,:))', 2);
     POP_mod = mean((MyLake_results.basin1.concentrations.POP(zinx,:) + MyLake_results.basin1.concentrations.PP(zinx,:))', 2);
